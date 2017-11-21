@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.model.Confidence;
@@ -19,7 +21,12 @@ import java.util.Collections;
 /**
  * Created by anjali on 21/11/17.
  */
+@NodeEntity
 public class GraphParticipant  implements psidev.psi.mi.jami.model.ParticipantEvidence {
+
+
+    @GraphId
+    private Long id;
 
 
     private CvTerm experimentalRole;
