@@ -2,7 +2,7 @@ package uk.ac.ebi.intact.graphdb.utils.interactions.providers.mitab;
 
 import psidev.psi.mi.tab.model.builder.MitabParserUtils;
 import psidev.psi.mi.tab.utils.MitabEscapeUtils;
-import uk.ac.ebi.intact.graphdb.model.nodes.CvParam;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
 
 import java.util.*;
 
@@ -23,14 +23,14 @@ public class MiTabUtils {
          * @param collection The values can not be null.
          * @return
          */
-        public static String joinCrossReferencStyleCollection(Collection<CvParam> collection) {
+        public static String joinCrossReferencStyleCollection(Collection<GraphCvTerm> collection) {
                 StringBuilder sb = new StringBuilder();
                 if (collection != null && !collection.isEmpty()) {
 
-                    Iterator<CvParam> iterator = collection.iterator();
+                    Iterator<GraphCvTerm> iterator = collection.iterator();
 
                         while (iterator.hasNext()) {
-                            CvParam field = iterator.next();
+                            GraphCvTerm field = iterator.next();
                             if (field.getCvLabel() == null) {
                                 field.setCvLabel(UNKNOWN);
                             }
@@ -88,10 +88,10 @@ public class MiTabUtils {
                 return sb.toString();
         }
 
-    public static Set<CvParam> splitCrossReferences(String column) throws IllegalArgumentException {
+    public static Set<GraphCvTerm> splitCrossReferences(String column) throws IllegalArgumentException {
 
-        Set<CvParam> objects = new HashSet<>();
-        CvParam object = null;
+        Set<GraphCvTerm> objects = new HashSet<>();
+        GraphCvTerm object = null;
 
         if (column != null && !column.isEmpty()) {
 
@@ -112,18 +112,18 @@ public class MiTabUtils {
                         if (length == 1) {
                             //Backward compatibility
                             if (field.equalsIgnoreCase("spoke")) {
-                                object = new CvParam("psi-mi", "MI:1060", "spoke expansion", null);
+                                object = new GraphCvTerm("psi-mi", "MI:1060", "spoke expansion", null);
                             } else if (field.equalsIgnoreCase("matrix")) {
-                                object = new CvParam("psi-mi", "MI:1061", "matrix expansion", null);
+                                object = new GraphCvTerm("psi-mi", "MI:1061", "matrix expansion", null);
                             } else if (field.equalsIgnoreCase("bipartite")) {
-                                object = new CvParam("psi-mi", "MI:1062", "bipartite expansion", null);
+                                object = new GraphCvTerm("psi-mi", "MI:1062", "bipartite expansion", null);
                                                         } else if (!result[0].equalsIgnoreCase("-")) {
                                 throw new IllegalArgumentException("String cannot be parsed to create a cross reference (check the syntax): " + Arrays.toString(result));
                             }
                         } else if (length == 2) {
-                            object = new CvParam(result[0], result[1], null, null);
+                            object = new GraphCvTerm(result[0], result[1], null, null);
                         } else if (length == 3) {
-                            object = new CvParam(result[0], result[1], result[2], null);
+                            object = new GraphCvTerm(result[0], result[1], result[2], null);
                         }
 
                         if (object != null) {

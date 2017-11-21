@@ -1,10 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.relationships;
 
-import org.neo4j.ogm.annotation.EndNode;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.RelationshipEntity;
-import org.neo4j.ogm.annotation.StartNode;
-import uk.ac.ebi.intact.graphdb.model.nodes.CvParam;
+import org.neo4j.ogm.annotation.*;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
 import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
 
 import java.util.Set;
@@ -29,12 +26,15 @@ public class Interaction {
 
     private Double score;
 
+    @Relationship(direction = Relationship.UNDIRECTED, type = RelationshipTypes.INTERACTS_IN)
+    private Set<Interactor> interators;
+
     //    @RelatedTo(type = "PUBLISH_IN", direction = Direction.INCOMING)
-    private Set<CvParam> publications;
+    private Set<GraphCvTerm> publications;
 
-    private Set<CvParam> detectionMethods;
+    private Set<GraphCvTerm> detectionMethods;
 
-    private Set<CvParam> interactionTypes;
+    private Set<GraphCvTerm> interactionTypes;
 
     public Interaction(Interactor interactorA, Interactor interactorB) {
         this.interactorA = interactorA;
@@ -47,9 +47,9 @@ public class Interaction {
 
    	/* TODO: Decouple with the Binary Interaction */
    	public Interaction(Interactor interactorA, Interactor interactorB, Double score,
-                       Set<CvParam> publications,
-                       Set<CvParam> detectionMethods,
-                       Set<CvParam> interactionTypes) {
+                       Set<GraphCvTerm> publications,
+                       Set<GraphCvTerm> detectionMethods,
+                       Set<GraphCvTerm> interactionTypes) {
         this.interactorA = interactorA;
         this.interactorB = interactorB;
    		this.score = score;
@@ -93,27 +93,27 @@ public class Interaction {
         this.score = score;
     }
 
-    public Set<CvParam> getPublications() {
+    public Set<GraphCvTerm> getPublications() {
         return publications;
     }
 
-    public void setPublications(Set<CvParam> publications) {
+    public void setPublications(Set<GraphCvTerm> publications) {
         this.publications = publications;
     }
 
-    public Set<CvParam> getDetectionMethods() {
+    public Set<GraphCvTerm> getDetectionMethods() {
         return detectionMethods;
     }
 
-    public void setDetectionMethods(Set<CvParam> detectionMethods) {
+    public void setDetectionMethods(Set<GraphCvTerm> detectionMethods) {
         this.detectionMethods = detectionMethods;
     }
 
-    public Set<CvParam> getInteractionTypes() {
+    public Set<GraphCvTerm> getInteractionTypes() {
         return interactionTypes;
     }
 
-    public void setInteractionTypes(Set<CvParam> interactionTypes) {
+    public void setInteractionTypes(Set<GraphCvTerm> interactionTypes) {
         this.interactionTypes = interactionTypes;
     }
 

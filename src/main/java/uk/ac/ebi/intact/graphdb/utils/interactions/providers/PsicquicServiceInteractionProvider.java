@@ -11,7 +11,7 @@ import uk.ac.ebi.enfin.mi.cluster.Encore2Binary;
 import uk.ac.ebi.enfin.mi.cluster.EncoreInteraction;
 import uk.ac.ebi.enfin.mi.cluster.score.InteractionClusterScore;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.CvParam;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
 import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
 import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
 import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
@@ -50,11 +50,11 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
     }
 
     @Override
-    public Iterator getInteractions() throws GraphDbException {
+    public List<Interaction> getInteractions() throws GraphDbException {
         return null;
     }
 
-    public Iterator getInteractions(Set<Protein> proteins, String species) throws GraphDbException {
+    public List<Interaction> getInteractions(Set<Protein> proteins, String species) throws GraphDbException {
 
         List<Interaction> interactions = null;
 
@@ -110,10 +110,10 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
             }
 
         }
-        return interactions.iterator();  //To change body of implemented methods use File | Settings | File Templates.
+        return interactions;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Iterator getInteractome(String species) throws GraphDbException {
+    public List<Interaction> getInteractome(String species) throws GraphDbException {
 
         List<Interaction> interactions = null;
         String query = "taxidA:" + species + " AND " + "taxidB:" + species + " AND " + miqlQueryFilters;
@@ -158,7 +158,7 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
             throw new GraphDbException("Impossible retrieving the interactions in this moment.");
         }
 
-        return interactions.iterator();
+        return interactions;
     }
 
     private List<Interaction> getBasicInteraction(Map<Integer, EncoreInteraction> interactionMapping, String idDBNames, Integer taxId) {
@@ -201,27 +201,27 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
                     bI = iConverter.getBinaryInteraction(aux);
 
                     //Convert interaction
-                    Set<CvParam> piPublications = new HashSet<>();
+                    Set<GraphCvTerm> piPublications = new HashSet<>();
                     for (Object o : bI.getPublications()) {
                         if (o instanceof CrossReference) {
                             CrossReference cr = (CrossReference) o;
-                            piPublications.add(new CvParam(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
+                            piPublications.add(new GraphCvTerm(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
                         }
                     }
 
-                    Set<CvParam> piDetectionMethods = new HashSet<CvParam>();
+                    Set<GraphCvTerm> piDetectionMethods = new HashSet<GraphCvTerm>();
                     for (Object o : bI.getDetectionMethods()) {
                         if (o instanceof CrossReference) {
                             CrossReference cr = (CrossReference) o;
-                            piDetectionMethods.add(new CvParam(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
+                            piDetectionMethods.add(new GraphCvTerm(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
                         }
                     }
 
-                    Set<CvParam> piInteractionTypes = new HashSet<CvParam>();
+                    Set<GraphCvTerm> piInteractionTypes = new HashSet<GraphCvTerm>();
                     for (Object o : bI.getInteractionTypes()) {
                         if (o instanceof CrossReference) {
                             CrossReference cr = (CrossReference) o;
-                            piInteractionTypes.add(new CvParam(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
+                            piInteractionTypes.add(new GraphCvTerm(cr.getDatabase(), cr.getIdentifier(), cr.getText(), null));
                         }
                     }
 

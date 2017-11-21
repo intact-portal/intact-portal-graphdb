@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,12 +15,12 @@ import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
  */
 
 @RepositoryRestResource(collectionResourceRel = "interactions", path = "interactions")
-public interface InteractionRepository extends GraphRepository<Interaction> {
+public interface InteractionRepository extends GraphRepository<BinaryInteractionEvidence> {
 
 
-    Interaction findById(Long id);
+    BinaryInteractionEvidence findById(Long id);
 
-    Page<Interaction> findByInteractorA_Accession(Pageable pageable, String accession);
+    Page<BinaryInteractionEvidence> findByInteractorA_Accession(Pageable pageable, String accession);
 
-    Page<Interaction> findByInteractorB_Accession(Pageable pageable, String accession);
+    Page<BinaryInteractionEvidence> findByInteractorB_Accession(Pageable pageable, String accession);
 }

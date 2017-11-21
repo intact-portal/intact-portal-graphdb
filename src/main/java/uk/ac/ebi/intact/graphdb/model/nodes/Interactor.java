@@ -21,7 +21,7 @@ public class Interactor {
     @GraphId
     protected Long id;
 
-    @Index(unique = true)
+    @Index(unique = true,primary = true)
     protected String accession;
 
     @Property
