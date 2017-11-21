@@ -40,9 +40,9 @@ public class InteractorRepositoryTest {
         interactorRepository.deleteAll();
 
 //
-//        Protein p12345 = new Protein("P12345");
-//        Protein p12346 = new Protein("P12346");
-//        Protein p12347 = new Protein("P12347");
+//        GraphProtein p12345 = new GraphProtein("P12345");
+//        GraphProtein p12346 = new GraphProtein("P12346");
+//        GraphProtein p12347 = new GraphProtein("P12347");
 
         Interactor p12345 = new Interactor(P12345);
         Interactor p12346 = new Interactor(P12346);

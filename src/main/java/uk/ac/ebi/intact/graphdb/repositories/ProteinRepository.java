@@ -2,7 +2,7 @@ package uk.ac.ebi.intact.graphdb.repositories;
 
 
 import org.springframework.data.neo4j.repository.GraphRepository;
-import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
+import psidev.psi.mi.jami.model.Protein;
 
 /**
  * Created by IntelliJ IDEA.

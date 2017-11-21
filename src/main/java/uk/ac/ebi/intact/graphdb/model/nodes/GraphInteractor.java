@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @NodeEntity
-public class GraphInteractor implements psidev.psi.mi.jami.model.Interactor  {
+public class GraphInteractor implements Interactor  {
 
     @GraphId
     protected Long id;
@@ -32,6 +32,101 @@ public class GraphInteractor implements psidev.psi.mi.jami.model.Interactor  {
     public GraphInteractor() {
     }
 
+    public GraphInteractor(String name, CvTerm type){
+        if (name == null || (name != null && name.length() == 0)){
+            throw new IllegalArgumentException("The short name cannot be null or empty.");
+        }
+        this.shortName = name;
+        if (type == null){
+            this.interactorType = CvTermUtils.createUnknownInteractorType();
+        }
+        else {
+            this.interactorType = type;
+        }
+    }
+
+    public GraphInteractor(String name, String fullName, CvTerm type){
+        this(name, type);
+        this.fullName = fullName;
+    }
+
+    public GraphInteractor(String name, CvTerm type, Organism organism){
+        this(name, type);
+        this.organism = organism;
+    }
+
+    public GraphInteractor(String name, String fullName, CvTerm type, Organism organism){
+        this(name, fullName, type);
+        this.organism = organism;
+    }
+
+    public GraphInteractor(String name, CvTerm type, Xref uniqueId){
+        this(name, type);
+        getIdentifiers().add(uniqueId);
+    }
+
+    public GraphInteractor(String name, String fullName, CvTerm type, Xref uniqueId){
+        this(name, fullName, type);
+        getIdentifiers().add(uniqueId);
+    }
+
+    public GraphInteractor(String name, CvTerm type, Organism organism, Xref uniqueId){
+        this(name, type, organism);
+        getIdentifiers().add(uniqueId);
+    }
+
+    public GraphInteractor(String name, String fullName, CvTerm type, Organism organism, Xref uniqueId){
+        this(name, fullName, type, organism);
+        getIdentifiers().add(uniqueId);
+    }
+
+    public GraphInteractor(String name){
+        if (name == null || (name != null && name.length() == 0)){
+            throw new IllegalArgumentException("The short name cannot be null or empty.");
+        }
+        this.shortName = name;
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
+
+    public GraphInteractor(String name, String fullName){
+        this(name);
+        this.fullName = fullName;
+    }
+
+    public GraphInteractor(String name, Organism organism){
+        this(name);
+        this.organism = organism;
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
+
+    public GraphInteractor(String name, String fullName, Organism organism){
+        this(name, fullName);
+        this.organism = organism;
+    }
+
+    public GraphInteractor(String name, Xref uniqueId){
+        this(name);
+        getIdentifiers().add(uniqueId);
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
+
+    public GraphInteractor(String name, String fullName, Xref uniqueId){
+        this(name, fullName);
+        getIdentifiers().add(uniqueId);
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
+
+    public GraphInteractor(String name, Organism organism, Xref uniqueId){
+        this(name, organism);
+        getIdentifiers().add(uniqueId);
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
+
+    public GraphInteractor(String name, String fullName, Organism organism, Xref uniqueId){
+        this(name, fullName, organism);
+        getIdentifiers().add(uniqueId);
+        this.interactorType = CvTermUtils.createUnknownInteractorType();
+    }
 
     public String getShortName() {
         return this.shortName;

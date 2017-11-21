@@ -12,7 +12,7 @@ import uk.ac.ebi.enfin.mi.cluster.EncoreInteraction;
 import uk.ac.ebi.enfin.mi.cluster.score.InteractionClusterScore;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
-import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 
 import java.io.File;
@@ -52,7 +52,7 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
         return null;
     }
 
-    public List<Interaction> getInteractions(Set<Protein> proteins, String species) throws GraphDbException {
+    public List<Interaction> getInteractions(Set<GraphProtein> proteins, String species) throws GraphDbException {
 
         List<Interaction> interactions = null;
 
@@ -60,7 +60,7 @@ public class PsicquicServiceInteractionProvider implements InteractionProvider {
         String query;
 
         int i = 0;
-        for (Protein protein : proteins) {
+        for (GraphProtein protein : proteins) {
 
             query = "identifier:" + protein.getAccession() +
                     " taxidA:" + species +

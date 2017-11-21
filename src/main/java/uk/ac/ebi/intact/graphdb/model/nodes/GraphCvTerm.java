@@ -16,12 +16,6 @@ import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Created by IntelliJ IDEA.
- * User: noedelta
- * Date: 05/09/2014
- * Time: 08:40
- */
 @NodeEntity
 public class GraphCvTerm implements CvTerm {
 

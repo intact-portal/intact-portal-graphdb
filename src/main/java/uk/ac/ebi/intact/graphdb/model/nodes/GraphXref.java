@@ -1,44 +1,50 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 
+@NodeEntity
 public class GraphXref implements Xref {
 
+    @GraphId
+    protected Long id;
+
     private CvTerm database;
-    private String id;
+    private String identifier;
     private String version;
     private CvTerm qualifier;
 
     public GraphXref() {
     }
 
-    public GraphXref(CvTerm database, String id, CvTerm qualifier) {
-        this(database, id);
+    public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
+        this(database, identifier);
         this.qualifier = qualifier;
     }
 
-    public GraphXref(CvTerm database, String id, String version, CvTerm qualifier) {
-        this(database, id, version);
+    public GraphXref(CvTerm database, String identifier, String version, CvTerm qualifier) {
+        this(database, identifier, version);
         this.qualifier = qualifier;
     }
 
-    public GraphXref(CvTerm database, String id, String version) {
-        this(database, id);
+    public GraphXref(CvTerm database, String identifier, String version) {
+        this(database, identifier);
         this.version = version;
     }
 
-    public GraphXref(CvTerm database, String id) {
+    public GraphXref(CvTerm database, String identifier) {
         if (database == null) {
             throw new IllegalArgumentException("The database is required and cannot be null");
         }
         this.database = database;
 
-        if (id == null || id.isEmpty()) {
+        if (identifier == null || identifier.isEmpty()) {
             throw new IllegalArgumentException("The id is required and cannot be null or empty");
         }
-        this.id = id;
+        this.identifier = identifier;
     }
 
     public CvTerm getDatabase() {
@@ -50,11 +56,11 @@ public class GraphXref implements Xref {
     }
 
     public String getId() {
-        return id;
+        return identifier;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getVersion() {
