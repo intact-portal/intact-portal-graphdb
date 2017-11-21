@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
 import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 import uk.ac.ebi.intact.graphdb.utils.interactions.providers.mitab.MiTabUtils;
 

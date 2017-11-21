@@ -7,17 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import psidev.psi.mi.jami.commons.PsiJami;
 import psidev.psi.mi.jami.factory.options.MIFileDataSourceOptions;
-import psidev.psi.mi.jami.tab.extension.MitabBinaryInteractionEvidence;
 import psidev.psi.mi.jami.tab.extension.datasource.MitabBinaryEvidenceStreamSource;
 import psidev.psi.mi.jami.tab.extension.datasource.MitabStreamSource;
 import psidev.psi.mi.jami.tab.extension.factory.MitabDataSourceFactory;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**

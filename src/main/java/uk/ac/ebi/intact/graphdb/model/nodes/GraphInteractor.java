@@ -26,7 +26,6 @@ public class GraphInteractor implements psidev.psi.mi.jami.model.Interactor  {
     private CvTerm interactorType;
 
 
-
     @Relationship(type = "INTERACT_IN", direction = Relationship.OUTGOING)
     private Collection<GraphBinaryInteraction> interactions;
 
@@ -116,6 +115,11 @@ public class GraphInteractor implements psidev.psi.mi.jami.model.Interactor  {
             this.interactorType = interactorType;
         }
     }
+
+    public Collection<GraphBinaryInteraction> getInteractions() {
+        return interactions;
+    }
+
 
     @Override
     public String toString() {

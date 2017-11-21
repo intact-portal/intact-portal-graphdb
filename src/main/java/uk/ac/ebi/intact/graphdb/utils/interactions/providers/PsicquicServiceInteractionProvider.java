@@ -12,9 +12,7 @@ import uk.ac.ebi.enfin.mi.cluster.EncoreInteraction;
 import uk.ac.ebi.enfin.mi.cluster.score.InteractionClusterScore;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
-import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
 import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 
 import java.io.File;

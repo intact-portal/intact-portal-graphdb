@@ -3,8 +3,8 @@ package uk.ac.ebi.intact.graphdb.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
 
 import java.util.*;
@@ -21,18 +21,18 @@ public class InteractorService {
     @Autowired
     InteractorRepository interactorRepository;
 
-    private Map<String, Object> toD3Format(Collection<Interactor> interactors) {
+    private Map<String, Object> toD3Format(Collection<GraphInteractor> interactors) {
         List<Map<String, Object>> nodes = new ArrayList<>();
         List<Map<String, Object>> rels = new ArrayList<>();
         int i = 0;
-        Iterator<Interactor> result = interactors.iterator();
+        Iterator<GraphInteractor> result = interactors.iterator();
         while (result.hasNext()) {
-            Interactor interactorB = result.next();
-            nodes.add(map("accession", interactorB.getAccession(), "label", "interactorB"));
+            GraphInteractor interactorB = result.next();
+            nodes.add(map("identifier", interactorB.getPreferredIdentifier().getDatabase(), "label", "interactorB"));
             int target = i;
             i++;
-            for (Interaction interaction : interactorB.getInteractions()) {
-                Map<String, Object> interactorA = map("accession", interaction.getInteractorA(), "label", "interactorA");
+            for (GraphBinaryInteraction interaction : interactorB.getInteractions()) {
+                Map<String, Object> interactorA = map("identifier", interaction.getInteractorA().getPreferredIdentifier().getId(), "label", "interactorA");
                 int source = nodes.indexOf(interactorA);
                 if (source == -1) {
                     nodes.add(interactorA);
@@ -53,7 +53,7 @@ public class InteractorService {
 
     @Transactional(readOnly = true)
     public Map<String, Object>  graph(int limit) {
-        Collection<Interactor> result = interactorRepository.graph(limit);
+        Collection<GraphInteractor> result = interactorRepository.graph(limit);
         return toD3Format(result);
     }
 

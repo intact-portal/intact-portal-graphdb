@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.tab.extension.MitabBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.Interactor;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
 import uk.ac.ebi.intact.graphdb.repositories.InteractionRepository;
 import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 

@@ -8,9 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
-import uk.ac.ebi.intact.graphdb.model.relationships.Interaction;
 import uk.ac.ebi.intact.graphdb.services.ImportInteractionService;
-import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 import uk.ac.ebi.intact.graphdb.utils.interactions.providers.MiTabInteractionProvider;
 
 import java.util.List;

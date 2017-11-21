@@ -294,10 +294,23 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         return removed;
     }
 
+    public Collection<GraphInteractor> getInteractors() {
+        return interactors;
+    }
+
+    public GraphInteractor getInteractorA() {
+        return interactorA;
+    }
+
+    public GraphInteractor getInteractorB() {
+        return interactorB;
+    }
+
     @Override
     public String toString() {
         return "Interaction: "+(getShortName() != null ? getShortName()+", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
     }
+
 
     protected void processAddedChecksumEvent(Checksum added) {
         if (rigid == null && ChecksumUtils.doesChecksumHaveMethod(added, Checksum.RIGID_MI, Checksum.RIGID)){
