@@ -6,7 +6,6 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import psidev.psi.mi.jami.model.Interactor;
-import psidev.psi.mi.jami.model.Xref;
 
 import java.util.Collection;
 
@@ -19,8 +18,7 @@ import java.util.Collection;
 @RepositoryRestResource(collectionResourceRel = "interactor", path = "interactor")
 public interface InteractorRepository extends GraphRepository<Interactor> {
 
-    //@Query("MATCH (a:Interactor) WHERE a.accession={accession} RETURN a")
-    Interactor findByPreferredIdentifier(@Param("identifier") Xref identifier);
+    Interactor findByShortName(@Param("shortName") String shortName );
 
     @Query("MATCH (a:Interactor)<-[i:INTERACTS_IN]-(b:Interactor) RETURN i,a,b LIMIT {limit}")
     Collection<Interactor> graph(@Param("limit") int limit);

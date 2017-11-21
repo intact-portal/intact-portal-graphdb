@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import psidev.psi.mi.jami.model.Protein;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 
 @RunWith(SpringRunner.class)
@@ -74,15 +75,15 @@ public class ProteinRepositoryTest {
 //        interactorRepository.save(p12346);
 //        interactorRepository.save(p12347);
 
-        p12345 = proteinRepository.findByAccession(p12345.getAccession());
+        p12345 = (GraphProtein) proteinRepository.findByShortName(p12345.getShortName());
 //        p12345 = interactorRepository.findByAccession(p12345.getAccession());
-        p12345.interactsWith(p12346, 0.0);
-        p12345.interactsWith(p12347, 0.0);
+//        p12345.interactsWith(p12346, 0.0);
+//        p12345.interactsWith(p12347, 0.0);
         proteinRepository.save(p12345);
 
-        p12346 = proteinRepository.findByAccession(p12346.getAccession());
+        p12346 = (GraphProtein) proteinRepository.findByShortName(p12346.getShortName());
 //        p12346 = interactorRepository.findByAccession(p12346.getAccession());
-        p12346.interactsWith(p12347, 0.0);
+//        p12346.interactsWith(p12347, 0.0);
 
         // We already know that p12346 works with p12345
         proteinRepository.save(p12346);
@@ -101,12 +102,12 @@ public class ProteinRepositoryTest {
     @Test
     public void testProteinRepository() throws Exception {
 
-        GraphProtein proteinA = proteinRepository.findByAccession(P12345);
-        GraphProtein proteinB = proteinRepository.findByAccession(P12346);
-        GraphProtein proteinC = proteinRepository.findByAccession(P12347);
-        Assert.assertEquals(proteinA.getAccession(), P12345);
-        Assert.assertEquals(proteinB.getAccession(), P12346);
-        Assert.assertEquals(proteinC.getAccession(), P12347);
+        Protein proteinA = proteinRepository.findByShortName(P12345);
+        Protein proteinB = proteinRepository.findByShortName(P12346);
+        Protein proteinC = proteinRepository.findByShortName(P12347);
+        Assert.assertEquals(proteinA.getShortName(), P12345);
+        Assert.assertEquals(proteinB.getShortName(), P12346);
+        Assert.assertEquals(proteinC.getShortName(), P12347);
 
 //        Result<GraphProtein> proteinResultA = proteinRepository.findAllBySchemaPropertyValue("accession", P12345);
 //        Result<GraphProtein> proteinResultB = proteinRepository.findAllBySchemaPropertyValue("accession", P12346);
@@ -117,13 +118,13 @@ public class ProteinRepositoryTest {
 
 
         Assert.assertEquals(proteinRepository.count(), 3);
-        for (GraphProtein protein : proteinRepository.findAll()) {
+        for (Protein protein : proteinRepository.findAll()) {
             System.out.println(protein);
         }
 
-        Page<GraphProtein> page = proteinRepository.findAll(new PageRequest(0, 10));
+        Page<Protein> page = proteinRepository.findAll(new PageRequest(0, 10));
         Assert.assertEquals(page.getTotalElements(), 3);
-        for (GraphProtein protein : page.getContent()) {
+        for (Protein protein : page.getContent()) {
             System.out.println(protein);
         }
 
@@ -134,8 +135,8 @@ public class ProteinRepositoryTest {
 
         System.out.println("Lookup each protein by accession...");
         for (String name : new String[]{P12345, P12346, P12347}) {
-            GraphProtein protein = proteinRepository.findByAccession(name);
-            Assert.assertEquals(protein.getAccession(), name);
+            GraphProtein protein = (GraphProtein) proteinRepository.findByShortName(name);
+            Assert.assertEquals(protein.getShortName(), name);
             Assert.assertNotNull(protein.getInteractions());
             Assert.assertEquals(protein.getInteractions().size(), 2);
             System.out.println(protein.getInteractions());

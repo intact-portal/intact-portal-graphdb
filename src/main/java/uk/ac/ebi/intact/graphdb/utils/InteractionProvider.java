@@ -15,6 +15,4 @@ public interface InteractionProvider {
 
     Iterator getInteractions() throws GraphDbException;
 
-
-
 }

@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import psidev.psi.mi.jami.model.Interaction;
 import uk.ac.ebi.intact.graphdb.services.ImportInteractionService;
 
 import java.util.List;

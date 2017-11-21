@@ -5,13 +5,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
+import psidev.psi.mi.jami.model.Interaction;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 
 @RunWith(SpringRunner.class)
@@ -23,8 +25,8 @@ public class InteractionRepositoryTest {
     public static final String P12346 = "P12346";
     public static final String P12347 = "P12347";
 
-    @Autowired
-    private Session session;
+//    @Autowired
+//    private Session session;
 
     @Autowired
     private ProteinRepository proteinRepository;
@@ -75,15 +77,15 @@ public class InteractionRepositoryTest {
 //        interactorRepository.save(p12346);
 //        interactorRepository.save(p12347);
 
-        p12345 = proteinRepository.findByAccession(p12345.getAccession());
+        p12345 = (GraphProtein) proteinRepository.findByShortName(p12345.getShortName());
 //        p12345 = interactorRepository.findByAccession(p12345.getAccession());
-        p12345.interactsWith(p12346, 0.0);
-        p12345.interactsWith(p12347, 0.0);
+//        p12345.interactsWith(p12346, 0.0);
+//        p12345.interactsWith(p12347, 0.0);
         proteinRepository.save(p12345);
 
-        p12346 = proteinRepository.findByAccession(p12346.getAccession());
+        p12346 = (GraphProtein) proteinRepository.findByShortName(p12346.getShortName());
 //        p12346 = interactorRepository.findByAccession(p12346.getAccession());
-        p12346.interactsWith(p12347, 0.0);
+//        p12346.interactsWith(p12347, 0.0);
 
         // We already know that p12346 works with p12345
         proteinRepository.save(p12346);
@@ -94,7 +96,7 @@ public class InteractionRepositoryTest {
 
     @After
     public void tearDown() throws Exception {
-        session.purgeDatabase();
+//        session.purgeDatabase();
     }
 
     @Test
@@ -102,33 +104,39 @@ public class InteractionRepositoryTest {
 
         long count = interactionRepository.count();
         Assert.assertEquals(3, count);
-        Page<Interaction> result = interactionRepository.findAll(new PageRequest(0, 10));
+        Page<BinaryInteractionEvidence> result = interactionRepository.findAll(new PageRequest(0, 10));
         Assert.assertEquals(3, result.getContent().size());
         for (Interaction interaction : interactionRepository.findAll()) {
             System.out.println(interaction);
         }
 
-        Page<Interaction> interactionsPage = interactionRepository.findAll(new PageRequest(0, 10));
+        Page<BinaryInteractionEvidence> interactionsPage = interactionRepository.findAll(new PageRequest(0, 10));
         Assert.assertEquals(3, interactionsPage.getContent().size());
         Assert.assertEquals(3, interactionsPage.getTotalElements());
         for (Interaction interaction : interactionsPage) {
             System.out.println(interaction);
         }
 
-        result = interactionRepository.findByInteractorB_Accession(new PageRequest(0, 10), P12345);
+        result = interactionRepository.findByInteractorB_ShortName(new PageRequest(0, 10), P12345);
         Assert.assertEquals(0, result.getNumberOfElements());
 
         for (Interaction interaction : result) {
-            System.out.println(interaction.getInteractorA().getAccession() +
-                    " interacts with " + interaction.getInteractorB().getAccession() + ".");
+            if (interaction instanceof GraphBinaryInteraction) {
+                System.out.println(
+                        ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+                                " interacts with " +
+                                ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
+            }
         }
 
-        result = interactionRepository.findByInteractorA_Accession(new PageRequest(0, 10), P12345);
+        result = interactionRepository.findByInteractorA_ShortName(new PageRequest(0, 10), P12345);
         Assert.assertEquals(0, result.getNumberOfElements());
 
         for (Interaction interaction : result) {
-            System.out.println(interaction.getInteractorA().getAccession() +
-                    " interacts with " + interaction.getInteractorB().getAccession() + ".");
+            System.out.println(
+                    ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+                            " interacts with " +
+                            ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
         }
 
     }

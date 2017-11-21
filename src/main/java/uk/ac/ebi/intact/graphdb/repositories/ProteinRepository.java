@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.repositories;
 
 
 import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.repository.query.Param;
 import psidev.psi.mi.jami.model.Protein;
 
 /**
@@ -12,8 +13,7 @@ import psidev.psi.mi.jami.model.Protein;
  */
 public interface ProteinRepository extends GraphRepository<Protein> {
 
-    Protein findByAccession(String accession);
-
+    Protein findByShortName(@Param("shortName") String shortName );
 
 }
 

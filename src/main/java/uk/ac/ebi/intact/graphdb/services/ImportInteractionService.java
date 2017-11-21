@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
+import psidev.psi.mi.jami.model.Interaction;
 import psidev.psi.mi.jami.tab.extension.MitabBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
 import uk.ac.ebi.intact.graphdb.repositories.InteractionRepository;
@@ -27,7 +28,7 @@ import java.util.List;
 @Service
 public class ImportInteractionService {
 
-	private static final Logger log = LoggerFactory.getLogger(ImportInteractionService.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportInteractionService.class);
 
     private final InteractionProvider interactionProvider;
 
@@ -42,9 +43,9 @@ public class ImportInteractionService {
         this.interactionProvider = interactionProvider;
     }
 
-    public  List<Interaction> importInteractions(){
+    public List<Interaction> importInteractions() {
 
-        List<Interaction> interactions = new ArrayList<Interaction>();;
+        List<Interaction> interactions = new ArrayList<Interaction>();
 
 //        log.info("Deleting previous interactions");
 //        cleanDb();
@@ -54,7 +55,6 @@ public class ImportInteractionService {
         try {
             Iterator<BinaryInteractionEvidence> interactionIterator = interactionProvider.getInteractions();
 
-
             while (interactionIterator.hasNext()) {
                 psidev.psi.mi.jami.model.Interaction interaction = (psidev.psi.mi.jami.model.Interaction) interactionIterator.next();
 
@@ -62,29 +62,10 @@ public class ImportInteractionService {
                 if (interaction instanceof MitabBinaryInteractionEvidence) {
                     MitabBinaryInteractionEvidence interactionEvidence = (MitabBinaryInteractionEvidence) interaction;
                     // process the interaction evidence
-
-                    Interactor interactorA=interactorRepository.findByAccession(interactionEvidence.getParticipantA().getInteractor().getShortName());
-                    if(interactorA==null){
-                        interactorA = new Interactor(interactionEvidence.getParticipantA().getInteractor().getShortName());
-                        interactorRepository.save(interactorA);
-                    }
-
-                    Interactor interactorB=interactorRepository.findByAccession(interactionEvidence.getParticipantB().getInteractor().getShortName());
-                    if(interactorB==null){
-                        interactorB = new Interactor(interactionEvidence.getParticipantB().getInteractor().getShortName());
-                        interactorRepository.save(interactorB);
-                    }
-
-                    Interaction interactionG=new Interaction(interactorA,interactorB);
-                    interactionRepository.save(interactionG);
-                    interactions.add(interactionG);
-
+                    interactionRepository.save(interactionEvidence);
+                    interactions.add(interactionEvidence);
                 }
-
-
             }
-
-
 
         } catch (GraphDbException e) {
             log.error(e.getMessage());
@@ -95,7 +76,4 @@ public class ImportInteractionService {
         return interactions;
 
     }
-
-
-
 }

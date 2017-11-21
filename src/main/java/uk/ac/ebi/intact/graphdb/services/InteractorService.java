@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import psidev.psi.mi.jami.model.Interactor;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
@@ -18,16 +19,20 @@ import java.util.*;
 @Service
 public class InteractorService {
 
-    @Autowired
-    InteractorRepository interactorRepository;
+    final private InteractorRepository interactorRepository;
 
-    private Map<String, Object> toD3Format(Collection<GraphInteractor> interactors) {
+    @Autowired
+    public InteractorService(InteractorRepository interactorRepository) {
+        this.interactorRepository = interactorRepository;
+    }
+
+    private Map<String, Object> toD3Format(Collection<Interactor> interactors) {
         List<Map<String, Object>> nodes = new ArrayList<>();
         List<Map<String, Object>> rels = new ArrayList<>();
         int i = 0;
-        Iterator<GraphInteractor> result = interactors.iterator();
+        Iterator<Interactor> result = interactors.iterator();
         while (result.hasNext()) {
-            GraphInteractor interactorB = result.next();
+            GraphInteractor interactorB = (GraphInteractor) result.next();
             nodes.add(map("identifier", interactorB.getPreferredIdentifier().getDatabase(), "label", "interactorB"));
             int target = i;
             i++;
@@ -53,7 +58,7 @@ public class InteractorService {
 
     @Transactional(readOnly = true)
     public Map<String, Object>  graph(int limit) {
-        Collection<GraphInteractor> result = interactorRepository.graph(limit);
+        Collection<Interactor> result = interactorRepository.graph(limit);
         return toD3Format(result);
     }
 

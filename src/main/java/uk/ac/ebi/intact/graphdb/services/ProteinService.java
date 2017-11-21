@@ -13,6 +13,10 @@ import uk.ac.ebi.intact.graphdb.repositories.ProteinRepository;
 @Service
 public class ProteinService {
 
+    final private ProteinRepository proteinRepository;
+
     @Autowired
-    ProteinRepository proteinRepository;
+    public ProteinService(ProteinRepository proteinRepository) {
+        this.proteinRepository = proteinRepository;
+    }
 }
