@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,9 +40,9 @@ public class InteractionRepositoryTest {
         interactorRepository.deleteAll();
 
 //
-        Protein p12345 = new Protein(P12345);
-        Protein p12346 = new Protein(P12346);
-        Protein p12347 = new Protein(P12347);
+        GraphProtein p12345 = new GraphProtein(P12345);
+        GraphProtein p12346 = new GraphProtein(P12346);
+        GraphProtein p12347 = new GraphProtein(P12347);
 
 //        Interactor p12345 = new Interactor(P12345);
 //        Interactor p12346 = new Interactor(P12346);

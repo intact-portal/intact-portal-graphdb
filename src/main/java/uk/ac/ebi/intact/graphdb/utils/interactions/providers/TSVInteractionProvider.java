@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.Protein;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 import uk.ac.ebi.intact.graphdb.utils.interactions.providers.mitab.MiTabUtils;
 
@@ -43,7 +43,7 @@ public class TSVInteractionProvider implements InteractionProvider {
 
     }
 
-    public Iterator getInteractions(Set<Protein> proteins, String species) throws GraphDbException {
+    public Iterator getInteractions(Set<GraphProtein> proteins, String species) throws GraphDbException {
         return null;
     }
 

@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.*;
@@ -14,7 +16,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+@NodeEntity
 public class GraphBinaryInteraction implements BinaryInteractionEvidence {
+
+    @GraphId
+    protected Long id;
 
     private Xref imexId;
     private Experiment experiment;
