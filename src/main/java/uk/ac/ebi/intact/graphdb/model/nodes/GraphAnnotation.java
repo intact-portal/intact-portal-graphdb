@@ -18,6 +18,11 @@ public class GraphAnnotation implements Annotation {
     public GraphAnnotation() {
     }
 
+    public GraphAnnotation(Annotation annotation) {
+
+    }
+
+
     public GraphAnnotation(CvTerm topic) {
         if (topic == null) {
             throw new IllegalArgumentException("The annotation topic is required and cannot be null");

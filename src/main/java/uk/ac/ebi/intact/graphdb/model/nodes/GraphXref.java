@@ -20,6 +20,9 @@ public class GraphXref implements Xref {
     public GraphXref() {
     }
 
+    public GraphXref(Xref xref) {
+    }
+
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
         this(database, identifier);
         this.qualifier = qualifier;

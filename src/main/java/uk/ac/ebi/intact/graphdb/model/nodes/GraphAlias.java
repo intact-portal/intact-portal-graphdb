@@ -18,6 +18,9 @@ public class GraphAlias implements Alias {
     public GraphAlias() {
     }
 
+    public GraphAlias(Alias alias) {
+    }
+
     public GraphAlias(CvTerm type, String name) {
         this(name);
         this.type = type;

@@ -18,6 +18,9 @@ public class GraphChecksum implements Checksum {
     public GraphChecksum() {
     }
 
+    public GraphChecksum(Checksum checksum) {
+    }
+
     public GraphChecksum(CvTerm method, String value){
         if (method == null){
             throw new IllegalArgumentException("The method is required and cannot be null");

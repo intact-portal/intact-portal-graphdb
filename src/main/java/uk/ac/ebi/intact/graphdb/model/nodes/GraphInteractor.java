@@ -5,135 +5,54 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @NodeEntity
-public class GraphInteractor implements Interactor  {
+public class GraphInteractor implements Interactor {
 
     @GraphId
     protected Long id;
 
     private String shortName;
     private String fullName;
-    private Collection<Xref> identifiers;
-    private Collection<Checksum> checksums;
-    private Collection<Xref> xrefs;
-    private Collection<Annotation> annotations;
-    private Collection<Alias> aliases;
-    private Organism organism;
-    private CvTerm interactorType;
+    private Collection<GraphXref> identifiers;
+    private Collection<GraphChecksum> checksums;
+    private Collection<GraphXref> xrefs;
+    private Collection<GraphAnnotation> annotations;
+    private Collection<GraphAlias> aliases;
+    private GraphOrganism organism;
+    private GraphCvTerm interactorType;
 
 
-    @Relationship(type = "INTERACT_IN", direction = Relationship.OUTGOING)
-    private Collection<GraphBinaryInteraction> interactions;
 
-    public GraphInteractor() {
-    }
 
-    public GraphInteractor(String name, CvTerm type){
-        if (name == null || (name != null && name.length() == 0)){
-            throw new IllegalArgumentException("The short name cannot be null or empty.");
+        @Relationship(type = "INTERACT_IN", direction = Relationship.OUTGOING)
+        private Collection<GraphBinaryInteraction> interactions;
+
+        public GraphInteractor() {
         }
-        this.shortName = name;
-        if (type == null){
-            this.interactorType = CvTermUtils.createUnknownInteractorType();
-        }
-        else {
-            this.interactorType = type;
-        }
+
+        public GraphInteractor(Interactor interactor) {
+            setShortName(interactor.getShortName());
+            setFullName(interactor.getFullName());
+            setIdentifiers(CollectionAdaptor.convertXrefIntoGraphModel(interactor.getIdentifiers()));
+            setChecksums(CollectionAdaptor.convertChecksumIntoGraphModel(interactor.getChecksums()));
+            setAnnotations(CollectionAdaptor.convertAnnotationIntoGraphModel(interactor.getAnnotations()));
+            setAliases(CollectionAdaptor.convertAliasIntoGraphModel(interactor.getAliases()));
+            setOrganism(new GraphOrganism(interactor.getOrganism()));
+            setInteractorType(new GraphCvTerm(interactor.getInteractorType()));
     }
 
-    public GraphInteractor(String name, String fullName, CvTerm type){
-        this(name, type);
-        this.fullName = fullName;
-    }
-
-    public GraphInteractor(String name, CvTerm type, Organism organism){
-        this(name, type);
-        this.organism = organism;
-    }
-
-    public GraphInteractor(String name, String fullName, CvTerm type, Organism organism){
-        this(name, fullName, type);
-        this.organism = organism;
-    }
-
-    public GraphInteractor(String name, CvTerm type, Xref uniqueId){
-        this(name, type);
-        getIdentifiers().add(uniqueId);
-    }
-
-    public GraphInteractor(String name, String fullName, CvTerm type, Xref uniqueId){
-        this(name, fullName, type);
-        getIdentifiers().add(uniqueId);
-    }
-
-    public GraphInteractor(String name, CvTerm type, Organism organism, Xref uniqueId){
-        this(name, type, organism);
-        getIdentifiers().add(uniqueId);
-    }
-
-    public GraphInteractor(String name, String fullName, CvTerm type, Organism organism, Xref uniqueId){
-        this(name, fullName, type, organism);
-        getIdentifiers().add(uniqueId);
-    }
-
-    public GraphInteractor(String name){
-        if (name == null || (name != null && name.length() == 0)){
-            throw new IllegalArgumentException("The short name cannot be null or empty.");
-        }
-        this.shortName = name;
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
-
-    public GraphInteractor(String name, String fullName){
-        this(name);
-        this.fullName = fullName;
-    }
-
-    public GraphInteractor(String name, Organism organism){
-        this(name);
-        this.organism = organism;
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
-
-    public GraphInteractor(String name, String fullName, Organism organism){
-        this(name, fullName);
-        this.organism = organism;
-    }
-
-    public GraphInteractor(String name, Xref uniqueId){
-        this(name);
-        getIdentifiers().add(uniqueId);
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
-
-    public GraphInteractor(String name, String fullName, Xref uniqueId){
-        this(name, fullName);
-        getIdentifiers().add(uniqueId);
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
-
-    public GraphInteractor(String name, Organism organism, Xref uniqueId){
-        this(name, organism);
-        getIdentifiers().add(uniqueId);
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
-
-    public GraphInteractor(String name, String fullName, Organism organism, Xref uniqueId){
-        this(name, fullName, organism);
-        getIdentifiers().add(uniqueId);
-        this.interactorType = CvTermUtils.createUnknownInteractorType();
-    }
 
     public String getShortName() {
         return this.shortName;
     }
 
     public void setShortName(String name) {
-        if (name == null || (name != null && name.length() == 0)){
+        if (name == null || (name != null && name.length() == 0)) {
             throw new IllegalArgumentException("The short name cannot be null or empty.");
         }
         this.shortName = name;
@@ -147,47 +66,66 @@ public class GraphInteractor implements Interactor  {
         this.fullName = name;
     }
 
-    public Collection<Xref> getIdentifiers() {
-        if (identifiers == null){
-            this.identifiers = new ArrayList<Xref>();
+    public Collection<? extends Xref> getIdentifiers() {
+        if (identifiers == null) {
+            this.identifiers = new ArrayList<GraphXref>();
         }
         return this.identifiers;
     }
 
+    public void setIdentifiers(Collection<GraphXref> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     /**
-     *
      * @return the first identifier in the list of identifiers or null if the list is empty
      */
     public Xref getPreferredIdentifier() {
         return !getIdentifiers().isEmpty() ? getIdentifiers().iterator().next() : null;
     }
 
-    public Collection<Checksum> getChecksums() {
-        if (checksums == null){
-            this.checksums = new ArrayList<Checksum>();
+    public Collection<? extends Checksum> getChecksums() {
+        if (checksums == null) {
+            this.checksums = new ArrayList<GraphChecksum>();
         }
         return this.checksums;
     }
 
-    public Collection<Xref> getXrefs() {
-        if (xrefs == null){
-            this.xrefs = new ArrayList<Xref>();
+    public void setChecksums(Collection<GraphChecksum> checksums) {
+        this.checksums = checksums;
+    }
+
+    public Collection<? extends Xref> getXrefs() {
+        if (xrefs == null) {
+            this.xrefs = new ArrayList<GraphXref>();
         }
         return this.xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
-        if (annotations == null){
-            this.annotations = new ArrayList<Annotation>();
+    public void setXrefs(Collection<GraphXref> xrefs) {
+        this.xrefs = xrefs;
+    }
+
+    public Collection<? extends Annotation> getAnnotations() {
+        if (annotations == null) {
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
         return this.annotations;
     }
 
-    public Collection<Alias> getAliases() {
-        if (aliases == null){
-            this.aliases = new ArrayList<Alias>();
+    public void setAnnotations(Collection<GraphAnnotation> annotations) {
+        this.annotations = annotations;
+    }
+
+    public Collection<? extends Alias> getAliases() {
+        if (aliases == null) {
+            this.aliases = new ArrayList<GraphAlias>();
         }
         return this.aliases;
+    }
+
+    public void setAliases(Collection<GraphAlias> aliases) {
+        this.aliases = aliases;
     }
 
     public Organism getOrganism() {
@@ -195,7 +133,7 @@ public class GraphInteractor implements Interactor  {
     }
 
     public void setOrganism(Organism organism) {
-        this.organism = organism;
+        this.organism = (GraphOrganism) organism;
     }
 
     public CvTerm getInteractorType() {
@@ -203,10 +141,9 @@ public class GraphInteractor implements Interactor  {
     }
 
     public void setInteractorType(CvTerm interactorType) {
-        if (interactorType == null){
+        if (interactorType == null) {
             this.interactorType = CvTermUtils.createUnknownInteractorType();
-        }
-        else {
+        } else {
             this.interactorType = interactorType;
         }
     }
@@ -215,11 +152,10 @@ public class GraphInteractor implements Interactor  {
         return interactions;
     }
 
-
     @Override
     public String toString() {
         return getShortName()
                 + (getOrganism() != null ? ", " + getOrganism().toString() : "")
-                + (getInteractorType() != null ? ", " + getInteractorType().toString() : "")  ;
+                + (getInteractorType() != null ? ", " + getInteractorType().toString() : "");
     }
 }
