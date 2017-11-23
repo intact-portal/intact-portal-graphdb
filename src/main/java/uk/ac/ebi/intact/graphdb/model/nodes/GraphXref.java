@@ -10,44 +10,48 @@ import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 public class GraphXref implements Xref {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
-    private CvTerm database;
+    private GraphCvTerm database;
     private String identifier;
     private String version;
-    private CvTerm qualifier;
+    private GraphCvTerm qualifier;
 
     public GraphXref() {
     }
 
     public GraphXref(Xref xref) {
+        setDatabase(xref.getDatabase());
+        setId(xref.getId());
+        setVersion(xref.getVersion());
+        setQualifier(xref.getQualifier());
     }
 
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
         this(database, identifier);
-        this.qualifier = qualifier;
+        setQualifier(qualifier);
     }
 
     public GraphXref(CvTerm database, String identifier, String version, CvTerm qualifier) {
         this(database, identifier, version);
-        this.qualifier = qualifier;
+        setQualifier(qualifier);
     }
 
     public GraphXref(CvTerm database, String identifier, String version) {
         this(database, identifier);
-        this.version = version;
+        setVersion(version);
     }
 
     public GraphXref(CvTerm database, String identifier) {
         if (database == null) {
             throw new IllegalArgumentException("The database is required and cannot be null");
         }
-        this.database = database;
+        setDatabase(database);
 
         if (identifier == null || identifier.isEmpty()) {
             throw new IllegalArgumentException("The id is required and cannot be null or empty");
         }
-        this.identifier = identifier;
+        setId(identifier);
     }
 
     public CvTerm getDatabase() {
@@ -55,8 +59,18 @@ public class GraphXref implements Xref {
     }
 
     public void setDatabase(CvTerm database) {
-        this.database = database;
+        if (database != null) {
+            if (database instanceof GraphCvTerm) {
+                this.database = (GraphCvTerm) database;
+            } else {
+                this.database = new GraphCvTerm(database);
+            }
+        } else {
+            this.database = null;
+        }
+        //TODO login it
     }
+
 
     public String getId() {
         return identifier;
@@ -79,21 +93,28 @@ public class GraphXref implements Xref {
     }
 
     public void setQualifier(CvTerm qualifier) {
-        this.qualifier = qualifier;
+        if (qualifier != null) {
+            if (qualifier instanceof GraphCvTerm) {
+                this.qualifier = (GraphCvTerm) qualifier;
+            } else {
+                this.qualifier = new GraphCvTerm(qualifier);
+            }
+        } else {
+            this.qualifier = null;
+        }
+        //TODO login it
     }
+
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }
-
         // Xrefs are different and it has to be ExternalIdentifier
         if (!(o instanceof Xref)) {
             return false;
         }
-
         return UnambiguousXrefComparator.areEquals(this, (Xref) o);
     }
 
