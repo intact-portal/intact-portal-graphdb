@@ -22,7 +22,7 @@ import java.util.Collections;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphParticipant  implements psidev.psi.mi.jami.model.ParticipantEvidence {
+public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.ParticipantEvidence {
 
 
     @GraphId

@@ -10,21 +10,23 @@ import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 public class GraphAlias implements Alias {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
-    private CvTerm type;
+    private GraphCvTerm type;
     private String name;
 
     public GraphAlias() {
     }
 
     public GraphAlias(Alias alias) {
+        setType(alias.getType());
+        setName(alias.getName());
     }
 
-    public GraphAlias(CvTerm type, String name) {
+/*    public GraphAlias(CvTerm type, String name) {
         this(name);
         this.type = type;
-    }
+    }*/
 
     public GraphAlias(String name) {
         if (name == null) {
@@ -38,7 +40,15 @@ public class GraphAlias implements Alias {
     }
 
     public void setType(CvTerm type) {
-        this.type = type;
+        if (type != null) {
+            if (type instanceof GraphCvTerm) {
+                this.type = (GraphCvTerm) type;
+            } else {
+                this.type = new GraphCvTerm(type);
+            }
+        } else {
+            this.type = null;
+        }
     }
 
     public String getName() {
