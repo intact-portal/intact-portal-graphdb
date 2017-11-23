@@ -9,42 +9,52 @@ import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
 public class GraphStoichiometry implements Stoichiometry {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
     private int minValue;
     private int maxValue;
 
-    public GraphStoichiometry(int value){
-
-        this.minValue = value;
-        this.maxValue = value;
+    public GraphStoichiometry(Stoichiometry stoichiometry) {
+        this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
     }
 
-    public GraphStoichiometry(int minValue, int maxValue){
-        if (minValue > maxValue){
-           throw new IllegalArgumentException("The minValue " + minValue + " cannot be bigger than the maxValue " + maxValue);
+    public GraphStoichiometry(int value) {
+        this(value, value);
+    }
+
+    public GraphStoichiometry(int minValue, int maxValue) {
+        if (minValue > maxValue) {
+            throw new IllegalArgumentException("The minValue " + minValue + " cannot be bigger than the maxValue " + maxValue);
         }
 
-        this.minValue = minValue;
-        this.maxValue = maxValue;
+        setMinValue(minValue);
+        setMaxValue(maxValue);
     }
 
     public int getMinValue() {
         return this.minValue;
     }
 
+    public void setMinValue(int minValue) {
+        this.minValue = minValue;
+    }
+
     public int getMaxValue() {
         return this.maxValue;
+    }
+
+    public void setMaxValue(int maxValue) {
+        this.maxValue = maxValue;
     }
 
     @Override
     public boolean equals(Object o) {
 
-        if (this == o){
+        if (this == o) {
             return true;
         }
 
-        if (!(o instanceof Stoichiometry)){
+        if (!(o instanceof Stoichiometry)) {
             return false;
         }
 
