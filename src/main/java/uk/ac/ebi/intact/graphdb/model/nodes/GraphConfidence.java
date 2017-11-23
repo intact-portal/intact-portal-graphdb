@@ -18,6 +18,9 @@ public class GraphConfidence implements Confidence {
     public GraphConfidence() {
     }
 
+    public GraphConfidence(Confidence confidence) {
+    }
+
     public GraphConfidence(CvTerm type, String value) {
         if (type == null) {
             throw new IllegalArgumentException("The confidence type is required and cannot be null");

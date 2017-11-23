@@ -25,6 +25,9 @@ public class GraphParameter implements Parameter {
     public GraphParameter() {
     }
 
+    public GraphParameter(Parameter parameter) {
+    }
+
     public GraphParameter(CvTerm type, ParameterValue value) {
         if (type == null) {
             throw new IllegalArgumentException("The parameter type is required and cannot be null");

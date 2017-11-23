@@ -1,12 +1,7 @@
 package uk.ac.ebi.intact.graphdb.utils;
 
-import psidev.psi.mi.jami.model.Annotation;
-import psidev.psi.mi.jami.model.Checksum;
-import psidev.psi.mi.jami.model.Xref;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphAlias;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphAnnotation;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphChecksum;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
+import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +39,27 @@ public class CollectionAdaptor {
 
         List<GraphAnnotation> graphAnnotations = annotations.stream().map(GraphAnnotation::new).collect(Collectors.toList());
         return graphAnnotations;
+
+    }
+
+    public static Collection<GraphParameter> convertParameterIntoGraphModel(Collection<Parameter> parameters){
+
+        List<GraphParameter> graphParameters = parameters.stream().map(GraphParameter::new).collect(Collectors.toList());
+        return graphParameters;
+
+    }
+
+    public static Collection<GraphConfidence> convertConfidenceIntoGraphModel(Collection<Confidence> confidences){
+
+        List<GraphConfidence> graphConfidences = confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
+        return graphConfidences;
+
+    }
+
+    public static Collection<GraphVariableParameterValueSet> convertvariableParameterValueIntoGraphModel(Collection<VariableParameterValueSet> variableParameterValueSets){
+
+        List<GraphVariableParameterValueSet> graphVariableParameterValueSet = variableParameterValueSets.stream().map(GraphVariableParameterValueSet::new).collect(Collectors.toList());
+        return graphVariableParameterValueSet;
 
     }
 }
