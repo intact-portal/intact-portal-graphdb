@@ -10,20 +10,21 @@ import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationCompa
 public class GraphAnnotation implements Annotation {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
-    private CvTerm topic;
+    private GraphCvTerm topic;
     private String value;
 
     public GraphAnnotation() {
     }
 
     public GraphAnnotation(Annotation annotation) {
-
+       setTopic(annotation.getTopic());
+       setValue(annotation.getValue());
     }
 
 
-    public GraphAnnotation(CvTerm topic) {
+    /*public GraphAnnotation(CvTerm topic) {
         if (topic == null) {
             throw new IllegalArgumentException("The annotation topic is required and cannot be null");
         }
@@ -33,14 +34,22 @@ public class GraphAnnotation implements Annotation {
     public GraphAnnotation(CvTerm topic, String value) {
         this(topic);
         this.value = value;
-    }
+    }*/
 
     public CvTerm getTopic() {
         return this.topic;
     }
 
     public void setTopic(CvTerm topic) {
-        this.topic = topic;
+        if (topic != null) {
+            if (topic instanceof GraphCvTerm) {
+                this.topic = (GraphCvTerm) topic;
+            } else {
+                this.topic = new GraphCvTerm(topic);
+            }
+        } else {
+            this.topic = null;
+        }
     }
 
     public String getValue() {
