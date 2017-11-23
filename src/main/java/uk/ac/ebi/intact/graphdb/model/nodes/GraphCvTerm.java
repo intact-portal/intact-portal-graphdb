@@ -7,11 +7,8 @@ import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
-import psidev.psi.mi.jami.utils.CvTermUtils;
-import psidev.psi.mi.jami.utils.XrefUtils;
-import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,16 +21,28 @@ public class GraphCvTerm implements CvTerm {
 
     private String shortName;
     private String fullName;
-    private Collection<Xref> xrefs;
-    private Collection<Xref> identifiers;
-    private Collection<Annotation> annotations;
-    private Collection<Alias> synonyms;
+    private Collection<GraphXref> xrefs;
+    private Collection<GraphXref> identifiers;
+    private Collection<GraphAnnotation> annotations;
+    private Collection<GraphAlias> synonyms;
 
-    private Xref miIdentifier;
-    private Xref modIdentifier;
-    private Xref parIdentifier;
+    private String mIIdentifier;
+    private String mODIdentifier;
+    private String pARIdentifier;
 
     public GraphCvTerm() {
+    }
+
+    public GraphCvTerm(CvTerm cvTerm) {
+        setShortName(cvTerm.getShortName());
+        setFullName(cvTerm.getFullName());
+        setXrefs(cvTerm.getXrefs());
+        setIdentifiers(cvTerm.getIdentifiers());
+        setAnnotations(cvTerm.getAnnotations());
+        setSynonyms(cvTerm.getSynonyms());
+        setMIIdentifier(cvTerm.getMIIdentifier());
+        setMODIdentifier(cvTerm.getMODIdentifier());
+        setPARIdentifier(cvTerm.getPARIdentifier());
     }
 
     public String getShortName() {
@@ -55,112 +64,99 @@ public class GraphCvTerm implements CvTerm {
         this.fullName = name;
     }
 
-
-    public Collection<Xref> getIdentifiers() {
-        if (identifiers == null) {
-            this.identifiers = new GraphCvTerm.CvTermIdentifierList();
-        }
-        return identifiers;
-    }
-
+    @Override
     public String getMIIdentifier() {
-        return this.miIdentifier != null ? this.miIdentifier.getId() : null;
+        return this.mIIdentifier;
     }
 
+    @Override
     public void setMIIdentifier(String mi) {
-        Collection<Xref> cvTermIdentifiers = getIdentifiers();
-
-        // add new mi if not null
-        if (mi != null) {
-            CvTerm psiMiDatabase = CvTermUtils.createPsiMiDatabase();
-            CvTerm identityQualifier = CvTermUtils.createIdentityQualifier(psiMiDatabase);
-            // first remove old psi mi if not null
-            if (this.miIdentifier != null) {
-                cvTermIdentifiers.remove(this.miIdentifier);
-            }
-            this.miIdentifier = new DefaultXref(psiMiDatabase, mi, identityQualifier);
-            cvTermIdentifiers.add(this.miIdentifier);
-        }
-        // remove all mi if the collection is not empty
-        else if (!getIdentifiers().isEmpty()) {
-            XrefUtils.removeAllXrefsWithDatabase(getIdentifiers(), CvTerm.PSI_MI_MI, CvTerm.PSI_MI);
-            this.miIdentifier = null;
-        }
+        this.mIIdentifier = mi;
     }
 
+    @Override
     public String getMODIdentifier() {
-        return this.modIdentifier != null ? this.modIdentifier.getId() : null;
+        return this.mODIdentifier;
     }
 
+    @Override
     public void setMODIdentifier(String mod) {
-        Collection<Xref> cvTermIdentifiers = getIdentifiers();
-
-        // add new mod if not null
-        if (mod != null) {
-
-            CvTerm psiModDatabase = CvTermUtils.createPsiModDatabase();
-            CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
-            // first remove old psi mod if not null
-            if (this.modIdentifier != null) {
-                cvTermIdentifiers.remove(this.modIdentifier);
-            }
-            this.modIdentifier = new DefaultXref(psiModDatabase, mod, identityQualifier);
-            cvTermIdentifiers.add(this.modIdentifier);
-        }
-        // remove all mod if the collection is not empty
-        else if (!getIdentifiers().isEmpty()) {
-            XrefUtils.removeAllXrefsWithDatabase(getIdentifiers(), CvTerm.PSI_MOD_MI, CvTerm.PSI_MOD);
-            this.modIdentifier = null;
-        }
+        this.mODIdentifier = mod;
     }
 
+    @Override
     public String getPARIdentifier() {
-        return this.parIdentifier != null ? this.parIdentifier.getId() : null;
+        return this.pARIdentifier;
     }
 
+    @Override
     public void setPARIdentifier(String par) {
-        Collection<Xref> cvTermIdentifiers = getIdentifiers();
+        this.pARIdentifier = par;
+    }
 
-        // add new mod if not null
-        if (par != null) {
-
-            CvTerm psiModDatabase = CvTermUtils.createPsiParDatabase();
-            CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
-            // first remove old psi mod if not null
-            if (this.parIdentifier != null) {
-                cvTermIdentifiers.remove(this.parIdentifier);
-            }
-            this.parIdentifier = new DefaultXref(psiModDatabase, par, identityQualifier);
-            cvTermIdentifiers.add(this.parIdentifier);
+    public Collection<GraphXref> getIdentifiers() {
+        if (this.identifiers == null) {
+            this.identifiers = new ArrayList<GraphXref>();
         }
-        // remove all mod if the collection is not empty
-        else if (!getIdentifiers().isEmpty()) {
-            XrefUtils.removeAllXrefsWithDatabase(getIdentifiers(), null, CvTerm.PSI_PAR);
-            this.parIdentifier = null;
+        return this.identifiers;
+    }
+
+    public void setIdentifiers(Collection<Xref> identifiers) {
+        if (identifiers != null) {
+            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
+        } else {
+            this.identifiers = new ArrayList<GraphXref>();
         }
     }
 
-    public Collection<Xref> getXrefs() {
+
+    public Collection<GraphXref> getXrefs() {
         if (xrefs == null) {
-            this.xrefs = new ArrayList<Xref>();
+            this.xrefs = new ArrayList<GraphXref>();
         }
         return this.xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
+    public void setXrefs(Collection<Xref> xrefs) {
+        if (xrefs != null) {
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+        } else {
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+    }
+
+    public Collection<GraphAnnotation> getAnnotations() {
         if (annotations == null) {
-            this.annotations = new ArrayList<Annotation>();
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
         return this.annotations;
     }
 
-    public Collection<Alias> getSynonyms() {
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if (annotations != null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        } else {
+            this.annotations = new ArrayList<GraphAnnotation>();
+        }
+    }
+
+    public Collection<GraphAlias> getSynonyms() {
         if (synonyms == null) {
-            this.synonyms = new ArrayList<Alias>();
+            this.synonyms = new ArrayList<GraphAlias>();
         }
         return this.synonyms;
     }
 
+    public void setSynonyms(Collection<Alias> synonyms) {
+        if (synonyms != null) {
+            this.synonyms = CollectionAdaptor.convertAliasIntoGraphModel(synonyms);
+        } else {
+            this.synonyms = new ArrayList<GraphAlias>();
+        }
+    }
+
+
+/*
     protected void processAddedIdentifierEvent(Xref added) {
 
         // the added identifier is psi-mi and it is not the current mi identifier
@@ -230,12 +226,13 @@ public class GraphCvTerm implements CvTerm {
             parIdentifier = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), null, CvTerm.PSI_PAR);
         }
     }
-
+*/
+/*
     protected void clearPropertiesLinkedToIdentifiers() {
         miIdentifier = null;
         modIdentifier = null;
         parIdentifier = null;
-    }
+    }*/
 
     @Override
     public int hashCode() {
@@ -259,10 +256,10 @@ public class GraphCvTerm implements CvTerm {
     public String toString() {
         return (getMIIdentifier() != null ? getMIIdentifier() :
                 (getMODIdentifier() != null ? getMODIdentifier() :
-                (getPARIdentifier() != null ? getPARIdentifier() : "-"))) + " (" + getShortName() + ")";
+                        (getPARIdentifier() != null ? getPARIdentifier() : "-"))) + " (" + getShortName() + ")";
     }
 
-    private class CvTermIdentifierList extends AbstractListHavingProperties<Xref> {
+/*    private class CvTermIdentifierList extends AbstractListHavingProperties<Xref> {
         public CvTermIdentifierList() {
             super();
         }
@@ -281,5 +278,5 @@ public class GraphCvTerm implements CvTerm {
         protected void clearProperties() {
             clearPropertiesLinkedToIdentifiers();
         }
-    }
+    }*/
 }

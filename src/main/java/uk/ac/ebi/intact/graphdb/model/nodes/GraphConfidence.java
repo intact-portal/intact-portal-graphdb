@@ -12,16 +12,18 @@ public class GraphConfidence implements Confidence {
     @GraphId
     protected Long id;
 
-    private CvTerm type;
+    private GraphCvTerm type;
     private String value;
 
     public GraphConfidence() {
     }
 
     public GraphConfidence(Confidence confidence) {
+        setType(confidence.getType());
+        setValue(confidence.getValue());
     }
 
-    public GraphConfidence(CvTerm type, String value) {
+/*    public GraphConfidence(CvTerm type, String value) {
         if (type == null) {
             throw new IllegalArgumentException("The confidence type is required and cannot be null");
         }
@@ -30,14 +32,22 @@ public class GraphConfidence implements Confidence {
             throw new IllegalArgumentException("The confidence value is required and cannot be null");
         }
         this.value = value;
-    }
+    }*/
 
     public CvTerm getType() {
         return this.type;
     }
 
     public void setType(CvTerm type) {
-        this.type = type;
+        if (type != null) {
+            if (type instanceof GraphCvTerm) {
+                this.type = (GraphCvTerm) type;
+            } else {
+                this.type = new GraphCvTerm(type);
+            }
+        } else {
+            this.type = null;
+        }
     }
 
     public String getValue() {
