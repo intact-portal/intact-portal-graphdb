@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 import uk.ac.ebi.intact.graphdb.services.ImportInteractionService;
 import uk.ac.ebi.intact.graphdb.utils.interactions.providers.MiTabInteractionProvider;
@@ -56,8 +56,8 @@ public class ImportInteractionServiceTest {
 
         GraphProtein A = new GraphProtein("A");
         GraphProtein B = new GraphProtein("B");
-        GraphBinaryInteraction interaction = mock(GraphBinaryInteraction.class);
-        List<GraphBinaryInteraction> interactions = (List<GraphBinaryInteraction>) mock(List.class);
+        GraphBinaryInteractionEvidence interaction = mock(GraphBinaryInteractionEvidence.class);
+        List<GraphBinaryInteractionEvidence> interactions = (List<GraphBinaryInteractionEvidence>) mock(List.class);
 
         when(interaction.getInteractorA()).thenReturn(A);
         when(interaction.getInteractorB()).thenReturn(B);

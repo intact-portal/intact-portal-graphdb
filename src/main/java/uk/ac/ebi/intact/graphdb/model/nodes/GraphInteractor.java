@@ -28,7 +28,7 @@ public class GraphInteractor implements Interactor {
     private GraphCvTerm interactorType;
 
     @Relationship(type = RelationshipTypes.INTERACTS_IN, direction = Relationship.OUTGOING)
-    private Collection<GraphBinaryInteraction> interactions;
+    private Collection<GraphBinaryInteractionEvidence> interactions;
 
     public GraphInteractor() {
     }
@@ -271,11 +271,11 @@ public class GraphInteractor implements Interactor {
         //TODO login it
     }
 
-    public Collection<GraphBinaryInteraction> getInteractions() {
+    public Collection<GraphBinaryInteractionEvidence> getInteractions() {
         return interactions;
     }
 
-    public void setInteractions(Collection<GraphBinaryInteraction> interactions) {
+    public void setInteractions(Collection<GraphBinaryInteractionEvidence> interactions) {
         this.interactions = interactions;
     }
 

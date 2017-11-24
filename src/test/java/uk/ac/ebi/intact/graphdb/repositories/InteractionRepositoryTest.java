@@ -114,11 +114,11 @@ public class InteractionRepositoryTest {
 //        Assert.assertEquals(0, result.getNumberOfElements());
 //
 //        for (Interaction interaction : result) {
-//            if (interaction instanceof GraphBinaryInteraction) {
+//            if (interaction instanceof GraphBinaryInteractionEvidence) {
 //                System.out.println(
-//                        ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+//                        ((GraphBinaryInteractionEvidence) interaction).getInteractorA().getShortName() +
 //                                " interacts with " +
-//                                ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
+//                                ((GraphBinaryInteractionEvidence) interaction).getInteractorB().getShortName() + ".");
 //            }
 //        }
 //
@@ -127,9 +127,9 @@ public class InteractionRepositoryTest {
 //
 //        for (Interaction interaction : result) {
 //            System.out.println(
-//                    ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+//                    ((GraphBinaryInteractionEvidence) interaction).getInteractorA().getShortName() +
 //                            " interacts with " +
-//                            ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
+//                            ((GraphBinaryInteractionEvidence) interaction).getInteractorB().getShortName() + ".");
 //        }
 //
 //    }

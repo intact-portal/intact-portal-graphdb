@@ -5,11 +5,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultChecksum;
-import psidev.psi.mi.jami.utils.ChecksumUtils;
-import psidev.psi.mi.jami.utils.CvTermUtils;
-import psidev.psi.mi.jami.utils.XrefUtils;
-import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
@@ -17,7 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @NodeEntity
-public class GraphBinaryInteraction implements BinaryInteractionEvidence {
+public class GraphBinaryInteractionEvidence implements BinaryInteractionEvidence {
 
     @GraphId
     protected Long graphId;
@@ -50,7 +45,11 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     private GraphInteractor interactorA;
     private GraphInteractor interactorB;
 
-    public GraphBinaryInteraction(BinaryInteractionEvidence binaryInteractionEvidence) {
+    public GraphBinaryInteractionEvidence(){
+
+    }
+
+    public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         setImexId(binaryInteractionEvidence.getImexId());
         setExperiment(binaryInteractionEvidence.getExperiment());
         setAvailability(binaryInteractionEvidence.getAvailability());
@@ -79,7 +78,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     }
 
     public void setImexId(String imexId) {
-         this.imexId = imexId;
+        this.imexId = imexId;
 
     }
 
@@ -114,14 +113,14 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             if (experiment instanceof GraphExperiment) {
                 this.experiment = (GraphExperiment) experiment;
             } else {
-                this.experiment = new GraphCvTerm(experiment);
+                this.experiment = new GraphExperiment(experiment);
             }
         } else {
             this.experiment = null;
         }
     }
 
- // dummy method for interface
+    // dummy method for interface
     public void setExperimentAndAddInteractionEvidence(Experiment experiment) {
         /*if (this.experiment != null) {
             this.experiment.removeInteractionEvidence(this);
@@ -133,17 +132,16 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     }
 
     public Collection<GraphConfidence> getConfidences() {
-        if(this.confidences==null){
-            this.confidences=new ArrayList<GraphConfidence>();
+        if (this.confidences == null) {
+            this.confidences = new ArrayList<GraphConfidence>();
         }
-         return this.confidences;
+        return this.confidences;
     }
 
     public void setConfidences(Collection<Confidence> confidences) {
-        if(confidences!=null) {
+        if (confidences != null) {
             this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences);
-        }
-        else{
+        } else {
             this.confidences = new ArrayList<GraphConfidence>();
         }
     }
@@ -165,17 +163,17 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     }
 
     public Collection<GraphParameter> getParameters() {
-        if(this.parameters==null){
-            this.parameters=new ArrayList<GraphParameter>();
+        if (this.parameters == null) {
+            this.parameters = new ArrayList<GraphParameter>();
         }
         return this.parameters;
     }
 
     public void setParameters(Collection<Parameter> parameters) {
-        if(parameters!=null) {
+        if (parameters != null) {
             this.parameters = CollectionAdaptor.convertParameterIntoGraphModel(parameters);
-        }else{
-            this.parameters=new ArrayList<GraphParameter>();
+        } else {
+            this.parameters = new ArrayList<GraphParameter>();
         }
     }
 
@@ -249,69 +247,65 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     }
 
     public void setRigid(String rigid) {
-         this.rigid = rigid;
+        this.rigid = rigid;
     }
 
     public Collection<GraphXref> getIdentifiers() {
-        if(this.identifiers==null){
-            this.identifiers=new ArrayList<GraphXref>();
+        if (this.identifiers == null) {
+            this.identifiers = new ArrayList<GraphXref>();
         }
         return this.identifiers;
     }
 
     public void setIdentifiers(Collection<Xref> identifiers) {
-        if(identifiers!=null) {
+        if (identifiers != null) {
             this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
-        }
-        else{
+        } else {
             this.identifiers = new ArrayList<GraphXref>();
         }
     }
 
     public Collection<GraphXref> getXrefs() {
-        if(this.xrefs==null){
-            this.xrefs=new ArrayList<GraphXref>();
+        if (this.xrefs == null) {
+            this.xrefs = new ArrayList<GraphXref>();
         }
-         return this.xrefs;
+        return this.xrefs;
     }
 
     public void setXrefs(Collection<Xref> xrefs) {
-        if(xrefs!=null) {
+        if (xrefs != null) {
             this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
-        }
-        else{
+        } else {
             this.xrefs = new ArrayList<GraphXref>();
         }
     }
 
     public Collection<GraphChecksum> getChecksums() {
-        if(this.checksums==null){
-            this.checksums=new ArrayList<GraphChecksum>();
+        if (this.checksums == null) {
+            this.checksums = new ArrayList<GraphChecksum>();
         }
-          return this.checksums;
+        return this.checksums;
     }
 
     public void setChecksums(Collection<Checksum> checksums) {
-        if(checksums!=null) {
+        if (checksums != null) {
             this.checksums = CollectionAdaptor.convertChecksumIntoGraphModel(checksums);
-        }
-        else{
+        } else {
             this.checksums = new ArrayList<GraphChecksum>();
         }
     }
 
     public Collection<GraphAnnotation> getAnnotations() {
-        if(this.annotations==null){
-            this.annotations=new ArrayList<GraphAnnotation>();
+        if (this.annotations == null) {
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
-          return this.annotations;
+        return this.annotations;
     }
 
     public void setAnnotations(Collection<Annotation> annotations) {
-        if(annotations!=null) {
+        if (annotations != null) {
             this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
-        }
-        else{
+        } else {
             this.annotations = new ArrayList<GraphAnnotation>();
         }
     }
@@ -349,33 +343,31 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     }
 
     public Collection<GraphParticipantEvidence> getParticipants() {
-        if(this.participants==null){
-            this.participants=new ArrayList<GraphParticipantEvidence>();
+        if (this.participants == null) {
+            this.participants = new ArrayList<GraphParticipantEvidence>();
         }
-         return participants;
+        return participants;
     }
 
     public void setParticipants(Collection<ParticipantEvidence> participants) {
-        if(participants!=null) {
-            this.participants = CollectionAdaptor.convertAnnotationIntoGraphModel(participants);
-        }
-        else{
+        if (participants != null) {
+            this.participants = CollectionAdaptor.convertParticipantEvidenceIntoGraphModel(participants);
+        } else {
             this.participants = new ArrayList<GraphParticipantEvidence>();
         }
     }
 
     public Collection<GraphVariableParameterValueSet> getVariableParameterValues() {
-        if(this.variableParameterValueSets==null){
-            this.variableParameterValueSets=new ArrayList<GraphVariableParameterValueSet>();
+        if (this.variableParameterValueSets == null) {
+            this.variableParameterValueSets = new ArrayList<GraphVariableParameterValueSet>();
         }
         return this.variableParameterValueSets;
     }
 
     public void setVariableParameterValueSets(Collection<VariableParameterValueSet> variableParameterValueSets) {
-        if(variableParameterValueSets!=null) {
-            this.variableParameterValueSets = CollectionAdaptor.convertvariableParameterValueIntoGraphModel(variableParameterValueSets)
-        }
-        else{
+        if (variableParameterValueSets != null) {
+            this.variableParameterValueSets = CollectionAdaptor.convertVariableParameterValueSetIntoGraphModel(variableParameterValueSets);
+        } else {
             this.variableParameterValueSets = new ArrayList<GraphVariableParameterValueSet>();
         }
     }
@@ -465,6 +457,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             rigid = added;
         }*/
     }
+
     // dummy method for the interface
     protected void processRemovedChecksumEvent(Checksum removed) {
         /*if (rigid == removed) {
@@ -476,6 +469,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
     protected void clearPropertiesLinkedToChecksums() {
         /*rigid = null;*/
     }
+
     // dummy method for the interface
     protected void processAddedXrefEvent(Xref added) {
 
@@ -487,6 +481,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             }
         }*/
     }
+
     // dummy method for the interface
     protected void processRemovedXrefEvent(Xref removed) {
         // the removed identifier is pubmed
@@ -497,6 +492,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             }
         }*/
     }
+
     // dummy method for the interface
     protected void clearPropertiesLinkedToXrefs() {
         /*imexId = null;*/
@@ -523,7 +519,9 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }
     }
 
-    *//**
+    */
+
+    /**
      * Experimental interaction Xref list
      *//*
     private class ExperimentalInteractionXrefList extends AbstractListHavingProperties<Xref> {
@@ -547,7 +545,6 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             clearPropertiesLinkedToXrefs();
         }
     }*/
-
     @Override
     public String toString() {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");

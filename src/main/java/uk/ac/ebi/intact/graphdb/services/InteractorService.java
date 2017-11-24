@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psidev.psi.mi.jami.model.Interactor;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
 
@@ -36,7 +36,7 @@ public class InteractorService {
             nodes.add(map("identifier", interactorB.getPreferredIdentifier().getDatabase(), "label", "interactorB"));
             int target = i;
             i++;
-            for (GraphBinaryInteraction interaction : interactorB.getInteractions()) {
+            for (GraphBinaryInteractionEvidence interaction : interactorB.getInteractions()) {
                 Map<String, Object> interactorA = map("identifier", interaction.getInteractorA().getPreferredIdentifier().getId(), "label", "interactorA");
                 int source = nodes.indexOf(interactorA);
                 if (source == -1) {

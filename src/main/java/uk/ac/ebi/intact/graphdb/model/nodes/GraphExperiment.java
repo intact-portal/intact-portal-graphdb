@@ -3,7 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.utils.CvTermUtils;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,20 +14,30 @@ public class GraphExperiment implements Experiment {
     @GraphId
     protected Long id;
 
-    private Publication publication;
-    private Collection<Xref> xrefs;
-    private Collection<Annotation> annotations;
-    private CvTerm interactionDetectionMethod;
-    private Organism hostOrganism;
-    private Collection<InteractionEvidence> interactions;
+    private GraphPublication publication;
+    private Collection<GraphXref> xrefs;
+    private Collection<GraphAnnotation> annotations;
+    private GraphCvTerm interactionDetectionMethod;
+    private GraphOrganism hostOrganism;
+    //private Collection<InteractionEvidence> interactions;
 
-    private Collection<Confidence> confidences;
-    private Collection<VariableParameter> variableParameters;
+    private Collection<GraphConfidence> confidences;
+    private Collection<GraphVariableParameter> variableParameters;
 
     public GraphExperiment() {
     }
 
-    public GraphExperiment(Publication publication) {
+    public GraphExperiment(Experiment experiment) {
+        setPublication(experiment.getPublication());
+        setXrefs(experiment.getXrefs());
+        setAnnotations(experiment.getAnnotations());
+        setInteractionDetectionMethod(experiment.getInteractionDetectionMethod());
+        setHostOrganism(experiment.getHostOrganism());
+        setConfidences(experiment.getConfidences());
+        setVariableParameters(experiment.getVariableParameters());
+    }
+
+/*    public GraphExperiment(Publication publication) {
         this.publication = publication;
         this.interactionDetectionMethod = CvTermUtils.createUnspecifiedMethod();
     }
@@ -44,9 +54,9 @@ public class GraphExperiment implements Experiment {
     public GraphExperiment(Publication publication, CvTerm interactionDetectionMethod, Organism organism) {
         this(publication, interactionDetectionMethod);
         this.hostOrganism = organism;
-    }
+    }*/
 
-    protected void initialiseXrefs() {
+    /*protected void initialiseXrefs() {
         this.xrefs = new ArrayList<Xref>();
     }
 
@@ -54,9 +64,9 @@ public class GraphExperiment implements Experiment {
         this.annotations = new ArrayList<Annotation>();
     }
 
-    protected void initialiseInteractions() {
+    *//*protected void initialiseInteractions() {
         this.interactions = new ArrayList<InteractionEvidence>();
-    }
+    }*//*
 
 
     protected void initialiseConfidences() {
@@ -66,14 +76,22 @@ public class GraphExperiment implements Experiment {
     protected void initialiseVariableParameters() {
         this.variableParameters = new ArrayList<VariableParameter>();
     }
-
+*/
 
     public Publication getPublication() {
         return this.publication;
     }
 
     public void setPublication(Publication publication) {
-        this.publication = publication;
+        if (publication != null) {
+            if (publication instanceof GraphPublication) {
+                this.publication = (GraphPublication) publication;
+            } else {
+                this.publication = new GraphPublication(publication);
+            }
+        } else {
+            this.publication = null;
+        }
     }
 
     public void setPublicationAndAddExperiment(Publication publication) {
@@ -86,36 +104,64 @@ public class GraphExperiment implements Experiment {
         }
     }
 
-    public Collection<Xref> getXrefs() {
-        if (xrefs == null) {
-            initialiseXrefs();
+    public Collection<GraphXref> getXrefs() {
+        if (this.xrefs == null) {
+            this.xrefs = new ArrayList<GraphXref>();
         }
         return this.xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
-        if (annotations == null) {
-            initialiseAnnotations();
+    public void setXrefs(Collection<Xref> xrefs) {
+        if (xrefs != null) {
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+        } else {
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+    }
+
+    public Collection<GraphAnnotation> getAnnotations() {
+        if (this.annotations == null) {
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
         return this.annotations;
     }
 
-    public Collection<Confidence> getConfidences() {
-        if (confidences == null) {
-            initialiseConfidences();
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if (annotations != null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        } else {
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
-        return confidences;
+    }
+
+    public Collection<GraphConfidence> getConfidences() {
+        if (this.confidences == null) {
+            this.confidences = new ArrayList<GraphConfidence>();
+        }
+        return this.confidences;
+    }
+
+    public void setConfidences(Collection<Confidence> confidences) {
+        if (confidences != null) {
+            this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences);
+        } else {
+            this.confidences = new ArrayList<GraphConfidence>();
+        }
     }
 
     public CvTerm getInteractionDetectionMethod() {
         return this.interactionDetectionMethod;
     }
 
-    public void setInteractionDetectionMethod(CvTerm term) {
-        if (term == null) {
-            this.interactionDetectionMethod = CvTermUtils.createUnspecifiedMethod();
+    public void setInteractionDetectionMethod(CvTerm interactionDetectionMethod) {
+        if (interactionDetectionMethod != null) {
+            if (interactionDetectionMethod instanceof GraphCvTerm) {
+                this.interactionDetectionMethod = (GraphCvTerm) interactionDetectionMethod;
+            } else {
+                this.interactionDetectionMethod = new GraphCvTerm(interactionDetectionMethod);
+            }
         } else {
-            this.interactionDetectionMethod = term;
+            this.interactionDetectionMethod = null;
         }
     }
 
@@ -123,15 +169,24 @@ public class GraphExperiment implements Experiment {
         return this.hostOrganism;
     }
 
-    public void setHostOrganism(Organism organism) {
-        this.hostOrganism = organism;
+    public void setHostOrganism(Organism hostOrganism) {
+        if (hostOrganism != null) {
+            if (hostOrganism instanceof GraphOrganism) {
+                this.hostOrganism = (GraphOrganism) hostOrganism;
+            } else {
+                this.hostOrganism = new GraphOrganism(hostOrganism);
+            }
+        } else {
+            this.hostOrganism = null;
+        }
     }
 
     public Collection<InteractionEvidence> getInteractionEvidences() {
-        if (interactions == null) {
+        /*if (interactions == null) {
             initialiseInteractions();
-        }
-        return this.interactions;
+        }*/
+        //  return this.interactions;
+        return null;
     }
 
     public boolean addInteractionEvidence(InteractionEvidence evidence) {
@@ -186,22 +241,30 @@ public class GraphExperiment implements Experiment {
         return removed;
     }
 
-    public Collection<VariableParameter> getVariableParameters() {
-        if (variableParameters == null) {
-            initialiseVariableParameters();
+    public Collection<GraphVariableParameter> getVariableParameters() {
+        if (this.variableParameters == null) {
+            this.variableParameters = new ArrayList<GraphVariableParameter>();
         }
         return variableParameters;
     }
 
+    public void setVariableParameters(Collection<VariableParameter> variableParameters) {
+        if (variableParameters != null) {
+            this.variableParameters = CollectionAdaptor.convertVariableParameterIntoGraphModel(variableParameters);
+        } else {
+            this.variableParameters = new ArrayList<GraphVariableParameter>();
+        }
+    }
+
     public boolean addVariableParameter(VariableParameter variableParameter) {
-        if (variableParameter == null) {
+        /*if (variableParameter == null) {
             return false;
         }
 
         if (getVariableParameters().add(variableParameter)) {
             variableParameter.setExperiment(this);
             return true;
-        }
+        }*/
         return false;
     }
 

@@ -264,28 +264,28 @@ public class GraphCvTerm implements CvTerm {
                         (getPARIdentifier() != null ? getPARIdentifier() : "-"))) + " (" + getShortName() + ")";
     }
 
-/*    private class CvTermIdentifierList extends AbstractListHavingProperties<Xref> {
-        public CvTermIdentifierList() {
-            super();
+    /*    private class CvTermIdentifierList extends AbstractListHavingProperties<Xref> {
+            public CvTermIdentifierList() {
+                super();
+            }
+
+            @Override
+            protected void processAddedObjectEvent(Xref added) {
+                processAddedIdentifierEvent(added);
+            }
+
+            @Override
+            protected void processRemovedObjectEvent(Xref removed) {
+                processRemovedIdentifierEvent(removed);
+            }
+
+            @Override
+            protected void clearProperties() {
+                clearPropertiesLinkedToIdentifiers();
+            }
         }
 
-        @Override
-        protected void processAddedObjectEvent(Xref added) {
-            processAddedIdentifierEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(Xref removed) {
-            processRemovedIdentifierEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToIdentifiers();
-        }
-    }
-
-*/
+    */
     public List<String> getTypeLabels() {
         return typeLabels;
     }

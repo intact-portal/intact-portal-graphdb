@@ -37,7 +37,21 @@ public class CollectionAdaptor {
         return confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
     }
 
-    public static Collection<GraphVariableParameterValueSet> convertvariableParameterValueIntoGraphModel(Collection<VariableParameterValueSet> variableParameterValueSets){
+    public static Collection<GraphVariableParameterValueSet> convertVariableParameterValueSetIntoGraphModel(Collection<VariableParameterValueSet> variableParameterValueSets){
         return variableParameterValueSets.stream().map(GraphVariableParameterValueSet::new).collect(Collectors.toList());
     }
+
+    public static Collection<GraphVariableParameterValue> convertVariableParameterValueIntoGraphModel(Collection<VariableParameterValue> variableParameterValue){
+        return variableParameterValue.stream().map(GraphVariableParameterValue::new).collect(Collectors.toList());
+    }
+
+    public static Collection<GraphVariableParameter> convertVariableParameterIntoGraphModel(Collection<VariableParameter> variableParameters){
+        return variableParameters.stream().map(GraphVariableParameter::new).collect(Collectors.toList());
+    }
+
+    public static Collection<GraphParticipantEvidence> convertParticipantEvidenceIntoGraphModel(Collection<ParticipantEvidence> participantEvidences){
+        return participantEvidences.stream().map(GraphParticipantEvidence::new).collect(Collectors.toList());
+    }
+
+
 }
