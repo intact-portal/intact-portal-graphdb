@@ -37,7 +37,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     private Collection<GraphRange> ranges;
     private Collection<GraphAlias> aliases;
     private GraphCvTerm role;
-    private GraphParticipantEvidence participant;
+    private GraphExperimentalEntity participant;
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
     public GraphFeatureEvidence(){
@@ -45,7 +45,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     }
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence){
-       setDetection(featureEvidence.getDetectionMethods());
+       setDetectionMethods(featureEvidence.getDetectionMethods());
        setParameters(featureEvidence.getParameters());
         setShortName(featureEvidence.getShortName());
         setFullName(featureEvidence.getFullName());
@@ -55,6 +55,10 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setAnnotations(featureEvidence.getAnnotations());
         setType(featureEvidence.getType());
         setRanges(featureEvidence.getRanges());
+        setAliases(featureEvidence.getAliases());
+        setRole(featureEvidence.getRole());
+        setParticipant(featureEvidence.getParticipant());
+        setLinkedFeatures(featureEvidence.getLinkedFeatures());
     }
 
     public Collection<GraphCvTerm> getDetectionMethods() {
@@ -64,9 +68,9 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         return this.detectionMethods;
     }
 
-    public void setDetectionMethods(Collection<GraphCvTerm> detectionMethods) {
+    public void setDetectionMethods(Collection<CvTerm> detectionMethods) {
         if (detectionMethods != null) {
-            this.detectionMethods = CollectionAdaptor.convert(detectionMethods);
+            this.detectionMethods = CollectionAdaptor.convertCvTermIntoGraphModel(detectionMethods);
         } else {
             this.detectionMethods = new ArrayList<GraphCvTerm>();
         }
@@ -298,23 +302,35 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         }
     }
 
-    public Collection<Range> getRanges() {
-        if (ranges == null){
-            initialiseRanges();
+    public Collection<GraphRange> getRanges() {
+        if (this.ranges == null) {
+            this.ranges = new ArrayList<GraphRange>();
         }
         return this.ranges;
     }
 
-    public void setRanges(Collection<GraphRange> ranges) {
-        this.ranges = ranges;
+    public void setRanges(Collection<Range> ranges) {
+        if (ranges != null) {
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges);
+        } else {
+            this.ranges = new ArrayList<GraphRange>();
+        }
     }
 
     public CvTerm getRole() {
         return this.role;
     }
 
-    public void setRole(CvTerm effect) {
-        this.role = effect;
+    public void setRole(CvTerm role) {
+        if (role != null) {
+            if (role instanceof GraphCvTerm) {
+                this.role = (GraphCvTerm) role;
+            } else {
+                this.role = new GraphCvTerm(role);
+            }
+        } else {
+            this.role = null;
+        }
     }
 
     @Override
@@ -324,40 +340,56 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     @Override
     public void setParticipant(ExperimentalEntity participant) {
-
+        if (participant != null) {
+            if (participant instanceof GraphExperimentalEntity) {
+                this.participant = (GraphExperimentalEntity) participant;
+            } else {
+                this.participant = new GraphExperimentalEntity(participant);
+            }
+        } else {
+            this.participant = null;
+        }
     }
 
     @Override
     public void setParticipantAndAddFeature(ExperimentalEntity participant) {
-        if (this.participant != null){
+        /*if (this.participant != null){
             this.participant.removeFeature(this);
         }
 
         if (participant != null){
             participant.addFeature(this);
-        }
+        }*/
     }
 
-    public Collection<FeatureEvidence> getLinkedFeatures() {
-        if(linkedFeatures == null){
-            initialiseLinkedFeatures();
+    public Collection<GraphFeatureEvidence> getLinkedFeatures() {
+        if (this.linkedFeatures == null) {
+            this.linkedFeatures = new ArrayList<GraphFeatureEvidence>();
         }
         return this.linkedFeatures;
     }
 
-    public void setLinkedFeatures(Collection<GraphFeatureEvidence> linkedFeatures) {
-        this.linkedFeatures = linkedFeatures;
-    }
-
-    public Collection<Alias> getAliases() {
-        if (this.aliases == null){
-            initialiseAliases();
+    public void setLinkedFeatures(Collection<FeatureEvidence> linkedFeatures) {
+        if (linkedFeatures != null) {
+            this.linkedFeatures = CollectionAdaptor.convertFeatureEvidenceIntoGraphModel(linkedFeatures);
+        } else {
+            this.linkedFeatures = new ArrayList<GraphFeatureEvidence>();
         }
-        return aliases;
     }
 
-    public void setAliases(Collection<GraphAlias> aliases) {
-        this.aliases = aliases;
+    public Collection<GraphAlias> getAliases() {
+        if (aliases == null) {
+            this.aliases = new ArrayList<GraphAlias>();
+        }
+        return this.aliases;
+    }
+
+    public void setAliases(Collection<Alias> aliases) {
+        if (aliases != null) {
+            this.aliases = CollectionAdaptor.convertAliasIntoGraphModel(aliases);
+        } else {
+            this.aliases = new ArrayList<GraphAlias>();
+        }
     }
 
 

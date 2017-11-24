@@ -58,4 +58,13 @@ public class CollectionAdaptor {
     public static Collection<GraphCausalRelationship> convertCausalRelationshipIntoGraphModel(Collection<CausalRelationship> causalRelationships) {
         return causalRelationships.stream().map(GraphCausalRelationship::new).collect(Collectors.toList());
     }
+
+    public static Collection<GraphRange> convertRangeIntoGraphModel(Collection<Range> ranges) {
+        return ranges.stream().map(GraphRange::new).collect(Collectors.toList());
+    }
+
+    public static Collection<GraphFeatureEvidence> convertFeatureEvidenceIntoGraphModel(Collection<FeatureEvidence> featureEvidences) {
+        return featureEvidences.stream().map(GraphFeatureEvidence::new).collect(Collectors.toList());
+    }
+}
 }
