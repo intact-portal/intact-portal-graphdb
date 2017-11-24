@@ -12,16 +12,18 @@ public class GraphChecksum implements Checksum {
     @GraphId
     protected Long id;
 
-    private CvTerm method;
+    private GraphCvTerm method;
     private String value;
 
     public GraphChecksum() {
     }
 
     public GraphChecksum(Checksum checksum) {
+        setMethod(checksum.getMethod());
+        setValue(checksum.getValue());
     }
 
-    public GraphChecksum(CvTerm method, String value){
+   /* public GraphChecksum(CvTerm method, String value){
         if (method == null){
             throw new IllegalArgumentException("The method is required and cannot be null");
         }
@@ -30,14 +32,30 @@ public class GraphChecksum implements Checksum {
             throw new IllegalArgumentException("The checksum value is required and cannot be null");
         }
         this.value = value;
-    }
+    }*/
 
     public CvTerm getMethod() {
         return this.method;
     }
 
+    public void setMethod(CvTerm method) {
+        if (method != null) {
+            if (method instanceof GraphCvTerm) {
+                this.method = (GraphCvTerm) method;
+            } else {
+                this.method = new GraphCvTerm(method);
+            }
+        } else {
+            this.method = null;
+        }
+    }
+
     public String getValue() {
         return this.value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override

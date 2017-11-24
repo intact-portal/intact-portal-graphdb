@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
@@ -78,6 +79,11 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         return this.imexId != null ? this.imexId : null;
     }
 
+    public void setImexId(String imexId) {
+         this.imexId = imexId;
+
+    }
+
     // Dummy Method because interface wants it
     public void assignImexId(String identifier) {
 
@@ -115,6 +121,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
             this.experiment = null;
         }
     }
+
  // dummy method for interface
     public void setExperimentAndAddInteractionEvidence(Experiment experiment) {
         /*if (this.experiment != null) {
@@ -126,12 +133,20 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }*/
     }
 
-    public Collection<? extends VariableParameterValueSet> getVariableParameterValues() {
-        return this.variableParameterValueSets;
+    public Collection<GraphConfidence> getConfidences() {
+        if(this.confidences==null){
+            this.confidences=new ArrayList<GraphConfidence>();
+        }
+         return this.confidences;
     }
 
-    public Collection<? extends Confidence> getConfidences() {
-         return this.confidences;
+    public void setConfidences(Collection<Confidence> confidences) {
+        if(confidences!=null) {
+            this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences);
+        }
+        else{
+            this.confidences = new ArrayList<GraphConfidence>();
+        }
     }
 
     public String getAvailability() {
@@ -150,8 +165,19 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         this.isNegative = negative;
     }
 
-    public Collection<? extends Parameter> getParameters() {
+    public Collection<GraphParameter> getParameters() {
+        if(this.parameters==null){
+            this.parameters=new ArrayList<GraphParameter>();
+        }
         return this.parameters;
+    }
+
+    public void setParameters(Collection<Parameter> parameters) {
+        if(parameters!=null) {
+            this.parameters = CollectionAdaptor.convertParameterIntoGraphModel(parameters);
+        }else{
+            this.parameters=new ArrayList<GraphParameter>();
+        }
     }
 
     public boolean isInferred() {
@@ -227,20 +253,68 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
          this.rigid = rigid;
     }
 
-    public Collection<? extends Xref> getIdentifiers() {
+    public Collection<GraphXref> getIdentifiers() {
+        if(this.identifiers==null){
+            this.identifiers=new ArrayList<GraphXref>();
+        }
         return this.identifiers;
     }
 
-    public Collection<? extends Xref> getXrefs() {
+    public void setIdentifiers(Collection<Xref> identifiers) {
+        if(identifiers!=null) {
+            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
+        }
+        else{
+            this.identifiers = new ArrayList<GraphXref>();
+        }
+    }
+
+    public Collection<GraphXref> getXrefs() {
+        if(this.xrefs==null){
+            this.xrefs=new ArrayList<GraphXref>();
+        }
          return this.xrefs;
     }
 
-    public Collection<? extends Checksum> getChecksums() {
+    public void setXrefs(Collection<Xref> xrefs) {
+        if(xrefs!=null) {
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+        }
+        else{
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+    }
+
+    public Collection<GraphChecksum> getChecksums() {
+        if(this.checksums==null){
+            this.checksums=new ArrayList<GraphChecksum>();
+        }
           return this.checksums;
     }
 
-    public Collection<? extends Annotation> getAnnotations() {
+    public void setChecksums(Collection<Checksum> checksums) {
+        if(checksums!=null) {
+            this.checksums = CollectionAdaptor.convertChecksumIntoGraphModel(checksums);
+        }
+        else{
+            this.checksums = new ArrayList<GraphChecksum>();
+        }
+    }
+
+    public Collection<GraphAnnotation> getAnnotations() {
+        if(this.annotations==null){
+            this.annotations=new ArrayList<GraphAnnotation>();
+        }
           return this.annotations;
+    }
+
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if(annotations!=null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        }
+        else{
+            this.annotations = new ArrayList<GraphAnnotation>();
+        }
     }
 
     public Date getUpdatedDate() {
@@ -275,79 +349,11 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }
     }
 
-    public Collection<? extends ParticipantEvidence> getParticipants() {
+    public Collection<GraphParticipantEvidence> getParticipants() {
+        if(this.participants==null){
+            this.participants=new ArrayList<GraphParticipantEvidence>();
+        }
          return participants;
-    }
-
-    public void setImexId(String imexId) {
-         this.imexId = imexId;
-
-    }
-
-    public void setParameters(Collection<Parameter> parameters) {
-        if(parameters!=null) {
-            this.parameters = CollectionAdaptor.convertParameterIntoGraphModel(parameters);
-        }else{
-            this.parameters=new ArrayList<GraphParameter>();
-        }
-    }
-
-    public void setConfidences(Collection<Confidence> confidences) {
-        if(confidences!=null) {
-            this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences)
-        }
-        else{
-            this.confidences = new ArrayList<GraphConfidence>();
-        }
-    }
-
-    public Collection<GraphVariableParameterValueSet> getVariableParameterValueSets() {
-        return variableParameterValueSets;
-    }
-
-    public void setVariableParameterValueSets(Collection<VariableParameterValueSet> variableParameterValueSets) {
-        if(variableParameterValueSets!=null) {
-            this.variableParameterValueSets = CollectionAdaptor.convertvariableParameterValueIntoGraphModel(variableParameterValueSets)
-        }
-        else{
-            this.variableParameterValueSets = new ArrayList<GraphVariableParameterValueSet>();
-        }
-    }
-
-    public void setChecksums(Collection<Checksum> checksums) {
-        if(checksums!=null) {
-            this.checksums = CollectionAdaptor.convertChecksumIntoGraphModel(checksums)
-        }
-        else{
-            this.checksums = new ArrayList<GraphChecksum>();
-        }
-    }
-
-    public void setIdentifiers(Collection<Xref> identifiers) {
-        if(identifiers!=null) {
-            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
-        }
-        else{
-            this.identifiers = new ArrayList<GraphXref>();
-        }
-    }
-
-    public void setXrefs(Collection<Xref> xrefs) {
-        if(xrefs!=null) {
-            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
-        }
-        else{
-            this.xrefs = new ArrayList<GraphXref>();
-        }
-    }
-
-    public void setAnnotations(Collection<Annotation> annotations) {
-        if(annotations!=null) {
-            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
-        }
-        else{
-            this.annotations = new ArrayList<GraphAnnotation>();
-        }
     }
 
     public void setParticipants(Collection<ParticipantEvidence> participants) {
@@ -359,16 +365,20 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }
     }
 
-    public void setInteractors(Collection<GraphInteractor> interactors) {
-        this.interactors = interactors;
+    public Collection<GraphVariableParameterValueSet> getVariableParameterValues() {
+        if(this.variableParameterValueSets==null){
+            this.variableParameterValueSets=new ArrayList<GraphVariableParameterValueSet>();
+        }
+        return this.variableParameterValueSets;
     }
 
-    public void setInteractorA(GraphInteractor interactorA) {
-        this.interactorA = interactorA;
-    }
-
-    public void setInteractorB(GraphInteractor interactorB) {
-        this.interactorB = interactorB;
+    public void setVariableParameterValueSets(Collection<VariableParameterValueSet> variableParameterValueSets) {
+        if(variableParameterValueSets!=null) {
+            this.variableParameterValueSets = CollectionAdaptor.convertvariableParameterValueIntoGraphModel(variableParameterValueSets)
+        }
+        else{
+            this.variableParameterValueSets = new ArrayList<GraphVariableParameterValueSet>();
+        }
     }
 
     // dummy method for the interface
@@ -394,6 +404,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }*/
         return false;
     }
+
     // dummy method for the interface
     public boolean addAllParticipants(Collection<? extends ParticipantEvidence> participants) {
         /*if (participants == null) {
@@ -408,6 +419,7 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         }*/
         return false;
     }
+
     // dummy method for the interface
     public boolean removeAllParticipants(Collection<? extends ParticipantEvidence> participants) {
         /*if (participants == null) {
@@ -427,12 +439,24 @@ public class GraphBinaryInteraction implements BinaryInteractionEvidence {
         return interactors;
     }
 
+    public void setInteractors(Collection<GraphInteractor> interactors) {
+        this.interactors = interactors;
+    }
+
     public GraphInteractor getInteractorA() {
         return interactorA;
     }
 
+    public void setInteractorA(GraphInteractor interactorA) {
+        this.interactorA = interactorA;
+    }
+
     public GraphInteractor getInteractorB() {
         return interactorB;
+    }
+
+    public void setInteractorB(GraphInteractor interactorB) {
+        this.interactorB = interactorB;
     }
 
     // dummy method for the interface

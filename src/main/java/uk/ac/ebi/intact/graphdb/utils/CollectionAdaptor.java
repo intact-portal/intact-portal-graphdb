@@ -28,7 +28,7 @@ public class CollectionAdaptor {
 
     }
 
-    public static Collection<GraphAlias> convertAliasIntoGraphModel(Collection<GraphAlias> aliases){
+    public static Collection<GraphAlias> convertAliasIntoGraphModel(Collection<Alias> aliases){
 
         List<GraphAlias> graphAliases = aliases.stream().map(GraphAlias::new).collect(Collectors.toList());
         return graphAliases;
