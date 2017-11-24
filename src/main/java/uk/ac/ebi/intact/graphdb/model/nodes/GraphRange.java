@@ -111,7 +111,16 @@ public class GraphRange implements Range {
     }
 
     public void setParticipant(Entity participant) {
-        this.participant = new GraphEntity(participant);
+        if (participant != null) {
+            if (participant instanceof GraphPosition) {
+                this.participant = (GraphEntity) participant;
+            } else {
+                this.participant = new GraphEntity(participant);
+            }
+        } else {
+            this.participant = null;
+        }
+
     }
 
     @Override
