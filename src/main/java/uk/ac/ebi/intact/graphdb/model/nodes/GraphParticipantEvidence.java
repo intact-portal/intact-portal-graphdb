@@ -27,7 +27,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
     private GraphInteractionEvidence interaction;
-    private Collection<GraphFeature> features;
+    private Collection<GraphFeatureEvidence> features;
     private Collection<GraphConfidence> confidences;
     private Collection<GraphParameter> parameters;
     private Collection<GraphCvTerm> identificationMethods;
@@ -204,9 +204,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
 
     @Override
-    public Collection<GraphFeature> getFeatures() {
+    public Collection<GraphFeatureEvidence> getFeatures() {
         if (features == null){
-            features = new ArrayList<GraphFeature>();
+            features = new ArrayList<GraphFeatureEvidence>();
         }
         return this.features;
     }
@@ -215,7 +215,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (features != null) {
             addAllFeatures(features);
         } else {
-            this.features = new ArrayList<GraphFeature>();
+            this.features = new ArrayList<GraphFeatureEvidence>();
         }
     }
 
@@ -225,7 +225,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             return false;
         }
 
-        if (getFeatures().add(new GraphFeature(feature))){
+        if (getFeatures().add(new GraphFeatureEvidence(feature))){
             feature.setParticipant(this);
             return true;
         }

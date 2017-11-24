@@ -1,4 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-public class GraphEntity implements Entity  {
+import psidev.psi.mi.jami.model.Entity;
+
+public class GraphEntity implements Entity {
 }
