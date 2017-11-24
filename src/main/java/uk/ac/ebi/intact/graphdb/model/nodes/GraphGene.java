@@ -6,7 +6,6 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Gene;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Xref;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
@@ -33,13 +32,21 @@ public class GraphGene extends GraphMolecule implements Gene {
     @GraphId
     protected Long id;
 
-    private Xref ensembl;
-    private Xref ensemblGenome;
-    private Xref entrezGeneId;
-    private Xref refseq;
+    private GraphXref ensembl;
+    private GraphXref ensemblGenome;
+    private GraphXref entrezGeneId;
+    private GraphXref refseq;
 
     public GraphGene() {
         super();
+    }
+
+    public GraphGene(Gene gene) {
+        super(gene);
+        setEnsembl(gene.getEnsembl());
+        setEnsemblGenome(gene.getEnsemblGenome());
+        setEntrezGeneId(gene.getEntrezGeneId());
+        setRefseq(gene.getRefseq());
     }
 
     public GraphGene(String name) {
@@ -84,42 +91,42 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public GraphGene(String name, CvTerm type, Xref ensembl) {
         super(name, type != null ? type : CvTermUtils.createGeneInteractorType());
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, String fullName, CvTerm type, Xref ensembl) {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType());
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, CvTerm type, Organism organism, Xref ensembl) {
         super(name, type != null ? type : CvTermUtils.createGeneInteractorType(), organism);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, String fullName, CvTerm type, Organism organism, Xref ensembl) {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), organism);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, CvTerm type, Xref uniqueId, Xref ensembl) {
         super(name, type != null ? type : CvTermUtils.createGeneInteractorType(), uniqueId);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, String fullName, CvTerm type, Xref uniqueId, Xref ensembl) {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), uniqueId);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, CvTerm type, Organism organism, Xref uniqueId, Xref ensembl) {
         super(name, type != null ? type : CvTermUtils.createGeneInteractorType(), organism, uniqueId);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, String fullName, CvTerm type, Organism organism, Xref uniqueId, Xref ensembl) {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), organism, uniqueId);
-        this.ensembl = ensembl;
+        this.ensembl = new GraphXref(ensembl);
     }
 
     public GraphGene(String name, Organism organism, String ensembl) {
@@ -152,13 +159,7 @@ public class GraphGene extends GraphMolecule implements Gene {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), organism);
     }
 
-
     @Override
-    /**
-     * Return the first ensembl identifier if provided, otherwise the first ensemblGenomes if provided, otherwise
-     * the first entrez/gene id if provided, otherwise the first refseq id if provided
-     * otherwise the first identifier in the list of identifiers
-     */
     public Xref getPreferredIdentifier() {
         return ensembl != null ? ensembl : (ensemblGenome != null ? ensemblGenome : (entrezGeneId != null ? entrezGeneId : (refseq != null ? refseq : super.getPreferredIdentifier())));
     }
@@ -178,7 +179,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.ensembl != null){
                 geneIdentifiers.removeOnly(this.ensembl);
             }
-            this.ensembl = new DefaultXref(ensemblDatabase, ac, identityQualifier);
+            this.ensembl = new GraphXref(ensemblDatabase, ac, identityQualifier);
             geneIdentifiers.addOnly(this.ensembl);
         }
         // remove all ensembl if the collection is not empty
@@ -203,7 +204,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.ensemblGenome != null){
                 geneIdentifiers.removeOnly(this.ensemblGenome);
             }
-            this.ensemblGenome = new DefaultXref(ensemblGenomesDatabase, ac, identityQualifier);
+            this.ensemblGenome = new GraphXref(ensemblGenomesDatabase, ac, identityQualifier);
             geneIdentifiers.addOnly(this.ensemblGenome);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -228,7 +229,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.entrezGeneId!= null){
                 geneIdentifiers.removeOnly(this.entrezGeneId);
             }
-            this.entrezGeneId = new DefaultXref(entrezDatabase, id, identityQualifier);
+            this.entrezGeneId = new GraphXref(entrezDatabase, id, identityQualifier);
             geneIdentifiers.addOnly(this.entrezGeneId);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -237,6 +238,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             this.entrezGeneId = null;
         }
     }
+
 
     public String getRefseq() {
         return this.refseq != null ? this.refseq.getId() : null;
@@ -253,7 +255,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.refseq!= null){
                 geneIdentifiers.removeOnly(this.refseq);
             }
-            this.refseq = new DefaultXref(refseqDatabase, ac, identityQualifier);
+            this.refseq = new GraphXref(refseqDatabase, ac, identityQualifier);
             geneIdentifiers.addOnly(this.refseq);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -270,15 +272,15 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (!XrefUtils.doesXrefHaveQualifier(ensembl, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the ensembl identifier is not set, we can set the ensembl identifier
                 if (ensembl == null){
-                    ensembl = added;
+                    ensembl = new GraphXref(added);
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    ensembl = added;
+                    ensembl = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current ensembl identifier is not a secondary object, we reset ensembl identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(ensembl, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    ensembl = added;
+                    ensembl = new GraphXref(added);
                 }
             }
         }
@@ -288,15 +290,15 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (!XrefUtils.doesXrefHaveQualifier(ensemblGenome, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the ensembl genomes Identifier is not set, we can set the ensembl genomes Identifier
                 if (ensemblGenome == null){
-                    ensemblGenome = added;
+                    ensemblGenome = new GraphXref(added);
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    ensemblGenome = added;
+                    ensemblGenome = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current ensembl genomes Identifier is not a secondary object, we reset ensembl genomes Identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(ensemblGenome, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    ensemblGenome = added;
+                    ensemblGenome = new GraphXref(added);
                 }
             }
         }
@@ -306,15 +308,15 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the entrez gene id is not set, we can set the entrez gene idr
                 if (entrezGeneId == null){
-                    entrezGeneId = added;
+                    entrezGeneId = new GraphXref(added);
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    entrezGeneId = added;
+                    entrezGeneId = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current entrez gene id is not a secondary object, we reset entrez gene id
                 else if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    entrezGeneId = added;
+                    entrezGeneId = new GraphXref(added);
                 }
             }
         }
@@ -324,15 +326,15 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the refseq id is not set, we can set the refseq id
                 if (refseq == null){
-                    refseq = added;
+                    refseq = new GraphXref(added);
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    refseq = added;
+                    refseq = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current refseq id is not a secondary object, we reset refseq id
-                else if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.SECONDARY_MI, Xref.SECONDARY)
+                else if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    refseq = added;
+                    refseq = new GraphXref(added);
                 }
             }
         }
@@ -340,16 +342,16 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         if (ensembl != null && ensembl.equals(removed)){
-            ensembl = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_MI, Xref.ENSEMBL);
+            ensembl = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_MI, Xref.ENSEMBL));
         }
         else if (ensemblGenome != null && ensemblGenome.equals(removed)){
-            ensemblGenome = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES);
+            ensemblGenome = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES));
         }
         else if (entrezGeneId != null && entrezGeneId.equals(removed)){
-            entrezGeneId = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE);
+            entrezGeneId = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE));
         }
         else if (refseq != null &&refseq.equals(removed)){
-            refseq = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ);
+            refseq = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ));
         }
     }
 
@@ -361,10 +363,6 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     @Override
-    /**
-     * Sets the interactor type.
-     * @throw IllegalArgumentException: If the give type is not gene (MI:0301)
-     */
     public void setInteractorType(CvTerm type) {
         if (type == null){
             super.setInteractorType(CvTermUtils.createGeneInteractorType());
@@ -383,18 +381,18 @@ public class GraphGene extends GraphMolecule implements Gene {
                                 (getRefseq() != null ? getRefseq() : super.toString()))));
     }
 
-    private class GeneIdentifierList extends AbstractListHavingProperties<Xref> {
+    private class GeneIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public GeneIdentifierList(){
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Xref added) {
+        protected void processAddedObjectEvent(GraphXref added) {
             processAddedIdentifierEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Xref removed) {
+        protected void processRemovedObjectEvent(GraphXref removed) {
             processRemovedIdentifierEvent(removed);
         }
 

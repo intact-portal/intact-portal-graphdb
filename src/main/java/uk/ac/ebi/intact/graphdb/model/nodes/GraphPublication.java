@@ -14,23 +14,23 @@ import java.util.*;
 public class GraphPublication implements Publication {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
     private String title;
     private String journal;
     private Date publicationDate;
     private List<String> authors;
-    private Collection<Xref> identifiers;
-    private Collection<Xref> xrefs;
-    private Collection<Annotation> annotations;
-    private Collection<Experiment> experiments;
+    private Collection<GraphXref> identifiers;
+    private Collection<GraphXref> xrefs;
+    private Collection<GraphAnnotation> annotations;
+    private Collection<GraphExperiment> experiments;
     private CurationDepth curationDepth;
     private Date releasedDate;
-    private Source source;
+    private GraphSource source;
 
-    private Xref pubmedId;
-    private Xref doi;
-    private Xref imexId;
+    private GraphXref pubmedId;
+    private GraphXref doi;
+    private GraphXref imexId;
 
     public GraphPublication(){
         this.curationDepth = CurationDepth.undefined;

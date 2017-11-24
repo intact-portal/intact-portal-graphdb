@@ -1,6 +1,5 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;

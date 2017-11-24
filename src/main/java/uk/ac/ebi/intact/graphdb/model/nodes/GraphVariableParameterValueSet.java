@@ -9,8 +9,9 @@ import psidev.psi.mi.jami.model.impl.DefaultVariableParameterValueSet;
 public class GraphVariableParameterValueSet extends DefaultVariableParameterValueSet {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
+    //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet){
 
     }

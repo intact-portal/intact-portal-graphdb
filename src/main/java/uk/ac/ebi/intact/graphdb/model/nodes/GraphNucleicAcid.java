@@ -6,7 +6,6 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.NucleicAcid;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Xref;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
@@ -17,8 +16,18 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @GraphId
     protected Long id;
 
-    private Xref ddbjEmblGenbank;
-    private Xref refseq;
+    private GraphXref ddbjEmblGenbank;
+    private GraphXref refseq;
+
+    public GraphNucleicAcid() {
+        super();
+    }
+
+    public GraphNucleicAcid(NucleicAcid nucleicAcid){
+        super(nucleicAcid);
+        setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
+        setRefseq(nucleicAcid.getRefseq());
+    }
 
     public GraphNucleicAcid(String name, CvTerm type) {
         super(name, type != null ? type : CvTermUtils.createNucleicAcidInteractorType());
@@ -109,7 +118,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (this.ddbjEmblGenbank != null){
                 nucleicAcidIdentifiers.removeOnly(this.ddbjEmblGenbank);
             }
-            this.ddbjEmblGenbank = new DefaultXref(ddbjEmblGenbankDatabase, id, identityQualifier);
+            this.ddbjEmblGenbank = new GraphXref(ddbjEmblGenbankDatabase, id, identityQualifier);
             nucleicAcidIdentifiers.addOnly(this.ddbjEmblGenbank);
         }
         // remove all ddbj/embl/genbank if the collection is not empty
@@ -134,7 +143,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (this.refseq!= null){
                 nucleicAcidIdentifiers.removeOnly(this.refseq);
             }
-            this.refseq = new DefaultXref(refseqDatabase, id, identityQualifier);
+            this.refseq = new GraphXref(refseqDatabase, id, identityQualifier);
             nucleicAcidIdentifiers.addOnly(this.refseq);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -151,15 +160,15 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (!XrefUtils.doesXrefHaveQualifier(ddbjEmblGenbank, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the ddbj/embl/genbank identifier is not set, we can set the ddbj/embl/genbank identifier
                 if (ddbjEmblGenbank == null){
-                    ddbjEmblGenbank = added;
+                    ddbjEmblGenbank = new GraphXref(added);
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    ddbjEmblGenbank = added;
+                    ddbjEmblGenbank = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current ddbj/embl/genbank identifier is not a secondary object, we reset ddbj/embl/genbank identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(ddbjEmblGenbank, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    ddbjEmblGenbank = added;
+                    ddbjEmblGenbank = new GraphXref(added);
                 }
             }
         }
@@ -169,15 +178,16 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)){
                 // the refseq id is not set, we can set the refseq id
                 if (refseq == null){
-                    refseq = added;
+                    refseq = new GraphXref(added);
+
                 }
                 else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    refseq = added;
+                    refseq = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current refseq id is not a secondary object, we reset refseq id
                 else if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.SECONDARY_MI, Xref.SECONDARY)
                         && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    refseq = added;
+                    refseq = new GraphXref(added);
                 }
             }
         }
@@ -185,10 +195,16 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         if (ddbjEmblGenbank != null && ddbjEmblGenbank.equals(removed)){
-            ddbjEmblGenbank = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.DDBJ_EMBL_GENBANK_MI, Xref.DDBJ_EMBL_GENBANK);
+            ddbjEmblGenbank = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(
+                    getIdentifiers(),
+                    Xref.DDBJ_EMBL_GENBANK_MI,
+                    Xref.DDBJ_EMBL_GENBANK));
         }
         else if (refseq != null && refseq.equals(removed)){
-            refseq = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ);
+            refseq =  new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(
+                    getIdentifiers(),
+                    Xref.REFSEQ_MI,
+                    Xref.REFSEQ));
         }
     }
 
@@ -218,18 +234,18 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
                 : (getRefseq() != null ? getRefseq() : super.toString()));
     }
 
-    private class NucleicAcidIdentifierList extends AbstractListHavingProperties<Xref> {
+    private class NucleicAcidIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public NucleicAcidIdentifierList(){
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Xref added) {
+        protected void processAddedObjectEvent(GraphXref added) {
             processAddedIdentifiersEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Xref removed) {
+        protected void processRemovedObjectEvent(GraphXref removed) {
             processRemovedIdentifierEvent(removed);
         }
 
