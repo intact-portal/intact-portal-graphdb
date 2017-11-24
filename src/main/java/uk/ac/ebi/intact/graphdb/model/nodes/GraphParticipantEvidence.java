@@ -26,7 +26,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphOrganism expressedIn;
     private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
-    private GraphBinaryInteraction interaction;
+    private GraphInteractionEvidence interaction;
     private Collection<GraphFeature> features;
     private Collection<GraphConfidence> confidences;
     private Collection<GraphParameter> parameters;
@@ -184,8 +184,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (interaction != null) {
             if (interaction instanceof GraphBinaryInteractionEvidence) {
                 this.interaction = (GraphBinaryInteractionEvidence) interaction;
+            } else if (interaction instanceof GraphInteractionEvidence) {
+                this.interaction = (GraphInteractionEvidence) interaction;
+            } else if (interaction instanceof BinaryInteractionEvidence) {
+                this.interaction = new GraphBinaryInteractionEvidence((BinaryInteractionEvidence) interaction);
             } else {
-                this.interaction = new GraphBinaryInteractionEvidence(interaction);
+                this.interaction = new GraphInteractionEvidence(interaction);
             }
         } else {
             this.interaction = null;
@@ -194,7 +198,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     @Override
-    public BinaryInteractionEvidence getInteraction() {
+    public InteractionEvidence getInteraction() {
         return this.interaction;
     }
 
