@@ -13,53 +13,31 @@ import java.util.stream.Collectors;
  */
 public class CollectionAdaptor {
 
-
     public static Collection<GraphXref> convertXrefIntoGraphModel(Collection<Xref> xrefs){
-
-        List<GraphXref> graphXrefs = xrefs.stream().map(GraphXref::new).collect(Collectors.toList());
-        return graphXrefs;
-
+        return xrefs.stream().map(GraphXref::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphChecksum> convertChecksumIntoGraphModel(Collection<Checksum> checksums){
-
-        List<GraphChecksum> graphChecksums = checksums.stream().map(GraphChecksum::new).collect(Collectors.toList());
-        return graphChecksums;
-
+        return checksums.stream().map(GraphChecksum::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphAlias> convertAliasIntoGraphModel(Collection<Alias> aliases){
-
-        List<GraphAlias> graphAliases = aliases.stream().map(GraphAlias::new).collect(Collectors.toList());
-        return graphAliases;
-
+        return aliases.stream().map(GraphAlias::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphAnnotation> convertAnnotationIntoGraphModel(Collection<Annotation> annotations){
-
-        List<GraphAnnotation> graphAnnotations = annotations.stream().map(GraphAnnotation::new).collect(Collectors.toList());
-        return graphAnnotations;
-
+        return annotations.stream().map(GraphAnnotation::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphParameter> convertParameterIntoGraphModel(Collection<Parameter> parameters){
-
-        List<GraphParameter> graphParameters = parameters.stream().map(GraphParameter::new).collect(Collectors.toList());
-        return graphParameters;
-
+        return parameters.stream().map(GraphParameter::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphConfidence> convertConfidenceIntoGraphModel(Collection<Confidence> confidences){
-
-        List<GraphConfidence> graphConfidences = confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
-        return graphConfidences;
-
+        return confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphVariableParameterValueSet> convertvariableParameterValueIntoGraphModel(Collection<VariableParameterValueSet> variableParameterValueSets){
-
-        List<GraphVariableParameterValueSet> graphVariableParameterValueSet = variableParameterValueSets.stream().map(GraphVariableParameterValueSet::new).collect(Collectors.toList());
-        return graphVariableParameterValueSet;
-
+        return variableParameterValueSets.stream().map(GraphVariableParameterValueSet::new).collect(Collectors.toList());
     }
 }

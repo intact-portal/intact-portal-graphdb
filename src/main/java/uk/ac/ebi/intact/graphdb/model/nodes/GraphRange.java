@@ -14,35 +14,71 @@ import psidev.psi.mi.jami.model.ResultingSequence;
 public class GraphRange implements Range {
 
     @GraphId
-    private Long id;
+    protected Long graphId;
 
-    private Position start;
-    private Position end;
+    private GraphPosition start;
+    private GraphPosition end;
     private boolean isLink;
-    private ResultingSequence resultingSequence;
-    private Entity participant;
+    private GraphResultingSequence resultingSequence;
+    private GraphEntity participant;
+
+    public GraphRange() {
+    }
+
+    public GraphRange(Range range) {
+        setPositions(range.getStart(), range.getEnd());
+        setLink(range.isLink());
+        setResultingSequence(range.getResultingSequence());
+        setParticipant(range.getParticipant());
+    }
+
+    public void setPositions(Position start, Position end) {
+        if (start == null) {
+            throw new IllegalArgumentException("The start position is required and cannot be null");
+        }
+        if (end == null) {
+            throw new IllegalArgumentException("The end position is required and cannot be null");
+        }
+
+        if (start.getEnd() != 0 && end.getStart() != 0 && start.getEnd() > end.getStart()) {
+            throw new IllegalArgumentException("The start position cannot be ending before the end position");
+        }
+        setStart(start);
+        setEnd(end);
+    }
 
     public Position getStart() {
         return this.start;
+    }
+
+    public void setStart(Position start) {
+        if (start != null) {
+            if (start instanceof GraphPosition) {
+                this.start = (GraphPosition) start;
+            } else {
+                this.start = new GraphPosition(start);
+            }
+        } else {
+            this.start = null;
+        }
+        //TODO login it
     }
 
     public Position getEnd() {
         return this.end;
     }
 
-    public void setPositions(Position start, Position end) {
-        if (start == null){
-            throw new IllegalArgumentException("The start position is required and cannot be null");
+    public void setEnd(Position end) {
+        if (end != null) {
+            if (end instanceof GraphPosition) {
+                this.end = (GraphPosition) end;
+            } else {
+                this.end = new GraphPosition(end);
+            }
+        } else {
+            this.end = null;
         }
-        if (end == null){
-            throw new IllegalArgumentException("The end position is required and cannot be null");
-        }
-
-        if (start.getEnd() != 0 && end.getStart() != 0 && start.getEnd() > end.getStart()){
-            throw new IllegalArgumentException("The start position cannot be ending before the end position");
-        }
-        this.start = start;
-        this.end = end;
+        //TODO login it
     }
 
     public boolean isLink() {
@@ -58,7 +94,16 @@ public class GraphRange implements Range {
     }
 
     public void setResultingSequence(ResultingSequence resultingSequence) {
-        this.resultingSequence = resultingSequence;
+        if (resultingSequence != null) {
+            if (resultingSequence instanceof GraphResultingSequence) {
+                this.resultingSequence = (GraphResultingSequence) resultingSequence;
+            } else {
+                this.resultingSequence = new GraphResultingSequence(resultingSequence);
+            }
+        } else {
+            this.resultingSequence = null;
+        }
+        //TODO login it
     }
 
     public Entity getParticipant() {

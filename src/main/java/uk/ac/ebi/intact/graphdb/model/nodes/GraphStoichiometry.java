@@ -14,6 +14,9 @@ public class GraphStoichiometry implements Stoichiometry {
     private int minValue;
     private int maxValue;
 
+    public GraphStoichiometry() {
+    }
+
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
     }
@@ -26,7 +29,6 @@ public class GraphStoichiometry implements Stoichiometry {
         if (minValue > maxValue) {
             throw new IllegalArgumentException("The minValue " + minValue + " cannot be bigger than the maxValue " + maxValue);
         }
-
         setMinValue(minValue);
         setMaxValue(maxValue);
     }

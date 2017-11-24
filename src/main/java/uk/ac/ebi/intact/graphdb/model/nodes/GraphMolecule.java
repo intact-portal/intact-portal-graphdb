@@ -17,6 +17,10 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         super();
     }
 
+    public GraphMolecule(Molecule molecule) {
+        super(molecule);
+    }
+
     public GraphMolecule(String name, CvTerm type) {
         super(name, type);
     }

@@ -1,19 +1,12 @@
 package uk.ac.ebi.intact.graphdb.repositories;
 
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
-import psidev.psi.mi.jami.model.Interaction;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 
 @RunWith(SpringRunner.class)
@@ -99,46 +92,46 @@ public class InteractionRepositoryTest {
 //        session.purgeDatabase();
     }
 
-    @Test
-    public void testInteractions() throws Exception {
-
-        long count = interactionRepository.count();
-        Assert.assertEquals(3, count);
-        Page<BinaryInteractionEvidence> result = interactionRepository.findAll(new PageRequest(0, 10));
-        Assert.assertEquals(3, result.getContent().size());
-        for (Interaction interaction : interactionRepository.findAll()) {
-            System.out.println(interaction);
-        }
-
-        Page<BinaryInteractionEvidence> interactionsPage = interactionRepository.findAll(new PageRequest(0, 10));
-        Assert.assertEquals(3, interactionsPage.getContent().size());
-        Assert.assertEquals(3, interactionsPage.getTotalElements());
-        for (Interaction interaction : interactionsPage) {
-            System.out.println(interaction);
-        }
-
-        result = interactionRepository.findByInteractorB_ShortName(new PageRequest(0, 10), P12345);
-        Assert.assertEquals(0, result.getNumberOfElements());
-
-        for (Interaction interaction : result) {
-            if (interaction instanceof GraphBinaryInteraction) {
-                System.out.println(
-                        ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
-                                " interacts with " +
-                                ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
-            }
-        }
-
-        result = interactionRepository.findByInteractorA_ShortName(new PageRequest(0, 10), P12345);
-        Assert.assertEquals(0, result.getNumberOfElements());
-
-        for (Interaction interaction : result) {
-            System.out.println(
-                    ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
-                            " interacts with " +
-                            ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
-        }
-
-    }
+//    @Test
+//    public void testInteractions() throws Exception {
+//
+//        long count = interactionRepository.count();
+//        Assert.assertEquals(3, count);
+//        Page<BinaryInteractionEvidence> result = interactionRepository.findAll(new PageRequest(0, 10));
+//        Assert.assertEquals(3, result.getContent().size());
+//        for (Interaction interaction : interactionRepository.findAll()) {
+//            System.out.println(interaction);
+//        }
+//
+//        Page<BinaryInteractionEvidence> interactionsPage = interactionRepository.findAll(new PageRequest(0, 10));
+//        Assert.assertEquals(3, interactionsPage.getContent().size());
+//        Assert.assertEquals(3, interactionsPage.getTotalElements());
+//        for (Interaction interaction : interactionsPage) {
+//            System.out.println(interaction);
+//        }
+//
+//        result = interactionRepository.findByInteractorB_ShortName(new PageRequest(0, 10), P12345);
+//        Assert.assertEquals(0, result.getNumberOfElements());
+//
+//        for (Interaction interaction : result) {
+//            if (interaction instanceof GraphBinaryInteraction) {
+//                System.out.println(
+//                        ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+//                                " interacts with " +
+//                                ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
+//            }
+//        }
+//
+//        result = interactionRepository.findByInteractorA_ShortName(new PageRequest(0, 10), P12345);
+//        Assert.assertEquals(0, result.getNumberOfElements());
+//
+//        for (Interaction interaction : result) {
+//            System.out.println(
+//                    ((GraphBinaryInteraction) interaction).getInteractorA().getShortName() +
+//                            " interacts with " +
+//                            ((GraphBinaryInteraction) interaction).getInteractorB().getShortName() + ".");
+//        }
+//
+//    }
 
 }

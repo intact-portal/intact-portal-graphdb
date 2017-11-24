@@ -13,36 +13,71 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 public class GraphPosition implements Position {
 
     @GraphId
-    private Long id;
+    protected Long graphId;
 
-    private CvTerm status;
+    private GraphCvTerm status;
     private long start;
     private long end;
     private boolean isPositionUndetermined;
 
+    public GraphPosition() {
+    }
+
+    public GraphPosition(Position position) {
+        setStatus(position.getStatus());
+        setStart(position.getStart());
+        setEnd(position.getEnd());
+        setPositionUndetermined(position.isPositionUndetermined());
+    }
+
     public CvTerm getStatus() {
         return this.status;
+    }
+
+    public void setStatus(CvTerm status) {
+        if (status != null) {
+            if (status instanceof GraphCvTerm) {
+                this.status = (GraphCvTerm) status;
+            } else {
+                this.status = new GraphCvTerm(status);
+            }
+        } else {
+            this.status = null;
+        }
+        //TODO login it
     }
 
     public long getStart() {
         return this.start;
     }
 
+    public void setStart(long start) {
+        this.start = start;
+    }
+
     public long getEnd() {
         return this.end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
     }
 
     public boolean isPositionUndetermined() {
         return this.isPositionUndetermined;
     }
 
+    public void setPositionUndetermined(boolean positionUndetermined) {
+        isPositionUndetermined = positionUndetermined;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
 
-        if (!(o instanceof Position)){
+        if (!(o instanceof Position)) {
             return false;
         }
 
@@ -51,7 +86,7 @@ public class GraphPosition implements Position {
 
     @Override
     public String toString() {
-        return getStatus().toString() + ": " + getStart()  +".."+ getEnd();
+        return getStatus().toString() + ": " + getStart() + ".." + getEnd();
     }
 
     @Override

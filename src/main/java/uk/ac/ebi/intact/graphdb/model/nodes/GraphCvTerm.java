@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Labels;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
@@ -12,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @NodeEntity
 public class GraphCvTerm implements CvTerm {
@@ -29,6 +31,9 @@ public class GraphCvTerm implements CvTerm {
     private String mIIdentifier;
     private String mODIdentifier;
     private String pARIdentifier;
+
+    @Labels
+    private List<String> typeLabels = new ArrayList<>();
 
     public GraphCvTerm() {
     }
@@ -278,5 +283,15 @@ public class GraphCvTerm implements CvTerm {
         protected void clearProperties() {
             clearPropertiesLinkedToIdentifiers();
         }
-    }*/
+    }
+
+*/
+    public List<String> getTypeLabels() {
+        return typeLabels;
+    }
+
+    public void setTypeLabels(List<String> typeLabels) {
+        this.typeLabels = typeLabels;
+    }
+
 }

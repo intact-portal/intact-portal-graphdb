@@ -48,9 +48,9 @@ public class InteractorRepositoryTest {
 //        GraphProtein p12346 = new GraphProtein("P12346");
 //        GraphProtein p12347 = new GraphProtein("P12347");
 
-        Interactor p12345 = new GraphInteractor(P12345);
-        Interactor p12346 = new GraphInteractor(P12346);
-        Interactor p12347 = new GraphInteractor(P12347);
+        GraphInteractor p12345 = new GraphInteractor(P12345);
+        GraphInteractor p12346 = new GraphInteractor(P12346);
+        GraphInteractor p12347 = new GraphInteractor(P12347);
 
         // automatically persisted
 //        proteinRepository.save(p12345);
@@ -79,12 +79,12 @@ public class InteractorRepositoryTest {
         interactorRepository.save(p12346);
         interactorRepository.save(p12347);
 
-        p12345 = interactorRepository.findByShortName(p12345.getShortName());
+        p12345 = (GraphInteractor) interactorRepository.findByShortName(p12345.getShortName());
 //        p12345.interactsWith(p12346, 0.0);
 //        p12345.interactsWith(p12347, 0.0);
         interactorRepository.save(p12345);
 
-        p12346 = interactorRepository.findByShortName(p12346.getShortName());
+        p12346 = (GraphInteractor) interactorRepository.findByShortName(p12346.getShortName());
 //        p12346 = interactorRepository.findByShortName(p12346.getShortName());
 //        p12346.interactsWith(p12347, 0.0);
 

@@ -19,12 +19,17 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 public class GraphPolymer extends GraphMolecule implements Polymer {
 
     @GraphId
-    private Long id;
+    protected Long graphId;
 
     private String sequence;
 
     public GraphPolymer() {
         super();
+    }
+
+    public GraphPolymer(Polymer polymer) {
+        super(polymer);
+        setSequence(polymer.getSequence());
     }
 
     public GraphPolymer(String name, CvTerm type) {

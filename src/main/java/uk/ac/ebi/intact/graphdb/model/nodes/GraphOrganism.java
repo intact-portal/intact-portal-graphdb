@@ -33,7 +33,6 @@ public class GraphOrganism implements Organism {
         setCellType(organism.getCellType());
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
-
     }
 
     public GraphOrganism(int taxId) {
@@ -103,7 +102,7 @@ public class GraphOrganism implements Organism {
         }
     }
 
-    public Collection<? extends Alias> getAliases() {
+    public Collection<GraphAlias> getAliases() {
         if (aliases == null) {
             this.aliases = new ArrayList<GraphAlias>();
         }
@@ -117,7 +116,6 @@ public class GraphOrganism implements Organism {
             this.aliases = new ArrayList<GraphAlias>();
         }
     }
-
 
     public CvTerm getCellType() {
         return this.cellType;

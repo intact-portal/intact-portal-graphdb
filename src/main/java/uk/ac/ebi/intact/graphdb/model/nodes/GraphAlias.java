@@ -23,16 +23,16 @@ public class GraphAlias implements Alias {
         setName(alias.getName());
     }
 
-/*    public GraphAlias(CvTerm type, String name) {
+    public GraphAlias(CvTerm type, String name) {
         this(name);
-        this.type = type;
-    }*/
+        setType(type);
+    }
 
     public GraphAlias(String name) {
         if (name == null) {
             throw new IllegalArgumentException("The alias name is required and cannot be null");
         }
-        this.name = name;
+        setName(name);
     }
 
     public CvTerm getType() {

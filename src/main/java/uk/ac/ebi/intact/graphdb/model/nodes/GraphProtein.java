@@ -3,9 +3,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultAlias;
-import psidev.psi.mi.jami.model.impl.DefaultChecksum;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.AliasUtils;
 import psidev.psi.mi.jami.utils.ChecksumUtils;
 import psidev.psi.mi.jami.utils.CvTermUtils;
@@ -23,15 +20,23 @@ import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 public class GraphProtein extends GraphPolymer implements Protein {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
-    private Xref uniprotkb;
-    private Xref refseq;
-    private Alias geneName;
-    private Checksum rogid;
-    
+    private GraphXref uniprotkb;
+    private GraphXref refseq;
+    private GraphAlias geneName;
+    private GraphChecksum rogid;
+
     public GraphProtein() {
         super();
+    }
+
+    public GraphProtein(Protein protein) {
+        super(protein);
+        setUniprotkb(protein.getUniprotkb());
+        setRefseq(protein.getRefseq());
+        setChecksums(protein.getChecksums());
+        setGeneName(protein.getGeneName());
     }
 
     public GraphProtein(String name, CvTerm type) {
@@ -111,17 +116,17 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setUniprotkb(String ac) {
-        GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList)getIdentifiers();
+        GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
         // add new uniprotkb if not null
-        if (ac != null){
+        if (ac != null) {
             CvTerm uniprotkbDatabase = CvTermUtils.createUniprotkbDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old uniprotkb if not null
-            if (this.uniprotkb != null){
+            if (this.uniprotkb != null) {
                 proteinIdentifiers.removeOnly(this.uniprotkb);
             }
-            this.uniprotkb = new DefaultXref(uniprotkbDatabase, ac, identityQualifier);
+            this.uniprotkb = new GraphXref(uniprotkbDatabase, ac, identityQualifier);
             proteinIdentifiers.addOnly(this.uniprotkb);
         }
         // remove all uniprotkb if the collection is not empty
@@ -136,17 +141,17 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setRefseq(String ac) {
-        GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList)getIdentifiers();
+        GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
         // add new refseq if not null
-        if (ac != null){
+        if (ac != null) {
             CvTerm refseqDatabase = CvTermUtils.createRefseqDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old refseq if not null
-            if (this.refseq != null){
+            if (this.refseq != null) {
                 proteinIdentifiers.removeOnly(this.refseq);
             }
-            this.refseq = new DefaultXref(refseqDatabase, ac, identityQualifier);
+            this.refseq = new GraphXref(refseqDatabase, ac, identityQualifier);
             proteinIdentifiers.addOnly(this.refseq);
         }
         // remove all refseq if the collection is not empty
@@ -161,16 +166,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setGeneName(String name) {
-        GraphProtein.ProteinAliasList proteinAliases = (GraphProtein.ProteinAliasList)getAliases();
+        GraphProtein.ProteinAliasList proteinAliases = (GraphProtein.ProteinAliasList) getAliases();
 
         // add new gene name if not null
-        if (name != null){
+        if (name != null) {
             CvTerm geneNameType = CvTermUtils.createGeneNameAliasType();
             // first remove old gene name if not null
-            if (this.geneName != null){
+            if (this.geneName != null) {
                 proteinAliases.removeOnly(this.geneName);
             }
-            this.geneName = new DefaultAlias(geneNameType, name);
+            this.geneName = new GraphAlias(geneNameType, name);
             proteinAliases.addOnly(this.geneName);
         }
         // remove all gene names if the collection is not empty
@@ -185,15 +190,15 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setRogid(String rogid) {
-        GraphProtein.ProteinChecksumList proteinChecksums = (GraphProtein.ProteinChecksumList)getChecksums();
+        GraphProtein.ProteinChecksumList proteinChecksums = (GraphProtein.ProteinChecksumList) getChecksums();
 
-        if (rogid != null){
+        if (rogid != null) {
             CvTerm rogidMethod = CvTermUtils.createRogid();
             // first remove old rogid
-            if (this.rogid != null){
+            if (this.rogid != null) {
                 proteinChecksums.removeOnly(this.rogid);
             }
-            this.rogid = new DefaultChecksum(rogidMethod, rogid);
+            this.rogid = new GraphChecksum(rogidMethod, rogid);
             proteinChecksums.addOnly(this.rogid);
         }
         // remove all smiles if the collection is not empty
@@ -205,14 +210,14 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     protected void processAddedAliasEvent(Alias added) {
         // the added alias is gene name and it is not the current gene name
-        if (geneName == null && AliasUtils.doesAliasHaveType(added, Alias.GENE_NAME_MI, Alias.GENE_NAME)){
-            geneName = added;
+        if (geneName == null && AliasUtils.doesAliasHaveType(added, Alias.GENE_NAME_MI, Alias.GENE_NAME)) {
+            geneName = new GraphAlias(added);
         }
     }
 
     protected void processRemovedAliasEvent(Alias removed) {
-        if (geneName != null && geneName.equals(removed)){
-            geneName = AliasUtils.collectFirstAliasWithType(getAliases(), Alias.GENE_NAME_MI, Alias.GENE_NAME);
+        if (geneName != null && geneName.equals(removed)) {
+            geneName = new GraphAlias(AliasUtils.collectFirstAliasWithType(getAliases(), Alias.GENE_NAME_MI, Alias.GENE_NAME));
         }
     }
 
@@ -221,15 +226,15 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     protected void processAddedChecksumEvent(Checksum added) {
-        if (rogid == null && ChecksumUtils.doesChecksumHaveMethod(added, Checksum.ROGID_MI, Checksum.ROGID)){
+        if (rogid == null && ChecksumUtils.doesChecksumHaveMethod(added, Checksum.ROGID_MI, Checksum.ROGID)) {
             // the rogid is not set, we can set the rogid
-            rogid = added;
+            rogid = new GraphChecksum(added);
         }
     }
 
     protected void processRemovedChecksumEvent(Checksum removed) {
-        if (rogid != null && rogid.equals(removed)){
-            rogid = ChecksumUtils.collectFirstChecksumWithMethod(getChecksums(), Checksum.ROGID_MI, Checksum.ROGID);
+        if (rogid != null && rogid.equals(removed)) {
+            rogid = new GraphChecksum(ChecksumUtils.collectFirstChecksumWithMethod(getChecksums(), Checksum.ROGID_MI, Checksum.ROGID));
         }
     }
 
@@ -241,55 +246,52 @@ public class GraphProtein extends GraphPolymer implements Protein {
         // the added identifier is uniprotkb and it is not the current uniprotkb identifier
         if (uniprotkb != added && (XrefUtils.isXrefFromDatabase(added, Xref.UNIPROTKB_MI, Xref.UNIPROTKB)
                 || XrefUtils.isXrefFromDatabase(added, Xref.UNIPROTKB_SWISSPROT_MI, Xref.UNIPROTKB_SWISSPROT)
-                || XrefUtils.isXrefFromDatabase(added, Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL))){
+                || XrefUtils.isXrefFromDatabase(added, Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL))) {
             // the current uniprotkb identifier is not identity, we may want to set uniprotkb Identifier
-            if (!XrefUtils.doesXrefHaveQualifier(uniprotkb, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(uniprotkb, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the uniprotkb identifier is not set, we can set the uniprotkb identifier
-                if (uniprotkb == null){
-                    uniprotkb = added;
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    uniprotkb = added;
+                if (uniprotkb == null) {
+                    uniprotkb = new GraphXref(added);
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
+                    uniprotkb = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current uniprotkb identifier is not a secondary object, we reset uniprotkb identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(uniprotkb, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    uniprotkb = added;
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
+                    uniprotkb = new GraphXref(added);
                 }
             }
         }
         // the added identifier is refseq id and it is not the current refseq id
-        else if (refseq != added && XrefUtils.isXrefFromDatabase(added, Xref.REFSEQ_MI, Xref.REFSEQ)){
+        else if (refseq != added && XrefUtils.isXrefFromDatabase(added, Xref.REFSEQ_MI, Xref.REFSEQ)) {
             // the current refseq id is not identity, we may want to set refseq id
-            if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the refseq id is not set, we can set the refseq id
-                if (refseq == null){
-                    refseq = added;
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
-                    refseq = added;
+                if (refseq == null) {
+                    refseq = new GraphXref(added);
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
+                    refseq = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current refseq id is not a secondary object, we reset refseq id
                 else if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    refseq = added;
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
+                    refseq = new GraphXref(added);
                 }
             }
         }
     }
 
     protected void processRemovedIdentifierEvent(Xref removed) {
-        if (uniprotkb != null && uniprotkb.equals(removed)){
-            uniprotkb = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_MI, Xref.UNIPROTKB);
-            if (uniprotkb == null){
-                uniprotkb = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_SWISSPROT_MI, Xref.UNIPROTKB_SWISSPROT);
-                if (uniprotkb == null){
-                    uniprotkb = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL);
+        if (uniprotkb != null && uniprotkb.equals(removed)) {
+            uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_MI, Xref.UNIPROTKB));
+            if (uniprotkb == null) {
+                uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_SWISSPROT_MI, Xref.UNIPROTKB_SWISSPROT));
+                if (uniprotkb == null) {
+                    uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL));
                 }
             }
-        }
-        else if (refseq != null && refseq.equals(removed)){
-            refseq = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ);
+        } else if (refseq != null && refseq.equals(removed)) {
+            refseq = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ));
         }
     }
 
@@ -304,10 +306,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
      * If the given interactorType is null, it will set the interactor type to 'protein' (MI:0326)
      */
     public void setInteractorType(CvTerm interactorType) {
-        if (interactorType == null){
+        if (interactorType == null) {
             super.setInteractorType(CvTermUtils.createProteinInteractorType());
-        }
-        else {
+        } else {
             super.setInteractorType(interactorType);
         }
     }
@@ -315,23 +316,23 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Override
     public String toString() {
         return "Protein"
-                +(getGeneName() != null ? getGeneName() :
+                + (getGeneName() != null ? getGeneName() :
                 (getUniprotkb() != null ? getUniprotkb() :
                         (getRefseq() != null ? getRefseq() : super.toString())));
     }
 
-    private class ProteinIdentifierList extends AbstractListHavingProperties<Xref> {
-        public ProteinIdentifierList(){
+    private class ProteinIdentifierList extends AbstractListHavingProperties<GraphXref> {
+        public ProteinIdentifierList() {
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Xref added) {
+        protected void processAddedObjectEvent(GraphXref added) {
             processAddedIdentifierEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Xref removed) {
+        protected void processRemovedObjectEvent(GraphXref removed) {
             processRemovedIdentifierEvent(removed);
         }
 
@@ -341,18 +342,18 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
-    private class ProteinChecksumList extends AbstractListHavingProperties<Checksum> {
-        public ProteinChecksumList(){
+    private class ProteinChecksumList extends AbstractListHavingProperties<GraphChecksum> {
+        public ProteinChecksumList() {
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Checksum added) {
+        protected void processAddedObjectEvent(GraphChecksum added) {
             processAddedChecksumEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Checksum removed) {
+        protected void processRemovedObjectEvent(GraphChecksum removed) {
             processRemovedChecksumEvent(removed);
         }
 
@@ -362,18 +363,18 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
-    private class ProteinAliasList extends AbstractListHavingProperties<Alias> {
-        public ProteinAliasList(){
+    private class ProteinAliasList extends AbstractListHavingProperties<GraphAlias> {
+        public ProteinAliasList() {
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Alias added) {
+        protected void processAddedObjectEvent(GraphAlias added) {
             processAddedAliasEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Alias removed) {
+        protected void processRemovedObjectEvent(GraphAlias removed) {
             processRemovedAliasEvent(removed);
         }
 

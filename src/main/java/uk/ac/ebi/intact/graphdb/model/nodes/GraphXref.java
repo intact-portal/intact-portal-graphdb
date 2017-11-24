@@ -105,7 +105,6 @@ public class GraphXref implements Xref {
         //TODO login it
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

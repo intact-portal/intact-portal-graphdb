@@ -4,96 +4,101 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.Confidence;
-import psidev.psi.mi.jami.model.Interactor;
-import psidev.psi.mi.jami.model.Organism;
-import psidev.psi.mi.jami.model.Parameter;
-import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.model.impl.DefaultStoichiometry;
 import psidev.psi.mi.jami.utils.CvTermUtils;
-import psidev.psi.mi.xml.model.BiologicalRole;
-import psidev.psi.mi.xml.model.Feature;
-import java.util.ArrayList;
+
 import java.util.Collection;
-import java.util.Collections;
 
 
 /**
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.ParticipantEvidence {
-
+public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @GraphId
-    private Long id;
+    protected Long graphId;
 
-
-    private CvTerm experimentalRole;
-    private Collection<CvTerm> identificationMethods;
-    private Collection<CvTerm> experimentalPreparations;
-    private Organism expressedIn;
-    private Collection<Confidence> confidences;
-    private Collection<Parameter> parameters;
-    private EntityInteractorChangeListener changeListener;
+    private GraphCvTerm experimentalRole;
+    private GraphCvTerm biologicalRole;
+    private GraphOrganism expressedIn;
+    private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
-    private Stoichiometry stoichiometry;
-    private Collection<CausalRelationship> causalRelationships;
-    private Collection<Feature> features;
-    private CvTerm biologicalRole;
+    private Collection<GraphFeature> features;
+    private Collection<GraphConfidence> confidences;
+    private Collection<GraphParameter> parameters;
+    private Collection<GraphCvTerm> identificationMethods;
+    private Collection<GraphCvTerm> experimentalPreparations;
+    private Collection<GraphCausalRelationship> causalRelationships;
+    private EntityInteractorChangeListener changeListener;
 
-
-    protected void initialiseExperimentalPreparations() {
-        this.experimentalPreparations = new ArrayList<CvTerm>();
+    public GraphParticipantEvidence() {
     }
 
-    protected void initialiseConfidences() {
-        this.confidences = new ArrayList<Confidence>();
+    public GraphParticipantEvidence(ParticipantEvidence participantEvidence) {
+        setExperimentalRole(participantEvidence.getExperimentalRole());
+        setBiologicalRole(participantEvidence.getBiologicalRole());
+        setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
+        setStoichiometry(participantEvidence.getStoichiometry());
+        setInteractor(participantEvidence.getInteractor());
+        setFeatures(participantEvidence.getFeatures());
+        setConfidences(participantEvidence.getConfidences());
+        setParameters(participantEvidence.getParameters());
+        setIdentificationMethods(participantEvidence.getIdentificationMethods());
+        setExperimentalPreparations(participantEvidence.getExperimentalPreparations());
+        setCausalRelationships(participantEvidence.getCausalRelationships());
+        setChangeListener(participantEvidence.getChangeListener());
     }
 
-    protected void initialiseParameters() {
-        this.parameters = new ArrayList<Parameter>();
+    public CvTerm getExperimentalRole() {
+        return this.experimentalRole;
     }
 
-    protected void initialiseIdentificationMethods(){
-        this.identificationMethods = new ArrayList<CvTerm>();
-    }
-
-    protected void initialiseIdentificationMethodsWith(Collection<CvTerm> methods){
-        if (methods == null){
-            this.identificationMethods = Collections.EMPTY_LIST;
-        }
-        else {
-            this.identificationMethods = methods;
-        }
-    }
-
-    protected void initialiseFeatures(){
-        this.features = new ArrayList<Feature>();
-    }
-
-    protected void initialiseCausalRelationships(){
-        this.causalRelationships = new ArrayList<CausalRelationship>();
-    }
-
-    protected void initialiseCausalRelationshipsWith(Collection<CausalRelationship> relationships) {
-        if (relationships == null){
-            this.causalRelationships = Collections.EMPTY_LIST;
-        }
-        else {
-            this.causalRelationships = relationships;
+    public void setExperimentalRole(CvTerm experimentalRole) {
+        if (experimentalRole != null) {
+            if (experimentalRole instanceof GraphCvTerm) {
+                this.experimentalRole = (GraphCvTerm) experimentalRole;
+            } else {
+                this.experimentalRole = new GraphCvTerm(experimentalRole);
+            }
+        } else {
+            this.experimentalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole());
         }
     }
 
-    protected void initialiseFeaturesWith(Collection<Feature> features) {
-        if (features == null){
-            this.features = Collections.EMPTY_LIST;
-        }
-        else {
-            this.features = features;
-        }
+    public CvTerm getBiologicalRole() {
+        return this.biologicalRole;
     }
 
+    public void setBiologicalRole(CvTerm biologicalRole) {
+        if (biologicalRole != null) {
+            if (biologicalRole instanceof GraphCvTerm) {
+                this.biologicalRole = (GraphCvTerm) biologicalRole;
+            } else {
+                this.biologicalRole = new GraphCvTerm(biologicalRole);
+            }
+        } else {
+            this.biologicalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole());
+        }
+        //TODO login it
+    }
+
+    public Organism getExpressedInOrganism() {
+        return this.expressedIn;
+    }
+
+    public void setExpressedInOrganism(Organism organism) {
+        if (organism != null) {
+            if (organism instanceof GraphOrganism) {
+                this.expressedIn = (GraphOrganism) organism;
+            } else {
+                this.expressedIn = new GraphOrganism(organism);
+            }
+        } else {
+            this.expressedIn = null;
+        }
+        //TODO login it
+    }
 
     public Interactor getInteractor() {
         return this.interactor;
@@ -104,7 +109,11 @@ public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.Parti
             throw new IllegalArgumentException("The interactor cannot be null.");
         }
         Interactor oldInteractor = this.interactor;
-        this.interactor = (GraphInteractor) interactor;
+        if (interactor instanceof GraphInteractor) {
+            this.interactor = (GraphInteractor) interactor;
+        } else {
+            this.interactor = new GraphInteractor(interactor);
+        }
         if (this.changeListener != null){
             this.changeListener.onInteractorUpdate(this, oldInteractor);
         }
@@ -134,55 +143,109 @@ public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.Parti
         this.stoichiometry = stoichiometry;
     }
 
-    public Collection<Feature> getFeatures() {
+    public Collection<F> getFeatures() {
         if (features == null){
             initialiseFeatures();
         }
         return this.features;
     }
 
-
-
-
-    protected void initialiseExperimentalPreparationsWith(Collection<CvTerm> expPreparations) {
-        if (expPreparations == null){
-            this.experimentalPreparations = Collections.EMPTY_LIST;
+    public Collection<Xref> getXrefs() {
+        if (xrefs == null){
+            initialiseXrefs();
         }
-        else {
-            this.experimentalPreparations = expPreparations;
+        return this.xrefs;
+    }
+
+    public Collection<Annotation> getAnnotations() {
+        if (annotations == null){
+            initialiseAnnotations();
+        }
+        return this.annotations;
+    }
+
+    public Collection<Alias> getAliases() {
+        if (aliases == null){
+            initialiseAliases();
+        }
+        return this.aliases;
+    }
+
+    public boolean addFeature(F feature) {
+
+        if (feature == null){
+            return false;
+        }
+
+        if (getFeatures().add(feature)){
+            feature.setParticipant(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeFeature(F feature) {
+
+        if (feature == null){
+            return false;
+        }
+
+        if (getFeatures().remove(feature)){
+            feature.setParticipant(null);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addAllFeatures(Collection<? extends F> features) {
+        if (features == null){
+            return false;
+        }
+
+        boolean added = false;
+        for (F feature : features){
+            if (addFeature(feature)){
+                added = true;
+            }
+        }
+        return added;
+    }
+
+    public boolean removeAllFeatures(Collection<? extends F> features) {
+        if (features == null){
+            return false;
+        }
+
+        boolean added = false;
+        for (F feature : features){
+            if (removeFeature(feature)){
+                added = true;
+            }
+        }
+        return added;
+    }
+
+    public void setInteractionAndAddParticipant(I interaction) {
+
+        if (this.interaction != null){
+            this.interaction.removeParticipant(this);
+        }
+
+        if (interaction != null){
+            interaction.addParticipant(this);
         }
     }
 
-    protected void initialiseConfidencesWith(Collection<Confidence> confidences) {
-        if (confidences == null){
-            this.confidences = Collections.EMPTY_LIST;
-        }
-        else {
-            this.confidences = confidences;
-        }
+    public I getInteraction() {
+        return this.interaction;
     }
 
-    protected void initialiseParametersWith(Collection<Parameter> parameters) {
-        if (parameters == null){
-            this.parameters = Collections.EMPTY_LIST;
-        }
-        else {
-            this.parameters = parameters;
-        }
+    public void setInteraction(I interaction) {
+        this.interaction = interaction;
     }
 
-    public CvTerm getExperimentalRole() {
-        return this.experimentalRole;
-    }
 
-    public void setExperimentalRole(CvTerm expRole) {
-        if (expRole == null){
-            this.experimentalRole = CvTermUtils.createUnspecifiedRole();
-        }
-        else {
-            this.experimentalRole = expRole;
-        }
-    }
+
 
     public Collection<CvTerm> getIdentificationMethods() {
         if (identificationMethods == null){
@@ -198,14 +261,6 @@ public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.Parti
         return this.experimentalPreparations;
     }
 
-    public Organism getExpressedInOrganism() {
-        return this.expressedIn;
-    }
-
-    public void setExpressedInOrganism(Organism organism) {
-        this.expressedIn = organism;
-    }
-
     public Collection<Confidence> getConfidences() {
         if (confidences == null){
             initialiseConfidences();
@@ -218,84 +273,5 @@ public class GraphParticipantEvidence  implements psidev.psi.mi.jami.model.Parti
             initialiseParameters();
         }
         return this.parameters;
-    }
-
-    public EntityInteractorChangeListener getChangeListener() {
-        return this.changeListener;
-    }
-
-    public void setChangeListener(EntityInteractorChangeListener listener) {
-        this.changeListener = listener;
-    }
-
-    @Override
-    public boolean addFeature(FeatureEvidence feature) {
-        return false;
-    }
-
-    @Override
-    public boolean removeFeature(FeatureEvidence feature) {
-        return false;
-    }
-
-    @Override
-    public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
-        return false;
-    }
-
-    @Override
-    public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString()
-                + (getExperimentalRole() != null ? ", " + getExperimentalRole().toString() : "")
-                + (getExpressedInOrganism() != null ? ", " + getExpressedInOrganism().toString() : "");
-    }
-
-
-    @Override
-    public void setInteractionAndAddParticipant(InteractionEvidence interaction) {
-
-    }
-
-    @Override
-    public InteractionEvidence getInteraction() {
-        return null;
-    }
-
-    @Override
-    public void setInteraction(InteractionEvidence interaction) {
-
-    }
-
-
-
-    @Override
-    public <X extends Xref> Collection<X> getXrefs() {
-        return null;
-    }
-
-    @Override
-    public <A extends Annotation> Collection<A> getAnnotations() {
-        return null;
-    }
-
-    @Override
-    public <A extends psidev.psi.mi.jami.model.Alias> Collection<A> getAliases() {
-        return null;
-    }
-
-
-    @Override
-    public CvTerm getBiologicalRole() {
-        return biologicalRole;
-    }
-
-    @Override
-    public void setBiologicalRole(CvTerm biologicalRole) {
-        this.biologicalRole = biologicalRole;
     }
 }

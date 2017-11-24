@@ -19,22 +19,22 @@ public class GraphAnnotation implements Annotation {
     }
 
     public GraphAnnotation(Annotation annotation) {
-       setTopic(annotation.getTopic());
-       setValue(annotation.getValue());
+        setTopic(annotation.getTopic());
+        setValue(annotation.getValue());
     }
 
 
-    /*public GraphAnnotation(CvTerm topic) {
+    public GraphAnnotation(CvTerm topic) {
         if (topic == null) {
             throw new IllegalArgumentException("The annotation topic is required and cannot be null");
         }
-        this.topic = topic;
+        setTopic(topic);
     }
 
     public GraphAnnotation(CvTerm topic, String value) {
         this(topic);
-        this.value = value;
-    }*/
+        setValue(value);
+    }
 
     public CvTerm getTopic() {
         return this.topic;

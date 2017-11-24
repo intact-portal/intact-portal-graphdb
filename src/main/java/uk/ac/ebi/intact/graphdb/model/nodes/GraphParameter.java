@@ -15,59 +15,63 @@ import java.math.BigDecimal;
 public class GraphParameter implements Parameter {
 
     @GraphId
-    protected Long id;
+    protected Long graphId;
 
-    private CvTerm type;
+    private GraphCvTerm type;
     private BigDecimal uncertainty;
-    private CvTerm unit;
-    private ParameterValue value;
+    private GraphCvTerm unit;
+    private GraphParameterValue value;
 
     public GraphParameter() {
     }
 
     public GraphParameter(Parameter parameter) {
+        setType(parameter.getType());
+        setUncertainty(parameter.getUncertainty());
+        setUnit(parameter.getUnit());
+        setValue(parameter.getValue());
     }
 
     public GraphParameter(CvTerm type, ParameterValue value) {
         if (type == null) {
             throw new IllegalArgumentException("The parameter type is required and cannot be null");
         }
-        this.type = type;
+        setType(type);
         if (value == null) {
             throw new IllegalArgumentException("The parameter value is required and cannot be null");
         }
-        this.value = value;
+        setValue(value);
     }
 
     public GraphParameter(CvTerm type, ParameterValue value, CvTerm unit) {
         this(type, value);
-        this.unit = unit;
+        setUnit(unit);
     }
 
     public GraphParameter(CvTerm type, ParameterValue value, CvTerm unit, BigDecimal uncertainty) {
         this(type, value, unit);
-        this.uncertainty = uncertainty;
+        setUncertainty(uncertainty);
     }
 
     public GraphParameter(CvTerm type, ParameterValue value, BigDecimal uncertainty) {
         this(type, value);
-        this.uncertainty = uncertainty;
+        setUncertainty(uncertainty);
     }
 
     public GraphParameter(CvTerm type, String value) throws IllegalParameterException {
         if (type == null) {
             throw new IllegalArgumentException("The parameter type is required and cannot be null");
         }
-        this.type = type;
+        setType(type);
 
         Parameter param = ParameterUtils.createParameterFromString(type, value);
-        this.value = param.getValue();
-        this.uncertainty = param.getUncertainty();
+        setValue(param.getValue());
+        setUncertainty(param.getUncertainty());
     }
 
     public GraphParameter(CvTerm type, String value, CvTerm unit) throws IllegalParameterException {
         this(type, value);
-        this.unit = unit;
+        setUnit(unit);
     }
 
     public CvTerm getType() {
@@ -75,7 +79,16 @@ public class GraphParameter implements Parameter {
     }
 
     public void setType(CvTerm type) {
-        this.type = type;
+        if (type != null) {
+            if (type instanceof GraphCvTerm) {
+                this.type = (GraphCvTerm) type;
+            } else {
+                this.type = new GraphCvTerm(type);
+            }
+        } else {
+            this.type = null;
+        }
+        //TODO login it
     }
 
     public BigDecimal getUncertainty() {
@@ -91,15 +104,34 @@ public class GraphParameter implements Parameter {
     }
 
     public void setUnit(CvTerm unit) {
-        this.unit = unit;
+        if (unit != null) {
+            if (unit instanceof GraphCvTerm) {
+                this.unit = (GraphCvTerm) unit;
+            } else {
+                this.unit = new GraphCvTerm(unit);
+            }
+        } else {
+            this.unit = null;
+        }
+        //TODO login it
     }
 
     public ParameterValue getValue() {
         return this.value;
     }
 
+    //TODO Review this setter with calm
     public void setValue(ParameterValue value) {
-        this.value = value;
+        if (value != null) {
+            if (value instanceof GraphParameterValue) {
+                this.value = (GraphParameterValue) value;
+            } else {
+                this.value = new GraphParameterValue(value.getFactor(), value.getBase(), value.getExponent());
+            }
+        } else {
+            this.value = null;
+        }
+        //TODO login it
     }
 
     @Override
