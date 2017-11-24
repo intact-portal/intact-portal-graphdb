@@ -38,6 +38,52 @@ public class GraphCvTerm implements CvTerm {
     public GraphCvTerm() {
     }
 
+    public GraphCvTerm(String shortName) {
+        if(shortName == null) {
+            throw new IllegalArgumentException("The short name is required and cannot be null");
+        } else {
+            this.shortName = shortName;
+        }
+    }
+
+    public GraphCvTerm(String shortName, String miIdentifier) {
+        this(shortName);
+        this.setMIIdentifier(miIdentifier);
+    }
+
+    public GraphCvTerm(String shortName, String fullName, String miIdentifier) {
+        this(shortName, miIdentifier);
+        this.fullName = fullName;
+    }
+
+    public GraphCvTerm(String shortName, Xref ontologyId) {
+        this(shortName);
+        if(ontologyId != null) {
+            this.getIdentifiers().add(new GraphXref(ontologyId));
+        }
+
+    }
+
+    public GraphCvTerm(String shortName, String fullName, Xref ontologyId) {
+        this(shortName, ontologyId);
+        this.fullName = fullName;
+    }
+
+    public GraphCvTerm(String shortName, Xref ontologyId, String label) {
+        this(shortName, ontologyId);
+        getTypeLabels().add(label);
+    }
+
+    public GraphCvTerm(String shortName, String fullName, Xref ontologyId,String label) {
+        this(shortName,fullName,ontologyId);
+        this.getTypeLabels().add(label);
+    }
+
+    public GraphCvTerm(String shortName, String fullName, String miIdentifier,String label) {
+        this(shortName, fullName,miIdentifier);
+        this.getTypeLabels().add(label);
+    }
+
     public GraphCvTerm(CvTerm cvTerm) {
         setShortName(cvTerm.getShortName());
         setFullName(cvTerm.getFullName());

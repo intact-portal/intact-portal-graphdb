@@ -13,6 +13,8 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
  * @since <pre>08/01/14</pre>
  */
 
+
+// TO DO Review
 public class GraphUtils {
 
     public static final String DATABASE_OBJCLASS="CvDatabase";
@@ -158,14 +160,14 @@ public class GraphUtils {
     }
 
     public static CvTerm createPsiMiDatabase(CvTerm identity) {
-        GraphCvTerm psiMi = new GraphCvTerm(CvTerm.PSI_MI, null, (String) null, DATABASE_OBJCLASS);
+        CvTerm psiMi = new GraphCvTerm(CvTerm.PSI_MI, null, (String) null, DATABASE_OBJCLASS);
         Xref psiMiXref = new GraphXref(psiMi, CvTerm.PSI_MI_MI, identity);
         psiMi.getIdentifiers().add(psiMiXref);
         return psiMi;
     }
 
-    public static GraphCvTerm createIdentityQualifier(CvTerm psiMi) {
-        GraphCvTerm identity = new GraphCvTerm(Xref.IDENTITY, null, (String) null, QUALIFIER_OBJCLASS);
+    public static CvTerm createIdentityQualifier(CvTerm psiMi) {
+        CvTerm identity = new GraphCvTerm(Xref.IDENTITY, null, (String) null, QUALIFIER_OBJCLASS);
         Xref psiMiXref = new GraphXref(psiMi, Xref.IDENTITY_MI, identity);
         identity.getIdentifiers().add(psiMiXref);
         return identity;
