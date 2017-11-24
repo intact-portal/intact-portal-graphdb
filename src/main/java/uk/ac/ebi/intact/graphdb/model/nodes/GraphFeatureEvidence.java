@@ -1,19 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.AbstractFeature;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
-import psidev.psi.mi.jami.utils.CvTermUtils;
-import psidev.psi.mi.jami.utils.XrefUtils;
-import psidev.psi.mi.xml.model.Feature;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by anjali on 21/11/17.
@@ -28,8 +21,8 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     private Collection<GraphParameter> parameters;
     private String shortName;
     private String fullName;
-   // private GraphXref interpro; // To do
-     private String interpro;
+    // private GraphXref interpro; // To do
+    private String interpro;
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
@@ -40,13 +33,13 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     private GraphExperimentalEntity participant;
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
-    public GraphFeatureEvidence(){
+    public GraphFeatureEvidence() {
 
     }
 
-    public GraphFeatureEvidence(FeatureEvidence featureEvidence){
-       setDetectionMethods(featureEvidence.getDetectionMethods());
-       setParameters(featureEvidence.getParameters());
+    public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
+        setDetectionMethods(featureEvidence.getDetectionMethods());
+        setParameters(featureEvidence.getParameters());
         setShortName(featureEvidence.getShortName());
         setFullName(featureEvidence.getFullName());
         setInterpro(featureEvidence.getInterpro());
@@ -156,7 +149,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
             this.interpro = null;
         }*/
 
-        this.interpro=interpro;
+        this.interpro = interpro;
     }
 
     /*protected void initialiseIdentifiers(){
