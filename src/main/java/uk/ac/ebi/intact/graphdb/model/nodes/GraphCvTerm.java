@@ -19,7 +19,7 @@ import java.util.List;
 public class GraphCvTerm implements CvTerm {
 
     @GraphId
-    private Long id;
+    private Long graphId;
 
     private String shortName;
     private String fullName;

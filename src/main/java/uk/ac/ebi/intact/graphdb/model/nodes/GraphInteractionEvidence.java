@@ -14,7 +14,7 @@ import java.util.Date;
 public class GraphInteractionEvidence implements InteractionEvidence {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private String imexId;
     private GraphExperiment experiment;

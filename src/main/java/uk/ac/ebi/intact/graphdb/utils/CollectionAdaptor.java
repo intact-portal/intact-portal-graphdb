@@ -67,4 +67,4 @@ public class CollectionAdaptor {
         return featureEvidences.stream().map(GraphFeatureEvidence::new).collect(Collectors.toList());
     }
 }
-}
+

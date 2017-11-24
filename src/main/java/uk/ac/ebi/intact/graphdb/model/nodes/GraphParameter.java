@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class GraphParameter implements Parameter {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm type;
     private BigDecimal uncertainty;

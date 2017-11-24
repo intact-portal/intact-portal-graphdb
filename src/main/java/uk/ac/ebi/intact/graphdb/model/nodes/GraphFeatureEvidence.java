@@ -328,7 +328,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     @Override
     public ExperimentalEntity getParticipant() {
-        return null;
+        return this.participant;
     }
 
     @Override
@@ -346,13 +346,13 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     @Override
     public void setParticipantAndAddFeature(ExperimentalEntity participant) {
-        /*if (this.participant != null){
+        if (this.participant != null){
             this.participant.removeFeature(this);
         }
 
         if (participant != null){
             participant.addFeature(this);
-        }*/
+        }
     }
 
     public Collection<GraphFeatureEvidence> getLinkedFeatures() {
@@ -384,6 +384,5 @@ public class GraphFeatureEvidence implements FeatureEvidence {
             this.aliases = new ArrayList<GraphAlias>();
         }
     }
-
 
 }

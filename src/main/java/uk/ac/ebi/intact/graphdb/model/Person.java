@@ -18,7 +18,7 @@ import java.util.List;
 public class Person {
 
 	@GraphId
-	private Long id;
+	private Long graphId;
 
 	private String name;
 

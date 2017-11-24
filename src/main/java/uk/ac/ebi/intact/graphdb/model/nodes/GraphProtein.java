@@ -20,7 +20,7 @@ import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 public class GraphProtein extends GraphPolymer implements Protein {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphXref uniprotkb;
     private GraphXref refseq;

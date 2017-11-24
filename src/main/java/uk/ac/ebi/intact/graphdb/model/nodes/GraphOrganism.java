@@ -15,7 +15,7 @@ import java.util.Collection;
 public class GraphOrganism implements Organism {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private String commonName;
     private String scientificName;

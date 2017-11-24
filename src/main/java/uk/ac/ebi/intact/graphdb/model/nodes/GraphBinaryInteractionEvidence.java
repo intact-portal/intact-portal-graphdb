@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.model.ParticipantEvidence;
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphParticipantEvidence participantA;
     private GraphParticipantEvidence participantB;

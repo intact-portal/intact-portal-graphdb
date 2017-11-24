@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.utils.comparator.confidence.UnambiguousConfidenceCompa
 public class GraphConfidence implements Confidence {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private GraphCvTerm type;
     private String value;

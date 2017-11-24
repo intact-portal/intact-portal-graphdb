@@ -11,7 +11,7 @@ import psidev.psi.mi.jami.model.Xref;
 public class GraphMolecule extends GraphInteractor implements Molecule {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     public GraphMolecule() {
         super();

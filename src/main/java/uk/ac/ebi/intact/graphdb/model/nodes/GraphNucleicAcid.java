@@ -14,7 +14,7 @@ import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private GraphXref ddbjEmblGenbank;
     private GraphXref refseq;

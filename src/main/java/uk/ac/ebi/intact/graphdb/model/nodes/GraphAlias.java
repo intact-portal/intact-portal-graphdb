@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 public class GraphAlias implements Alias {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm type;
     private String name;

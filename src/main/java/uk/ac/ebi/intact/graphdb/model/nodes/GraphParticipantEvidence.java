@@ -19,7 +19,7 @@ import java.util.Collection;
 public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm experimentalRole;
     private GraphCvTerm biologicalRole;

@@ -14,7 +14,7 @@ import psidev.psi.mi.jami.model.ResultingSequence;
 public class GraphRange implements Range {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphPosition start;
     private GraphPosition end;
@@ -111,7 +111,7 @@ public class GraphRange implements Range {
     }
 
     public void setParticipant(Entity participant) {
-        this.participant = participant;
+        this.participant = new GraphEntity(participant);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.Collection;
 public class GraphInteractor implements Interactor {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private String shortName;
     private String fullName;

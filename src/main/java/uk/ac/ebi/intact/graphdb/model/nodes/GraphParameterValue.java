@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class GraphParameterValue extends ParameterValue {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     public GraphParameterValue(BigDecimal factor, short base, short exponent) {
         super(factor, base, exponent);

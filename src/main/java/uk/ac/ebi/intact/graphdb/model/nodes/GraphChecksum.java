@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.utils.comparator.checksum.UnambiguousChecksumComparato
 public class GraphChecksum implements Checksum {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private GraphCvTerm method;
     private String value;
@@ -19,20 +19,19 @@ public class GraphChecksum implements Checksum {
     }
 
     public GraphChecksum(Checksum checksum) {
-        setMethod(checksum.getMethod());
-        setValue(checksum.getValue());
+        this(checksum.getMethod(), checksum.getValue());
     }
 
-   /* public GraphChecksum(CvTerm method, String value){
+    public GraphChecksum(CvTerm method, String value){
         if (method == null){
             throw new IllegalArgumentException("The method is required and cannot be null");
         }
-        this.method = method;
+        setMethod(method);
         if (value == null){
             throw new IllegalArgumentException("The checksum value is required and cannot be null");
         }
-        this.value = value;
-    }*/
+        setValue(value);
+    }
 
     public CvTerm getMethod() {
         return this.method;

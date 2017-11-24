@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationCompa
 public class GraphAnnotation implements Annotation {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm topic;
     private String value;

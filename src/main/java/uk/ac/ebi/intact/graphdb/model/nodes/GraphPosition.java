@@ -13,7 +13,7 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 public class GraphPosition implements Position {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm status;
     private long start;

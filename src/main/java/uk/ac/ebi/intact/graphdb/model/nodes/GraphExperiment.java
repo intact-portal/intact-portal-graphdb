@@ -12,7 +12,7 @@ import java.util.Collection;
 public class GraphExperiment implements Experiment {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private GraphPublication publication;
     private Collection<GraphXref> xrefs;

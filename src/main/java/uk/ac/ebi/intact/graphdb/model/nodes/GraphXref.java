@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 public class GraphXref implements Xref {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private GraphCvTerm database;
     private String identifier;

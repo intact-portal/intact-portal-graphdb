@@ -14,7 +14,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
  */
 
 
-// TO DO Review
+// TODO Review
 public class GraphUtils {
 
     public static final String DATABASE_OBJCLASS="CvDatabase";

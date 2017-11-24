@@ -19,7 +19,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 public class GraphPolymer extends GraphMolecule implements Polymer {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private String sequence;
 

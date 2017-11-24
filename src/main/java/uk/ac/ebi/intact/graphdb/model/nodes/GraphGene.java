@@ -30,7 +30,7 @@ import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 public class GraphGene extends GraphMolecule implements Gene {
 
     @GraphId
-    protected Long id;
+    private Long graphId;
 
     private GraphXref ensembl;
     private GraphXref ensemblGenome;

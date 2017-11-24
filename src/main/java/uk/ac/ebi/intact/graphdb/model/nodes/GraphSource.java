@@ -8,7 +8,7 @@ import psidev.psi.mi.jami.model.Source;
 public class GraphSource implements Source {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     public GraphSource() {
     }
