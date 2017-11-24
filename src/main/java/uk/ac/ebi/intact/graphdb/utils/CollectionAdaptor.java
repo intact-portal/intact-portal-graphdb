@@ -3,15 +3,17 @@ package uk.ac.ebi.intact.graphdb.utils;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by anjali on 22/11/17.
  */
 public class CollectionAdaptor {
+
+    public static Collection<GraphCvTerm> convertCvTermIntoGraphModel(Collection<CvTerm> cvTerms){
+        return cvTerms.stream().map(GraphCvTerm::new).collect(Collectors.toList());
+    }
 
     public static Collection<GraphXref> convertXrefIntoGraphModel(Collection<Xref> xrefs){
         return xrefs.stream().map(GraphXref::new).collect(Collectors.toList());
@@ -53,5 +55,7 @@ public class CollectionAdaptor {
         return participantEvidences.stream().map(GraphParticipantEvidence::new).collect(Collectors.toList());
     }
 
-
+    public static Collection<GraphCausalRelationship> convertCausalRelationshipIntoGraphModel(Collection<CausalRelationship> causalRelationships) {
+        return causalRelationships.stream().map(GraphCausalRelationship::new).collect(Collectors.toList());
+    }
 }

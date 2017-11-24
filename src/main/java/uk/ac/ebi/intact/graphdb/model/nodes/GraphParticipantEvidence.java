@@ -2,11 +2,13 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultStoichiometry;
 import psidev.psi.mi.jami.utils.CvTermUtils;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -24,13 +26,18 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphOrganism expressedIn;
     private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
+    private GraphBinaryInteraction interaction;
     private Collection<GraphFeature> features;
     private Collection<GraphConfidence> confidences;
     private Collection<GraphParameter> parameters;
     private Collection<GraphCvTerm> identificationMethods;
     private Collection<GraphCvTerm> experimentalPreparations;
+    private Collection<GraphXref> xrefs;
+    private Collection<GraphAnnotation> annotations;
+    private Collection<GraphAlias> aliases;
     private Collection<GraphCausalRelationship> causalRelationships;
     private EntityInteractorChangeListener changeListener;
+
 
     public GraphParticipantEvidence() {
     }
@@ -41,19 +48,25 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
         setStoichiometry(participantEvidence.getStoichiometry());
         setInteractor(participantEvidence.getInteractor());
+        setInteraction(participantEvidence.getInteraction());
         setFeatures(participantEvidence.getFeatures());
         setConfidences(participantEvidence.getConfidences());
         setParameters(participantEvidence.getParameters());
         setIdentificationMethods(participantEvidence.getIdentificationMethods());
         setExperimentalPreparations(participantEvidence.getExperimentalPreparations());
+        setXrefs(participantEvidence.getXrefs());
+        setAnnotations(participantEvidence.getAnnotations());
+        setAliases(participantEvidence.getAliases());
         setCausalRelationships(participantEvidence.getCausalRelationships());
         setChangeListener(participantEvidence.getChangeListener());
     }
 
+    @Override
     public CvTerm getExperimentalRole() {
         return this.experimentalRole;
     }
 
+    @Override
     public void setExperimentalRole(CvTerm experimentalRole) {
         if (experimentalRole != null) {
             if (experimentalRole instanceof GraphCvTerm) {
@@ -66,10 +79,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         }
     }
 
+    @Override
     public CvTerm getBiologicalRole() {
         return this.biologicalRole;
     }
 
+    @Override
     public void setBiologicalRole(CvTerm biologicalRole) {
         if (biologicalRole != null) {
             if (biologicalRole instanceof GraphCvTerm) {
@@ -83,10 +98,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         //TODO login it
     }
 
+    @Override
     public Organism getExpressedInOrganism() {
         return this.expressedIn;
     }
 
+    @Override
     public void setExpressedInOrganism(Organism organism) {
         if (organism != null) {
             if (organism instanceof GraphOrganism) {
@@ -100,10 +117,41 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         //TODO login it
     }
 
+    @Override
+    public Stoichiometry getStoichiometry() {
+        return this.stoichiometry;
+    }
+
+    @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
+    }
+
+    @Override
+    public void setStoichiometry(Stoichiometry stoichiometry) {
+        if (stoichiometry != null) {
+            if (stoichiometry instanceof GraphStoichiometry) {
+                this.stoichiometry = (GraphStoichiometry) stoichiometry;
+            } else {
+                this.stoichiometry = new GraphStoichiometry(stoichiometry);
+            }
+        } else {
+            this.stoichiometry = null;
+        }
+        //TODO login it
+    }
+
+    @Override
     public Interactor getInteractor() {
         return this.interactor;
     }
 
+    @Override
     public void setInteractor(Interactor interactor) {
         if (interactor == null){
             throw new IllegalArgumentException("The interactor cannot be null.");
@@ -119,73 +167,70 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         }
     }
 
-    public Collection<CausalRelationship> getCausalRelationships() {
-        if (this.causalRelationships == null){
-            initialiseCausalRelationships();
-        }
-        return this.causalRelationships;
-    }
+    @Override
+    public void setInteractionAndAddParticipant(InteractionEvidence interaction) {
 
-    public Stoichiometry getStoichiometry() {
-        return this.stoichiometry;
-    }
-
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry == null){
-            this.stoichiometry = null;
+        if (this.interaction != null){
+            this.interaction.removeParticipant(this);
         }
-        else {
-            this.stoichiometry = new DefaultStoichiometry(stoichiometry, stoichiometry);
+
+        if (interaction != null){
+            interaction.addParticipant(this);
         }
     }
 
-    public void setStoichiometry(Stoichiometry stoichiometry) {
-        this.stoichiometry = stoichiometry;
+    @Override
+    public void setInteraction(InteractionEvidence interaction) {
+        if (interaction != null) {
+            if (interaction instanceof GraphBinaryInteractionEvidence) {
+                this.interaction = (GraphBinaryInteractionEvidence) interaction;
+            } else {
+                this.interaction = new GraphBinaryInteractionEvidence(interaction);
+            }
+        } else {
+            this.interaction = null;
+        }
+        //TODO login it
     }
 
-    public Collection<F> getFeatures() {
+    @Override
+    public BinaryInteractionEvidence getInteraction() {
+        return this.interaction;
+    }
+
+
+    @Override
+    public Collection<GraphFeature> getFeatures() {
         if (features == null){
-            initialiseFeatures();
+            features = new ArrayList<GraphFeature>();
         }
         return this.features;
     }
 
-    public Collection<Xref> getXrefs() {
-        if (xrefs == null){
-            initialiseXrefs();
+    public void setFeatures(Collection<FeatureEvidence> features) {
+        if (features != null) {
+            addAllFeatures(features);
+        } else {
+            this.features = new ArrayList<GraphFeature>();
         }
-        return this.xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
-        if (annotations == null){
-            initialiseAnnotations();
-        }
-        return this.annotations;
-    }
-
-    public Collection<Alias> getAliases() {
-        if (aliases == null){
-            initialiseAliases();
-        }
-        return this.aliases;
-    }
-
-    public boolean addFeature(F feature) {
-
+    @Override
+    public boolean addFeature(FeatureEvidence feature) {
         if (feature == null){
             return false;
         }
 
-        if (getFeatures().add(feature)){
+        if (getFeatures().add(new GraphFeature(feature))){
             feature.setParticipant(this);
             return true;
         }
         return false;
     }
 
-    public boolean removeFeature(F feature) {
-
+    //Todo review
+    @Override
+    public boolean removeFeature(FeatureEvidence feature) {
         if (feature == null){
             return false;
         }
@@ -197,13 +242,14 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         return false;
     }
 
-    public boolean addAllFeatures(Collection<? extends F> features) {
+    @Override
+    public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
         if (features == null){
             return false;
         }
 
         boolean added = false;
-        for (F feature : features){
+        for (FeatureEvidence feature : features){
             if (addFeature(feature)){
                 added = true;
             }
@@ -211,13 +257,14 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         return added;
     }
 
-    public boolean removeAllFeatures(Collection<? extends F> features) {
+    @Override
+    public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
         if (features == null){
             return false;
         }
 
         boolean added = false;
-        for (F feature : features){
+        for (FeatureEvidence feature : features){
             if (removeFeature(feature)){
                 added = true;
             }
@@ -225,53 +272,141 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         return added;
     }
 
-    public void setInteractionAndAddParticipant(I interaction) {
-
-        if (this.interaction != null){
-            this.interaction.removeParticipant(this);
-        }
-
-        if (interaction != null){
-            interaction.addParticipant(this);
-        }
-    }
-
-    public I getInteraction() {
-        return this.interaction;
-    }
-
-    public void setInteraction(I interaction) {
-        this.interaction = interaction;
-    }
-
-
-
-
-    public Collection<CvTerm> getIdentificationMethods() {
-        if (identificationMethods == null){
-            initialiseIdentificationMethods();
-        }
-        return this.identificationMethods;
-    }
-
-    public Collection<CvTerm> getExperimentalPreparations() {
-        if (experimentalPreparations == null){
-            initialiseExperimentalPreparations();
-        }
-        return this.experimentalPreparations;
-    }
-
-    public Collection<Confidence> getConfidences() {
-        if (confidences == null){
-            initialiseConfidences();
+    @Override
+    public Collection<GraphConfidence> getConfidences() {
+        if(this.confidences==null){
+            this.confidences=new ArrayList<GraphConfidence>();
         }
         return this.confidences;
     }
 
-    public Collection<Parameter> getParameters() {
-        if (parameters == null){
-            initialiseParameters();
+    public void setConfidences(Collection<Confidence> confidences) {
+        if(confidences!=null) {
+            this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences);
+        }
+        else{
+            this.confidences = new ArrayList<GraphConfidence>();
+        }
+    }
+
+    @Override
+    public Collection<GraphParameter> getParameters() {
+        if(this.parameters==null){
+            this.parameters=new ArrayList<GraphParameter>();
         }
         return this.parameters;
+    }
+
+    public void setParameters(Collection<Parameter> parameters) {
+        if(parameters!=null) {
+            this.parameters = CollectionAdaptor.convertParameterIntoGraphModel(parameters);
+        }else{
+            this.parameters=new ArrayList<GraphParameter>();
+        }
+    }
+
+    @Override
+    public Collection<GraphCvTerm> getIdentificationMethods() {
+        if (identificationMethods == null){
+            this.identificationMethods = new ArrayList<GraphCvTerm>();
+        }
+        return this.identificationMethods;
+    }
+
+    public void setIdentificationMethods(Collection<CvTerm> identificationMethods) {
+        if (identificationMethods != null) {
+            this.identificationMethods = CollectionAdaptor.convertCvTermIntoGraphModel(identificationMethods);
+        } else {
+            this.identificationMethods = new ArrayList<GraphCvTerm>();
+        }    }
+
+    @Override
+    public Collection<GraphCvTerm> getExperimentalPreparations() {
+        if (experimentalPreparations == null){
+            this.experimentalPreparations = new ArrayList<GraphCvTerm>();
+        }
+        return this.experimentalPreparations;
+    }
+
+    public void setExperimentalPreparations(Collection<CvTerm> experimentalPreparations) {
+        if (experimentalPreparations != null) {
+            this.experimentalPreparations = CollectionAdaptor.convertCvTermIntoGraphModel(experimentalPreparations);
+        } else {
+            this.experimentalPreparations = new ArrayList<GraphCvTerm>();
+        }
+    }
+
+    @Override
+    public Collection<GraphXref> getXrefs() {
+        if (xrefs == null) {
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+        return this.xrefs;
+    }
+
+    public void setXrefs(Collection<Xref> xrefs) {
+        if (xrefs != null) {
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+        } else {
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+    }
+
+    @Override
+    public Collection<GraphAnnotation> getAnnotations() {
+        if (annotations == null) {
+            this.annotations = new ArrayList<GraphAnnotation>();
+        }
+        return this.annotations;
+    }
+
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if (annotations != null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        } else {
+            this.annotations = new ArrayList<GraphAnnotation>();
+        }
+    }
+
+    @Override
+    public Collection<GraphAlias> getAliases() {
+        if (aliases == null) {
+            this.aliases = new ArrayList<GraphAlias>();
+        }
+        return this.aliases;
+    }
+
+    public void setAliases(Collection<Alias> aliases) {
+        if (aliases != null) {
+            this.aliases = CollectionAdaptor.convertAliasIntoGraphModel(aliases);
+        } else {
+            this.aliases = new ArrayList<GraphAlias>();
+        }
+    }
+
+    @Override
+    public Collection<GraphCausalRelationship> getCausalRelationships() {
+        if (this.causalRelationships == null){
+            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
+        }
+        return this.causalRelationships;
+    }
+
+    public void setCausalRelationships(Collection<CausalRelationship> causalRelationships) {
+        if (causalRelationships != null) {
+            this.causalRelationships = CollectionAdaptor.convertCausalRelationshipIntoGraphModel(causalRelationships);
+        } else {
+            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
+        }
+    }
+
+    @Override
+    public EntityInteractorChangeListener getChangeListener() {
+        return changeListener;
+    }
+
+    @Override
+    public void setChangeListener(EntityInteractorChangeListener changeListener) {
+        this.changeListener = changeListener;
     }
 }
