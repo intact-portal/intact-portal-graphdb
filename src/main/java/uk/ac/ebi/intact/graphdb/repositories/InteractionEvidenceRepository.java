@@ -15,7 +15,7 @@ import psidev.psi.mi.jami.model.Xref;
  */
 
 @RepositoryRestResource(collectionResourceRel = "interactions", path = "interactions")
-public interface InteractionRepository extends GraphRepository<BinaryInteractionEvidence> {
+public interface InteractionEvidenceRepository extends GraphRepository<BinaryInteractionEvidence> {
 
     BinaryInteractionEvidence findByShortName(@Param("shortName") String shortName);
 

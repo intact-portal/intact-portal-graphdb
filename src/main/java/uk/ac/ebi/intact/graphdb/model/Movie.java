@@ -18,7 +18,7 @@ import java.util.List;
 public class Movie {
 
 	@GraphId
-	private Long graphId;
+	private Long id;
 
 	private String title;
 

@@ -26,7 +26,7 @@ public class InteractionRepositoryTest {
     @Autowired
     private InteractorRepository interactorRepository;
     @Autowired
-    private InteractionRepository interactionRepository;
+    private InteractionEvidenceRepository interactionRepository;
 
     @Before
     public void setUp() throws Exception {

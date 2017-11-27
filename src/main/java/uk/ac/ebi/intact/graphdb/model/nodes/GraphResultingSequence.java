@@ -15,7 +15,7 @@ import java.util.Collections;
 public class GraphResultingSequence implements ResultingSequence {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private String originalSequence;
     private String newSequence;

@@ -123,7 +123,7 @@ public class InteractorRepositoryTest {
             System.out.println(interactor);
         }
 
-        Page<Interactor> page = interactorRepository.findAll(new PageRequest(0, 10));
+        Page<GraphInteractor> page = interactorRepository.findAll(new PageRequest(0, 10));
         Assert.assertEquals(page.getTotalElements(), 3);
         for (Interactor interactor : page.getContent()) {
             System.out.println(interactor);
@@ -136,7 +136,7 @@ public class InteractorRepositoryTest {
 
         System.out.println("Lookup each interactor by accession...");
         for (String name : new String[]{P12345, P12346, P12347}) {
-            GraphInteractor interactor = (GraphInteractor) interactorRepository.findByShortName(name);
+            GraphInteractor interactor = interactorRepository.findByShortName(name);
             Assert.assertEquals(interactor.getShortName(), name);
             Assert.assertNotNull(interactor.getInteractions());
             Assert.assertEquals(interactor.getInteractions().size(), 2);

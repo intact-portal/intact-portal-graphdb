@@ -19,7 +19,7 @@ import java.util.Collection;
 public class Role {
 
 	@GraphId
-	private Long graphId;
+	private Long id;
 
 	private Collection<String> roles = new ArrayList<>();
 

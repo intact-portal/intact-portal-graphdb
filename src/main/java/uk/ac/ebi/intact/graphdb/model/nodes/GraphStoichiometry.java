@@ -9,7 +9,7 @@ import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
 public class GraphStoichiometry implements Stoichiometry {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private int minValue;
     private int maxValue;

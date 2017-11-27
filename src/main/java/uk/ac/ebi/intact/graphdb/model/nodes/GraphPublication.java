@@ -3,18 +3,21 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @NodeEntity
 public class GraphPublication implements Publication {
 
     @GraphId
-    protected Long graphId;
+    private Long graphId;
 
     private String title;
     private String journal;
@@ -32,153 +35,106 @@ public class GraphPublication implements Publication {
     private GraphXref doi;
     private GraphXref imexId;
 
-    public GraphPublication(){
+    public GraphPublication() {
         this.curationDepth = CurationDepth.undefined;
     }
 
-    public GraphPublication(Xref identifier){
+    public GraphPublication(Publication publication) {
+        setTitle(publication.getTitle());
+        setJournal(publication.getJournal());
+        setPublicationDate(publication.getPublicationDate());
+        setAuthors(publication.getAuthors());
+        setIdentifiers(publication.getIdentifiers());
+        setXrefs(publication.getXrefs());
+        setAnnotations(publication.getAnnotations());
+        setExperiments(publication.getExperiments());
+        setCurationDepth(publication.getCurationDepth());
+        setReleasedDate(publication.getReleasedDate());
+        setSource(publication.getSource());
+        setPubmedId(publication.getPubmedId());
+        setDoi(publication.getDoi());
+        assignImexId(publication.getImexId());
+    }
+
+    public GraphPublication(Xref identifier) {
         this();
 
-        if (identifier != null){
-            getIdentifiers().add(identifier);
+        if (identifier != null) {
+            getIdentifiers().add(new GraphXref(identifier));
         }
     }
 
-    public GraphPublication(Xref identifier, CurationDepth curationDepth, Source source){
+    public GraphPublication(Xref identifier, CurationDepth curationDepth, Source source) {
         this(identifier);
-        if (curationDepth != null){
+        if (curationDepth != null) {
             this.curationDepth = curationDepth;
         }
-        this.source = source;
+        setSource(source);
     }
 
-    public GraphPublication(Xref identifier, String imexId, Source source){
+    public GraphPublication(Xref identifier, String imexId, Source source) {
         this(identifier, CurationDepth.IMEx, source);
         assignImexId(imexId);
     }
 
-    public GraphPublication(String pubmed){
+    public GraphPublication(String pubmed) {
         this.curationDepth = CurationDepth.undefined;
 
-        if (pubmed != null){
+        if (pubmed != null) {
             setPubmedId(pubmed);
         }
     }
 
-    public GraphPublication(String pubmed, CurationDepth curationDepth, Source source){
+    public GraphPublication(String pubmed, CurationDepth curationDepth, Source source) {
         this(pubmed);
-        if (curationDepth != null){
+        if (curationDepth != null) {
             this.curationDepth = curationDepth;
         }
-        this.source = source;
+        setSource(source);
     }
 
-    public GraphPublication(String pubmed, String imexId, Source source){
+    public GraphPublication(String pubmed, String imexId, Source source) {
         this(pubmed, CurationDepth.IMEx, source);
         assignImexId(imexId);
     }
 
-    public GraphPublication(String title, String journal, Date publicationDate){
+    public GraphPublication(String title, String journal, Date publicationDate) {
         this.title = title;
         this.journal = journal;
         this.publicationDate = publicationDate;
         this.curationDepth = CurationDepth.undefined;
     }
 
-    public GraphPublication(String title, String journal, Date publicationDate, CurationDepth curationDepth, Source source){
+    public GraphPublication(String title, String journal, Date publicationDate, CurationDepth curationDepth, Source source) {
         this(title, journal, publicationDate);
-        if (curationDepth != null){
+        if (curationDepth != null) {
             this.curationDepth = curationDepth;
         }
-        this.source = source;
+        setSource(source);
     }
 
-    public GraphPublication(String title, String journal, Date publicationDate, String imexId, Source source){
+    public GraphPublication(String title, String journal, Date publicationDate, String imexId, Source source) {
         this(title, journal, publicationDate, CurationDepth.IMEx, source);
         assignImexId(imexId);
     }
 
-    protected void initialiseAuthors(){
-        this.authors = new ArrayList<String>();
-    }
-
-    protected void initialiseXrefs(){
-        this.xrefs = new PublicationXrefList();
-    }
-
-    protected void initialiseAnnotations(){
-        this.annotations = new ArrayList<Annotation>();
-    }
-
-    protected void initialiseExperiments(){
-        this.experiments = new ArrayList<Experiment>();
-    }
-
-    protected void initialiseIdentifiers(){
-        this.identifiers = new PublicationIdentifierList();
-    }
-
-    protected void initialiseAuthorsWith(List<String> authors){
-        if (authors == null){
-            this.authors = Collections.EMPTY_LIST;
-        }
-        else {
-            this.authors = authors;
-        }
-    }
-
-    protected void initialiseXrefsWith(Collection<Xref> xrefs){
-        if (xrefs == null){
-            this.xrefs = Collections.EMPTY_LIST;
-        }
-        else {
-            this.xrefs = xrefs;
-        }
-    }
-
-    protected void initialiseAnnotationsWith(Collection<Annotation> annotations){
-        if (annotations == null){
-            this.annotations = Collections.EMPTY_LIST;
-        }
-        else {
-            this.annotations = annotations;
-        }
-    }
-
-    protected void initialiseExperimentsWith(Collection<Experiment> experiments){
-        if (experiments == null){
-            this.experiments = Collections.EMPTY_LIST;
-        }
-        else {
-            this.experiments = experiments;
-        }
-    }
-
-    protected void initialiseIdentifiersWith(Collection<Xref> identifiers){
-        if (identifiers == null){
-            this.identifiers = Collections.EMPTY_LIST;
-        }
-        else {
-            this.identifiers = identifiers;
-        }
-    }
 
     public String getPubmedId() {
         return this.pubmedId != null ? this.pubmedId.getId() : null;
     }
 
     public void setPubmedId(String pubmedId) {
-        PublicationIdentifierList identifiers = (PublicationIdentifierList)getIdentifiers();
+        PublicationIdentifierList identifiers = (PublicationIdentifierList) getIdentifiers();
 
         // add new pubmed if not null
-        if (pubmedId != null){
+        if (pubmedId != null) {
             CvTerm pubmedDatabase = CvTermUtils.createPubmedDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old pubmed if not null
-            if (this.pubmedId != null){
+            if (this.pubmedId != null) {
                 identifiers.removeOnly(this.pubmedId);
             }
-            this.pubmedId = new DefaultXref(pubmedDatabase, pubmedId, identityQualifier);
+            this.pubmedId = new GraphXref(pubmedDatabase, pubmedId, identityQualifier);
             identifiers.addOnly(this.pubmedId);
         }
         // remove all pubmed if the collection is not empty
@@ -193,16 +149,16 @@ public class GraphPublication implements Publication {
     }
 
     public void setDoi(String doi) {
-        PublicationIdentifierList identifiers = (PublicationIdentifierList)getIdentifiers();
+        PublicationIdentifierList identifiers = (PublicationIdentifierList) getIdentifiers();
         // add new doi if not null
-        if (doi != null){
+        if (doi != null) {
             CvTerm doiDatabase = CvTermUtils.createDoiDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old doi if not null
-            if (this.doi != null){
+            if (this.doi != null) {
                 identifiers.removeOnly(this.doi);
             }
-            this.doi = new DefaultXref(doiDatabase, doi, identityQualifier);
+            this.doi = new GraphXref(doiDatabase, doi, identityQualifier);
             identifiers.addOnly(this.doi);
         }
         // remove all doi if the collection is not empty
@@ -212,11 +168,19 @@ public class GraphPublication implements Publication {
         }
     }
 
-    public Collection<Xref> getIdentifiers() {
-        if (identifiers == null){
-            initialiseIdentifiers();
+    public Collection<GraphXref> getIdentifiers() {
+        if (identifiers == null) {
+            this.identifiers = new ArrayList<GraphXref>();
         }
         return this.identifiers;
+    }
+
+    public void setIdentifiers(Collection<Xref> identifiers) {
+        if (identifiers != null) {
+            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
+        } else {
+            this.identifiers = new ArrayList<GraphXref>();
+        }
     }
 
     public String getImexId() {
@@ -224,21 +188,20 @@ public class GraphPublication implements Publication {
     }
 
     public void assignImexId(String identifier) {
-        PublicationXrefList xrefs = (PublicationXrefList)getXrefs();
+        PublicationXrefList xrefs = (PublicationXrefList) getXrefs();
         // add new imex if not null
-        if (identifier != null){
+        if (identifier != null) {
             CvTerm imexDatabase = CvTermUtils.createImexDatabase();
             CvTerm imexPrimaryQualifier = CvTermUtils.createImexPrimaryQualifier();
             // first remove old imex if not null
-            if (this.imexId != null){
+            if (this.imexId != null) {
                 xrefs.removeOnly(this.imexId);
             }
-            this.imexId = new DefaultXref(imexDatabase, identifier, imexPrimaryQualifier);
+            this.imexId = new GraphXref(imexDatabase, identifier, imexPrimaryQualifier);
             xrefs.addOnly(this.imexId);
 
             this.curationDepth = CurationDepth.IMEx;
-        }
-        else if (this.imexId != null){
+        } else if (this.imexId != null) {
             throw new IllegalArgumentException("The imex id has to be non null.");
         }
     }
@@ -268,31 +231,60 @@ public class GraphPublication implements Publication {
     }
 
     public List<String> getAuthors() {
-        if (authors == null){
-           initialiseAuthors();
+        if (authors == null) {
+            this.authors = new ArrayList<String>();
         }
         return this.authors;
     }
 
-    public Collection<Xref> getXrefs() {
-        if (xrefs == null){
-           initialiseXrefs();
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public Collection<GraphXref> getXrefs() {
+        if (xrefs == null) {
+            this.xrefs = new PublicationXrefList();
         }
         return this.xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
-        if (annotations == null){
-            initialiseAnnotations();
+    //TODO Review it shoudl use PublicationXrefList I guess
+    public void setXrefs(Collection<Xref> xrefs) {
+        if (xrefs != null) {
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+        } else {
+            this.xrefs = new ArrayList<GraphXref>();
+        }
+    }
+
+    public Collection<GraphAnnotation> getAnnotations() {
+        if (this.annotations == null) {
+            this.annotations = new ArrayList<GraphAnnotation>();
         }
         return this.annotations;
     }
 
-    public Collection<Experiment> getExperiments() {
-        if (experiments == null){
-            initialiseExperiments();
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if (annotations != null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        } else {
+            this.annotations = new ArrayList<GraphAnnotation>();
+        }
+    }
+
+    public Collection<GraphExperiment> getExperiments() {
+        if (experiments == null) {
+            this.experiments = new ArrayList<GraphExperiment>();
         }
         return this.experiments;
+    }
+
+    public void setExperiments(Collection<Experiment> experiments) {
+        if (experiments != null) {
+            addAllExperiments(experiments);
+        } else {
+            this.experiments = new ArrayList<GraphExperiment>();
+        }
     }
 
     public CurationDepth getCurationDepth() {
@@ -301,17 +293,15 @@ public class GraphPublication implements Publication {
 
     public void setCurationDepth(CurationDepth curationDepth) {
 
-        if (imexId != null && curationDepth != null && !curationDepth.equals(CurationDepth.IMEx)){
+        if (imexId != null && curationDepth != null && !curationDepth.equals(CurationDepth.IMEx)) {
             throw new IllegalArgumentException("The curationDepth " + curationDepth.toString() + " is not allowed because the publication has an IMEx id so it has IMEx curation depth.");
-        }
-        else if (imexId != null && curationDepth == null){
+        } else if (imexId != null && curationDepth == null) {
             throw new IllegalArgumentException("The curationDepth cannot be null/not specified because the publication has an IMEx id so it has IMEx curation depth.");
         }
 
         if (curationDepth == null) {
             this.curationDepth = CurationDepth.undefined;
-        }
-        else {
+        } else {
             this.curationDepth = curationDepth;
         }
     }
@@ -329,15 +319,22 @@ public class GraphPublication implements Publication {
     }
 
     public void setSource(Source source) {
-        this.source = source;
+        if (source != null) {
+            if (source instanceof GraphSource) {
+                this.source = (GraphSource) source;
+            } else {
+                this.source = new GraphSource(source);
+            }
+        } else {
+            this.source = null;
+        }
     }
 
     public boolean addExperiment(Experiment exp) {
-        if (exp == null){
+        if (exp == null) {
             return false;
-        }
-        else {
-            if (getExperiments().add(exp)){
+        } else {
+            if (getExperiments().add(new GraphExperiment(exp))) {
                 exp.setPublication(this);
                 return true;
             }
@@ -346,11 +343,10 @@ public class GraphPublication implements Publication {
     }
 
     public boolean removeExperiment(Experiment exp) {
-        if (exp == null){
+        if (exp == null) {
             return false;
-        }
-        else {
-            if (getExperiments().remove(exp)){
+        } else {
+            if (getExperiments().remove(exp)) {
                 exp.setPublication(null);
                 return true;
             }
@@ -359,14 +355,13 @@ public class GraphPublication implements Publication {
     }
 
     public boolean addAllExperiments(Collection<? extends Experiment> exps) {
-        if (exps == null){
+        if (exps == null) {
             return false;
-        }
-        else {
+        } else {
             boolean added = false;
 
-            for (Experiment exp : exps){
-                if (addExperiment(exp)){
+            for (Experiment exp : exps) {
+                if (addExperiment(exp)) {
                     added = true;
                 }
             }
@@ -375,14 +370,13 @@ public class GraphPublication implements Publication {
     }
 
     public boolean removeAllExperiments(Collection<? extends Experiment> exps) {
-        if (exps == null){
+        if (exps == null) {
             return false;
-        }
-        else {
+        } else {
             boolean removed = false;
 
-            for (Experiment exp : exps){
-                if (removeExperiment(exp)){
+            for (Experiment exp : exps) {
+                if (removeExperiment(exp)) {
                     removed = true;
                 }
             }
@@ -393,38 +387,36 @@ public class GraphPublication implements Publication {
     protected void processAddedIdentifierEvent(Xref added) {
 
         // the added identifier is pubmed and it is not the current pubmed identifier
-        if (pubmedId != added && XrefUtils.isXrefFromDatabase(added, Xref.PUBMED_MI, Xref.PUBMED)){
+        if (pubmedId != added && XrefUtils.isXrefFromDatabase(added, Xref.PUBMED_MI, Xref.PUBMED)) {
             // the current pubmed identifier is not identity, we may want to set pubmed Identifier
-            if (!XrefUtils.doesXrefHaveQualifier(pubmedId, Xref.IDENTITY_MI, Xref.IDENTITY) && !XrefUtils.doesXrefHaveQualifier(pubmedId, Xref.PRIMARY_MI, Xref.PRIMARY)){
+            if (!XrefUtils.doesXrefHaveQualifier(pubmedId, Xref.IDENTITY_MI, Xref.IDENTITY) && !XrefUtils.doesXrefHaveQualifier(pubmedId, Xref.PRIMARY_MI, Xref.PRIMARY)) {
                 // the pubmed identifier is not set, we can set the pubmed
-                if (pubmedId == null){
-                    pubmedId = added;
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY) || XrefUtils.doesXrefHaveQualifier(added, Xref.PRIMARY_MI, Xref.PRIMARY)){
-                    pubmedId = added;
+                if (pubmedId == null) {
+                    pubmedId = new GraphXref(added);
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY) || XrefUtils.doesXrefHaveQualifier(added, Xref.PRIMARY_MI, Xref.PRIMARY)) {
+                    pubmedId = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current pubmed is not a secondary object, we reset pubmed identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(pubmedId, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    pubmedId = added;
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
+                    pubmedId = new GraphXref(added);
                 }
             }
         }
         // the added identifier is doi and it is not the current doi identifier
-        else if (doi != added && XrefUtils.isXrefFromDatabase(added, Xref.DOI_MI, Xref.DOI)){
+        else if (doi != added && XrefUtils.isXrefFromDatabase(added, Xref.DOI_MI, Xref.DOI)) {
             // the current doi identifier is not identity, we may want to set doi
-            if (!XrefUtils.doesXrefHaveQualifier(doi, Xref.IDENTITY_MI, Xref.IDENTITY) && !XrefUtils.doesXrefHaveQualifier(doi, Xref.PRIMARY_MI, Xref.PRIMARY)){
+            if (!XrefUtils.doesXrefHaveQualifier(doi, Xref.IDENTITY_MI, Xref.IDENTITY) && !XrefUtils.doesXrefHaveQualifier(doi, Xref.PRIMARY_MI, Xref.PRIMARY)) {
                 // the doi is not set, we can set the doi
-                if (doi == null){
-                    doi = added;
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY) || XrefUtils.doesXrefHaveQualifier(added, Xref.PRIMARY_MI, Xref.PRIMARY)){
-                    doi = added;
+                if (doi == null) {
+                    doi = new GraphXref(added);
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY) || XrefUtils.doesXrefHaveQualifier(added, Xref.PRIMARY_MI, Xref.PRIMARY)) {
+                    doi = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current doi is not a secondary object, we reset doi
                 else if (!XrefUtils.doesXrefHaveQualifier(doi, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
-                    doi = added;
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
+                    doi = new GraphXref(added);
                 }
             }
         }
@@ -432,12 +424,12 @@ public class GraphPublication implements Publication {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         // the removed identifier is pubmed
-        if (pubmedId != null && pubmedId.equals(removed)){
-            pubmedId = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.PUBMED_MI, Xref.PUBMED);
+        if (pubmedId != null && pubmedId.equals(removed)) {
+            pubmedId = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.PUBMED_MI, Xref.PUBMED));
         }
         // the removed identifier is doi
-        else if (doi != null && doi.equals(removed)){
-            doi = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.DOI_MI, Xref.DOI);
+        else if (doi != null && doi.equals(removed)) {
+            doi = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.DOI_MI, Xref.DOI));
         }
     }
 
@@ -449,20 +441,20 @@ public class GraphPublication implements Publication {
     protected void processAddedXrefEvent(Xref added) {
 
         // the added identifier is imex and the current imex is not set
-        if (imexId == null && XrefUtils.isXrefFromDatabase(added, Xref.IMEX_MI, Xref.IMEX)){
+        if (imexId == null && XrefUtils.isXrefFromDatabase(added, Xref.IMEX_MI, Xref.IMEX)) {
             // the added xref is imex-primary
-            if (XrefUtils.doesXrefHaveQualifier(added, Xref.IMEX_PRIMARY_MI, Xref.IMEX_PRIMARY)){
-                imexId = added;
+            if (XrefUtils.doesXrefHaveQualifier(added, Xref.IMEX_PRIMARY_MI, Xref.IMEX_PRIMARY)) {
+                imexId = new GraphXref(added);
             }
         }
     }
 
     protected void processRemovedXrefEvent(Xref removed) {
         // the removed identifier is pubmed
-        if (imexId != null && imexId.equals(removed)){
+        if (imexId != null && imexId.equals(removed)) {
             Collection<Xref> existingImex = XrefUtils.collectAllXrefsHavingDatabaseAndQualifier(getXrefs(), Xref.IMEX_MI, Xref.IMEX, Xref.IMEX_PRIMARY_MI, Xref.IMEX_PRIMARY);
-            if (!existingImex.isEmpty()){
-                imexId = existingImex.iterator().next();
+            if (!existingImex.isEmpty()) {
+                imexId = new GraphXref(existingImex.iterator().next());
             }
         }
     }
@@ -473,26 +465,25 @@ public class GraphPublication implements Publication {
 
     @Override
     public String toString() {
-        return "GraphPublication: "+
+        return "GraphPublication: " +
                 (getImexId() != null ? getImexId() :
                         (getPubmedId() != null ? getPubmedId() :
                                 (getDoi() != null ? getDoi() :
                                         (getTitle() != null ? getTitle() : "-"))));
     }
 
-    private class PublicationIdentifierList extends AbstractListHavingProperties<Xref> {
-        public PublicationIdentifierList(){
+    private class PublicationIdentifierList extends AbstractListHavingProperties<GraphXref> {
+        public PublicationIdentifierList() {
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Xref added) {
-
+        protected void processAddedObjectEvent(GraphXref added) {
             processAddedIdentifierEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Xref removed) {
+        protected void processRemovedObjectEvent(GraphXref removed) {
             processRemovedIdentifierEvent(removed);
         }
 
@@ -502,19 +493,18 @@ public class GraphPublication implements Publication {
         }
     }
 
-    private class PublicationXrefList extends AbstractListHavingProperties<Xref> {
-        public PublicationXrefList(){
+    private class PublicationXrefList extends AbstractListHavingProperties<GraphXref> {
+        public PublicationXrefList() {
             super();
         }
 
         @Override
-        protected void processAddedObjectEvent(Xref added) {
-
+        protected void processAddedObjectEvent(GraphXref added) {
             processAddedXrefEvent(added);
         }
 
         @Override
-        protected void processRemovedObjectEvent(Xref removed) {
+        protected void processRemovedObjectEvent(GraphXref removed) {
             processRemovedXrefEvent(removed);
         }
 

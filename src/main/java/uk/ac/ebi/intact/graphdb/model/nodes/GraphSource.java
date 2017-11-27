@@ -2,12 +2,8 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
-import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultAnnotation;
-import psidev.psi.mi.jami.model.impl.DefaultCvTerm;
-import psidev.psi.mi.jami.utils.AnnotationUtils;
-import psidev.psi.mi.jami.utils.CvTermUtils;
-import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import psidev.psi.mi.jami.model.Publication;
+import psidev.psi.mi.jami.model.Source;
 
 @NodeEntity
 public class GraphSource extends GraphCvTerm  implements Source {
@@ -18,7 +14,7 @@ public class GraphSource extends GraphCvTerm  implements Source {
     /*private Annotation url;*/
     private String url;
     private String postalAddress;
-    private Publication publication;
+    private GraphPublication publication;
 
     public GraphSource() {
     }
