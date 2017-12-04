@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
@@ -8,6 +9,9 @@ import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComp
  * Created by anjali on 24/11/17.
  */
 public class GraphVariableParameterValue implements VariableParameterValue {
+
+    @GraphId
+    private Long graphId;
 
     private String value;
     private Integer order;

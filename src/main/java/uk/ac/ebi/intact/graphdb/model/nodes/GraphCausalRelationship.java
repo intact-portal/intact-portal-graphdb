@@ -1,8 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
 import psidev.psi.mi.jami.model.*;
 
 public class GraphCausalRelationship implements CausalRelationship {
+
+    @GraphId
+    private Long graphId;
 
     private GraphCvTerm relationType;
     private GraphEntity target;

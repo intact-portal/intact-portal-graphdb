@@ -7,6 +7,7 @@ import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -33,6 +34,8 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private Date updatedDate;
     private Date createdDate;
     private GraphCvTerm interactionType;
+
+    @Relationship(type = "ie-participant", direction = Relationship.OUTGOING)
     private Collection<GraphParticipantEvidence> participants;
 
     @Relationship(type = "HAS", direction = Relationship.OUTGOING)
@@ -44,6 +47,9 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     }
 
     public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence) {
+        String callingClasses= Arrays.toString(Thread.currentThread().getStackTrace());
+
+
         setImexId(binaryInteractionEvidence.getImexId());
         setExperiment(binaryInteractionEvidence.getExperiment());
         setAvailability(binaryInteractionEvidence.getAvailability());
@@ -61,7 +67,12 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setUpdatedDate(binaryInteractionEvidence.getUpdatedDate());
         setCreatedDate(binaryInteractionEvidence.getCreatedDate());
         setInteractionType(binaryInteractionEvidence.getInteractionType());
-        setParticipants(binaryInteractionEvidence.getParticipants());
+
+        if(!callingClasses.contains("GraphParticipantEvidence")){
+            setParticipants(binaryInteractionEvidence.getParticipants());
+        }
+
+
     }
 
     public String getImexId() {

@@ -4,12 +4,15 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Labels;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,13 +90,18 @@ public class GraphCvTerm implements CvTerm {
     public GraphCvTerm(CvTerm cvTerm) {
         setShortName(cvTerm.getShortName());
         setFullName(cvTerm.getFullName());
+        setMIIdentifier(cvTerm.getMIIdentifier());
+        setMODIdentifier(cvTerm.getMODIdentifier());
+        setPARIdentifier(cvTerm.getPARIdentifier());
+        if(EntityCache.PSIMI_CVTERM==null && getShortName().equals(CvTerm.PSI_MI)){
+            EntityCache.PSIMI_CVTERM = this;
+        }else if(EntityCache.IDENTITY==null && getShortName().equals(Constants.IDENTITY)){
+            EntityCache.IDENTITY = this;
+        }
         setXrefs(cvTerm.getXrefs());
         setIdentifiers(cvTerm.getIdentifiers());
         setAnnotations(cvTerm.getAnnotations());
         setSynonyms(cvTerm.getSynonyms());
-        setMIIdentifier(cvTerm.getMIIdentifier());
-        setMODIdentifier(cvTerm.getMODIdentifier());
-        setPARIdentifier(cvTerm.getPARIdentifier());
     }
 
     public String getShortName() {
@@ -292,15 +300,16 @@ public class GraphCvTerm implements CvTerm {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof CvTerm)) {
+        if (!(o instanceof GraphCvTerm)) {
             return false;
+        }else {
+            if (this.getShortName().equals(((GraphCvTerm) o).getShortName())) {
+                return true;
+            } else {
+                return false;
+            }
         }
-
-        return UnambiguousCvTermComparator.areEquals(this, (CvTerm) o);
+        //return UnambiguousCvTermComparator.areEquals(this, (CvTerm) o);
     }
 
     @Override

@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
@@ -12,7 +13,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @GraphId
     private Long graphId;
 
+    @Relationship(type = "bie-participant", direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantA;
+
+    @Relationship(type = "bie-participant", direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantB;
 
     private GraphInteractor interactorA;

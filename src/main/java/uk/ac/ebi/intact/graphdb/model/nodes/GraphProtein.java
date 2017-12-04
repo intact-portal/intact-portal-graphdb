@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.AliasUtils;
 import psidev.psi.mi.jami.utils.ChecksumUtils;
@@ -321,6 +322,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
                         (getRefseq() != null ? getRefseq() : super.toString())));
     }
 
+    @Transient
     private class ProteinIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public ProteinIdentifierList() {
             super();
@@ -342,6 +344,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
+    @Transient
     private class ProteinChecksumList extends AbstractListHavingProperties<GraphChecksum> {
         public ProteinChecksumList() {
             super();
@@ -363,6 +366,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
+    @Transient
     private class ProteinAliasList extends AbstractListHavingProperties<GraphAlias> {
         public ProteinAliasList() {
             super();

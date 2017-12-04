@@ -15,7 +15,8 @@ public class GraphExperimentalEntity extends GraphEntity {
     }
 
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
-        super(experimentalEntity);
+        //TODO...
+        //  super(experimentalEntity); //TO DO
     }
 
 }

@@ -2,6 +2,8 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
@@ -26,7 +28,10 @@ public class GraphPublication implements Publication {
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
+
+    @Relationship(type = "pub-exp", direction = Relationship.OUTGOING)
     private Collection<GraphExperiment> experiments;
+
     private CurationDepth curationDepth;
     private Date releasedDate;
     private GraphSource source;
@@ -124,7 +129,8 @@ public class GraphPublication implements Publication {
     }
 
     public void setPubmedId(String pubmedId) {
-        PublicationIdentifierList identifiers = (PublicationIdentifierList) getIdentifiers();
+        //changed this method as it was giving problems
+        Collection<GraphXref> identifiers =  getIdentifiers();
 
         // add new pubmed if not null
         if (pubmedId != null) {
@@ -132,10 +138,10 @@ public class GraphPublication implements Publication {
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old pubmed if not null
             if (this.pubmedId != null) {
-                identifiers.removeOnly(this.pubmedId);
+                identifiers.remove(this.pubmedId);
             }
             this.pubmedId = new GraphXref(pubmedDatabase, pubmedId, identityQualifier);
-            identifiers.addOnly(this.pubmedId);
+            identifiers.add(this.pubmedId);
         }
         // remove all pubmed if the collection is not empty
         else if (!identifiers.isEmpty()) {
@@ -149,17 +155,18 @@ public class GraphPublication implements Publication {
     }
 
     public void setDoi(String doi) {
-        PublicationIdentifierList identifiers = (PublicationIdentifierList) getIdentifiers();
+        //changed this method as it was giving problems
+        Collection<GraphXref> identifiers =  getIdentifiers();
         // add new doi if not null
         if (doi != null) {
             CvTerm doiDatabase = CvTermUtils.createDoiDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old doi if not null
             if (this.doi != null) {
-                identifiers.removeOnly(this.doi);
+                identifiers.remove(this.doi);
             }
             this.doi = new GraphXref(doiDatabase, doi, identityQualifier);
-            identifiers.addOnly(this.doi);
+            identifiers.add(this.doi);
         }
         // remove all doi if the collection is not empty
         else if (!identifiers.isEmpty()) {
@@ -188,17 +195,19 @@ public class GraphPublication implements Publication {
     }
 
     public void assignImexId(String identifier) {
-        PublicationXrefList xrefs = (PublicationXrefList) getXrefs();
+        //changed this method as it was giving problems
+        Collection<GraphXref> identifiers =  getXrefs();
+
         // add new imex if not null
         if (identifier != null) {
             CvTerm imexDatabase = CvTermUtils.createImexDatabase();
             CvTerm imexPrimaryQualifier = CvTermUtils.createImexPrimaryQualifier();
             // first remove old imex if not null
             if (this.imexId != null) {
-                xrefs.removeOnly(this.imexId);
+                xrefs.remove(this.imexId);
             }
             this.imexId = new GraphXref(imexDatabase, identifier, imexPrimaryQualifier);
-            xrefs.addOnly(this.imexId);
+            xrefs.add(this.imexId);
 
             this.curationDepth = CurationDepth.IMEx;
         } else if (this.imexId != null) {
@@ -472,6 +481,7 @@ public class GraphPublication implements Publication {
                                         (getTitle() != null ? getTitle() : "-"))));
     }
 
+    @Transient
     private class PublicationIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public PublicationIdentifierList() {
             super();
@@ -493,6 +503,7 @@ public class GraphPublication implements Publication {
         }
     }
 
+    @Transient
     private class PublicationXrefList extends AbstractListHavingProperties<GraphXref> {
         public PublicationXrefList() {
             super();

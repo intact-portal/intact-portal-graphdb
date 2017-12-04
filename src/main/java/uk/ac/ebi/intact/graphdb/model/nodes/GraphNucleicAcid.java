@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.NucleicAcid;
 import psidev.psi.mi.jami.model.Organism;
@@ -234,6 +235,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
                 : (getRefseq() != null ? getRefseq() : super.toString()));
     }
 
+    @Transient
     private class NucleicAcidIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public NucleicAcidIdentifierList(){
             super();

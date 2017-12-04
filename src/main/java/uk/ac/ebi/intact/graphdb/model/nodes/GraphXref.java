@@ -5,6 +5,8 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 
 @NodeEntity
 public class GraphXref implements Xref {
@@ -60,8 +62,11 @@ public class GraphXref implements Xref {
 
     public void setDatabase(CvTerm database) {
         if (database != null) {
+
             if (database instanceof GraphCvTerm) {
                 this.database = (GraphCvTerm) database;
+            } else if (database != null && EntityCache.PSIMI_CVTERM != null && CvTerm.PSI_MI.equals(database.getShortName())) {
+                this.database = EntityCache.PSIMI_CVTERM;
             } else {
                 this.database = new GraphCvTerm(database);
             }
@@ -96,6 +101,8 @@ public class GraphXref implements Xref {
         if (qualifier != null) {
             if (qualifier instanceof GraphCvTerm) {
                 this.qualifier = (GraphCvTerm) qualifier;
+            } else if (qualifier != null && EntityCache.IDENTITY != null && Constants.IDENTITY.equals(qualifier.getShortName())) {
+                setQualifier(EntityCache.IDENTITY);
             } else {
                 this.qualifier = new GraphCvTerm(qualifier);
             }

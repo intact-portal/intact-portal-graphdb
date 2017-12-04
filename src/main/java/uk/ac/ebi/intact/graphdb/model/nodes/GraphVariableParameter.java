@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Experiment;
 import psidev.psi.mi.jami.model.VariableParameter;
@@ -13,7 +15,11 @@ import java.util.Collection;
 /**
  * Created by anjali on 24/11/17.
  */
+@NodeEntity
 public class GraphVariableParameter implements VariableParameter {
+
+    @GraphId
+    private Long graphId;
 
     private String description;
     private GraphCvTerm unit;

@@ -95,7 +95,7 @@ public class GraphOrganism implements Organism {
     }
 
     public void setTaxId(int id) {
-        if (taxId == -1 || taxId == -2 || taxId == -3 || taxId == -4 || taxId == -5 || taxId > 0) {
+        if (id == -1 || id == -2 || id == -3 || id == -4 || id == -5 || id > 0) {
             this.taxId = id;
         } else {
             throw new IllegalArgumentException("The taxId " + id + " is not a valid taxid. Only NCBI taxid or -1, -2, -3, -4, -5 are valid taxids.");

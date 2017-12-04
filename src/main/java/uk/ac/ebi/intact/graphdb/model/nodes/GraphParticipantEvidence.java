@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
@@ -9,6 +10,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -26,7 +28,13 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphOrganism expressedIn;
     private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
+
+    @Relationship(type = "ie-participant", direction = Relationship.INCOMING)
     private GraphInteractionEvidence interaction;
+
+    @Relationship(type = "bie-participant", direction = Relationship.INCOMING)
+    private GraphBinaryInteractionEvidence binaryInteractionEvidence;
+
     private Collection<GraphFeatureEvidence> features;
     private Collection<GraphConfidence> confidences;
     private Collection<GraphParameter> parameters;
@@ -43,12 +51,20 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public GraphParticipantEvidence(ParticipantEvidence participantEvidence) {
+        String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
+
         setExperimentalRole(participantEvidence.getExperimentalRole());
         setBiologicalRole(participantEvidence.getBiologicalRole());
         setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
         setStoichiometry(participantEvidence.getStoichiometry());
         setInteractor(participantEvidence.getInteractor());
-        setInteraction(participantEvidence.getInteraction());
+
+        if (!callingClasses.contains("GraphInteractionEvidence") && !callingClasses.contains("GraphBinaryInteractionEvidence")) {
+            setInteraction(participantEvidence.getInteraction());
+        }
+        if (!callingClasses.contains("GraphBinaryInteractionEvidence")) {
+            setBinaryInteractionEvidence(participantEvidence.getInteraction());
+        }
         setFeatures(participantEvidence.getFeatures());
         setConfidences(participantEvidence.getConfidences());
         setParameters(participantEvidence.getParameters());
@@ -123,16 +139,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
-    }
-
-    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -147,13 +153,23 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
+    }
+
+    @Override
     public Interactor getInteractor() {
         return this.interactor;
     }
 
     @Override
     public void setInteractor(Interactor interactor) {
-        if (interactor == null){
+        if (interactor == null) {
             throw new IllegalArgumentException("The interactor cannot be null.");
         }
         Interactor oldInteractor = this.interactor;
@@ -162,7 +178,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         } else {
             this.interactor = new GraphInteractor(interactor);
         }
-        if (this.changeListener != null){
+        if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);
         }
     }
@@ -170,13 +186,18 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Override
     public void setInteractionAndAddParticipant(InteractionEvidence interaction) {
 
-        if (this.interaction != null){
+        if (this.interaction != null) {
             this.interaction.removeParticipant(this);
         }
 
-        if (interaction != null){
+        if (interaction != null) {
             interaction.addParticipant(this);
         }
+    }
+
+    @Override
+    public InteractionEvidence getInteraction() {
+        return this.interaction;
     }
 
     @Override
@@ -197,15 +218,25 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         //TODO login it
     }
 
-    @Override
-    public InteractionEvidence getInteraction() {
-        return this.interaction;
+    public GraphBinaryInteractionEvidence getBinaryInteractionEvidence() {
+        return binaryInteractionEvidence;
     }
 
+    public void setBinaryInteractionEvidence(InteractionEvidence binaryInteractionEvidence) {
+        if (binaryInteractionEvidence != null) {
+            if (binaryInteractionEvidence instanceof GraphBinaryInteractionEvidence) {
+                this.binaryInteractionEvidence = (GraphBinaryInteractionEvidence) binaryInteractionEvidence;
+            } else {
+                this.binaryInteractionEvidence = new GraphBinaryInteractionEvidence((BinaryInteractionEvidence) binaryInteractionEvidence);
+            }
+        } else {
+            this.binaryInteractionEvidence = null;
+        }
+    }
 
     @Override
     public Collection<GraphFeatureEvidence> getFeatures() {
-        if (features == null){
+        if (features == null) {
             features = new ArrayList<GraphFeatureEvidence>();
         }
         return this.features;
@@ -221,11 +252,11 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Override
     public boolean addFeature(FeatureEvidence feature) {
-        if (feature == null){
+        if (feature == null) {
             return false;
         }
 
-        if (getFeatures().add(new GraphFeatureEvidence(feature))){
+        if (getFeatures().add(new GraphFeatureEvidence(feature))) {
             feature.setParticipant(this);
             return true;
         }
@@ -235,11 +266,11 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     //Todo review
     @Override
     public boolean removeFeature(FeatureEvidence feature) {
-        if (feature == null){
+        if (feature == null) {
             return false;
         }
 
-        if (getFeatures().remove(feature)){
+        if (getFeatures().remove(feature)) {
             feature.setParticipant(null);
             return true;
         }
@@ -248,13 +279,13 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Override
     public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
-        if (features == null){
+        if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (FeatureEvidence feature : features){
-            if (addFeature(feature)){
+        for (FeatureEvidence feature : features) {
+            if (addFeature(feature)) {
                 added = true;
             }
         }
@@ -263,13 +294,13 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Override
     public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
-        if (features == null){
+        if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (FeatureEvidence feature : features){
-            if (removeFeature(feature)){
+        for (FeatureEvidence feature : features) {
+            if (removeFeature(feature)) {
                 added = true;
             }
         }
@@ -278,40 +309,39 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Override
     public Collection<GraphConfidence> getConfidences() {
-        if(this.confidences==null){
-            this.confidences=new ArrayList<GraphConfidence>();
+        if (this.confidences == null) {
+            this.confidences = new ArrayList<GraphConfidence>();
         }
         return this.confidences;
     }
 
     public void setConfidences(Collection<Confidence> confidences) {
-        if(confidences!=null) {
+        if (confidences != null) {
             this.confidences = CollectionAdaptor.convertConfidenceIntoGraphModel(confidences);
-        }
-        else{
+        } else {
             this.confidences = new ArrayList<GraphConfidence>();
         }
     }
 
     @Override
     public Collection<GraphParameter> getParameters() {
-        if(this.parameters==null){
-            this.parameters=new ArrayList<GraphParameter>();
+        if (this.parameters == null) {
+            this.parameters = new ArrayList<GraphParameter>();
         }
         return this.parameters;
     }
 
     public void setParameters(Collection<Parameter> parameters) {
-        if(parameters!=null) {
+        if (parameters != null) {
             this.parameters = CollectionAdaptor.convertParameterIntoGraphModel(parameters);
-        }else{
-            this.parameters=new ArrayList<GraphParameter>();
+        } else {
+            this.parameters = new ArrayList<GraphParameter>();
         }
     }
 
     @Override
     public Collection<GraphCvTerm> getIdentificationMethods() {
-        if (identificationMethods == null){
+        if (identificationMethods == null) {
             this.identificationMethods = new ArrayList<GraphCvTerm>();
         }
         return this.identificationMethods;
@@ -322,11 +352,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             this.identificationMethods = CollectionAdaptor.convertCvTermIntoGraphModel(identificationMethods);
         } else {
             this.identificationMethods = new ArrayList<GraphCvTerm>();
-        }    }
+        }
+    }
 
     @Override
     public Collection<GraphCvTerm> getExperimentalPreparations() {
-        if (experimentalPreparations == null){
+        if (experimentalPreparations == null) {
             this.experimentalPreparations = new ArrayList<GraphCvTerm>();
         }
         return this.experimentalPreparations;
@@ -390,7 +421,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Override
     public Collection<GraphCausalRelationship> getCausalRelationships() {
-        if (this.causalRelationships == null){
+        if (this.causalRelationships == null) {
             this.causalRelationships = new ArrayList<GraphCausalRelationship>();
         }
         return this.causalRelationships;

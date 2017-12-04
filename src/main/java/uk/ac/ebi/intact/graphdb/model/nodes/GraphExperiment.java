@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
@@ -14,7 +15,9 @@ public class GraphExperiment implements Experiment {
     @GraphId
     private Long graphId;
 
+    @Relationship(type = "pub-exp", direction = Relationship.INCOMING)
     private GraphPublication publication;
+
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
     private GraphCvTerm interactionDetectionMethod;
@@ -28,7 +31,11 @@ public class GraphExperiment implements Experiment {
     }
 
     public GraphExperiment(Experiment experiment) {
-        setPublication(experiment.getPublication());
+        String callingClass=Thread.currentThread().getStackTrace()[2].getClassName();
+
+        if(!callingClass.contains("GraphPublication")){
+            setPublication(experiment.getPublication());
+        }
         setXrefs(experiment.getXrefs());
         setAnnotations(experiment.getAnnotations());
         setInteractionDetectionMethod(experiment.getInteractionDetectionMethod());

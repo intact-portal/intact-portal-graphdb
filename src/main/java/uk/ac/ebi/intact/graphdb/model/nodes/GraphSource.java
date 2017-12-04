@@ -20,6 +20,7 @@ public class GraphSource extends GraphCvTerm  implements Source {
     }
 
     public GraphSource(Source source){
+        super(source);
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
