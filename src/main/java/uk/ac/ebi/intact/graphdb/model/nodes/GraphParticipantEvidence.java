@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
@@ -8,6 +9,8 @@ import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +25,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private GraphCvTerm experimentalRole;
     private GraphCvTerm biologicalRole;
@@ -75,6 +81,16 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setAliases(participantEvidence.getAliases());
         setCausalRelationships(participantEvidence.getCausalRelationships());
         setChangeListener(participantEvidence.getChangeListener());
+
+        setUniqueKey(participantEvidence.toString());
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     @Override
@@ -443,5 +459,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Override
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
+    }
+
+    public String toString() {
+        return super.toString() + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
     }
 }

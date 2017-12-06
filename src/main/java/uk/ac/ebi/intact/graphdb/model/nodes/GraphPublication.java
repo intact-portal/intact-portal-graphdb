@@ -1,14 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +19,9 @@ public class GraphPublication implements Publication {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String pubmedIdStr;
 
     private String title;
     private String journal;
@@ -59,6 +61,7 @@ public class GraphPublication implements Publication {
         setPubmedId(publication.getPubmedId());
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
+
     }
 
     public GraphPublication(Xref identifier) {
@@ -123,12 +126,33 @@ public class GraphPublication implements Publication {
         assignImexId(imexId);
     }
 
+    public void initializeAc(){
+        String ac=null;
+
+        for(Xref xref:xrefs){
+            if(xref.getDatabase()!=null&&xref.getDatabase().getShortName()!=null&xref.getDatabase().getShortName().equals(Constants.INTACT_DB)){
+                ac=xref.getId();
+            }
+        }
+
+
+    }
+
+    public String getPubmedIdStr() {
+        return pubmedIdStr;
+    }
+
+    public void setPubmedIdStr(String pubmedIdStr) {
+        this.pubmedIdStr = pubmedIdStr;
+    }
 
     public String getPubmedId() {
         return this.pubmedId != null ? this.pubmedId.getId() : null;
     }
 
     public void setPubmedId(String pubmedId) {
+
+        setPubmedIdStr(pubmedId);
         //changed this method as it was giving problems
         Collection<GraphXref> identifiers =  getIdentifiers();
 

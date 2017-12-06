@@ -1,10 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +19,9 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String ac;
 
     private String imexId;
     private GraphExperiment experiment;
@@ -72,7 +78,25 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             setParticipants(binaryInteractionEvidence.getParticipants());
         }
 
+        initializeAc();
+    }
 
+    public void initializeAc(){
+        try {
+            CommonUtility commonUtility= Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
+            setAc(commonUtility.extractAc(getIdentifiers()));
+            Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     public String getImexId() {

@@ -1,11 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.GraphUtils;
 
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ public class GraphInteractor implements Interactor {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String ac;
 
     private String shortName;
     private String fullName;
@@ -42,6 +48,8 @@ public class GraphInteractor implements Interactor {
         setAliases(interactor.getAliases());
         setOrganism(interactor.getOrganism());
         setInteractorType(interactor.getInteractorType());
+
+        initializeAc();
     }
 
     public GraphInteractor(String name, CvTerm type) {
@@ -136,6 +144,18 @@ public class GraphInteractor implements Interactor {
         initialiseDefaultInteractorType();
     }
 
+    public void initializeAc(){
+        try {
+            CommonUtility commonUtility= Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
+            setAc(commonUtility.extractAc(getIdentifiers()));
+            Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
     public String getShortName() {
         return this.shortName;
     }
@@ -168,6 +188,14 @@ public class GraphInteractor implements Interactor {
         } else {
             this.identifiers = new ArrayList<GraphXref>();
         }
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     /**

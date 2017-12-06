@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.*;
@@ -23,6 +24,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniprotName;
+
     private GraphXref uniprotkb;
     private GraphXref refseq;
     private GraphAlias geneName;
@@ -38,6 +42,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         setRefseq(protein.getRefseq());
         setChecksums(protein.getChecksums());
         setGeneName(protein.getGeneName());
+
     }
 
     public GraphProtein(String name, CvTerm type) {
@@ -112,11 +117,21 @@ public class GraphProtein extends GraphPolymer implements Protein {
         return uniprotkb != null ? uniprotkb : (refseq != null ? refseq : super.getPreferredIdentifier());
     }
 
+    public String getUniprotName() {
+        return uniprotName;
+    }
+
+    public void setUniprotName(String uniprotName) {
+        this.uniprotName = uniprotName;
+    }
+
     public String getUniprotkb() {
         return this.uniprotkb != null ? this.uniprotkb.getId() : null;
     }
 
     public void setUniprotkb(String ac) {
+
+        setUniprotName(ac);
         GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
         // add new uniprotkb if not null

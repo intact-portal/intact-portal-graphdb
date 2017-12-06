@@ -1,16 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Labels;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 
@@ -24,16 +22,18 @@ public class GraphCvTerm implements CvTerm {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
     private String shortName;
     private String fullName;
     private Collection<GraphXref> xrefs;
     private Collection<GraphXref> identifiers;
     private Collection<GraphAnnotation> annotations;
     private Collection<GraphAlias> synonyms;
-
     private String mIIdentifier;
     private String mODIdentifier;
     private String pARIdentifier;
+
+
 
     @Labels
     private List<String> typeLabels = new ArrayList<>();

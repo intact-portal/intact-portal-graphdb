@@ -5,6 +5,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
 
 @NodeEntity
@@ -33,6 +34,8 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         super(binaryInteractionEvidence);
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
+        setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
+        setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
 
     }
@@ -90,16 +93,33 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         return interactorA;
     }
 
-    public void setInteractorA(GraphInteractor interactorA) {
-        this.interactorA = interactorA;
+    public void setInteractorA(Interactor interactorA) {
+        if (interactorA != null) {
+            if (interactorA instanceof GraphInteractor) {
+                this.interactorA = (GraphInteractor) interactorA;
+            } else {
+                this.interactorA = new GraphInteractor(interactorA);
+            }
+        } else {
+            this.interactorA = null;
+        }
     }
 
     public GraphInteractor getInteractorB() {
         return interactorB;
     }
 
-    public void setInteractorB(GraphInteractor interactorB) {
-        this.interactorB = interactorB;
+    public void setInteractorB(Interactor interactorB) {
+        if (interactorB != null) {
+            if (interactorB instanceof GraphInteractor) {
+                this.interactorB = (GraphInteractor) interactorB;
+            } else {
+                this.interactorB = new GraphInteractor(interactorB);
+            }
+        } else {
+            this.interactorB = null;
+        }
+
     }
 
 

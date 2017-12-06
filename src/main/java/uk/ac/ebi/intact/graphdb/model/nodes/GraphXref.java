@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
@@ -14,8 +15,10 @@ public class GraphXref implements Xref {
     @GraphId
     private Long graphId;
 
-    private GraphCvTerm database;
+    @Index(unique = true,primary = true)
     private String identifier;
+
+    private GraphCvTerm database;
     private String version;
     private GraphCvTerm qualifier;
 

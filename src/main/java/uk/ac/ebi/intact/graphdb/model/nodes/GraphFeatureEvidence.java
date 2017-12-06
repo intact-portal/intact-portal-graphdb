@@ -1,9 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +19,9 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     @GraphId
     private Long id;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private Collection<GraphCvTerm> detectionMethods;
     private Collection<GraphParameter> parameters;
@@ -52,6 +58,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setRole(featureEvidence.getRole());
         setParticipant(featureEvidence.getParticipant());
         setLinkedFeatures(featureEvidence.getLinkedFeatures());
+        setUniqueKey(featureEvidence.toString());
     }
 
     public Collection<GraphCvTerm> getDetectionMethods() {
@@ -115,6 +122,14 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public void setShortName(String name) {
         this.shortName = name;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public String getFullName() {
@@ -383,6 +398,10 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         } else {
             this.aliases = new ArrayList<GraphAlias>();
         }
+    }
+
+    public String toString() {
+        return "Feature: " + (this.getShortName() != null?this.getShortName() + " ":"") + (this.getType() != null?this.getType().toString() + " ":"") + (!this.getRanges().isEmpty()?"(" + this.getRanges().toString() + ")":" (-)");
     }
 
 }

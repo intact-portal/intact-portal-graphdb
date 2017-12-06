@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -17,8 +18,10 @@ public class GraphOrganism implements Organism {
     @GraphId
     private Long graphId;
 
-    private String commonName;
+    @Index(unique = true,primary = true)
     private String scientificName;
+
+    private String commonName;
     private int taxId;
     private Collection<GraphAlias> aliases;
     private GraphCvTerm cellType;

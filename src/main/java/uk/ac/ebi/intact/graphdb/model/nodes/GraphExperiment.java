@@ -1,12 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 @NodeEntity
@@ -15,9 +17,11 @@ public class GraphExperiment implements Experiment {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     @Relationship(type = "pub-exp", direction = Relationship.INCOMING)
     private GraphPublication publication;
-
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
     private GraphCvTerm interactionDetectionMethod;
@@ -31,7 +35,7 @@ public class GraphExperiment implements Experiment {
     }
 
     public GraphExperiment(Experiment experiment) {
-        String callingClass=Thread.currentThread().getStackTrace()[2].getClassName();
+        String callingClass= Arrays.toString(Thread.currentThread().getStackTrace());
 
         if(!callingClass.contains("GraphPublication")){
             setPublication(experiment.getPublication());
@@ -42,6 +46,7 @@ public class GraphExperiment implements Experiment {
         setHostOrganism(experiment.getHostOrganism());
         setConfidences(experiment.getConfidences());
         setVariableParameters(experiment.getVariableParameters());
+        setUniqueKey(experiment.toString());
     }
 
 /*    public GraphExperiment(Publication publication) {
@@ -84,6 +89,14 @@ public class GraphExperiment implements Experiment {
         this.variableParameters = new ArrayList<VariableParameter>();
     }
 */
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
     public Publication getPublication() {
         return this.publication;
