@@ -5,6 +5,7 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class GraphExperiment implements Experiment {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
-    @Relationship(type = "pub-exp", direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.INCOMING)
     private GraphPublication publication;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;

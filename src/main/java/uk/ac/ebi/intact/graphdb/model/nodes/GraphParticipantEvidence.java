@@ -8,6 +8,7 @@ import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
@@ -35,10 +36,10 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphStoichiometry stoichiometry;
     private GraphInteractor interactor;
 
-    @Relationship(type = "ie-participant", direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
     private GraphInteractionEvidence interaction;
 
-    @Relationship(type = "bie-participant", direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.INCOMING)
     private GraphBinaryInteractionEvidence binaryInteractionEvidence;
 
     private Collection<GraphFeatureEvidence> features;

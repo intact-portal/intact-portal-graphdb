@@ -8,6 +8,7 @@ import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
@@ -18,10 +19,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
-    @Relationship(type = "bie-participant", direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantA;
 
-    @Relationship(type = "bie-participant", direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantB;
 
     private GraphInteractor interactorA;

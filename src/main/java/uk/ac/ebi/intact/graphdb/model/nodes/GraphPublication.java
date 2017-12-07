@@ -5,6 +5,7 @@ import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
@@ -31,7 +32,7 @@ public class GraphPublication implements Publication {
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
 
-    @Relationship(type = "pub-exp", direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
     private Collection<GraphExperiment> experiments;
 
     private CurationDepth curationDepth;
