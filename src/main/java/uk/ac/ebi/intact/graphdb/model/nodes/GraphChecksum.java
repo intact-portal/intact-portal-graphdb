@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Checksum;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -12,6 +13,9 @@ public class GraphChecksum implements Checksum {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphCvTerm method;
     private String value;
 
@@ -20,6 +24,7 @@ public class GraphChecksum implements Checksum {
 
     public GraphChecksum(Checksum checksum) {
         this(checksum.getMethod(), checksum.getValue());
+        setUniqueKey(this.toString());
     }
 
     public GraphChecksum(CvTerm method, String value){
@@ -31,6 +36,14 @@ public class GraphChecksum implements Checksum {
             throw new IllegalArgumentException("The checksum value is required and cannot be null");
         }
         setValue(value);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public CvTerm getMethod() {
@@ -77,6 +90,6 @@ public class GraphChecksum implements Checksum {
 
     @Override
     public String toString() {
-        return getMethod().toString() + ": " + getValue();
+        return this.method.toString() + ": " + getValue();
     }
 }

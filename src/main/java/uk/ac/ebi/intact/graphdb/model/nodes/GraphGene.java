@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -33,6 +34,9 @@ public class GraphGene extends GraphMolecule implements Gene {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphXref ensembl;
     private GraphXref ensemblGenome;
     private GraphXref entrezGeneId;
@@ -48,6 +52,7 @@ public class GraphGene extends GraphMolecule implements Gene {
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());
         setRefseq(gene.getRefseq());
+        setUniqueKey(this.toString());
     }
 
     public GraphGene(String name) {
@@ -163,6 +168,14 @@ public class GraphGene extends GraphMolecule implements Gene {
     @Override
     public Xref getPreferredIdentifier() {
         return ensembl != null ? ensembl : (ensemblGenome != null ? ensemblGenome : (entrezGeneId != null ? entrezGeneId : (refseq != null ? refseq : super.getPreferredIdentifier())));
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public String getEnsembl() {

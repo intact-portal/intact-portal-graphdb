@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
@@ -16,6 +17,9 @@ public class GraphRange implements Range {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphPosition start;
     private GraphPosition end;
     private boolean isLink;
@@ -30,6 +34,7 @@ public class GraphRange implements Range {
         setLink(range.isLink());
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
+        setUniqueKey(this.toString());
     }
 
     public void setPositions(Position start, Position end) {
@@ -45,6 +50,14 @@ public class GraphRange implements Range {
         }
         setStart(start);
         setEnd(end);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public Position getStart() {
@@ -125,6 +138,6 @@ public class GraphRange implements Range {
 
     @Override
     public String toString() {
-        return getStart().toString() + " - " + getEnd().toString() + (isLink() ? "(linked)" : "");
+        return this.start.toString() + " - " + this.end.toString() + (isLink() ? "(linked)" : "");
     }
 }

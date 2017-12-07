@@ -58,7 +58,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setRole(featureEvidence.getRole());
         setParticipant(featureEvidence.getParticipant());
         setLinkedFeatures(featureEvidence.getLinkedFeatures());
-        setUniqueKey(featureEvidence.toString());
+        setUniqueKey(this.toString());
     }
 
     public Collection<GraphCvTerm> getDetectionMethods() {

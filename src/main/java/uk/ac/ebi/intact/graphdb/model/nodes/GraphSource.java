@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Publication;
 import psidev.psi.mi.jami.model.Source;
@@ -11,9 +12,11 @@ public class GraphSource extends GraphCvTerm  implements Source {
     @GraphId
     private Long graphId;
 
+    private String postalAddress;
+    private String uniqueKey;
+
     /*private Annotation url;*/
     private String url;
-    private String postalAddress;
     private GraphPublication publication;
 
     public GraphSource() {
@@ -24,6 +27,15 @@ public class GraphSource extends GraphCvTerm  implements Source {
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
+        setUniqueKey(this.toString());
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     @Override

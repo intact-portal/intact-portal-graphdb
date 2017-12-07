@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Stoichiometry;
 import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
@@ -10,6 +11,9 @@ public class GraphStoichiometry implements Stoichiometry {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private int minValue;
     private int maxValue;
@@ -31,6 +35,15 @@ public class GraphStoichiometry implements Stoichiometry {
         }
         setMinValue(minValue);
         setMaxValue(maxValue);
+        setUniqueKey(this.toString());
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public int getMinValue() {

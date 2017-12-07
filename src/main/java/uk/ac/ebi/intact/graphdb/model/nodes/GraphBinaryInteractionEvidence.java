@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
@@ -13,6 +14,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     @Relationship(type = "bie-participant", direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantA;
@@ -37,7 +41,15 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
         setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
+        setUniqueKey(this.toString());
+    }
 
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public ParticipantEvidence getParticipantA() {
@@ -125,6 +137,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     @Override
     public String toString() {
-        return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
+            return (getAc() != null?getAc():"")+" Binary interaction: participant A=[" + (this.getParticipantA() != null?this.getParticipantA().toString():"") + "], participant B=[" + (this.getParticipantB() != null?this.getParticipantB().toString():"") + "], Complex expansion=[" + (this.getComplexExpansion() != null?this.getComplexExpansion().toString():"") + "]";
+
     }
 }

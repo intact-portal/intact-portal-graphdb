@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -17,6 +18,9 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphXref ddbjEmblGenbank;
     private GraphXref refseq;
 
@@ -28,6 +32,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         super(nucleicAcid);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
+        setUniqueKey(this.toString());
     }
 
     public GraphNucleicAcid(String name, CvTerm type) {
@@ -92,6 +97,14 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public GraphNucleicAcid(String name, String fullName, Organism organism, Xref uniqueId) {
         super(name, fullName, CvTermUtils.createNucleicAcidInteractorType(), organism, uniqueId);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     /**

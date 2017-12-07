@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Position;
@@ -15,6 +16,9 @@ public class GraphPosition implements Position {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphCvTerm status;
     private long start;
     private long end;
@@ -28,6 +32,15 @@ public class GraphPosition implements Position {
         setStart(position.getStart());
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
+        setUniqueKey(this.toString());
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public CvTerm getStatus() {
@@ -86,7 +99,7 @@ public class GraphPosition implements Position {
 
     @Override
     public String toString() {
-        return getStatus().toString() + ": " + getStart() + ".." + getEnd();
+        return this.status.toString() + ": " + getStart() + ".." + getEnd();
     }
 
     @Override

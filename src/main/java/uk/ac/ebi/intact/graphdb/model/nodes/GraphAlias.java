@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -12,6 +13,9 @@ public class GraphAlias implements Alias {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphCvTerm type;
     private String name;
 
@@ -21,6 +25,7 @@ public class GraphAlias implements Alias {
     public GraphAlias(Alias alias) {
         setType(alias.getType());
         setName(alias.getName());
+        setUniqueKey(this.toString());
     }
 
     public GraphAlias(CvTerm type, String name) {
@@ -33,6 +38,14 @@ public class GraphAlias implements Alias {
             throw new IllegalArgumentException("The alias name is required and cannot be null");
         }
         setName(name);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public CvTerm getType() {
@@ -79,7 +92,7 @@ public class GraphAlias implements Alias {
 
     @Override
     public String toString() {
-        return getName() + (getType() != null ? "(" + getType().toString() + ")" : "");
+        return getName() + (this.type != null ? "(" + this.type.toString() + ")" : "");
     }
 
 }

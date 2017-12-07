@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
@@ -17,6 +18,9 @@ public class GraphResultingSequence implements ResultingSequence {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private String originalSequence;
     private String newSequence;
     private Collection<GraphXref> xrefs;
@@ -29,6 +33,7 @@ public class GraphResultingSequence implements ResultingSequence {
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
+        setUniqueKey(this.toString());
     }
 
 
@@ -54,6 +59,14 @@ public class GraphResultingSequence implements ResultingSequence {
         }
 
     }*/
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
     public String getNewSequence() {
         return this.newSequence;

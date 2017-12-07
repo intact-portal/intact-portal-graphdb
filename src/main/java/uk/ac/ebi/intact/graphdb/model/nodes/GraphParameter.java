@@ -149,9 +149,9 @@ public class GraphParameter implements Parameter {
 
     @Override
     public String toString() {
-        return getType().toString() + ": " + getValue()
-                + (getUncertainty() != null ? " ~" + getUncertainty().toString() : ""
-                + (getUnit() != null ? "(" + getUnit().toString() + ")" : ""));
+        return this.type.toString() + ": " + getValue()
+                + (this.uncertainty != null ? " ~" + this.uncertainty.toString() : ""
+                + (this.unit != null ? "(" + this.unit.toString() + ")" : ""));
     }
 
     @Override

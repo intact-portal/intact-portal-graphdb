@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Experiment;
@@ -21,6 +22,9 @@ public class GraphVariableParameter implements VariableParameter {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private String description;
     private GraphCvTerm unit;
     private Collection<GraphVariableParameterValue> variableValues;
@@ -35,7 +39,7 @@ public class GraphVariableParameter implements VariableParameter {
         setUnit(variableParameter.getUnit());
         setVariableValues(variableParameter.getVariableValues());
         setExperiment(variableParameter.getExperiment());
-
+        setUniqueKey(this.toString());
     }
 
    /* public GraphVariableParameter(String description) {
@@ -73,6 +77,14 @@ public class GraphVariableParameter implements VariableParameter {
         }
 
     }*/
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
     public String getDescription() {
         return this.description;
@@ -153,7 +165,7 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public String toString() {
-        return this.getDescription().toString() + (this.getUnit() != null ? "(unit: " + this.getUnit().toString() + ")" : "");
+        return this.description + (this.getUnit() != null ? "(unit: " + this.unit.toString() + ")" : "");
     }
 
 }

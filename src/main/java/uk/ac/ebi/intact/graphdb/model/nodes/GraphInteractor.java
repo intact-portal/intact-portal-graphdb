@@ -317,7 +317,7 @@ public class GraphInteractor implements Interactor {
     @Override
     public String toString() {
         return getShortName()
-                + (getOrganism() != null ? ", " + getOrganism().toString() : "")
-                + (getInteractorType() != null ? ", " + getInteractorType().toString() : "");
+                + (this.organism != null ? ", " + this.organism.toString() : "")
+                + (this.interactorType != null ? ", " + this.interactorType.toString() : "");
     }
 }

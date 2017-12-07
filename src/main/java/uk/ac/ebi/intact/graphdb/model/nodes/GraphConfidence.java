@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -12,6 +13,9 @@ public class GraphConfidence implements Confidence {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphCvTerm type;
     private String value;
 
@@ -21,6 +25,7 @@ public class GraphConfidence implements Confidence {
     public GraphConfidence(Confidence confidence) {
         setType(confidence.getType());
         setValue(confidence.getValue());
+        setUniqueKey(this.toString());
     }
 
 /*    public GraphConfidence(CvTerm type, String value) {
@@ -33,6 +38,14 @@ public class GraphConfidence implements Confidence {
         }
         this.value = value;
     }*/
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
     public CvTerm getType() {
         return this.type;
@@ -73,7 +86,7 @@ public class GraphConfidence implements Confidence {
 
     @Override
     public String toString() {
-        return getType().toString() + ": " + getValue();
+        return this.type.toString() + ": " + getValue();
     }
 
     @Override

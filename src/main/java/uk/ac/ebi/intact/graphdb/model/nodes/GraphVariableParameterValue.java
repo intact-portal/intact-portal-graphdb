@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
@@ -12,6 +13,9 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private String value;
     private Integer order;
@@ -26,6 +30,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         setValue(variableParameterValue.getValue());
         setOrder(variableParameterValue.getOrder());
         setVariableParameter(variableParameterValue.getVariableParameter());
+        setUniqueKey(this.toString());
     }
 
 /*    public GraphVariableParameterValue(String value, VariableParameter variableParameter){
@@ -44,6 +49,14 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         this.variableParameter = variableParameter;
         this.order = order;
     }*/
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
     public String getValue() {
         return value;

@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.*;
 
@@ -9,6 +10,9 @@ public class GraphCausalRelationship implements CausalRelationship {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private GraphCvTerm relationType;
     private GraphEntity target;
@@ -19,6 +23,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     public GraphCausalRelationship(CausalRelationship causalRelationship) {
         setRelationType(causalRelationship.getRelationType());
         setTarget(causalRelationship.getTarget());
+        setUniqueKey(this.toString());
     }
 
     public GraphCausalRelationship(CvTerm relationType, Participant target) {
@@ -31,6 +36,14 @@ public class GraphCausalRelationship implements CausalRelationship {
             throw new IllegalArgumentException("The participat target in a CausalRelationship cannot be null");
         }
         setTarget(target);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public CvTerm getRelationType() {
@@ -68,7 +81,7 @@ public class GraphCausalRelationship implements CausalRelationship {
 
     @Override
     public String toString() {
-        return getRelationType().toString() + ": " + getTarget().toString();
+        return this.relationType.toString() + ": " + this.target.toString();
     }
 
 }

@@ -82,7 +82,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setCausalRelationships(participantEvidence.getCausalRelationships());
         setChangeListener(participantEvidence.getChangeListener());
 
-        setUniqueKey(participantEvidence.toString());
+        setUniqueKey(this.toString());
     }
 
     public String getUniqueKey() {
@@ -462,6 +462,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public String toString() {
-        return super.toString() + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
+        return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null?", stoichiometry: " + this.getStoichiometry().toString():"") + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
     }
 }

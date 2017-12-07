@@ -30,6 +30,7 @@ public class GraphExperiment implements Experiment {
 
     private Collection<GraphConfidence> confidences;
     private Collection<GraphVariableParameter> variableParameters;
+    private String pubmedId;
 
     public GraphExperiment() {
     }
@@ -46,7 +47,8 @@ public class GraphExperiment implements Experiment {
         setHostOrganism(experiment.getHostOrganism());
         setConfidences(experiment.getConfidences());
         setVariableParameters(experiment.getVariableParameters());
-        setUniqueKey(experiment.toString());
+        setPubmedId(experiment.getPublication().getPubmedId());
+        setUniqueKey(this.toString());
     }
 
 /*    public GraphExperiment(Publication publication) {
@@ -89,6 +91,14 @@ public class GraphExperiment implements Experiment {
         this.variableParameters = new ArrayList<VariableParameter>();
     }
 */
+
+    public String getPubmedId() {
+        return pubmedId;
+    }
+
+    public void setPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
+    }
 
     public String getUniqueKey() {
         return uniqueKey;
@@ -331,7 +341,7 @@ public class GraphExperiment implements Experiment {
     @Override
     public String toString() {
         return "Experiment: "
-                + (getPublication() != null ? getPublication().toString() : "no publication")
+                + (getPubmedId() != null ? getPubmedId() : "no publication")
                 + "( " + getInteractionDetectionMethod().toString()
                 + (getHostOrganism() != null ? ", " + getHostOrganism().toString() : "") + " )";
     }

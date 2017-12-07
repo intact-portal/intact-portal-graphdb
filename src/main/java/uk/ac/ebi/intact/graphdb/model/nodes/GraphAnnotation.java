@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -12,6 +13,9 @@ public class GraphAnnotation implements Annotation {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     private GraphCvTerm topic;
     private String value;
 
@@ -21,6 +25,7 @@ public class GraphAnnotation implements Annotation {
     public GraphAnnotation(Annotation annotation) {
         setTopic(annotation.getTopic());
         setValue(annotation.getValue());
+        setUniqueKey(this.toString());
     }
 
 
@@ -34,6 +39,14 @@ public class GraphAnnotation implements Annotation {
     public GraphAnnotation(CvTerm topic, String value) {
         this(topic);
         setValue(value);
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public CvTerm getTopic() {
@@ -80,6 +93,6 @@ public class GraphAnnotation implements Annotation {
 
     @Override
     public String toString() {
-        return getTopic().toString() + (getValue() != null ? ": " + getValue() : "");
+        return this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
     }
 }

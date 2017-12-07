@@ -20,7 +20,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+
     private String ac;
 
     private String imexId;
