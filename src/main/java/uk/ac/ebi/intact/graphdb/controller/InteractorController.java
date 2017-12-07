@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.ac.ebi.intact.graphdb.services.InteractorService;
+import uk.ac.ebi.intact.graphdb.services.InteractorServiceImpl;
 
 import java.util.Map;
 
@@ -17,15 +17,15 @@ import java.util.Map;
 @RestController("/interactor")
 public class InteractorController {
 
-    final InteractorService interactorService;
+    final InteractorServiceImpl interactorServiceImpl;
 
     @Autowired
-    public InteractorController(InteractorService interactorService) {
-        this.interactorService = interactorService;
+    public InteractorController(InteractorServiceImpl interactorServiceImpl) {
+        this.interactorServiceImpl = interactorServiceImpl;
     }
 
     @RequestMapping("/graph")
     public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return interactorService.graph(limit == null ? 100 : limit);
+        return interactorServiceImpl.graph(limit == null ? 100 : limit);
     }
 }

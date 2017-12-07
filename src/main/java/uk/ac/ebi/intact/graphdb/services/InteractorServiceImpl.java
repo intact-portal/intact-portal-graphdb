@@ -16,12 +16,12 @@ import java.util.*;
  * Time: 17:43
  */
 @Service
-public class InteractorService {
+public class InteractorServiceImpl {
 
     final private InteractorRepository interactorRepository;
 
     @Autowired
-    public InteractorService(InteractorRepository interactorRepository) {
+    public InteractorServiceImpl(InteractorRepository interactorRepository) {
         this.interactorRepository = interactorRepository;
     }
 
