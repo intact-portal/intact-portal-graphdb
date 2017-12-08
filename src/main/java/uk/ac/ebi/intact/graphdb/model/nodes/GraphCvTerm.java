@@ -97,6 +97,12 @@ public class GraphCvTerm implements CvTerm {
             EntityCache.PSIMI_CVTERM = this;
         }else if(EntityCache.IDENTITY==null && getShortName().equals(Constants.IDENTITY)){
             EntityCache.IDENTITY = this;
+        }else if(EntityCache.PUBMED_CVTERM==null && getShortName().equals(Constants.PUBMED_DB)){
+            EntityCache.PUBMED_CVTERM = this;
+        }else if(EntityCache.PRIMARY_REFERENCE==null && getShortName().equals(Constants.PRIMARY_REFERENCE_QUALIFIER)){
+            EntityCache.PRIMARY_REFERENCE = this;
+        }else if(EntityCache.USED_IN_CLASS==null && getShortName().equals(Constants.USED_IN_CLASS_TOPIC)){
+            EntityCache.USED_IN_CLASS = this;
         }
         setXrefs(cvTerm.getXrefs());
         setIdentifiers(cvTerm.getIdentifiers());

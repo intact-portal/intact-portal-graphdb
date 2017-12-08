@@ -70,6 +70,8 @@ public class GraphXref implements Xref {
                 this.database = (GraphCvTerm) database;
             } else if (database != null && EntityCache.PSIMI_CVTERM != null && CvTerm.PSI_MI.equals(database.getShortName())) {
                 this.database = EntityCache.PSIMI_CVTERM;
+            }else if (database != null && EntityCache.PUBMED_CVTERM != null && Constants.PUBMED_DB.equals(database.getShortName())) {
+                this.database = EntityCache.PUBMED_CVTERM;
             } else {
                 this.database = new GraphCvTerm(database);
             }
@@ -106,6 +108,8 @@ public class GraphXref implements Xref {
                 this.qualifier = (GraphCvTerm) qualifier;
             } else if (qualifier != null && EntityCache.IDENTITY != null && Constants.IDENTITY.equals(qualifier.getShortName())) {
                 setQualifier(EntityCache.IDENTITY);
+            }else if (qualifier != null && EntityCache.PRIMARY_REFERENCE != null && Constants.PRIMARY_REFERENCE_QUALIFIER.equals(qualifier.getShortName())) {
+                setQualifier(EntityCache.PRIMARY_REFERENCE);
             } else {
                 this.qualifier = new GraphCvTerm(qualifier);
             }

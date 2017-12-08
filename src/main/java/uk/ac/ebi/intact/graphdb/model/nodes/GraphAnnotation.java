@@ -6,6 +6,8 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationComparator;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 
 @NodeEntity
 public class GraphAnnotation implements Annotation {
@@ -57,6 +59,8 @@ public class GraphAnnotation implements Annotation {
         if (topic != null) {
             if (topic instanceof GraphCvTerm) {
                 this.topic = (GraphCvTerm) topic;
+            }else if (topic != null && EntityCache.USED_IN_CLASS != null && Constants.USED_IN_CLASS_TOPIC.equals(topic.getShortName())) {
+                setTopic(EntityCache.USED_IN_CLASS);
             } else {
                 this.topic = new GraphCvTerm(topic);
             }

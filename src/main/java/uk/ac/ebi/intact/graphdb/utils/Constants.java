@@ -13,6 +13,9 @@ public class Constants {
 
     public static final String IDENTITY = "identity";
     public static final String INTACT_DB = "intact";
+    public static final String PUBMED_DB="pubmed";
+    public static final String PRIMARY_REFERENCE_QUALIFIER="primary-reference";
+    public static final String USED_IN_CLASS_TOPIC="used-in-class";
     public static final ObjectPool<CommonUtility> COMMON_UTILITY_OBJECT_POOL =new GenericObjectPool<CommonUtility>(new CommonUtilityFactory(),new GenericObjectPoolConfig());
 
 }
