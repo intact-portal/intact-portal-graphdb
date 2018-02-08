@@ -34,7 +34,6 @@ public class GraphGene extends GraphMolecule implements Gene {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
     private String uniqueKey;
 
     private GraphXref ensembl;

@@ -18,7 +18,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+
     private String uniqueKey;
 
     private GraphXref ddbjEmblGenbank;

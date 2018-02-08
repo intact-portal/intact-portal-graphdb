@@ -24,7 +24,6 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
     private String uniprotName;
 
     private GraphXref uniprotkb;
