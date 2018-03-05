@@ -12,6 +12,10 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by anjali on 24/11/17.
  */
@@ -24,5 +28,7 @@ public interface BinaryInteractionEvidenceRepository extends GraphRepository<Gra
 
     @Query(CypherQueries.COMM_NEIGH_OF_INTOR)
     Page<ClusterDataFeed> getInteractorPairWithEvidences(Pageable page);
+
+    List<GraphBinaryInteractionEvidence> findByUniqueKeyIn(Set<String> uniqueKey,@Depth int depth);
 
 }

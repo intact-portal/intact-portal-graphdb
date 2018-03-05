@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.domain;
 import org.springframework.data.neo4j.annotation.QueryResult;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.Interactor;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 
 import java.util.Set;
 
@@ -13,18 +14,9 @@ import java.util.Set;
 @QueryResult
 public class ClusterDataFeed {
 
-    private Set<BinaryInteractionEvidence> binaryInteractionEvidences;
+    private Set<GraphBinaryInteractionEvidence> binaryInteractionEvidences;
     private Interactor interactorA;
     private Interactor interactorB;
-
-
-    public Set<BinaryInteractionEvidence> getBinaryInteractionEvidences() {
-        return binaryInteractionEvidences;
-    }
-
-    public void setBinaryInteractionEvidences(Set<BinaryInteractionEvidence> binaryInteractionEvidences) {
-        this.binaryInteractionEvidences = binaryInteractionEvidences;
-    }
 
     public Interactor getInteractorA() {
         return interactorA;
@@ -40,5 +32,13 @@ public class ClusterDataFeed {
 
     public void setInteractorB(Interactor interactorB) {
         this.interactorB = interactorB;
+    }
+
+    public Set<GraphBinaryInteractionEvidence> getBinaryInteractionEvidences() {
+        return binaryInteractionEvidences;
+    }
+
+    public void setBinaryInteractionEvidences(Set<GraphBinaryInteractionEvidence> binaryInteractionEvidences) {
+        this.binaryInteractionEvidences = binaryInteractionEvidences;
     }
 }
