@@ -14,7 +14,7 @@ import java.util.Set;
 @QueryResult
 public class ClusterDataFeed {
 
-    private Set<GraphBinaryInteractionEvidence> binaryInteractionEvidences;
+    private Set<GraphBinaryInteractionEvidence> interactions;
     private Interactor interactorA;
     private Interactor interactorB;
 
@@ -34,11 +34,12 @@ public class ClusterDataFeed {
         this.interactorB = interactorB;
     }
 
-    public Set<GraphBinaryInteractionEvidence> getBinaryInteractionEvidences() {
-        return binaryInteractionEvidences;
+
+    public Set<GraphBinaryInteractionEvidence> getInteractions() {
+        return interactions;
     }
 
-    public void setBinaryInteractionEvidences(Set<GraphBinaryInteractionEvidence> binaryInteractionEvidences) {
-        this.binaryInteractionEvidences = binaryInteractionEvidences;
+    public void setInteractions(Set<GraphBinaryInteractionEvidence> interactions) {
+        this.interactions = interactions;
     }
 }
