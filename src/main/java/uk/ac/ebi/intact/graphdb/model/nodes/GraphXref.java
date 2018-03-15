@@ -72,6 +72,8 @@ public class GraphXref implements Xref {
                 this.database = EntityCache.PSIMI_CVTERM;
             }else if (database != null && EntityCache.PUBMED_CVTERM != null && Constants.PUBMED_DB.equals(database.getShortName())) {
                 this.database = EntityCache.PUBMED_CVTERM;
+            } else if (database != null && EntityCache.INTACT != null && Constants.INTACT_DB.equals(database.getShortName())) {
+                this.database = EntityCache.INTACT;
             } else {
                 this.database = new GraphCvTerm(database);
             }

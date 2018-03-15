@@ -103,6 +103,8 @@ public class GraphCvTerm implements CvTerm {
             EntityCache.PRIMARY_REFERENCE = this;
         }else if(EntityCache.USED_IN_CLASS==null && getShortName().equals(Constants.USED_IN_CLASS_TOPIC)){
             EntityCache.USED_IN_CLASS = this;
+        }else if(EntityCache.INTACT==null && getShortName().equals(Constants.INTACT_DB)){
+            EntityCache.INTACT = this;
         }
         setXrefs(cvTerm.getXrefs());
         setIdentifiers(cvTerm.getIdentifiers());

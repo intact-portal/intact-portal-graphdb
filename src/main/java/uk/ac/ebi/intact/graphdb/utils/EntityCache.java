@@ -12,4 +12,5 @@ public class EntityCache {
     public static GraphCvTerm PUBMED_CVTERM;
     public static GraphCvTerm PRIMARY_REFERENCE;
     public static GraphCvTerm USED_IN_CLASS;
+    public static GraphCvTerm INTACT;
 }
