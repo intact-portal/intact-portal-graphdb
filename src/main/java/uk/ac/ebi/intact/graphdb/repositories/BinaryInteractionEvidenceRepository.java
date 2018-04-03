@@ -31,4 +31,7 @@ public interface BinaryInteractionEvidenceRepository extends GraphRepository<Gra
 
     List<GraphBinaryInteractionEvidence> findByUniqueKeyIn(Set<String> uniqueKey,@Depth int depth);
 
+    @Query(CypherQueries.INTERACTOR_PAIR_COUNT)
+    long getInteractorPairCount();
+
 }
