@@ -19,8 +19,9 @@ public class GraphOrganism implements Organism {
     private Long graphId;
 
     @Index(unique = true,primary = true)
-    private String scientificName;
+    private String uniqueKey;
 
+    private String scientificName;
     private String commonName;
     private int taxId;
     private Collection<GraphAlias> aliases;
@@ -36,6 +37,7 @@ public class GraphOrganism implements Organism {
         setCellType(organism.getCellType());
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
+        setUniqueKey(this.toString());
     }
 
     public GraphOrganism(int taxId) {
@@ -168,6 +170,14 @@ public class GraphOrganism implements Organism {
         }
     }
 
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -188,6 +198,22 @@ public class GraphOrganism implements Organism {
 
     @Override
     public String toString() {
-        return "Organism: " + getTaxId() + "(" + (getCommonName() != null ? getCommonName() : "-") + ")";
+        String objName="";
+        if(getTaxId()!=0){
+            objName=objName+"Tax Id: "+getTaxId();
+        }
+        if(getCellType()!=null&&getCellType().getMIIdentifier()!=null){
+            objName=objName+"Cell Type :"+getCellType().getMIIdentifier();
+        }
+        if(getTissue()!=null&&getTissue().getMIIdentifier()!=null){
+            objName=objName+"Tissue :"+getTissue().getMIIdentifier();
+        }
+        if(getCompartment()!=null&&getCompartment().getMIIdentifier()!=null){
+            objName=objName+"Compartment :"+getCompartment().getMIIdentifier();
+        }
+
+        return objName;
     }
+
+
 }
