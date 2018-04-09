@@ -17,8 +17,8 @@ import java.util.Collection;
 @NodeEntity
 public class GraphInteractor implements Interactor {
 
-    /*@GraphId
-    private Long graphId;*/
+    @GraphId
+    private Long graphId;
 
     @Index(unique = true,primary = true)
     private String ac;
