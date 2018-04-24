@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,6 +89,10 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public GraphCvTerm(CvTerm cvTerm) {
+
+        if(GraphEntityCache.cvTermCacheMap.get(cvTerm.getShortName())==null){
+            GraphEntityCache.cvTermCacheMap.put(cvTerm.getShortName(),this);
+        }
         setShortName(cvTerm.getShortName());
         setFullName(cvTerm.getFullName());
         setMIIdentifier(cvTerm.getMIIdentifier());

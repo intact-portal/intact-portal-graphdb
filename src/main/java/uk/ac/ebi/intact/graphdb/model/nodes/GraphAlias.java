@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 @NodeEntity
 public class GraphAlias implements Alias {
@@ -13,7 +14,7 @@ public class GraphAlias implements Alias {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private GraphCvTerm type;
@@ -23,7 +24,11 @@ public class GraphAlias implements Alias {
     }
 
     public GraphAlias(Alias alias) {
-        setType(alias.getType());
+        if (GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()) != null) {
+            type=(GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()));
+        } else {
+            setType(alias.getType());
+        }
         setName(alias.getName());
         setUniqueKey(this.toString());
     }

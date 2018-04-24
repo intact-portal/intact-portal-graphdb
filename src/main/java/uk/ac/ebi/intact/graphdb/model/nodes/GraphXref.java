@@ -8,6 +8,7 @@ import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 @NodeEntity
 public class GraphXref implements Xref {
@@ -15,7 +16,7 @@ public class GraphXref implements Xref {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String identifier;
 
     private GraphCvTerm database;
@@ -26,10 +27,21 @@ public class GraphXref implements Xref {
     }
 
     public GraphXref(Xref xref) {
-        setDatabase(xref.getDatabase());
+        if (GraphEntityCache.xrefCacheMap.get(xref.getId()) == null) {
+            GraphEntityCache.xrefCacheMap.put(xref.getId(), this);
+        }
+        if (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()) != null) {
+            database=(GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()));
+        } else {
+            setDatabase(xref.getDatabase());
+        }
         setId(xref.getId());
         setVersion(xref.getVersion());
-        setQualifier(xref.getQualifier());
+        if (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()) != null) {
+            qualifier=(GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()));
+        } else {
+            setQualifier(xref.getQualifier());
+        }
     }
 
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
@@ -70,7 +82,7 @@ public class GraphXref implements Xref {
                 this.database = (GraphCvTerm) database;
             } else if (database != null && EntityCache.PSIMI_CVTERM != null && CvTerm.PSI_MI.equals(database.getShortName())) {
                 this.database = EntityCache.PSIMI_CVTERM;
-            }else if (database != null && EntityCache.PUBMED_CVTERM != null && Constants.PUBMED_DB.equals(database.getShortName())) {
+            } else if (database != null && EntityCache.PUBMED_CVTERM != null && Constants.PUBMED_DB.equals(database.getShortName())) {
                 this.database = EntityCache.PUBMED_CVTERM;
             } else if (database != null && EntityCache.INTACT != null && Constants.INTACT_DB.equals(database.getShortName())) {
                 this.database = EntityCache.INTACT;
@@ -110,7 +122,7 @@ public class GraphXref implements Xref {
                 this.qualifier = (GraphCvTerm) qualifier;
             } else if (qualifier != null && EntityCache.IDENTITY != null && Constants.IDENTITY.equals(qualifier.getShortName())) {
                 setQualifier(EntityCache.IDENTITY);
-            }else if (qualifier != null && EntityCache.PRIMARY_REFERENCE != null && Constants.PRIMARY_REFERENCE_QUALIFIER.equals(qualifier.getShortName())) {
+            } else if (qualifier != null && EntityCache.PRIMARY_REFERENCE != null && Constants.PRIMARY_REFERENCE_QUALIFIER.equals(qualifier.getShortName())) {
                 setQualifier(EntityCache.PRIMARY_REFERENCE);
             } else {
                 this.qualifier = new GraphCvTerm(qualifier);

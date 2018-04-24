@@ -8,6 +8,7 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationComparator;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 @NodeEntity
 public class GraphAnnotation implements Annotation {
@@ -15,7 +16,7 @@ public class GraphAnnotation implements Annotation {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private GraphCvTerm topic;
@@ -25,7 +26,12 @@ public class GraphAnnotation implements Annotation {
     }
 
     public GraphAnnotation(Annotation annotation) {
-        setTopic(annotation.getTopic());
+
+        if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
+            topic=(GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
+        } else {
+            setTopic(annotation.getTopic());
+        }
         setValue(annotation.getValue());
         setUniqueKey(this.toString());
     }
@@ -59,7 +65,7 @@ public class GraphAnnotation implements Annotation {
         if (topic != null) {
             if (topic instanceof GraphCvTerm) {
                 this.topic = (GraphCvTerm) topic;
-            }else if (topic != null && EntityCache.USED_IN_CLASS != null && Constants.USED_IN_CLASS_TOPIC.equals(topic.getShortName())) {
+            } else if (topic != null && EntityCache.USED_IN_CLASS != null && Constants.USED_IN_CLASS_TOPIC.equals(topic.getShortName())) {
                 setTopic(EntityCache.USED_IN_CLASS);
             } else {
                 this.topic = new GraphCvTerm(topic);
