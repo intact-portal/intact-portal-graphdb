@@ -1,14 +1,21 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphAnnotation implements Annotation {
@@ -27,13 +34,38 @@ public class GraphAnnotation implements Annotation {
 
     public GraphAnnotation(Annotation annotation) {
 
-        if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
-            topic=(GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
+         if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
+            topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
         } else {
             setTopic(annotation.getTopic());
         }
+
         setValue(annotation.getValue());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodesNatively();
+            createRelationShipNatively();
+        }
+
+    }
+
+    private void createNodesNatively() {
+
+        BatchInserter batchInserter = CreationConfig.batchInserter;
+
+        Map<String, Object> nodeProperties = new HashMap<String, Object>();
+        nodeProperties.put("uniqueKey", this.getUniqueKey());
+        if (this.getValue() != null) nodeProperties.put("value", this.getValue());
+
+        Label[] labels = CommonUtility.getLabels(GraphAnnotation.class);
+
+        setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+    }
+
+    private void createRelationShipNatively() {
+        CommonUtility.createRelationShip(topic, this.getGraphId(), "topic");
     }
 
 
@@ -104,5 +136,13 @@ public class GraphAnnotation implements Annotation {
     @Override
     public String toString() {
         return this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 }

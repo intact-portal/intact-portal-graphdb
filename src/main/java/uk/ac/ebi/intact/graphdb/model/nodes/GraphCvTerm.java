@@ -1,7 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Labels;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -9,13 +14,10 @@ import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @NodeEntity
 public class GraphCvTerm implements CvTerm {
@@ -23,7 +25,7 @@ public class GraphCvTerm implements CvTerm {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String shortName;
     private String fullName;
     private Collection<GraphXref> xrefs;
@@ -35,15 +37,72 @@ public class GraphCvTerm implements CvTerm {
     private String pARIdentifier;
 
 
-
     @Labels
     private List<String> typeLabels = new ArrayList<>();
 
     public GraphCvTerm() {
     }
 
+    public GraphCvTerm(CvTerm cvTerm) {
+
+        if (GraphEntityCache.cvTermCacheMap.get(cvTerm.getShortName()) == null) {
+            GraphEntityCache.cvTermCacheMap.put(cvTerm.getShortName(), this);
+        }
+        setShortName(cvTerm.getShortName());
+        setFullName(cvTerm.getFullName());
+        setMIIdentifier(cvTerm.getMIIdentifier());
+        setMODIdentifier(cvTerm.getMODIdentifier());
+        setPARIdentifier(cvTerm.getPARIdentifier());
+
+        if (CreationConfig.createNatively) {
+            createNodesNatively();
+        }
+
+
+        setXrefs(cvTerm.getXrefs());
+        setIdentifiers(cvTerm.getIdentifiers());
+        setAnnotations(cvTerm.getAnnotations());
+        setSynonyms(cvTerm.getSynonyms());
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    private void createNodesNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if (this.getShortName()!=null) nodeProperties.put("shortName", this.getShortName());
+            if (this.getFullName()!=null) nodeProperties.put("fullName", this.getFullName());
+            if (this.getMIIdentifier()!=null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
+            if (this.getMODIdentifier()!=null) nodeProperties.put("mODIdentifier", this.getMODIdentifier());
+            if (this.getPARIdentifier()!=null)nodeProperties.put("pARIdentifier", this.getPARIdentifier());
+
+            Label[] labels=CommonUtility.getLabels(GraphCvTerm.class);
+
+            //create node
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+            //create relationships
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(){
+        CommonUtility.createXrefRelationShips(xrefs,this.graphId,"xrefs");
+        CommonUtility.createAliasRelationShips(synonyms,this.graphId,"synonyms");
+        CommonUtility.createAnnotationRelationShips(annotations,this.graphId,"annotations");
+        CommonUtility.createXrefRelationShips(identifiers,this.graphId,"identifiers");
+    }
+
     public GraphCvTerm(String shortName) {
-        if(shortName == null) {
+        if (shortName == null) {
             throw new IllegalArgumentException("The short name is required and cannot be null");
         } else {
             this.shortName = shortName;
@@ -62,7 +121,7 @@ public class GraphCvTerm implements CvTerm {
 
     public GraphCvTerm(String shortName, Xref ontologyId) {
         this(shortName);
-        if(ontologyId != null) {
+        if (ontologyId != null) {
             this.getIdentifiers().add(new GraphXref(ontologyId));
         }
 
@@ -78,44 +137,16 @@ public class GraphCvTerm implements CvTerm {
         getTypeLabels().add(label);
     }
 
-    public GraphCvTerm(String shortName, String fullName, Xref ontologyId,String label) {
-        this(shortName,fullName,ontologyId);
+    public GraphCvTerm(String shortName, String fullName, Xref ontologyId, String label) {
+        this(shortName, fullName, ontologyId);
         this.getTypeLabels().add(label);
     }
 
-    public GraphCvTerm(String shortName, String fullName, String miIdentifier,String label) {
-        this(shortName, fullName,miIdentifier);
+    public GraphCvTerm(String shortName, String fullName, String miIdentifier, String label) {
+        this(shortName, fullName, miIdentifier);
         this.getTypeLabels().add(label);
     }
 
-    public GraphCvTerm(CvTerm cvTerm) {
-
-        if(GraphEntityCache.cvTermCacheMap.get(cvTerm.getShortName())==null){
-            GraphEntityCache.cvTermCacheMap.put(cvTerm.getShortName(),this);
-        }
-        setShortName(cvTerm.getShortName());
-        setFullName(cvTerm.getFullName());
-        setMIIdentifier(cvTerm.getMIIdentifier());
-        setMODIdentifier(cvTerm.getMODIdentifier());
-        setPARIdentifier(cvTerm.getPARIdentifier());
-        if(EntityCache.PSIMI_CVTERM==null && getShortName().equals(CvTerm.PSI_MI)){
-            EntityCache.PSIMI_CVTERM = this;
-        }else if(EntityCache.IDENTITY==null && getShortName().equals(Constants.IDENTITY)){
-            EntityCache.IDENTITY = this;
-        }else if(EntityCache.PUBMED_CVTERM==null && getShortName().equals(Constants.PUBMED_DB)){
-            EntityCache.PUBMED_CVTERM = this;
-        }else if(EntityCache.PRIMARY_REFERENCE==null && getShortName().equals(Constants.PRIMARY_REFERENCE_QUALIFIER)){
-            EntityCache.PRIMARY_REFERENCE = this;
-        }else if(EntityCache.USED_IN_CLASS==null && getShortName().equals(Constants.USED_IN_CLASS_TOPIC)){
-            EntityCache.USED_IN_CLASS = this;
-        }else if(EntityCache.INTACT==null && getShortName().equals(Constants.INTACT_DB)){
-            EntityCache.INTACT = this;
-        }
-        setXrefs(cvTerm.getXrefs());
-        setIdentifiers(cvTerm.getIdentifiers());
-        setAnnotations(cvTerm.getAnnotations());
-        setSynonyms(cvTerm.getSynonyms());
-    }
 
     public String getShortName() {
         return shortName;
@@ -315,7 +346,7 @@ public class GraphCvTerm implements CvTerm {
     public boolean equals(Object o) {
         if (!(o instanceof GraphCvTerm)) {
             return false;
-        }else {
+        } else {
             if (this.getShortName().equals(((GraphCvTerm) o).getShortName())) {
                 return true;
             } else {
@@ -362,4 +393,12 @@ public class GraphCvTerm implements CvTerm {
         this.typeLabels = typeLabels;
     }
 
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
 }

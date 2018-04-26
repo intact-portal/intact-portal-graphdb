@@ -1,14 +1,21 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphXref implements Xref {
@@ -27,6 +34,15 @@ public class GraphXref implements Xref {
     }
 
     public GraphXref(Xref xref) {
+
+
+        setId(xref.getId());
+        setVersion(xref.getVersion());
+
+        if (CreationConfig.createNatively) {
+            createNodesNatively();
+        }
+
         if (GraphEntityCache.xrefCacheMap.get(xref.getId()) == null) {
             GraphEntityCache.xrefCacheMap.put(xref.getId(), this);
         }
@@ -35,13 +51,39 @@ public class GraphXref implements Xref {
         } else {
             setDatabase(xref.getDatabase());
         }
-        setId(xref.getId());
-        setVersion(xref.getVersion());
+
         if (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()) != null) {
             qualifier=(GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()));
         } else {
             setQualifier(xref.getQualifier());
         }
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    private void createNodesNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("identifier", this.getId());
+            if(this.getVersion()!=null) nodeProperties.put("version", this.getVersion());
+
+            Label[] labels=CommonUtility.getLabels(GraphXref.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createRelationShipNatively(){
+        CommonUtility.createRelationShip(database, this.getGraphId(),"database");
+        CommonUtility.createRelationShip(qualifier, this.getGraphId(),"qualifier");
     }
 
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
@@ -133,6 +175,8 @@ public class GraphXref implements Xref {
         //TODO login it
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -153,5 +197,13 @@ public class GraphXref implements Xref {
     @Override
     public String toString() {
         return getDatabase().toString() + ":" + getId() + (getQualifier() != null ? " (" + getQualifier().toString() + ")" : "");
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 }

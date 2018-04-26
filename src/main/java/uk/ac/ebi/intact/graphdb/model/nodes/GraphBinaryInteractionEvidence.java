@@ -1,14 +1,21 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
@@ -43,6 +50,34 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodesNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    private void createNodesNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+
+            Label[] labels= CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(){
+        CommonUtility.createRelationShip(participantA, this.getGraphId(),RelationshipTypes.BIE_PARTICIPANT);
+        CommonUtility.createRelationShip(participantB, this.getGraphId(),RelationshipTypes.BIE_PARTICIPANT);
+        CommonUtility.createRelationShip(interactorA, this.getGraphId(),"interactorA");
+        CommonUtility.createRelationShip(interactorB, this.getGraphId(),"interactorB");
+        CommonUtility.createRelationShip(complexExpansion, this.getGraphId(),"complexExpansion");
     }
 
     public String getUniqueKey() {
@@ -140,5 +175,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     public String toString() {
             return (getAc() != null?getAc():"")+" Binary interaction: participant A=[" + (this.getParticipantA() != null?this.getParticipantA().toString():"") + "], participant B=[" + (this.getParticipantB() != null?this.getParticipantB().toString():"") + "], Complex expansion=[" + (this.getComplexExpansion() != null?this.getComplexExpansion().toString():"") + "]";
 
+    }
+
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 }
