@@ -55,7 +55,7 @@ public class GraphCvTerm implements CvTerm {
         setPARIdentifier(cvTerm.getPARIdentifier());
 
         if (CreationConfig.createNatively) {
-            createNodesNatively();
+            createNodeNatively();
         }
 
 
@@ -69,7 +69,7 @@ public class GraphCvTerm implements CvTerm {
         }
     }
 
-    private void createNodesNatively() {
+    public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 

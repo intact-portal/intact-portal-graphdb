@@ -1,9 +1,11 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
@@ -12,10 +14,9 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 
 /**
@@ -41,6 +42,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.INCOMING)
     private GraphBinaryInteractionEvidence binaryInteractionEvidence;
+    private EntityInteractorChangeListener changeListener;
 
     private Collection<GraphFeatureEvidence> features;
     private Collection<GraphConfidence> confidences;
@@ -51,7 +53,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private Collection<GraphAnnotation> annotations;
     private Collection<GraphAlias> aliases;
     private Collection<GraphCausalRelationship> causalRelationships;
-    private EntityInteractorChangeListener changeListener;
+
 
 
     public GraphParticipantEvidence() {
@@ -72,6 +74,13 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (!callingClasses.contains("GraphBinaryInteractionEvidence")) {
             setBinaryInteractionEvidence(participantEvidence.getInteraction());
         }
+        setChangeListener(participantEvidence.getChangeListener());
+        setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
         setFeatures(participantEvidence.getFeatures());
         setConfidences(participantEvidence.getConfidences());
         setParameters(participantEvidence.getParameters());
@@ -81,9 +90,48 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setAnnotations(participantEvidence.getAnnotations());
         setAliases(participantEvidence.getAliases());
         setCausalRelationships(participantEvidence.getCausalRelationships());
-        setChangeListener(participantEvidence.getChangeListener());
 
-        setUniqueKey(this.toString());
+        if (CreationConfig.createNatively) {
+
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+
+            Label[] labels = CommonUtility.getLabels(GraphParticipantEvidence.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(experimentalRole, this.graphId, "experimentalRole");
+        CommonUtility.createRelationShip(biologicalRole, this.graphId, "biologicalRole");
+        CommonUtility.createRelationShip(expressedIn, this.graphId, "expressedIn");
+        CommonUtility.createRelationShip(stoichiometry, this.graphId, "stoichiometry");
+        CommonUtility.createRelationShip(interactor, this.graphId, "interactor");
+        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
+        CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
+        CommonUtility.createRelationShip(changeListener, this.graphId, "changeListener");
+        CommonUtility.createFeatureEvidenceRelationShips(features, this.graphId, "features");
+        CommonUtility.createConfidenceRelationShips(confidences, this.graphId, "confidences");
+        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
+        CommonUtility.createCvTermRelationShips(identificationMethods, this.graphId, "identificationMethods");
+        CommonUtility.createCvTermRelationShips(experimentalPreparations, this.graphId, "experimentalPreparations");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
+        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, this.graphId, "causalRelationships");
+
     }
 
     public String getUniqueKey() {
@@ -461,6 +509,15 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
     }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
 
     public String toString() {
         return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null?", stoichiometry: " + this.getStoichiometry().toString():"") + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");

@@ -1,13 +1,19 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Publication;
 import psidev.psi.mi.jami.model.Source;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
-public class GraphSource extends GraphCvTerm  implements Source {
+public class GraphSource extends GraphCvTerm implements Source {
 
     @GraphId
     private Long graphId;
@@ -22,12 +28,40 @@ public class GraphSource extends GraphCvTerm  implements Source {
     public GraphSource() {
     }
 
-    public GraphSource(Source source){
+    public GraphSource(Source source) {
         super(source);
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if (this.getPostalAddress() != null) nodeProperties.put("postalAddress", this.getPostalAddress());
+            if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getUrl() != null) nodeProperties.put("url", this.getUrl());
+
+
+            Label[] labels = CommonUtility.getLabels(GraphSource.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(getPublication(), this.graphId, "publication");
     }
 
     public String getUniqueKey() {
@@ -52,8 +86,16 @@ public class GraphSource extends GraphCvTerm  implements Source {
                 this.publication = new GraphPublication(publication);
             }
         } else {
-            this.publication=null;
+            this.publication = null;
         }
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 /*
     public GraphSource(String shortName) {
@@ -122,8 +164,9 @@ public class GraphSource extends GraphCvTerm  implements Source {
 
 
     public String getUrl() {
-        return this.url != null?this.url:null;
+        return this.url != null ? this.url : null;
     }
+
     public void setUrl(String url) {
         /*DefaultSource.SourceAnnotationList sourceAnnotationList = (DefaultSource.SourceAnnotationList)this.getAnnotations();
         if(url != null) {
@@ -139,7 +182,7 @@ public class GraphSource extends GraphCvTerm  implements Source {
             this.url = null;
         }*/
 
-        this.url=url;
+        this.url = url;
 
     }
 
@@ -150,7 +193,7 @@ public class GraphSource extends GraphCvTerm  implements Source {
 */
 
     public String getPostalAddress() {
-        return this.postalAddress != null?this.postalAddress:null;
+        return this.postalAddress != null ? this.postalAddress : null;
     }
 
     public void setPostalAddress(String address) {
@@ -168,7 +211,7 @@ public class GraphSource extends GraphCvTerm  implements Source {
             this.postalAddress = null;
         }*/
 
-        this.postalAddress=postalAddress;
+        this.postalAddress = postalAddress;
 
     }
 

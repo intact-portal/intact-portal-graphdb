@@ -1,6 +1,8 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
@@ -9,11 +11,9 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @NodeEntity
 public class GraphPublication implements Publication {
@@ -27,6 +27,12 @@ public class GraphPublication implements Publication {
     private String title;
     private String journal;
     private Date publicationDate;
+    private CurationDepth curationDepth;
+    private Date releasedDate;
+    private GraphSource source;
+    private GraphXref pubmedId;
+    private GraphXref doi;
+    private GraphXref imexId;
     private List<String> authors;
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
@@ -34,14 +40,6 @@ public class GraphPublication implements Publication {
 
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
     private Collection<GraphExperiment> experiments;
-
-    private CurationDepth curationDepth;
-    private Date releasedDate;
-    private GraphSource source;
-
-    private GraphXref pubmedId;
-    private GraphXref doi;
-    private GraphXref imexId;
 
     public GraphPublication() {
         this.curationDepth = CurationDepth.undefined;
@@ -51,11 +49,6 @@ public class GraphPublication implements Publication {
         setTitle(publication.getTitle());
         setJournal(publication.getJournal());
         setPublicationDate(publication.getPublicationDate());
-        setAuthors(publication.getAuthors());
-        setIdentifiers(publication.getIdentifiers());
-        setXrefs(publication.getXrefs());
-        setAnnotations(publication.getAnnotations());
-        setExperiments(publication.getExperiments());
         setCurationDepth(publication.getCurationDepth());
         setReleasedDate(publication.getReleasedDate());
         setSource(publication.getSource());
@@ -63,6 +56,54 @@ public class GraphPublication implements Publication {
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
 
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setAuthors(publication.getAuthors());
+        setIdentifiers(publication.getIdentifiers());
+        setXrefs(publication.getXrefs());
+        setAnnotations(publication.getAnnotations());
+        setExperiments(publication.getExperiments());
+
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
+            if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
+            if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
+            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", this.getPublicationDate());
+            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", this.getReleasedDate());
+            if (this.getAuthors() != null) nodeProperties.put("authors", this.getAuthors());
+
+            Label[] labels = CommonUtility.getLabels(GraphPublication.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(curationDepth, this.graphId, "curationDepth");
+        CommonUtility.createRelationShip(imexId, this.graphId, "imexId");
+        CommonUtility.createRelationShip(source, this.graphId, "source");
+        CommonUtility.createRelationShip(pubmedId, this.graphId, "pubmedId");
+        CommonUtility.createRelationShip(doi, this.graphId, "doi");
+
+        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+        CommonUtility.createExperimentRelationShips(experiments, this.graphId, RelationshipTypes.PUB_EXP);
     }
 
     public GraphPublication(Xref identifier) {
@@ -362,6 +403,14 @@ public class GraphPublication implements Publication {
         } else {
             this.source = null;
         }
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     public boolean addExperiment(Experiment exp) {

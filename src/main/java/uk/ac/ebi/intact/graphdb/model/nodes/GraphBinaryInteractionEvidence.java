@@ -23,7 +23,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.OUTGOING)
@@ -38,7 +38,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     private GraphCvTerm complexExpansion;
 
 
-    public GraphBinaryInteractionEvidence(){
+    public GraphBinaryInteractionEvidence() {
         super();
     }
 
@@ -52,19 +52,21 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            createNodesNatively();
+            super.createNodeNatively();
+            super.createRelationShipNatively();
+            createNodeNatively();
             createRelationShipNatively();
         }
     }
 
-    private void createNodesNatively() {
+    public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
 
-            Label[] labels= CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
+            Label[] labels = CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
 
             setGraphId(CommonUtility.createNode(nodeProperties, labels));
         } catch (Exception e) {
@@ -72,12 +74,12 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         }
     }
 
-    public void createRelationShipNatively(){
-        CommonUtility.createRelationShip(participantA, this.getGraphId(),RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(participantB, this.getGraphId(),RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(interactorA, this.getGraphId(),"interactorA");
-        CommonUtility.createRelationShip(interactorB, this.getGraphId(),"interactorB");
-        CommonUtility.createRelationShip(complexExpansion, this.getGraphId(),"complexExpansion");
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(participantA, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
+        CommonUtility.createRelationShip(participantB, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
+        CommonUtility.createRelationShip(interactorA, this.getGraphId(), "interactorA");
+        CommonUtility.createRelationShip(interactorB, this.getGraphId(), "interactorB");
+        CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), "complexExpansion");
     }
 
     public String getUniqueKey() {
@@ -171,13 +173,6 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
 
-    @Override
-    public String toString() {
-            return (getAc() != null?getAc():"")+" Binary interaction: participant A=[" + (this.getParticipantA() != null?this.getParticipantA().toString():"") + "], participant B=[" + (this.getParticipantB() != null?this.getParticipantB().toString():"") + "], Complex expansion=[" + (this.getComplexExpansion() != null?this.getComplexExpansion().toString():"") + "]";
-
-    }
-
-
     public Long getGraphId() {
         return graphId;
     }
@@ -185,4 +180,12 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
     }
+
+    @Override
+    public String toString() {
+        return (getAc() != null ? getAc() : "") + " Binary interaction: participant A=[" + (this.getParticipantA() != null ? this.getParticipantA().toString() : "") + "], participant B=[" + (this.getParticipantB() != null ? this.getParticipantB().toString() : "") + "], Complex expansion=[" + (this.getComplexExpansion() != null ? this.getComplexExpansion().toString() : "") + "]";
+
+    }
+
+
 }

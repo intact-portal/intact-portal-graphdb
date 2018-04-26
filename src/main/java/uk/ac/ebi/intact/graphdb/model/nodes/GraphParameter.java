@@ -1,15 +1,21 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.exception.IllegalParameterException;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Parameter;
 import psidev.psi.mi.jami.model.ParameterValue;
 import psidev.psi.mi.jami.utils.ParameterUtils;
 import psidev.psi.mi.jami.utils.comparator.parameter.UnambiguousParameterComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphParameter implements Parameter {
@@ -30,6 +36,33 @@ public class GraphParameter implements Parameter {
         setUncertainty(parameter.getUncertainty());
         setUnit(parameter.getUnit());
         setValue(parameter.getValue());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty());
+
+            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(type, this.graphId, "type");
+        CommonUtility.createRelationShip(unit, this.graphId, "unit");
+        CommonUtility.createRelationShip(value, this.graphId, "value");
     }
 
     public GraphParameter(CvTerm type, ParameterValue value) {
@@ -132,6 +165,14 @@ public class GraphParameter implements Parameter {
             this.value = null;
         }
         //TODO login it
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

@@ -1,9 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Gene;
 import psidev.psi.mi.jami.model.Organism;
@@ -11,10 +12,15 @@ import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default implementation for gene
- *
+ * <p>
  * Notes: The equals and hashcode methods have NOT been overridden because the Gene object is a complex object.
  * To compare Gene objects, you can use some comparators provided by default:
  * - DefaultGeneComparator
@@ -52,6 +58,34 @@ public class GraphGene extends GraphMolecule implements Gene {
         setEntrezGeneId(gene.getEntrezGeneId());
         setRefseq(gene.getRefseq());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+
+            Label[] labels = CommonUtility.getLabels(GraphGene.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(ensembl, this.graphId, "ensembl");
+        CommonUtility.createRelationShip(ensemblGenome, this.graphId, "ensemblGenome");
+        CommonUtility.createRelationShip(entrezGeneId, this.graphId, "entrezGeneId");
+        CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
     }
 
     public GraphGene(String name) {
@@ -89,7 +123,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     public GraphGene(String name, String fullName, String ensembl) {
         super(name, fullName, CvTermUtils.createGeneInteractorType());
 
-        if (ensembl != null){
+        if (ensembl != null) {
             setEnsembl(ensembl);
         }
     }
@@ -136,14 +170,14 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public GraphGene(String name, Organism organism, String ensembl) {
         super(name, CvTermUtils.createGeneInteractorType(), organism);
-        if (ensembl != null){
+        if (ensembl != null) {
             setEnsembl(ensembl);
         }
     }
 
     public GraphGene(String name, String fullName, Organism organism, String ensembl) {
         super(name, fullName, CvTermUtils.createGeneInteractorType(), organism);
-        if (ensembl != null){
+        if (ensembl != null) {
             setEnsembl(ensembl);
         }
     }
@@ -182,14 +216,14 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public void setEnsembl(String ac) {
-        GeneIdentifierList geneIdentifiers = (GeneIdentifierList)getIdentifiers();
+        GeneIdentifierList geneIdentifiers = (GeneIdentifierList) getIdentifiers();
 
         // add new ensembl if not null
-        if (ac != null){
+        if (ac != null) {
             CvTerm ensemblDatabase = CvTermUtils.createEnsemblDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old ensembl if not null
-            if (this.ensembl != null){
+            if (this.ensembl != null) {
                 geneIdentifiers.removeOnly(this.ensembl);
             }
             this.ensembl = new GraphXref(ensemblDatabase, ac, identityQualifier);
@@ -207,14 +241,14 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public void setEnsemblGenome(String ac) {
-        GeneIdentifierList geneIdentifiers = (GeneIdentifierList)getIdentifiers();
+        GeneIdentifierList geneIdentifiers = (GeneIdentifierList) getIdentifiers();
 
         // add new ensembl genomes if not null
-        if (ac != null){
+        if (ac != null) {
             CvTerm ensemblGenomesDatabase = CvTermUtils.createEnsemblGenomesDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old ensembl genome if not null
-            if (this.ensemblGenome != null){
+            if (this.ensemblGenome != null) {
                 geneIdentifiers.removeOnly(this.ensemblGenome);
             }
             this.ensemblGenome = new GraphXref(ensemblGenomesDatabase, ac, identityQualifier);
@@ -232,14 +266,14 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public void setEntrezGeneId(String id) {
-        GeneIdentifierList geneIdentifiers = (GeneIdentifierList)getIdentifiers();
+        GeneIdentifierList geneIdentifiers = (GeneIdentifierList) getIdentifiers();
 
         // add new entrez gene id genomes if not null
-        if (id != null){
+        if (id != null) {
             CvTerm entrezDatabase = CvTermUtils.createEntrezGeneIdDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove old entrez gene id if not null
-            if (this.entrezGeneId!= null){
+            if (this.entrezGeneId != null) {
                 geneIdentifiers.removeOnly(this.entrezGeneId);
             }
             this.entrezGeneId = new GraphXref(entrezDatabase, id, identityQualifier);
@@ -258,14 +292,14 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public void setRefseq(String ac) {
-        GeneIdentifierList geneIdentifiers = (GeneIdentifierList)getIdentifiers();
+        GeneIdentifierList geneIdentifiers = (GeneIdentifierList) getIdentifiers();
 
         // add new refseq if not null
-        if (ac != null){
+        if (ac != null) {
             CvTerm refseqDatabase = CvTermUtils.createRefseqDatabase();
             CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
             // first remove refseq if not null
-            if (this.refseq!= null){
+            if (this.refseq != null) {
                 geneIdentifiers.removeOnly(this.refseq);
             }
             this.refseq = new GraphXref(refseqDatabase, ac, identityQualifier);
@@ -280,73 +314,69 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     protected void processAddedIdentifierEvent(Xref added) {
         // the added identifier is ensembl and it is not the current ensembl identifier
-        if (ensembl != added && XrefUtils.isXrefFromDatabase(added, Xref.ENSEMBL_MI, Xref.ENSEMBL)){
+        if (ensembl != added && XrefUtils.isXrefFromDatabase(added, Xref.ENSEMBL_MI, Xref.ENSEMBL)) {
             // the current ensembl identifier is not identity, we may want to set ensembl Identifier
-            if (!XrefUtils.doesXrefHaveQualifier(ensembl, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(ensembl, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the ensembl identifier is not set, we can set the ensembl identifier
-                if (ensembl == null){
+                if (ensembl == null) {
                     ensembl = new GraphXref(added);
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                     ensembl = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current ensembl identifier is not a secondary object, we reset ensembl identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(ensembl, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
                     ensembl = new GraphXref(added);
                 }
             }
         }
         // the added identifier is ensembl genomes and it is not the current ensembl genomes identifier
-        else if (ensemblGenome != added && XrefUtils.isXrefFromDatabase(added, Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES)){
+        else if (ensemblGenome != added && XrefUtils.isXrefFromDatabase(added, Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES)) {
             // the current ensembl genomes identifier is not identity, we may want to set ensembl genomes Identifier
-            if (!XrefUtils.doesXrefHaveQualifier(ensemblGenome, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(ensemblGenome, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the ensembl genomes Identifier is not set, we can set the ensembl genomes Identifier
-                if (ensemblGenome == null){
+                if (ensemblGenome == null) {
                     ensemblGenome = new GraphXref(added);
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                     ensemblGenome = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current ensembl genomes Identifier is not a secondary object, we reset ensembl genomes Identifier
                 else if (!XrefUtils.doesXrefHaveQualifier(ensemblGenome, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
                     ensemblGenome = new GraphXref(added);
                 }
             }
         }
         // the added identifier is entrez gene id and it is not the current entrez gene id
-        else if (entrezGeneId != added && XrefUtils.isXrefFromDatabase(added, Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE)){
+        else if (entrezGeneId != added && XrefUtils.isXrefFromDatabase(added, Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE)) {
             // the current entrez gene id is not identity, we may want to set entrez gene id
-            if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the entrez gene id is not set, we can set the entrez gene idr
-                if (entrezGeneId == null){
+                if (entrezGeneId == null) {
                     entrezGeneId = new GraphXref(added);
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                     entrezGeneId = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current entrez gene id is not a secondary object, we reset entrez gene id
                 else if (!XrefUtils.doesXrefHaveQualifier(entrezGeneId, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
                     entrezGeneId = new GraphXref(added);
                 }
             }
         }
         // the added identifier is refseq id and it is not the current refseq id
-        else if (refseq != added && XrefUtils.isXrefFromDatabase(added, Xref.REFSEQ_MI, Xref.REFSEQ)){
+        else if (refseq != added && XrefUtils.isXrefFromDatabase(added, Xref.REFSEQ_MI, Xref.REFSEQ)) {
             // the current refseq id is not identity, we may want to set refseq id
-            if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)){
+            if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                 // the refseq id is not set, we can set the refseq id
-                if (refseq == null){
+                if (refseq == null) {
                     refseq = new GraphXref(added);
-                }
-                else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)){
+                } else if (XrefUtils.doesXrefHaveQualifier(added, Xref.IDENTITY_MI, Xref.IDENTITY)) {
                     refseq = new GraphXref(added);
                 }
                 // the added xref is secondary object and the current refseq id is not a secondary object, we reset refseq id
                 else if (!XrefUtils.doesXrefHaveQualifier(refseq, Xref.SECONDARY_MI, Xref.SECONDARY)
-                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)){
+                        && XrefUtils.doesXrefHaveQualifier(added, Xref.SECONDARY_MI, Xref.SECONDARY)) {
                     refseq = new GraphXref(added);
                 }
             }
@@ -354,16 +384,13 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     protected void processRemovedIdentifierEvent(Xref removed) {
-        if (ensembl != null && ensembl.equals(removed)){
+        if (ensembl != null && ensembl.equals(removed)) {
             ensembl = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_MI, Xref.ENSEMBL));
-        }
-        else if (ensemblGenome != null && ensemblGenome.equals(removed)){
+        } else if (ensemblGenome != null && ensemblGenome.equals(removed)) {
             ensemblGenome = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES));
-        }
-        else if (entrezGeneId != null && entrezGeneId.equals(removed)){
+        } else if (entrezGeneId != null && entrezGeneId.equals(removed)) {
             entrezGeneId = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE));
-        }
-        else if (refseq != null &&refseq.equals(removed)){
+        } else if (refseq != null && refseq.equals(removed)) {
             refseq = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ));
         }
     }
@@ -377,18 +404,26 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     @Override
     public void setInteractorType(CvTerm type) {
-        if (type == null){
+        if (type == null) {
             super.setInteractorType(CvTermUtils.createGeneInteractorType());
-        }
-        else {
+        } else {
             super.setInteractorType(type);
         }
+    }
+
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override
     public String toString() {
         return "Gene: "
-                +(getEnsembl() != null ? getEnsembl() :
+                + (getEnsembl() != null ? getEnsembl() :
                 (getEnsemblGenome() != null ? getEnsemblGenome() :
                         (getEntrezGeneId() != null ? getEntrezGeneId() :
                                 (getRefseq() != null ? getRefseq() : super.toString()))));
@@ -396,7 +431,7 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     @Transient
     private class GeneIdentifierList extends AbstractListHavingProperties<GraphXref> {
-        public GeneIdentifierList(){
+        public GeneIdentifierList() {
             super();
         }
 

@@ -1,16 +1,22 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphOrganism implements Organism {
@@ -18,26 +24,62 @@ public class GraphOrganism implements Organism {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String scientificName;
     private String commonName;
     private int taxId;
-    private Collection<GraphAlias> aliases;
     private GraphCvTerm cellType;
     private GraphCvTerm compartment;
     private GraphCvTerm tissue;
+    private Collection<GraphAlias> aliases;
+
 
     public GraphOrganism(Organism organism) {
         setCommonName(organism.getCommonName());
         setScientificName(organism.getScientificName());
         setTaxId(organism.getTaxId());
-        setAliases(organism.getAliases());
         setCellType(organism.getCellType());
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setAliases(organism.getAliases());
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getScientificName() != null) nodeProperties.put("scientificName", this.getScientificName());
+            if (this.getCommonName() != null) nodeProperties.put("commonName", this.getScientificName());
+            nodeProperties.put("taxId", this.getTaxId());
+
+            Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(cellType, this.graphId, "cellType");
+        CommonUtility.createRelationShip(compartment, this.graphId, "compartment");
+        CommonUtility.createRelationShip(tissue, this.graphId, "tissue");
+        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
     }
 
     public GraphOrganism(int taxId) {
@@ -178,6 +220,14 @@ public class GraphOrganism implements Organism {
         this.uniqueKey = uniqueKey;
     }
 
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -198,18 +248,18 @@ public class GraphOrganism implements Organism {
 
     @Override
     public String toString() {
-        String objName="";
-        if(getTaxId()!=0){
-            objName=objName+"Tax Id: "+getTaxId();
+        String objName = "";
+        if (getTaxId() != 0) {
+            objName = objName + "Tax Id: " + getTaxId();
         }
-        if(getCellType()!=null&&getCellType().getMIIdentifier()!=null){
-            objName=objName+"Cell Type :"+getCellType().getMIIdentifier();
+        if (getCellType() != null && getCellType().getMIIdentifier() != null) {
+            objName = objName + "Cell Type :" + getCellType().getMIIdentifier();
         }
-        if(getTissue()!=null&&getTissue().getMIIdentifier()!=null){
-            objName=objName+"Tissue :"+getTissue().getMIIdentifier();
+        if (getTissue() != null && getTissue().getMIIdentifier() != null) {
+            objName = objName + "Tissue :" + getTissue().getMIIdentifier();
         }
-        if(getCompartment()!=null&&getCompartment().getMIIdentifier()!=null){
-            objName=objName+"Compartment :"+getCompartment().getMIIdentifier();
+        if (getCompartment() != null && getCompartment().getMIIdentifier() != null) {
+            objName = objName + "Compartment :" + getCompartment().getMIIdentifier();
         }
 
         return objName;

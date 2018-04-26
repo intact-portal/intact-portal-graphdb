@@ -1,12 +1,19 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anjali on 21/11/17.
@@ -35,6 +42,35 @@ public class GraphRange implements Range {
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.put("isLink", this.isLink());
+
+            Label[] labels = CommonUtility.getLabels(GraphRange.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(start, this.graphId, "start");
+        CommonUtility.createRelationShip(end, this.graphId, "end");
+        CommonUtility.createRelationShip(resultingSequence, this.graphId, "resultingSequence");
+        CommonUtility.createRelationShip(participant, this.graphId, "participant");
     }
 
     public void setPositions(Position start, Position end) {
@@ -134,6 +170,14 @@ public class GraphRange implements Range {
             this.participant = null;
         }
 
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

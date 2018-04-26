@@ -1,18 +1,19 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.GraphUtils;
+import uk.ac.ebi.intact.graphdb.utils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphInteractor implements Interactor {
@@ -20,18 +21,19 @@ public class GraphInteractor implements Interactor {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String ac;
 
     private String shortName;
     private String fullName;
+    private GraphOrganism organism;
+    private GraphCvTerm interactorType;
     private Collection<GraphXref> identifiers;
     private Collection<GraphChecksum> checksums;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
     private Collection<GraphAlias> aliases;
-    private GraphOrganism organism;
-    private GraphCvTerm interactorType;
+
 
     @Relationship(type = RelationshipTypes.INTERACTS_IN, direction = Relationship.OUTGOING)
     private Collection<GraphBinaryInteractionEvidence> interactions;
@@ -42,14 +44,50 @@ public class GraphInteractor implements Interactor {
     public GraphInteractor(Interactor interactor) {
         setShortName(interactor.getShortName());
         setFullName(interactor.getFullName());
+        setOrganism(interactor.getOrganism());
+        setInteractorType(interactor.getInteractorType());
+        initializeAc(interactor.getIdentifiers());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
         setIdentifiers(interactor.getIdentifiers());
         setChecksums(interactor.getChecksums());
         setAnnotations(interactor.getAnnotations());
         setAliases(interactor.getAliases());
-        setOrganism(interactor.getOrganism());
-        setInteractorType(interactor.getInteractorType());
 
-        initializeAc();
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("ac", this.getAc());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getAc());
+            if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
+
+            Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(organism, this.graphId, "organism");
+        CommonUtility.createRelationShip(interactorType, this.graphId, "interactorType");
+        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
+        CommonUtility.createCheckSumRelationShips(checksums, this.graphId, "checksums");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
     }
 
     public GraphInteractor(String name, CvTerm type) {
@@ -144,16 +182,15 @@ public class GraphInteractor implements Interactor {
         initialiseDefaultInteractorType();
     }
 
-    public void initializeAc(){
+    public void initializeAc(Collection<Xref> xrefs) {
         try {
-            CommonUtility commonUtility= Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
-            setAc(commonUtility.extractAc(getIdentifiers()));
+            CommonUtility commonUtility = Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
+            setAc(commonUtility.extractAc(xrefs));
             Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 
     public String getShortName() {
@@ -312,6 +349,14 @@ public class GraphInteractor implements Interactor {
                 Interactor.UNKNOWN_INTERACTOR,
                 Interactor.UNKNOWN_INTERACTOR_MI,
                 GraphUtils.INTERACTOR_TYPE_OBJCLASS);
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

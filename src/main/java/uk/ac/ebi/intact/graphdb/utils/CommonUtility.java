@@ -4,9 +4,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import psidev.psi.mi.jami.model.Xref;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphAlias;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphAnnotation;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
+import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -18,7 +16,7 @@ public class CommonUtility {
 
     private static final Map<Class, Label[]> labelMap = new HashMap<>();
 
-    public String extractAc(Collection<GraphXref> xrefs) {
+    public String extractAc(Collection<Xref> xrefs) {
         String ac = null;
 
         for (Xref xref : xrefs) {
@@ -116,6 +114,69 @@ public class CommonUtility {
 
     public static void createAnnotationRelationShips(Collection<GraphAnnotation> relCollection, long fromId, String relationName) {
         for (GraphAnnotation obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+
+    public static void createBinaryInteractionEvidenceRelationShips(Collection<GraphBinaryInteractionEvidence> relCollection, long fromId, String relationName) {
+        for (GraphBinaryInteractionEvidence obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+
+    public static void createFeatureEvidenceRelationShips(Collection<GraphFeatureEvidence> relCollection, long fromId, String relationName) {
+        for (GraphFeatureEvidence obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+
+    public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId, String relationName) {
+        for (GraphCausalRelationship obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createConfidenceRelationShips(Collection<GraphConfidence> relCollection, long fromId, String relationName) {
+        for (GraphConfidence obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createVariableParameterRelationShips(Collection<GraphVariableParameter> relCollection, long fromId, String relationName) {
+        for (GraphVariableParameter obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createCvTermRelationShips(Collection<GraphCvTerm> relCollection, long fromId, String relationName) {
+        for (GraphCvTerm obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createParameterRelationShips(Collection<GraphParameter> relCollection, long fromId, String relationName) {
+        for (GraphParameter obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createVariableParameterValueSetRelationShips(Collection<GraphVariableParameterValueSet> relCollection, long fromId, String relationName) {
+        for (GraphVariableParameterValueSet obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createVariableParameterValueRelationShips(Collection<GraphVariableParameterValue> relCollection, long fromId, String relationName) {
+        for (GraphVariableParameterValue obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createCheckSumRelationShips(Collection<GraphChecksum> relCollection, long fromId, String relationName) {
+        for (GraphChecksum obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createRangeRelationShips(Collection<GraphRange> relCollection, long fromId, String relationName) {
+        for (GraphRange obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
+    public static void createExperimentRelationShips(Collection<GraphExperiment> relCollection, long fromId, String relationName) {
+        for (GraphExperiment obj : relCollection) {
             createRelationShip(obj, fromId, relationName);
         }
     }

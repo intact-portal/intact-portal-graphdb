@@ -1,10 +1,17 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Stoichiometry;
 import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NodeEntity
 public class GraphStoichiometry implements Stoichiometry {
@@ -12,7 +19,7 @@ public class GraphStoichiometry implements Stoichiometry {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private int minValue;
@@ -23,6 +30,27 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.put("minValue", this.getMinValue());
+            nodeProperties.put("maxValue", this.getMaxValue());
+
+            Label[] labels = CommonUtility.getLabels(GraphRange.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public GraphStoichiometry(int value) {
@@ -60,6 +88,14 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

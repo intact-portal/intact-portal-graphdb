@@ -1,19 +1,18 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @NodeEntity
 public class GraphInteractionEvidence implements InteractionEvidence {
@@ -27,20 +26,22 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private String imexId;
     private GraphExperiment experiment;
     private String availability;
-    private Collection<GraphParameter> parameters;
     private boolean isInferred = false;
-    private Collection<GraphConfidence> confidences;
     private boolean isNegative;
-    private Collection<GraphVariableParameterValueSet> variableParameterValueSets;
     private String shortName;
     private String rigid;
+    private Date updatedDate;
+    private Date createdDate;
+    private GraphCvTerm interactionType;
+
+    private Collection<GraphParameter> parameters;
+    private Collection<GraphConfidence> confidences;
+    private Collection<GraphVariableParameterValueSet> variableParameterValueSets;
     private Collection<GraphChecksum> checksums;
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
-    private Date updatedDate;
-    private Date createdDate;
-    private GraphCvTerm interactionType;
+
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
     private Collection<GraphParticipantEvidence> participants;
@@ -49,45 +50,89 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private Collection<GraphInteractor> interactors;
 
 
-    public GraphInteractionEvidence(){
+    public GraphInteractionEvidence() {
 
     }
 
     public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence) {
-        String callingClasses= Arrays.toString(Thread.currentThread().getStackTrace());
+        String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
 
 
         setImexId(binaryInteractionEvidence.getImexId());
         setExperiment(binaryInteractionEvidence.getExperiment());
         setAvailability(binaryInteractionEvidence.getAvailability());
-        setParameters(binaryInteractionEvidence.getParameters());
         setInferred(binaryInteractionEvidence.isInferred());
-        setConfidences(binaryInteractionEvidence.getConfidences());
         setNegative(binaryInteractionEvidence.isNegative());
-        setVariableParameterValueSets(binaryInteractionEvidence.getVariableParameterValues());
         setShortName(binaryInteractionEvidence.getShortName());
         setRigid(binaryInteractionEvidence.getRigid());
+        setUpdatedDate(binaryInteractionEvidence.getUpdatedDate());
+        setCreatedDate(binaryInteractionEvidence.getCreatedDate());
+        setInteractionType(binaryInteractionEvidence.getInteractionType());
+        initializeAc(binaryInteractionEvidence.getXrefs());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setParameters(binaryInteractionEvidence.getParameters());
+        setConfidences(binaryInteractionEvidence.getConfidences());
+        setVariableParameterValueSets(binaryInteractionEvidence.getVariableParameterValues());
         setChecksums(binaryInteractionEvidence.getChecksums());
         setIdentifiers(binaryInteractionEvidence.getIdentifiers());
         setXrefs(binaryInteractionEvidence.getXrefs());
         setAnnotations(binaryInteractionEvidence.getAnnotations());
-        setUpdatedDate(binaryInteractionEvidence.getUpdatedDate());
-        setCreatedDate(binaryInteractionEvidence.getCreatedDate());
-        setInteractionType(binaryInteractionEvidence.getInteractionType());
-
-        if(!callingClasses.contains("GraphParticipantEvidence")){
+        if (!callingClasses.contains("GraphParticipantEvidence")) {
             setParticipants(binaryInteractionEvidence.getParticipants());
         }
 
-        initializeAc();
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
     }
 
-    public void initializeAc(){
+
+    public void createNodeNatively() {
         try {
-            CommonUtility commonUtility= Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
-            setAc(commonUtility.extractAc(getIdentifiers()));
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("ac", this.getAc());
+            if (this.getImexId() != null) nodeProperties.put("imexId", this.getImexId());
+            if (this.getAvailability() != null) nodeProperties.put("availability", this.getAvailability());
+            nodeProperties.put("isInferred", this.isInferred());
+            nodeProperties.put("isNegative", this.isNegative());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+            if (this.getRigid() != null) nodeProperties.put("rigid", this.getRigid());
+            if (this.getUpdatedDate() != null) nodeProperties.put("updatedDate", this.getUpdatedDate());
+            if (this.getCreatedDate() != null) nodeProperties.put("createdDate", this.getCreatedDate());
+
+            Label[] labels = CommonUtility.getLabels(GraphInteractionEvidence.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(experiment, this.graphId, "experiment");
+        CommonUtility.createRelationShip(interactionType, this.graphId, "interactionType");
+        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
+        CommonUtility.createConfidenceRelationShips(confidences, this.graphId, "confidences");
+        CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets, this.graphId, "variableParameterValueSets");
+        CommonUtility.createCheckSumRelationShips(checksums, this.graphId, "checksums");
+        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+    }
+
+    public void initializeAc(Collection<Xref> xrefs) {
+        try {
+            CommonUtility commonUtility = Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
+            setAc(commonUtility.extractAc(xrefs));
             Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -508,6 +553,14 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             clearPropertiesLinkedToXrefs();
         }
     }*/
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
     @Override
     public String toString() {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");

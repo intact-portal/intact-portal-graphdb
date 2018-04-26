@@ -1,15 +1,22 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.AliasUtils;
 import psidev.psi.mi.jami.utils.ChecksumUtils;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,6 +49,33 @@ public class GraphProtein extends GraphPolymer implements Protein {
         setChecksums(protein.getChecksums());
         setGeneName(protein.getGeneName());
 
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if(this.getUniprotName()!=null) nodeProperties.put("uniprotName", this.getUniprotName());
+
+            Label[] labels = CommonUtility.getLabels(GraphProtein.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(uniprotkb, this.graphId, "uniprotkb");
+        CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
+        CommonUtility.createRelationShip(geneName, this.graphId, "geneName");
+        CommonUtility.createRelationShip(rogid, this.graphId, "rogid");
     }
 
     public GraphProtein(String name, CvTerm type) {
@@ -326,6 +360,14 @@ public class GraphProtein extends GraphPolymer implements Protein {
         } else {
             super.setInteractorType(interactorType);
         }
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

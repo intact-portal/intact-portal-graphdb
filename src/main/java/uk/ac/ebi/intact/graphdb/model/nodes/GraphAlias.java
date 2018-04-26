@@ -42,13 +42,13 @@ public class GraphAlias implements Alias {
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            createNodesNatively();
+            createNodeNatively();
             createRelationShipNatively();
         }
 
     }
 
-    private void createNodesNatively() {
+    public void createNodeNatively() {
 
         BatchInserter batchInserter = CreationConfig.batchInserter;
 
@@ -109,6 +109,14 @@ public class GraphAlias implements Alias {
         this.name = name;
     }
 
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -133,11 +141,4 @@ public class GraphAlias implements Alias {
     }
 
 
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
-    }
 }

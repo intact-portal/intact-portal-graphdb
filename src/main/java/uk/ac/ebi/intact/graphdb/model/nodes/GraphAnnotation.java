@@ -34,7 +34,7 @@ public class GraphAnnotation implements Annotation {
 
     public GraphAnnotation(Annotation annotation) {
 
-         if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
+        if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
             topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
         } else {
             setTopic(annotation.getTopic());
@@ -44,13 +44,13 @@ public class GraphAnnotation implements Annotation {
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            createNodesNatively();
+            createNodeNatively();
             createRelationShipNatively();
         }
 
     }
 
-    private void createNodesNatively() {
+    public void createNodeNatively() {
 
         BatchInserter batchInserter = CreationConfig.batchInserter;
 
@@ -115,6 +115,14 @@ public class GraphAnnotation implements Annotation {
         this.value = value;
     }
 
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
     @Override
     public int hashCode() {
         return UnambiguousAnnotationComparator.hashCode(this);
@@ -138,11 +146,5 @@ public class GraphAnnotation implements Annotation {
         return this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
     }
 
-    public Long getGraphId() {
-        return graphId;
-    }
 
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
-    }
 }

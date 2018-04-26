@@ -1,11 +1,18 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anjali on 21/11/17.
@@ -33,6 +40,34 @@ public class GraphPosition implements Position {
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+             nodeProperties.put("start", this.getStart());
+            nodeProperties.put("end", this.getEnd());
+            nodeProperties.put("isPositionUndetermined", this.isPositionUndetermined());
+
+            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(status, this.graphId, "status");
     }
 
     public String getUniqueKey() {
@@ -82,6 +117,14 @@ public class GraphPosition implements Position {
 
     public void setPositionUndetermined(boolean positionUndetermined) {
         isPositionUndetermined = positionUndetermined;
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

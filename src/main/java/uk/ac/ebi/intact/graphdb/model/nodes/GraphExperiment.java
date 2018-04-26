@@ -1,16 +1,18 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 @NodeEntity
 public class GraphExperiment implements Experiment {
@@ -42,14 +44,51 @@ public class GraphExperiment implements Experiment {
         if(!callingClass.contains("GraphPublication")){
             setPublication(experiment.getPublication());
         }
-        setXrefs(experiment.getXrefs());
-        setAnnotations(experiment.getAnnotations());
         setInteractionDetectionMethod(experiment.getInteractionDetectionMethod());
         setHostOrganism(experiment.getHostOrganism());
-        setConfidences(experiment.getConfidences());
-        setVariableParameters(experiment.getVariableParameters());
         setPubmedId(experiment.getPublication().getPubmedId());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setXrefs(experiment.getXrefs());
+        setAnnotations(experiment.getAnnotations());
+        setConfidences(experiment.getConfidences());
+        setVariableParameters(experiment.getVariableParameters());
+
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getPubmedId() != null) nodeProperties.put("pubmedId", this.getPubmedId());
+
+            Label[] labels = CommonUtility.getLabels(GraphExperiment.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(interactionDetectionMethod, this.graphId, "interactionDetectionMethod");
+        CommonUtility.createRelationShip(hostOrganism, this.graphId, "hostOrganism");
+        CommonUtility.createRelationShip(publication, this.graphId, "publication");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+        CommonUtility.createConfidenceRelationShips(confidences,this.graphId,"confidences");
+        CommonUtility.createVariableParameterRelationShips(variableParameters,this.graphId,"variableParameters");
     }
 
 /*    public GraphExperiment(Publication publication) {
@@ -337,6 +376,15 @@ public class GraphExperiment implements Experiment {
             }
         }
         return removed;
+    }
+
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

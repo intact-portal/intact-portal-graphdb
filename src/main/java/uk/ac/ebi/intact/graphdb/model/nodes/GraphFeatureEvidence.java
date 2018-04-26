@@ -1,15 +1,19 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anjali on 21/11/17.
@@ -18,25 +22,26 @@ import java.util.Collection;
 public class GraphFeatureEvidence implements FeatureEvidence {
 
     @GraphId
-    private Long id;
+    private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
+
+    private String shortName;
+    private String fullName;
+    private String interpro;
+    private GraphCvTerm type;
+    private GraphCvTerm role;
+    private GraphExperimentalEntity participant;
 
     private Collection<GraphCvTerm> detectionMethods;
     private Collection<GraphParameter> parameters;
-    private String shortName;
-    private String fullName;
     // private GraphXref interpro; // To do
-    private String interpro;
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
-    private GraphCvTerm type;
     private Collection<GraphRange> ranges;
     private Collection<GraphAlias> aliases;
-    private GraphCvTerm role;
-    private GraphExperimentalEntity participant;
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
     public GraphFeatureEvidence() {
@@ -44,22 +49,67 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     }
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
-        setDetectionMethods(featureEvidence.getDetectionMethods());
-        setParameters(featureEvidence.getParameters());
+
         setShortName(featureEvidence.getShortName());
         setFullName(featureEvidence.getFullName());
         setInterpro(featureEvidence.getInterpro());
+        setType(featureEvidence.getType());
+        setRole(featureEvidence.getRole());
+        setParticipant(featureEvidence.getParticipant());
+        setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setDetectionMethods(featureEvidence.getDetectionMethods());
+        setParameters(featureEvidence.getParameters());
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        setType(featureEvidence.getType());
         setRanges(featureEvidence.getRanges());
         setAliases(featureEvidence.getAliases());
-        setRole(featureEvidence.getRole());
-        setParticipant(featureEvidence.getParticipant());
         setLinkedFeatures(featureEvidence.getLinkedFeatures());
-        setUniqueKey(this.toString());
+
+
+        if (CreationConfig.createNatively) {
+            createRelationShipNatively();
+        }
     }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+            if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
+            if (this.getInterpro() != null) nodeProperties.put("interpro", this.getInterpro());
+
+            Label[] labels = CommonUtility.getLabels(GraphFeatureEvidence.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(type, this.graphId, "type");
+        CommonUtility.createRelationShip(role, this.graphId, "role");
+        CommonUtility.createRelationShip(participant, this.graphId, "participant");
+        CommonUtility.createCvTermRelationShips(detectionMethods, this.graphId, "detectionMethods");
+        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
+        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+        CommonUtility.createRangeRelationShips(ranges, this.graphId, "ranges");
+        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
+        CommonUtility.createFeatureEvidenceRelationShips(linkedFeatures, this.graphId, "linkedFeatures");
+    }
+
 
     public Collection<GraphCvTerm> getDetectionMethods() {
         if (this.detectionMethods == null) {
@@ -361,11 +411,11 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     @Override
     public void setParticipantAndAddFeature(ExperimentalEntity participant) {
-        if (this.participant != null){
+        if (this.participant != null) {
             this.participant.removeFeature(this);
         }
 
-        if (participant != null){
+        if (participant != null) {
             participant.addFeature(this);
         }
     }
@@ -400,8 +450,17 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         }
     }
 
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
     public String toString() {
-        return "Feature: " + (this.getShortName() != null?this.getShortName() + " ":"") + (this.getType() != null?this.getType().toString() + " ":"") + (!this.getRanges().isEmpty()?"(" + this.getRanges().toString() + ")":" (-)");
+        return "Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
     }
 
 }

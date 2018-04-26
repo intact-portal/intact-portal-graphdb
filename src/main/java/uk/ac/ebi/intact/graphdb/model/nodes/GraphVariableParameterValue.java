@@ -1,10 +1,17 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anjali on 24/11/17.
@@ -31,6 +38,33 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         setOrder(variableParameterValue.getOrder());
         setVariableParameter(variableParameterValue.getVariableParameter());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+            createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if(this.getValue()!=null)nodeProperties.put("value", this.getValue());
+            if(this.getOrder()!=null)nodeProperties.put("order", this.getOrder());
+
+            Label[] labels = CommonUtility.getLabels(GraphVariableParameterValue.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(variableParameter, this.graphId, "variableParameter");
     }
 
 /*    public GraphVariableParameterValue(String value, VariableParameter variableParameter){
@@ -88,6 +122,14 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         } else {
             this.variableParameter = null;
         }
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     @Override

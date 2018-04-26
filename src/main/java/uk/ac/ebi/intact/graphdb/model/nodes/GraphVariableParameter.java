@@ -1,17 +1,23 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Experiment;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anjali on 24/11/17.
@@ -37,9 +43,41 @@ public class GraphVariableParameter implements VariableParameter {
     public GraphVariableParameter(VariableParameter variableParameter) {
         setDescription(variableParameter.getDescription());
         setUnit(variableParameter.getUnit());
-        setVariableValues(variableParameter.getVariableValues());
         setExperiment(variableParameter.getExperiment());
         setUniqueKey(this.toString());
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setVariableValues(variableParameter.getVariableValues());
+
+        if (CreationConfig.createNatively) {
+                        createRelationShipNatively();
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if(this.getDescription()!=null)nodeProperties.put("description", this.getDescription());
+
+            Label[] labels = CommonUtility.getLabels(GraphVariableParameter.class);
+
+            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(unit, this.graphId, "unit");
+        CommonUtility.createRelationShip(experiment, this.graphId, "experiment");
+        CommonUtility.createVariableParameterValueRelationShips(variableValues, this.graphId, "variableValues");
     }
 
    /* public GraphVariableParameter(String description) {
@@ -154,6 +192,14 @@ public class GraphVariableParameter implements VariableParameter {
             experiment.addVariableParameter(this);
         }
 
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 
     public boolean equals(Object o) {
