@@ -22,6 +22,7 @@ public class GraphInteractor implements Interactor {
     private Long graphId;
 
     @Index(unique = true, primary = true)
+    private String uniqueKey;
     private String ac;
 
     private String shortName;
@@ -47,6 +48,7 @@ public class GraphInteractor implements Interactor {
         setOrganism(interactor.getOrganism());
         setInteractorType(interactor.getInteractorType());
         initializeAc(interactor.getIdentifiers());
+        setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -67,6 +69,7 @@ public class GraphInteractor implements Interactor {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.put("ac", this.getAc());
             if (this.getShortName() != null) nodeProperties.put("shortName", this.getAc());
             if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
@@ -364,5 +367,14 @@ public class GraphInteractor implements Interactor {
         return getShortName()
                 + (this.organism != null ? ", " + this.organism.toString() : "")
                 + (this.interactorType != null ? ", " + this.interactorType.toString() : "");
+    }
+
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 }

@@ -21,7 +21,8 @@ public class GraphPublication implements Publication {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
+    private String uniqueKey;
     private String pubmedIdStr;
 
     private String title;
@@ -55,6 +56,7 @@ public class GraphPublication implements Publication {
         setPubmedId(publication.getPubmedId());
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
+        setUniqueKey(this.getPubmedIdStr());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -78,6 +80,7 @@ public class GraphPublication implements Publication {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
             if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", this.getPublicationDate());
@@ -411,6 +414,14 @@ public class GraphPublication implements Publication {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     public boolean addExperiment(Experiment exp) {

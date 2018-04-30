@@ -183,11 +183,13 @@ public class CommonUtility {
 
     public static void createRelationShip(Object relObj, long fromId, String relationName) {
         try {
-            Class clazz = relObj.getClass();
-            Method method = clazz.getMethod("getGraphId");
-            long endId = (Long) method.invoke(clazz.cast(relObj));
-            RelationshipType relationshipType = RelationshipType.withName(relationName);
-            CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+            if(relObj!=null) {
+                Class clazz = relObj.getClass();
+                Method method = clazz.getMethod("getGraphId");
+                long endId = (Long) method.invoke(clazz.cast(relObj));
+                RelationshipType relationshipType = RelationshipType.withName(relationName);
+                CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

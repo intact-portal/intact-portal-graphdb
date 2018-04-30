@@ -26,6 +26,8 @@ public class GraphCvTerm implements CvTerm {
     private Long graphId;
 
     @Index(unique = true, primary = true)
+    private String uniqueKey;
+
     private String shortName;
     private String fullName;
     private Collection<GraphXref> xrefs;
@@ -53,6 +55,7 @@ public class GraphCvTerm implements CvTerm {
         setMIIdentifier(cvTerm.getMIIdentifier());
         setMODIdentifier(cvTerm.getMODIdentifier());
         setPARIdentifier(cvTerm.getPARIdentifier());
+        setUniqueKey(cvTerm.getShortName());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -75,6 +78,7 @@ public class GraphCvTerm implements CvTerm {
 
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getShortName()!=null) nodeProperties.put("shortName", this.getShortName());
             if (this.getFullName()!=null) nodeProperties.put("fullName", this.getFullName());
             if (this.getMIIdentifier()!=null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
@@ -400,5 +404,14 @@ public class GraphCvTerm implements CvTerm {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 }

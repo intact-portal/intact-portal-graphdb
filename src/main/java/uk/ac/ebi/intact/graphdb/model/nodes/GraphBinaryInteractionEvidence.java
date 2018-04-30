@@ -37,6 +37,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     private GraphCvTerm complexExpansion;
 
+    private GraphInteractionEvidence graphInteractionEvidence;
 
     public GraphBinaryInteractionEvidence() {
         super();
@@ -44,6 +45,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         super(binaryInteractionEvidence);
+        //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
         setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
@@ -172,6 +174,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     }
 
+
+    public GraphInteractionEvidence getGraphInteractionEvidence() {
+        return graphInteractionEvidence;
+    }
+
+    public void setGraphInteractionEvidence(GraphInteractionEvidence graphInteractionEvidence) {
+        this.graphInteractionEvidence = graphInteractionEvidence;
+    }
 
     public Long getGraphId() {
         return graphId;

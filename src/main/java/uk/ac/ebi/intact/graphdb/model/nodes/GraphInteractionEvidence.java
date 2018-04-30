@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -20,6 +21,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     @GraphId
     private Long graphId;
 
+    private String uniqueKey;
 
     private String ac;
 
@@ -69,6 +71,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setCreatedDate(binaryInteractionEvidence.getCreatedDate());
         setInteractionType(binaryInteractionEvidence.getInteractionType());
         initializeAc(binaryInteractionEvidence.getXrefs());
+        setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -96,6 +99,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.put("ac", this.getAc());
             if (this.getImexId() != null) nodeProperties.put("imexId", this.getImexId());
             if (this.getAvailability() != null) nodeProperties.put("availability", this.getAvailability());
@@ -561,8 +565,17 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         this.graphId = graphId;
     }
 
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
     @Override
     public String toString() {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
     }
+
 }

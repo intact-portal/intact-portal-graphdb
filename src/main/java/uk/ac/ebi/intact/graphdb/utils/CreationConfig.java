@@ -15,10 +15,10 @@ public class CreationConfig {
 
 
 public  static void createSchemaConstraint(){
-    CommonUtility.createSchemaConstraint(GraphCvTerm.class,"shortName");
-    CommonUtility.createSchemaConstraint(GraphAlias.class, "shortName");
-    CommonUtility.createSchemaConstraint(GraphAnnotation.class,"shortName");
-    CommonUtility.createSchemaConstraint(GraphXref.class,"identifier");
+    CommonUtility.createSchemaConstraint(GraphCvTerm.class,"uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphAlias.class, "uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphAnnotation.class,"uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphXref.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphBinaryInteractionEvidence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphCausalRelationship.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphChecksum.class, "uniqueKey");
@@ -26,14 +26,14 @@ public  static void createSchemaConstraint(){
     CommonUtility.createSchemaConstraint(GraphConfidence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphExperiment.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphFeatureEvidence.class,"uniqueKey");
-    CommonUtility.createSchemaConstraint(GraphInteractionEvidence.class, "ac");
-    CommonUtility.createSchemaConstraint(GraphInteractor.class,"ac");
+    CommonUtility.createSchemaConstraint(GraphInteractionEvidence.class, "uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphInteractor.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphNucleicAcid.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphOrganism.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphParticipantEvidence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphPosition.class, "uniqueKey");
-    CommonUtility.createSchemaConstraint(GraphProtein.class,"uniprotName");
-    CommonUtility.createSchemaConstraint(GraphPublication.class,"pubmedIdStr");
+    //CommonUtility.createSchemaConstraint(GraphProtein.class,"uniprotName");
+    CommonUtility.createSchemaConstraint(GraphPublication.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphRange.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphResultingSequence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphSource.class, "uniqueKey");

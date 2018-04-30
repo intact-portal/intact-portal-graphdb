@@ -24,6 +24,7 @@ public class GraphXref implements Xref {
     private Long graphId;
 
     @Index(unique = true, primary = true)
+    private String uniqueKey;
     private String identifier;
 
     private GraphCvTerm database;
@@ -38,6 +39,7 @@ public class GraphXref implements Xref {
 
         setId(xref.getId());
         setVersion(xref.getVersion());
+        setUniqueKey(this.getId());
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
@@ -68,6 +70,7 @@ public class GraphXref implements Xref {
             BatchInserter batchInserter = CreationConfig.batchInserter;
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("identifier", this.getId());
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             if(this.getVersion()!=null) nodeProperties.put("version", this.getVersion());
 
             Label[] labels=CommonUtility.getLabels(GraphXref.class);
@@ -205,5 +208,14 @@ public class GraphXref implements Xref {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 }
