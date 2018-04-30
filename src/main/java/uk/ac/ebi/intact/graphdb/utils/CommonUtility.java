@@ -196,7 +196,17 @@ public class CommonUtility {
     }
 
     public static long createNode(Map<String, Object> nodeProperties, Label[] labels) {
-        return CreationConfig.batchInserter.createNode(nodeProperties, labels);
+        long id=-1;
+        String uniqueKey = (String)nodeProperties.get("uniqueKey");
+        if(Constants.createdNodeIdMap.get(uniqueKey)!=null){
+            id= Constants.createdNodeIdMap.get(uniqueKey);
+        }else{
+            id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
+            Constants.createdNodeIdMap.put(uniqueKey,id);
+        }
+       return id;
     }
+
+
 }
 
