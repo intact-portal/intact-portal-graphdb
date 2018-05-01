@@ -44,18 +44,18 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
-        super(binaryInteractionEvidence);
+        //super(binaryInteractionEvidence);
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
-        setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
-        setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
+        if(binaryInteractionEvidence.getParticipantA()!=null)setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
+        if(binaryInteractionEvidence.getParticipantB()!=null)setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            super.createNodeNatively();
-            super.createRelationShipNatively();
+            //super.createNodeNatively();
+            //super.createRelationShipNatively();
             createNodeNatively();
             createRelationShipNatively();
         }

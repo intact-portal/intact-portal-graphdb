@@ -101,89 +101,122 @@ public class CommonUtility {
     *
     * */
     public static void createXrefRelationShips(Collection<GraphXref> relCollection, long fromId, String relationName) {
-        for (GraphXref obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphXref obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
 
     public static void createAliasRelationShips(Collection<GraphAlias> relCollection, long fromId, String relationName) {
-        for (GraphAlias obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphAlias obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
 
     public static void createAnnotationRelationShips(Collection<GraphAnnotation> relCollection, long fromId, String relationName) {
-        for (GraphAnnotation obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphAnnotation obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
 
     public static void createBinaryInteractionEvidenceRelationShips(Collection<GraphBinaryInteractionEvidence> relCollection, long fromId, String relationName) {
-        for (GraphBinaryInteractionEvidence obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphBinaryInteractionEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+
+            }
         }
     }
 
     public static void createFeatureEvidenceRelationShips(Collection<GraphFeatureEvidence> relCollection, long fromId, String relationName) {
-        for (GraphFeatureEvidence obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphFeatureEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
 
     public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId, String relationName) {
-        for (GraphCausalRelationship obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphCausalRelationship obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createConfidenceRelationShips(Collection<GraphConfidence> relCollection, long fromId, String relationName) {
-        for (GraphConfidence obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphConfidence obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createVariableParameterRelationShips(Collection<GraphVariableParameter> relCollection, long fromId, String relationName) {
-        for (GraphVariableParameter obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphVariableParameter obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createCvTermRelationShips(Collection<GraphCvTerm> relCollection, long fromId, String relationName) {
-        for (GraphCvTerm obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphCvTerm obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createParameterRelationShips(Collection<GraphParameter> relCollection, long fromId, String relationName) {
-        for (GraphParameter obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphParameter obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createVariableParameterValueSetRelationShips(Collection<GraphVariableParameterValueSet> relCollection, long fromId, String relationName) {
-        for (GraphVariableParameterValueSet obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphVariableParameterValueSet obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createVariableParameterValueRelationShips(Collection<GraphVariableParameterValue> relCollection, long fromId, String relationName) {
-        for (GraphVariableParameterValue obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphVariableParameterValue obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createCheckSumRelationShips(Collection<GraphChecksum> relCollection, long fromId, String relationName) {
-        for (GraphChecksum obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphChecksum obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createRangeRelationShips(Collection<GraphRange> relCollection, long fromId, String relationName) {
-        for (GraphRange obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphRange obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createExperimentRelationShips(Collection<GraphExperiment> relCollection, long fromId, String relationName) {
-        for (GraphExperiment obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphExperiment obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
 
     public static void createAuthorRelationShips(Collection<GraphAuthor> relCollection, long fromId, String relationName) {
-        for (GraphAuthor obj : relCollection) {
-            createRelationShip(obj, fromId, relationName);
+        if(relCollection!=null) {
+            for (GraphAuthor obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
         }
     }
     public static void createRelationShip(Object relObj, long fromId, String relationName) {

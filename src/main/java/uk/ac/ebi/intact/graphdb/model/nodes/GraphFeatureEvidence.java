@@ -9,6 +9,7 @@ import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,7 +70,12 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setAnnotations(featureEvidence.getAnnotations());
         setRanges(featureEvidence.getRanges());
         setAliases(featureEvidence.getAliases());
-        setLinkedFeatures(featureEvidence.getLinkedFeatures());
+
+        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
+            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+            setLinkedFeatures(featureEvidence.getLinkedFeatures());
+        }
+
 
 
         if (CreationConfig.createNatively) {

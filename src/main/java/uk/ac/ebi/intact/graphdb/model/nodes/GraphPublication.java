@@ -28,7 +28,9 @@ public class GraphPublication implements Publication {
     private String title;
     private String journal;
     private Date publicationDate;
+    @Transient
     private CurationDepth curationDepth;
+    private GraphCurationDepth graphCurationDepth;
     private Date releasedDate;
     private GraphSource source;
     private GraphXref pubmedId;
@@ -54,6 +56,7 @@ public class GraphPublication implements Publication {
         setJournal(publication.getJournal());
         setPublicationDate(publication.getPublicationDate());
         setCurationDepth(publication.getCurationDepth());
+        setGraphCurationDepth(new GraphCurationDepth(curationDepth));
         setReleasedDate(publication.getReleasedDate());
         setSource(publication.getSource());
         setPubmedId(publication.getPubmedId());
@@ -101,7 +104,7 @@ public class GraphPublication implements Publication {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(curationDepth, this.graphId, "curationDepth");
+        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, "graphCurationDepth");
         CommonUtility.createRelationShip(imexId, this.graphId, "imexId");
         CommonUtility.createRelationShip(source, this.graphId, "source");
         CommonUtility.createRelationShip(pubmedId, this.graphId, "pubmedId");
@@ -111,7 +114,7 @@ public class GraphPublication implements Publication {
         CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
         CommonUtility.createExperimentRelationShips(experiments, this.graphId, RelationshipTypes.PUB_EXP);
-        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId(),"authors");
+        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId(),"graphAuthors");
     }
 
     public GraphPublication(Xref identifier) {
@@ -363,6 +366,9 @@ public class GraphPublication implements Publication {
     }
 
     public CurationDepth getCurationDepth() {
+        if(this.curationDepth==null&&this.getGraphCurationDepth()!=null) {
+            this.curationDepth = CurationDepth.valueOf(this.getGraphCurationDepth().getCurationDepth());
+        }
         return this.curationDepth;
     }
 
@@ -573,6 +579,14 @@ public class GraphPublication implements Publication {
 
     @Override
     public List<String> getAuthors() {
+        if(this.authors==null&&this.graphAuthors!=null){
+           List<String> authorsList=new ArrayList<String>();
+            for(GraphAuthor graphAuthor:graphAuthors){
+                authorsList.add(graphAuthor.getAuthorName());
+            }
+
+            return authorsList;
+        }
         return authors;
     }
 
@@ -586,6 +600,14 @@ public class GraphPublication implements Publication {
         } else {
             this.graphAuthors = new ArrayList<GraphAuthor>();
         }
+    }
+
+    public GraphCurationDepth getGraphCurationDepth() {
+        return graphCurationDepth;
+    }
+
+    public void setGraphCurationDepth(GraphCurationDepth graphCurationDepth) {
+        this.graphCurationDepth = graphCurationDepth;
     }
 
     @Transient
