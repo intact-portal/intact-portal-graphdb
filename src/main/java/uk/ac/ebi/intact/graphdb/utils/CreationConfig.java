@@ -22,6 +22,7 @@ public  static void createSchemaConstraint(){
     CommonUtility.createSchemaConstraint(GraphBinaryInteractionEvidence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphCausalRelationship.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphChecksum.class, "uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphAuthor.class,"authorName");
    // CommonUtility.createSchemaConstraint(GraphClusteredInteraction.class,"shortName");
     CommonUtility.createSchemaConstraint(GraphConfidence.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphExperiment.class,"uniqueKey");

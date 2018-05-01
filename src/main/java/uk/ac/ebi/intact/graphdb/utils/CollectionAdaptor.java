@@ -70,5 +70,8 @@ public class CollectionAdaptor {
     public static Collection<GraphExperiment> convertExperimentIntoGraphModel(Collection<Experiment> experiments) {
         return experiments.stream().map(GraphExperiment::new).collect(Collectors.toList());
     }
+    public static Collection<GraphAuthor> convertAuthorStringIntoGraphModel(Collection<String> authors) {
+        return authors.stream().map(GraphAuthor::new).collect(Collectors.toList());
+    }
 }
 

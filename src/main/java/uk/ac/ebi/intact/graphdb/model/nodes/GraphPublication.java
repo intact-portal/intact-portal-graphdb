@@ -34,7 +34,10 @@ public class GraphPublication implements Publication {
     private GraphXref pubmedId;
     private GraphXref doi;
     private GraphXref imexId;
+    @Transient
     private List<String> authors;
+
+    private Collection<GraphAuthor> graphAuthors;
     private Collection<GraphXref> identifiers;
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
@@ -63,6 +66,7 @@ public class GraphPublication implements Publication {
         }
 
         setAuthors(publication.getAuthors());
+        initializeGraphAuthors(this.getAuthors());
         setIdentifiers(publication.getIdentifiers());
         setXrefs(publication.getXrefs());
         setAnnotations(publication.getAnnotations());
@@ -83,9 +87,9 @@ public class GraphPublication implements Publication {
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
-            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", this.getPublicationDate());
-            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", this.getReleasedDate());
-            if (this.getAuthors() != null) nodeProperties.put("authors", this.getAuthors());
+            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", this.getPublicationDate().toString());
+            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", this.getReleasedDate().toString());
+            //if (this.getAuthors() != null) nodeProperties.put("authors", (String[])this.getAuthors().toArray());
 
             Label[] labels = CommonUtility.getLabels(GraphPublication.class);
 
@@ -107,6 +111,7 @@ public class GraphPublication implements Publication {
         CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
         CommonUtility.createExperimentRelationShips(experiments, this.graphId, RelationshipTypes.PUB_EXP);
+        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId(),"authors");
     }
 
     public GraphPublication(Xref identifier) {
@@ -182,6 +187,7 @@ public class GraphPublication implements Publication {
 
 
     }
+
 
     public String getPubmedIdStr() {
         return pubmedIdStr;
@@ -308,16 +314,7 @@ public class GraphPublication implements Publication {
         this.publicationDate = date;
     }
 
-    public List<String> getAuthors() {
-        if (authors == null) {
-            this.authors = new ArrayList<String>();
-        }
-        return this.authors;
-    }
 
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
 
     public Collection<GraphXref> getXrefs() {
         if (xrefs == null) {
@@ -564,6 +561,31 @@ public class GraphPublication implements Publication {
                         (getPubmedId() != null ? getPubmedId() :
                                 (getDoi() != null ? getDoi() :
                                         (getTitle() != null ? getTitle() : "-"))));
+    }
+
+    public Collection<GraphAuthor> getGraphAuthors() {
+        return graphAuthors;
+    }
+
+    public void setGraphAuthors(Collection<GraphAuthor> graphAuthors) {
+        this.graphAuthors = graphAuthors;
+    }
+
+    @Override
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+         }
+
+    private void initializeGraphAuthors(List<String> authors){
+        if (graphAuthors != null) {
+            this.graphAuthors = CollectionAdaptor.convertAuthorStringIntoGraphModel(authors);
+        } else {
+            this.graphAuthors = new ArrayList<GraphAuthor>();
+        }
     }
 
     @Transient

@@ -181,6 +181,11 @@ public class CommonUtility {
         }
     }
 
+    public static void createAuthorRelationShips(Collection<GraphAuthor> relCollection, long fromId, String relationName) {
+        for (GraphAuthor obj : relCollection) {
+            createRelationShip(obj, fromId, relationName);
+        }
+    }
     public static void createRelationShip(Object relObj, long fromId, String relationName) {
         try {
             if(relObj!=null) {
