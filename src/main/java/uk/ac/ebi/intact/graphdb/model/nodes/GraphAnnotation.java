@@ -34,10 +34,12 @@ public class GraphAnnotation implements Annotation {
 
     public GraphAnnotation(Annotation annotation) {
 
-        if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
-            topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
-        } else {
-            setTopic(annotation.getTopic());
+        if(annotation.getTopic()!=null) {
+            if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
+                topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
+            } else {
+                setTopic(annotation.getTopic());
+            }
         }
 
         setValue(annotation.getValue());

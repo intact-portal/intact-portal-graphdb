@@ -48,16 +48,19 @@ public class GraphXref implements Xref {
         if (GraphEntityCache.xrefCacheMap.get(xref.getId()) == null) {
             GraphEntityCache.xrefCacheMap.put(xref.getId(), this);
         }
-        if (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()) != null) {
-            database=(GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()));
-        } else {
-            setDatabase(xref.getDatabase());
+        if(xref.getDatabase()!=null) {
+            if (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()) != null) {
+                database = (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()));
+            } else {
+                setDatabase(xref.getDatabase());
+            }
         }
-
-        if (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()) != null) {
-            qualifier=(GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()));
-        } else {
-            setQualifier(xref.getQualifier());
+        if(xref.getQualifier()!=null) {
+            if (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()) != null) {
+                qualifier = (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()));
+            } else {
+                setQualifier(xref.getQualifier());
+            }
         }
 
         if (CreationConfig.createNatively) {
