@@ -2,16 +2,14 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.Labels;
-import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -37,6 +35,9 @@ public class GraphCvTerm implements CvTerm {
     private String mIIdentifier;
     private String mODIdentifier;
     private String pARIdentifier;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
 
     @Labels
@@ -68,7 +69,9 @@ public class GraphCvTerm implements CvTerm {
         setSynonyms(cvTerm.getSynonyms());
 
         if (CreationConfig.createNatively) {
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -88,7 +91,9 @@ public class GraphCvTerm implements CvTerm {
             Label[] labels=CommonUtility.getLabels(GraphCvTerm.class);
 
             //create node
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
             //create relationships
 
@@ -406,6 +411,13 @@ public class GraphCvTerm implements CvTerm {
         this.graphId = graphId;
     }
 
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
 
     public String getUniqueKey() {
         return uniqueKey;

@@ -3,10 +3,12 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -28,6 +30,9 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     private Integer order;
     private GraphVariableParameter variableParameter;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphVariableParameterValue() {
 
     }
@@ -41,7 +46,9 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -56,7 +63,9 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
             Label[] labels = CommonUtility.getLabels(GraphVariableParameterValue.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,6 +139,14 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

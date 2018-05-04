@@ -1,12 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -35,6 +33,9 @@ public class GraphExperiment implements Experiment {
     private Collection<GraphVariableParameter> variableParameters;
     private String pubmedId;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphExperiment() {
     }
 
@@ -60,7 +61,9 @@ public class GraphExperiment implements Experiment {
 
 
         if (CreationConfig.createNatively) {
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -74,7 +77,9 @@ public class GraphExperiment implements Experiment {
 
             Label[] labels = CommonUtility.getLabels(GraphExperiment.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,6 +254,14 @@ public class GraphExperiment implements Experiment {
         } else {
             this.hostOrganism = null;
         }
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     public Collection<InteractionEvidence> getInteractionEvidences() {

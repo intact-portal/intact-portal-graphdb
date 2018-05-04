@@ -1,12 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.*;
 
@@ -35,6 +33,9 @@ public class GraphInteractor implements Interactor {
     private Collection<GraphAnnotation> annotations;
     private Collection<GraphAlias> aliases;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
 
     @Relationship(type = RelationshipTypes.INTERACTS_IN, direction = Relationship.OUTGOING)
     private Collection<GraphBinaryInteractionEvidence> interactions;
@@ -60,7 +61,9 @@ public class GraphInteractor implements Interactor {
         setAliases(interactor.getAliases());
 
         if (CreationConfig.createNatively) {
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -71,12 +74,14 @@ public class GraphInteractor implements Interactor {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.put("ac", this.getAc());
-            if (this.getShortName() != null) nodeProperties.put("shortName", this.getAc());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
             if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
 
             Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -360,6 +365,14 @@ public class GraphInteractor implements Interactor {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

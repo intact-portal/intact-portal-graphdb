@@ -4,9 +4,11 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Stoichiometry;
 import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -24,6 +26,9 @@ public class GraphStoichiometry implements Stoichiometry {
 
     private int minValue;
     private int maxValue;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
     public GraphStoichiometry() {
     }
@@ -46,7 +51,9 @@ public class GraphStoichiometry implements Stoichiometry {
 
             Label[] labels = CommonUtility.getLabels(GraphRange.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,6 +103,14 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

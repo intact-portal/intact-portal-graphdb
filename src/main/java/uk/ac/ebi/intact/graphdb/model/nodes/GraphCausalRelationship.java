@@ -4,11 +4,13 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CausalRelationship;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Participant;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -27,6 +29,9 @@ public class GraphCausalRelationship implements CausalRelationship {
     private GraphCvTerm relationType;
     private GraphEntity target;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphCausalRelationship() {
     }
 
@@ -37,7 +42,9 @@ public class GraphCausalRelationship implements CausalRelationship {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -50,7 +57,9 @@ public class GraphCausalRelationship implements CausalRelationship {
 
             Label[] labels = CommonUtility.getLabels(GraphCausalRelationship.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,6 +130,14 @@ public class GraphCausalRelationship implements CausalRelationship {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

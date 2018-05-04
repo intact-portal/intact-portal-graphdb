@@ -4,10 +4,12 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.range.ResultingSequenceComparator;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -30,6 +32,9 @@ public class GraphResultingSequence implements ResultingSequence {
     private String newSequence;
     private Collection<GraphXref> xrefs;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphResultingSequence() {
 
     }
@@ -42,7 +47,9 @@ public class GraphResultingSequence implements ResultingSequence {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -57,7 +64,9 @@ public class GraphResultingSequence implements ResultingSequence {
 
             Label[] labels = CommonUtility.getLabels(GraphResultingSequence.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,6 +146,14 @@ public class GraphResultingSequence implements ResultingSequence {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     public boolean equals(Object o) {

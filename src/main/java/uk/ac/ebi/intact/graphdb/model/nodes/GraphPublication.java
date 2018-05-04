@@ -7,6 +7,7 @@ import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -44,6 +45,9 @@ public class GraphPublication implements Publication {
     private Collection<GraphXref> xrefs;
     private Collection<GraphAnnotation> annotations;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
     private Collection<GraphExperiment> experiments;
 
@@ -77,7 +81,9 @@ public class GraphPublication implements Publication {
 
 
         if (CreationConfig.createNatively) {
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -96,7 +102,9 @@ public class GraphPublication implements Publication {
 
             Label[] labels = CommonUtility.getLabels(GraphPublication.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -593,6 +601,14 @@ public class GraphPublication implements Publication {
     public void setAuthors(List<String> authors) {
         this.authors = authors;
          }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
 
     private void initializeGraphAuthors(List<String> authors){
         if (graphAuthors != null) {

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import psidev.psi.mi.jami.model.Xref;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
 import java.lang.reflect.Method;
@@ -225,24 +226,29 @@ public class CommonUtility {
                 Class clazz = relObj.getClass();
                 Method method = clazz.getMethod("getGraphId");
                 long endId = (Long) method.invoke(clazz.cast(relObj));
-                RelationshipType relationshipType = RelationshipType.withName(relationName);
-                CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+                if(fromId!=endId) {
+                    RelationshipType relationshipType = RelationshipType.withName(relationName);
+                    CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static long createNode(Map<String, Object> nodeProperties, Label[] labels) {
+    public static NodeDataFeed createNode(Map<String, Object> nodeProperties, Label[] labels) {
         long id=-1;
+        boolean isAlreadyCreated=false;
         String uniqueKey = (String)nodeProperties.get("uniqueKey");
-        if(Constants.createdNodeIdMap.get(uniqueKey)!=null){
+        isAlreadyCreated=Constants.createdNodeIdMap.get(uniqueKey)!=null?true:false;
+
+        if(isAlreadyCreated){
             id= Constants.createdNodeIdMap.get(uniqueKey);
         }else{
             id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
             Constants.createdNodeIdMap.put(uniqueKey,id);
         }
-       return id;
+       return new NodeDataFeed(id,isAlreadyCreated);
     }
 
 

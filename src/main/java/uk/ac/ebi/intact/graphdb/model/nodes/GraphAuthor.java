@@ -3,7 +3,9 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -22,6 +24,9 @@ public class GraphAuthor {
     private String uniqueKey;
 
     private String authorName;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
     public GraphAuthor(){
 
@@ -46,7 +51,9 @@ public class GraphAuthor {
 
         Label[] labels = CommonUtility.getLabels(GraphAlias.class);
 
-        setGraphId(CommonUtility.createNode(nodeProperties, labels));
+        NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+        setGraphId(nodeDataFeed.getGraphId());
+        setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
     }
 
     public String getAuthorName() {
@@ -72,5 +79,13 @@ public class GraphAuthor {
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 }

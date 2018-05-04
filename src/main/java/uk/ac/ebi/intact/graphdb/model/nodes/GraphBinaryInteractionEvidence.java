@@ -1,15 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -39,6 +37,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     private GraphInteractionEvidence graphInteractionEvidence;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphBinaryInteractionEvidence() {
         super();
     }
@@ -57,7 +58,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             //super.createNodeNatively();
             //super.createRelationShipNatively();
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -70,7 +73,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
             Label[] labels = CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,6 +194,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

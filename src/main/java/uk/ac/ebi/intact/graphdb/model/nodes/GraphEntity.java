@@ -3,9 +3,11 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -27,6 +29,9 @@ public class GraphEntity implements ExperimentalEntity {
     private Collection<GraphCausalRelationship> causalRelationships;
     private EntityInteractorChangeListener changeListener;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphEntity() {
     }
 
@@ -43,7 +48,9 @@ public class GraphEntity implements ExperimentalEntity {
         setCausalRelationships(entity.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -55,7 +62,9 @@ public class GraphEntity implements ExperimentalEntity {
 
             Label[] labels = CommonUtility.getLabels(GraphEntity.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,6 +217,14 @@ public class GraphEntity implements ExperimentalEntity {
         } else {
             this.causalRelationships = new ArrayList<GraphCausalRelationship>();
         }
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override

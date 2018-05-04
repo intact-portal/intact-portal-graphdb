@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Molecule;
 import psidev.psi.mi.jami.model.Organism;
@@ -12,6 +13,9 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
 
     @GraphId
     private Long graphId;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
     public GraphMolecule() {
         super();
@@ -83,5 +87,13 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
 
     public GraphMolecule(String name, String fullName, Organism organism, Xref uniqueId) {
         super(name, fullName, organism, uniqueId);
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 }

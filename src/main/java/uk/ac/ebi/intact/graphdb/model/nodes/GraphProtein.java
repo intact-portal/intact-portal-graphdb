@@ -12,6 +12,7 @@ import psidev.psi.mi.jami.utils.ChecksumUtils;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -38,6 +39,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
     private GraphAlias geneName;
     private GraphChecksum rogid;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphProtein() {
         super();
     }
@@ -51,7 +55,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -64,7 +70,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
             Label[] labels = CommonUtility.getLabels(GraphProtein.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -255,6 +263,14 @@ public class GraphProtein extends GraphPolymer implements Protein {
             ChecksumUtils.removeAllChecksumWithMethod(proteinChecksums, Checksum.ROGID_MI, Checksum.ROGID);
             this.rogid = null;
         }
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     protected void processAddedAliasEvent(Alias added) {

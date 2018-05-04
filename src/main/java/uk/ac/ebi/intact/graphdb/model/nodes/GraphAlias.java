@@ -4,10 +4,12 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
@@ -27,6 +29,9 @@ public class GraphAlias implements Alias {
     private GraphCvTerm type;
     private String name;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphAlias() {
     }
 
@@ -43,7 +48,9 @@ public class GraphAlias implements Alias {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
 
     }
@@ -58,7 +65,9 @@ public class GraphAlias implements Alias {
 
         Label[] labels = CommonUtility.getLabels(GraphAlias.class);
 
-        setGraphId(CommonUtility.createNode(nodeProperties, labels));
+        NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+        setGraphId(nodeDataFeed.getGraphId());
+        setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
     }
 
     private void createRelationShipNatively() {
@@ -141,4 +150,11 @@ public class GraphAlias implements Alias {
     }
 
 
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
 }

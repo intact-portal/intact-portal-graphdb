@@ -12,6 +12,7 @@ import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -30,6 +31,9 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     private GraphXref ddbjEmblGenbank;
     private GraphXref refseq;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphNucleicAcid() {
         super();
     }
@@ -42,7 +46,9 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            createRelationShipNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -55,7 +61,9 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
             Label[] labels = CommonUtility.getLabels(GraphNucleicAcid.class);
 
-            setGraphId(CommonUtility.createNode(nodeProperties, labels));
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -274,6 +282,14 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 
     @Override
