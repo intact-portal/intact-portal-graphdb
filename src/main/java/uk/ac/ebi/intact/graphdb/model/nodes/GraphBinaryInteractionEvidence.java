@@ -45,7 +45,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
-        //super(binaryInteractionEvidence);
+        super(binaryInteractionEvidence,true);
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
@@ -57,6 +57,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         if (CreationConfig.createNatively) {
             //super.createNodeNatively();
             //super.createRelationShipNatively();
+            super.initialzeNodeProperties();
             createNodeNatively();
             if(!isAlreadyCreated()) {
                 createRelationShipNatively();
@@ -70,7 +71,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-
+            nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -82,6 +83,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(participantA, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
         CommonUtility.createRelationShip(participantB, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
         CommonUtility.createRelationShip(interactorA, this.getGraphId(), "interactorA");

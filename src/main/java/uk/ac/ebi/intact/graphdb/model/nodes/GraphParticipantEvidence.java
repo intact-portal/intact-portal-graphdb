@@ -279,7 +279,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             } else if (interaction instanceof BinaryInteractionEvidence) {
                 this.interaction = new GraphBinaryInteractionEvidence((BinaryInteractionEvidence) interaction);
             } else {
-                this.interaction = new GraphInteractionEvidence(interaction);
+                this.interaction = new GraphInteractionEvidence(interaction,false);
             }
         } else {
             this.interaction = null;

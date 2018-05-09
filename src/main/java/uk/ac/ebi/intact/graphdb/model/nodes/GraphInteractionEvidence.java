@@ -44,6 +44,8 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     @Transient
     private boolean isAlreadyCreated;
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
@@ -57,7 +59,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     }
 
-    public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence) {
+    public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence,boolean childAlreadyCreated) {
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
 
 
@@ -75,7 +77,10 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            initialzeNodeProperties();
+            if(!childAlreadyCreated) {
+                createNodeNatively();
+            }
         }
 
         setParameters(binaryInteractionEvidence.getParameters());
@@ -90,29 +95,29 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         }
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if(!isAlreadyCreated()&&!childAlreadyCreated) {
+                createRelationShipNatively(this.getGraphId());
             }
         }
     }
 
+    public void initialzeNodeProperties(){
+        if(this.getAc()!=null)getNodeProperties().put("ac", this.getAc());
+        if (this.getImexId() != null) getNodeProperties().put("imexId", this.getImexId());
+        if (this.getAvailability() != null) getNodeProperties().put("availability", this.getAvailability());
+        getNodeProperties().put("isInferred", this.isInferred());
+        getNodeProperties().put("isNegative", this.isNegative());
+        if (this.getShortName() != null) getNodeProperties().put("shortName", this.getShortName());
+        if (this.getRigid() != null) getNodeProperties().put("rigid", this.getRigid());
+        if (this.getUpdatedDate() != null) getNodeProperties().put("updatedDate", this.getUpdatedDate().toString());
+        if (this.getCreatedDate() != null) getNodeProperties().put("createdDate", this.getCreatedDate().toString());
+    }
 
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.put("ac", this.getAc());
-            if (this.getImexId() != null) nodeProperties.put("imexId", this.getImexId());
-            if (this.getAvailability() != null) nodeProperties.put("availability", this.getAvailability());
-            nodeProperties.put("isInferred", this.isInferred());
-            nodeProperties.put("isNegative", this.isNegative());
-            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
-            if (this.getRigid() != null) nodeProperties.put("rigid", this.getRigid());
-            if (this.getUpdatedDate() != null) nodeProperties.put("updatedDate", this.getUpdatedDate());
-            if (this.getCreatedDate() != null) nodeProperties.put("createdDate", this.getCreatedDate());
-
             Label[] labels = CommonUtility.getLabels(GraphInteractionEvidence.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -124,16 +129,16 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         }
     }
 
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(experiment, this.graphId, "experiment");
-        CommonUtility.createRelationShip(interactionType, this.graphId, "interactionType");
-        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
-        CommonUtility.createConfidenceRelationShips(confidences, this.graphId, "confidences");
-        CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets, this.graphId, "variableParameterValueSets");
-        CommonUtility.createCheckSumRelationShips(checksums, this.graphId, "checksums");
-        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(experiment, graphId, "experiment");
+        CommonUtility.createRelationShip(interactionType, graphId, "interactionType");
+        CommonUtility.createParameterRelationShips(parameters, graphId, "parameters");
+        CommonUtility.createConfidenceRelationShips(confidences, graphId, "confidences");
+        CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets,graphId, "variableParameterValueSets");
+        CommonUtility.createCheckSumRelationShips(checksums, graphId, "checksums");
+        CommonUtility.createXrefRelationShips(identifiers,graphId, "identifiers");
+        CommonUtility.createXrefRelationShips(xrefs, graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, graphId, "annotations");
     }
 
     public void initializeAc(Collection<Xref> xrefs) {
@@ -562,6 +567,16 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             clearPropertiesLinkedToXrefs();
         }
     }*/
+
+
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
+    }
+
     public Long getGraphId() {
         return graphId;
     }
@@ -590,5 +605,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     public String toString() {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
     }
+
 
 }
