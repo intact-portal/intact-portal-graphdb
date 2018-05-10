@@ -173,7 +173,7 @@ public class GraphRange implements Range {
             if (participant instanceof GraphPosition) {
                 this.participant = (GraphEntity) participant;
             } else {
-                this.participant = new GraphEntity(participant);
+                this.participant = new GraphEntity(participant,false);
             }
         } else {
             this.participant = null;

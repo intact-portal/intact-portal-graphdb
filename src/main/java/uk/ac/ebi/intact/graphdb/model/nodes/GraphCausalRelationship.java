@@ -99,7 +99,7 @@ public class GraphCausalRelationship implements CausalRelationship {
             if (relationType instanceof GraphCvTerm) {
                 this.relationType = (GraphCvTerm) relationType;
             } else {
-                this.relationType = new GraphCvTerm(relationType);
+                this.relationType = new GraphCvTerm(relationType,false);
             }
         } else {
             this.relationType = null;
@@ -116,7 +116,7 @@ public class GraphCausalRelationship implements CausalRelationship {
             if (target instanceof GraphEntity) {
                 this.target = (GraphEntity) target;
             } else {
-                this.target = new GraphEntity(target);
+                this.target = new GraphEntity(target,false);
             }
         } else {
             this.target = null;

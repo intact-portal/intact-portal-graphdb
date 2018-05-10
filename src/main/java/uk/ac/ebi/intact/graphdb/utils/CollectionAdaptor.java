@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class CollectionAdaptor {
 
     public static Collection<GraphCvTerm> convertCvTermIntoGraphModel(Collection<CvTerm> cvTerms){
-        return cvTerms.stream().map(GraphCvTerm::new).collect(Collectors.toList());
+        return cvTerms.stream().map(p -> new GraphCvTerm(p,false)).collect(Collectors.toList());
     }
 
     public static Collection<GraphXref> convertXrefIntoGraphModel(Collection<Xref> xrefs){

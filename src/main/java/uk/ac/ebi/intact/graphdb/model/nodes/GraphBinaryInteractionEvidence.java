@@ -55,9 +55,6 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            //super.createNodeNatively();
-            //super.createRelationShipNatively();
-            super.initialzeNodeProperties();
             createNodeNatively();
             if(!isAlreadyCreated()) {
                 createRelationShipNatively();
@@ -141,7 +138,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (expansion instanceof GraphCvTerm) {
                 this.complexExpansion = (GraphCvTerm) expansion;
             } else {
-                this.complexExpansion = new GraphCvTerm(expansion);
+                this.complexExpansion = new GraphCvTerm(expansion,false);
             }
         } else {
             this.complexExpansion = null;
@@ -157,7 +154,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorA instanceof GraphInteractor) {
                 this.interactorA = (GraphInteractor) interactorA;
             } else {
-                this.interactorA = new GraphInteractor(interactorA);
+                this.interactorA = new GraphInteractor(interactorA,false);
             }
         } else {
             this.interactorA = null;
@@ -173,7 +170,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorB instanceof GraphInteractor) {
                 this.interactorB = (GraphInteractor) interactorB;
             } else {
-                this.interactorB = new GraphInteractor(interactorB);
+                this.interactorB = new GraphInteractor(interactorB,false);
             }
         } else {
             this.interactorB = null;

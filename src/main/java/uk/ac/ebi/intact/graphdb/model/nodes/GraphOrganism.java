@@ -70,7 +70,7 @@ public class GraphOrganism implements Organism {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getScientificName() != null) nodeProperties.put("scientificName", this.getScientificName());
-            if (this.getCommonName() != null) nodeProperties.put("commonName", this.getScientificName());
+            if (this.getCommonName() != null) nodeProperties.put("commonName", this.getCommonName());
             nodeProperties.put("taxId", this.getTaxId());
 
             Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
@@ -182,7 +182,7 @@ public class GraphOrganism implements Organism {
             if (cellType instanceof GraphCvTerm) {
                 this.cellType = (GraphCvTerm) cellType;
             } else {
-                this.cellType = new GraphCvTerm(cellType);
+                this.cellType = new GraphCvTerm(cellType,false);
             }
         } else {
             this.cellType = null;
@@ -198,7 +198,7 @@ public class GraphOrganism implements Organism {
             if (compartment instanceof GraphCvTerm) {
                 this.compartment = (GraphCvTerm) compartment;
             } else {
-                this.compartment = new GraphCvTerm(compartment);
+                this.compartment = new GraphCvTerm(compartment,false);
             }
         } else {
             this.compartment = null;
@@ -214,7 +214,7 @@ public class GraphOrganism implements Organism {
             if (tissue instanceof GraphCvTerm) {
                 this.tissue = (GraphCvTerm) tissue;
             } else {
-                this.tissue = new GraphCvTerm(tissue);
+                this.tissue = new GraphCvTerm(tissue,false);
             }
         } else {
             this.tissue = null;

@@ -39,7 +39,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     }
 
     public GraphNucleicAcid(NucleicAcid nucleicAcid) {
-        super(nucleicAcid);
+        super(nucleicAcid,true);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
         setUniqueKey(this.toString());
@@ -58,7 +58,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-
+            nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphNucleicAcid.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -71,6 +71,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, "ddbjEmblGenbank");
         CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
     }

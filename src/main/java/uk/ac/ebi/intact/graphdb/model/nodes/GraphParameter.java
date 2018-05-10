@@ -125,7 +125,7 @@ public class GraphParameter implements Parameter {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type);
+                this.type = new GraphCvTerm(type,false);
             }
         } else {
             this.type = null;
@@ -150,7 +150,7 @@ public class GraphParameter implements Parameter {
             if (unit instanceof GraphCvTerm) {
                 this.unit = (GraphCvTerm) unit;
             } else {
-                this.unit = new GraphCvTerm(unit);
+                this.unit = new GraphCvTerm(unit,false);
             }
         } else {
             this.unit = null;

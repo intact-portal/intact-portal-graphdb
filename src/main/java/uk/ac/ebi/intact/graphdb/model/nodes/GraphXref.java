@@ -151,7 +151,7 @@ public class GraphXref implements Xref {
             } else if (database != null && EntityCache.INTACT != null && Constants.INTACT_DB.equals(database.getShortName())) {
                 this.database = EntityCache.INTACT;
             } else {
-                this.database = new GraphCvTerm(database);
+                this.database = new GraphCvTerm(database,false);
             }
         } else {
             this.database = null;
@@ -189,7 +189,7 @@ public class GraphXref implements Xref {
             } else if (qualifier != null && EntityCache.PRIMARY_REFERENCE != null && Constants.PRIMARY_REFERENCE_QUALIFIER.equals(qualifier.getShortName())) {
                 setQualifier(EntityCache.PRIMARY_REFERENCE);
             } else {
-                this.qualifier = new GraphCvTerm(qualifier);
+                this.qualifier = new GraphCvTerm(qualifier,false);
             }
         } else {
             this.qualifier = null;

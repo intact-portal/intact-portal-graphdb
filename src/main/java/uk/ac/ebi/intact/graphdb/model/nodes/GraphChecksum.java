@@ -96,7 +96,7 @@ public class GraphChecksum implements Checksum {
             if (method instanceof GraphCvTerm) {
                 this.method = (GraphCvTerm) method;
             } else {
-                this.method = new GraphCvTerm(method);
+                this.method = new GraphCvTerm(method,false);
             }
         } else {
             this.method = null;

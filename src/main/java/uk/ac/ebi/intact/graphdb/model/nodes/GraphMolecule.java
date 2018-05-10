@@ -22,7 +22,7 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     }
 
     public GraphMolecule(Molecule molecule) {
-        super(molecule);
+        super(molecule,true);
     }
 
     public GraphMolecule(String name, CvTerm type) {

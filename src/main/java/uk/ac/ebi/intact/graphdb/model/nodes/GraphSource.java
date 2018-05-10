@@ -34,7 +34,7 @@ public class GraphSource extends GraphCvTerm implements Source {
     }
 
     public GraphSource(Source source) {
-        super(source);
+        super(source,true);
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
@@ -56,7 +56,7 @@ public class GraphSource extends GraphCvTerm implements Source {
             if (this.getPostalAddress() != null) nodeProperties.put("postalAddress", this.getPostalAddress());
             if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getUrl() != null) nodeProperties.put("url", this.getUrl());
-
+            nodeProperties.putAll(super.getNodeProperties());
 
             Label[] labels = CommonUtility.getLabels(GraphSource.class);
 
@@ -70,6 +70,7 @@ public class GraphSource extends GraphCvTerm implements Source {
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(getPublication(), this.graphId, "publication");
     }
 

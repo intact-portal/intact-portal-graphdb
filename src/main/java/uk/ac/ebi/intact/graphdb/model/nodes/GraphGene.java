@@ -64,7 +64,7 @@ public class GraphGene extends GraphMolecule implements Gene {
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+             createNodeNatively();
             if(!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
@@ -76,8 +76,8 @@ public class GraphGene extends GraphMolecule implements Gene {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-
+            nodeProperties.put("uniqueKey", this.getAc());
+            nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphGene.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -90,6 +90,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(ensembl, this.graphId, "ensembl");
         CommonUtility.createRelationShip(ensemblGenome, this.graphId, "ensemblGenome");
         CommonUtility.createRelationShip(entrezGeneId, this.graphId, "entrezGeneId");

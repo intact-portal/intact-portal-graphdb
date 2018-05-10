@@ -97,7 +97,7 @@ public class GraphConfidence implements Confidence {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type);
+                this.type = new GraphCvTerm(type,false);
             }
         } else {
             this.type = null;

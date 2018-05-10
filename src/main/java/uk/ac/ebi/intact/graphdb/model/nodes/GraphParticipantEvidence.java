@@ -157,10 +157,10 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             if (experimentalRole instanceof GraphCvTerm) {
                 this.experimentalRole = (GraphCvTerm) experimentalRole;
             } else {
-                this.experimentalRole = new GraphCvTerm(experimentalRole);
+                this.experimentalRole = new GraphCvTerm(experimentalRole,false);
             }
         } else {
-            this.experimentalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole());
+            this.experimentalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(),false);
         }
     }
 
@@ -175,10 +175,10 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             if (biologicalRole instanceof GraphCvTerm) {
                 this.biologicalRole = (GraphCvTerm) biologicalRole;
             } else {
-                this.biologicalRole = new GraphCvTerm(biologicalRole);
+                this.biologicalRole = new GraphCvTerm(biologicalRole,false);
             }
         } else {
-            this.biologicalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole());
+            this.biologicalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(),false);
         }
         //TODO login it
     }
@@ -245,7 +245,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            this.interactor = new GraphInteractor(interactor);
+            this.interactor = new GraphInteractor(interactor,false);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);

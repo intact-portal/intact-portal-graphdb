@@ -47,7 +47,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public GraphProtein(Protein protein) {
-        super(protein);
+        super(protein,true);
         setUniprotkb(protein.getUniprotkb());
         setRefseq(protein.getRefseq());
         setChecksums(protein.getChecksums());
@@ -67,7 +67,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             if(this.getUniprotName()!=null) nodeProperties.put("uniprotName", this.getUniprotName());
-
+            nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphProtein.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -80,6 +80,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(uniprotkb, this.graphId, "uniprotkb");
         CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
         CommonUtility.createRelationShip(geneName, this.graphId, "geneName");

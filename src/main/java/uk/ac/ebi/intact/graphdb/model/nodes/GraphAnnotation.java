@@ -111,7 +111,7 @@ public class GraphAnnotation implements Annotation {
             } else if (topic != null && EntityCache.USED_IN_CLASS != null && Constants.USED_IN_CLASS_TOPIC.equals(topic.getShortName())) {
                 setTopic(EntityCache.USED_IN_CLASS);
             } else {
-                this.topic = new GraphCvTerm(topic);
+                this.topic = new GraphCvTerm(topic,false);
             }
         } else {
             this.topic = null;

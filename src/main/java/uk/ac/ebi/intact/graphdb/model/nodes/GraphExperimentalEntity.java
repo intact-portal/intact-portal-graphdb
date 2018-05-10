@@ -27,8 +27,12 @@ public class GraphExperimentalEntity extends GraphEntity {
     }
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
         //TODO...
+        super(experimentalEntity,true);
         if (CreationConfig.createNatively) {
             createNodeNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
         }
     }
 
@@ -37,7 +41,7 @@ public class GraphExperimentalEntity extends GraphEntity {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-
+            nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphExperimentalEntity.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -49,6 +53,9 @@ public class GraphExperimentalEntity extends GraphEntity {
         }
     }
 
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+    }
 
     @Override
     public Long getGraphId() {

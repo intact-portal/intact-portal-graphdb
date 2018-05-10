@@ -38,7 +38,8 @@ public class GraphCvTerm implements CvTerm {
 
     @Transient
     private boolean isAlreadyCreated;
-
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     @Labels
     private List<String> typeLabels = new ArrayList<>();
@@ -46,7 +47,7 @@ public class GraphCvTerm implements CvTerm {
     public GraphCvTerm() {
     }
 
-    public GraphCvTerm(CvTerm cvTerm) {
+    public GraphCvTerm(CvTerm cvTerm,boolean childAlreadyCreated) {
 
         if (GraphEntityCache.cvTermCacheMap.get(cvTerm.getShortName()) == null) {
             GraphEntityCache.cvTermCacheMap.put(cvTerm.getShortName(), this);
@@ -59,7 +60,10 @@ public class GraphCvTerm implements CvTerm {
         setUniqueKey(cvTerm.getShortName());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            initialzeNodeProperties();
+            if(!childAlreadyCreated) {
+                createNodeNatively();
+            }
         }
 
 
@@ -69,24 +73,25 @@ public class GraphCvTerm implements CvTerm {
         setSynonyms(cvTerm.getSynonyms());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if(!isAlreadyCreated()&&!childAlreadyCreated) {
+                createRelationShipNatively(this.getGraphId());
             }
         }
+    }
+
+
+    public void initialzeNodeProperties(){
+        nodeProperties.put("uniqueKey", this.getUniqueKey());
+        if (this.getShortName()!=null) nodeProperties.put("shortName", this.getShortName());
+        if (this.getFullName()!=null) nodeProperties.put("fullName", this.getFullName());
+        if (this.getMIIdentifier()!=null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
+        if (this.getMODIdentifier()!=null) nodeProperties.put("mODIdentifier", this.getMODIdentifier());
+        if (this.getPARIdentifier()!=null)nodeProperties.put("pARIdentifier", this.getPARIdentifier());
     }
 
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
-
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getShortName()!=null) nodeProperties.put("shortName", this.getShortName());
-            if (this.getFullName()!=null) nodeProperties.put("fullName", this.getFullName());
-            if (this.getMIIdentifier()!=null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
-            if (this.getMODIdentifier()!=null) nodeProperties.put("mODIdentifier", this.getMODIdentifier());
-            if (this.getPARIdentifier()!=null)nodeProperties.put("pARIdentifier", this.getPARIdentifier());
 
             Label[] labels=CommonUtility.getLabels(GraphCvTerm.class);
 
@@ -103,11 +108,11 @@ public class GraphCvTerm implements CvTerm {
         }
     }
 
-    public void createRelationShipNatively(){
-        CommonUtility.createXrefRelationShips(xrefs,this.graphId,"xrefs");
-        CommonUtility.createAliasRelationShips(synonyms,this.graphId,"synonyms");
-        CommonUtility.createAnnotationRelationShips(annotations,this.graphId,"annotations");
-        CommonUtility.createXrefRelationShips(identifiers,this.graphId,"identifiers");
+    public void createRelationShipNatively(Long graphId){
+        CommonUtility.createXrefRelationShips(xrefs,graphId,"xrefs");
+        CommonUtility.createAliasRelationShips(synonyms,graphId,"synonyms");
+        CommonUtility.createAnnotationRelationShips(annotations,graphId,"annotations");
+        CommonUtility.createXrefRelationShips(identifiers,graphId,"identifiers");
     }
 
     public GraphCvTerm(String shortName) {
@@ -425,5 +430,13 @@ public class GraphCvTerm implements CvTerm {
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
+    }
+
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
     }
 }

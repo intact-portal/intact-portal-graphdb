@@ -56,17 +56,24 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
 
+        boolean wasInitializedBefore=false;
+        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
+            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+        }else{
+            wasInitializedBefore=true;
+        }
         setShortName(featureEvidence.getShortName());
         setFullName(featureEvidence.getFullName());
         setInterpro(featureEvidence.getInterpro());
         setType(featureEvidence.getType());
         setRole(featureEvidence.getRole());
-        setParticipant(featureEvidence.getParticipant());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey(featureEvidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
+
+        setParticipant(featureEvidence.getParticipant());
 
         setDetectionMethods(featureEvidence.getDetectionMethods());
         setParameters(featureEvidence.getParameters());
@@ -76,8 +83,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setRanges(featureEvidence.getRanges());
         setAliases(featureEvidence.getAliases());
 
-        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
-            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+        if (!wasInitializedBefore) {
             setLinkedFeatures(featureEvidence.getLinkedFeatures());
         }
 
@@ -368,7 +374,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type);
+                this.type = new GraphCvTerm(type,false);
             }
         } else {
             this.type = null;
@@ -399,7 +405,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
             if (role instanceof GraphCvTerm) {
                 this.role = (GraphCvTerm) role;
             } else {
-                this.role = new GraphCvTerm(role);
+                this.role = new GraphCvTerm(role,false);
             }
         } else {
             this.role = null;
@@ -484,6 +490,10 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public String toString() {
         return "Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
+    }
+
+    public String createUniqueKey(Feature feature){
+        return "Feature: " + (feature.getShortName() != null ? feature.getShortName() + " " : "") + (feature.getType() != null ? feature.getType().toString() + " " : "") + (!feature.getRanges().isEmpty() ? "(" + feature.getRanges().toString() + ")" : " (-)");
     }
 
 }

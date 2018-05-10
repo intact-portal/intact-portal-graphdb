@@ -96,7 +96,7 @@ public class GraphPosition implements Position {
             if (status instanceof GraphCvTerm) {
                 this.status = (GraphCvTerm) status;
             } else {
-                this.status = new GraphCvTerm(status);
+                this.status = new GraphCvTerm(status,false);
             }
         } else {
             this.status = null;

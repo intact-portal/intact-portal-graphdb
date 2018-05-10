@@ -372,7 +372,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             if (interactionType instanceof GraphCvTerm) {
                 this.interactionType = (GraphCvTerm) interactionType;
             } else {
-                this.interactionType = new GraphCvTerm(interactionType);
+                this.interactionType = new GraphCvTerm(interactionType,false);
             }
         } else {
             this.interactionType = null;

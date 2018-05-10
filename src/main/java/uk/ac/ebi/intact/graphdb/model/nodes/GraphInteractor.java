@@ -35,6 +35,8 @@ public class GraphInteractor implements Interactor {
 
     @Transient
     private boolean isAlreadyCreated;
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
 
     @Relationship(type = RelationshipTypes.INTERACTS_IN, direction = Relationship.OUTGOING)
@@ -43,7 +45,7 @@ public class GraphInteractor implements Interactor {
     public GraphInteractor() {
     }
 
-    public GraphInteractor(Interactor interactor) {
+    public GraphInteractor(Interactor interactor,boolean childAlreadyCreated) {
         setShortName(interactor.getShortName());
         setFullName(interactor.getFullName());
         setOrganism(interactor.getOrganism());
@@ -52,7 +54,10 @@ public class GraphInteractor implements Interactor {
         setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            initialzeNodeProperties();
+            if(!childAlreadyCreated) {
+                createNodeNatively();
+            }
         }
 
         setIdentifiers(interactor.getIdentifiers());
@@ -61,21 +66,22 @@ public class GraphInteractor implements Interactor {
         setAliases(interactor.getAliases());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if(!isAlreadyCreated()&&!childAlreadyCreated) {
+                createRelationShipNatively(this.getGraphId());
             }
         }
+    }
+
+    public void initialzeNodeProperties(){
+        nodeProperties.put("uniqueKey", this.getUniqueKey());
+        nodeProperties.put("ac", this.getAc());
+        if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+        if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
     }
 
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.put("ac", this.getAc());
-            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
-            if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
 
             Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
 
@@ -88,14 +94,14 @@ public class GraphInteractor implements Interactor {
         }
     }
 
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(organism, this.graphId, "organism");
-        CommonUtility.createRelationShip(interactorType, this.graphId, "interactorType");
-        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
-        CommonUtility.createCheckSumRelationShips(checksums, this.graphId, "checksums");
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
-        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(organism, graphId, "organism");
+        CommonUtility.createRelationShip(interactorType, graphId, "interactorType");
+        CommonUtility.createXrefRelationShips(identifiers, graphId, "identifiers");
+        CommonUtility.createCheckSumRelationShips(checksums, graphId, "checksums");
+        CommonUtility.createXrefRelationShips(xrefs, graphId, "xrefs");
+        CommonUtility.createAnnotationRelationShips(annotations, graphId, "annotations");
+        CommonUtility.createAliasRelationShips(aliases, graphId, "aliases");
     }
 
     public GraphInteractor(String name, CvTerm type) {
@@ -200,6 +206,13 @@ public class GraphInteractor implements Interactor {
         }
     }
 
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
+    }
 
     public String getShortName() {
         return this.shortName;
@@ -336,7 +349,7 @@ public class GraphInteractor implements Interactor {
             if (interactorType instanceof GraphCvTerm) {
                 this.interactorType = (GraphCvTerm) interactorType;
             } else {
-                this.interactorType = new GraphCvTerm(interactorType);
+                this.interactorType = new GraphCvTerm(interactorType,false);
             }
         } else {
             initialiseDefaultInteractorType();
@@ -390,4 +403,6 @@ public class GraphInteractor implements Interactor {
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
+
+
 }

@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,38 +32,44 @@ public class GraphEntity implements ExperimentalEntity {
 
     @Transient
     private boolean isAlreadyCreated;
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     public GraphEntity() {
     }
 
-    public GraphEntity(Entity entity) {
+    public GraphEntity(Entity entity, boolean childAlreadyCreated) {
         setInteractor(entity.getInteractor());
         setStoichiometry(entity.getStoichiometry());
         setChangeListener(entity.getChangeListener());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            if (!childAlreadyCreated) {
+                createNodeNatively();
+            }
         }
 
         setFeatures(entity.getFeatures());
         setCausalRelationships(entity.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if (!isAlreadyCreated() && !childAlreadyCreated) {
+                createRelationShipNatively(this.getGraphId());
             }
         }
+    }
+
+    public void initialzeNodeProperties() {
+        // if needed
     }
 
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-
             Label[] labels = CommonUtility.getLabels(GraphEntity.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -71,12 +78,12 @@ public class GraphEntity implements ExperimentalEntity {
         }
     }
 
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(interactor, this.graphId, "interactor");
-        CommonUtility.createRelationShip(stoichiometry, this.graphId, "stoichiometry");
-        CommonUtility.createRelationShip(changeListener, this.graphId, "changeListener");
-        CommonUtility.createFeatureEvidenceRelationShips(features, this.graphId, "features");
-        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, this.graphId, "causalRelationships");
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(interactor, graphId, "interactor");
+        CommonUtility.createRelationShip(stoichiometry, graphId, "stoichiometry");
+        CommonUtility.createRelationShip(changeListener, graphId, "changeListener");
+        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, "features");
+        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId, "causalRelationships");
     }
 
     @Override
@@ -93,7 +100,7 @@ public class GraphEntity implements ExperimentalEntity {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            this.interactor = new GraphInteractor(interactor);
+            this.interactor = new GraphInteractor(interactor, false);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);
@@ -123,10 +130,18 @@ public class GraphEntity implements ExperimentalEntity {
             return false;
         }
 
-        if (getFeatures().add(new GraphFeatureEvidence(feature))) {
+        GraphFeatureEvidence graphFeatureEvidence = null;
+        if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
+            graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(feature.getShortName());
+
+        }else{
+            graphFeatureEvidence=new GraphFeatureEvidence(feature);
+        }
+        if (getFeatures().add(graphFeatureEvidence)) {
             feature.setParticipant(this);
             return true;
         }
+
         return false;
     }
 
@@ -203,6 +218,14 @@ public class GraphEntity implements ExperimentalEntity {
         //TODO login it
     }
 
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
+    }
+
     @Override
     public Collection<GraphCausalRelationship> getCausalRelationships() {
         if (this.causalRelationships == null) {
@@ -245,4 +268,5 @@ public class GraphEntity implements ExperimentalEntity {
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
     }
+
 }

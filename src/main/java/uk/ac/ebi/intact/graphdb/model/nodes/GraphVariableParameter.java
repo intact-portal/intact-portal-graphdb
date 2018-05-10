@@ -154,7 +154,7 @@ public class GraphVariableParameter implements VariableParameter {
             if (unit instanceof GraphCvTerm) {
                 this.unit = (GraphCvTerm) unit;
             } else {
-                this.unit = new GraphCvTerm(unit);
+                this.unit = new GraphCvTerm(unit,false);
             }
         } else {
             this.unit = null;

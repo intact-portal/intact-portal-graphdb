@@ -233,7 +233,7 @@ public class GraphExperiment implements Experiment {
             if (interactionDetectionMethod instanceof GraphCvTerm) {
                 this.interactionDetectionMethod = (GraphCvTerm) interactionDetectionMethod;
             } else {
-                this.interactionDetectionMethod = new GraphCvTerm(interactionDetectionMethod);
+                this.interactionDetectionMethod = new GraphCvTerm(interactionDetectionMethod,false);
             }
         } else {
             this.interactionDetectionMethod = null;

@@ -35,29 +35,37 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
+
     public GraphPolymer() {
         super();
     }
 
-    public GraphPolymer(Polymer polymer) {
+    public GraphPolymer(Polymer polymer,boolean childAlreadyCreated) {
         super(polymer);
         setSequence(polymer.getSequence());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            initialzeNodeProperties();
+            if(!childAlreadyCreated) {
+                createNodeNatively();
+            }
         }
+    }
+
+    public void initialzeNodeProperties(){
+        if(this.getSequence()!=null) getNodeProperties().put("sequence", this.getSequence());
+        this.getNodeProperties().putAll(super.getNodeProperties());
     }
 
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            if(this.getSequence()!=null) nodeProperties.put("sequence", this.getSequence());
-
             Label[] labels = CommonUtility.getLabels(GraphPolymer.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed=CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -158,5 +166,15 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    @Override
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    @Override
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
     }
 }
