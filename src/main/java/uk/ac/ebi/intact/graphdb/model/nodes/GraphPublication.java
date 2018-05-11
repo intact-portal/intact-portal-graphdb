@@ -14,6 +14,8 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
@@ -96,8 +98,10 @@ public class GraphPublication implements Publication {
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
-            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", this.getPublicationDate().toString());
-            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", this.getReleasedDate().toString());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
+            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
             //if (this.getAuthors() != null) nodeProperties.put("authors", (String[])this.getAuthors().toArray());
 
             Label[] labels = CommonUtility.getLabels(GraphPublication.class);

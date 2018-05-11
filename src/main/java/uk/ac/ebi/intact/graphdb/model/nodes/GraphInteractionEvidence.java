@@ -11,6 +11,9 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
@@ -109,8 +112,10 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         getNodeProperties().put("isNegative", this.isNegative());
         if (this.getShortName() != null) getNodeProperties().put("shortName", this.getShortName());
         if (this.getRigid() != null) getNodeProperties().put("rigid", this.getRigid());
-        if (this.getUpdatedDate() != null) getNodeProperties().put("updatedDate", this.getUpdatedDate().toString());
-        if (this.getCreatedDate() != null) getNodeProperties().put("createdDate", this.getCreatedDate().toString());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (this.getUpdatedDate() != null) getNodeProperties().put("updatedDate", dateFormat.format(this.getUpdatedDate()));
+        if (this.getCreatedDate() != null) getNodeProperties().put("createdDate", dateFormat.format(this.getCreatedDate()));
     }
 
     public void createNodeNatively() {
