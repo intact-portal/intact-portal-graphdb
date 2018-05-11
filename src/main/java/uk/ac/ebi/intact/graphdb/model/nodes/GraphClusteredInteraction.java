@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Interactor;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -32,7 +33,16 @@ public class GraphClusteredInteraction {
     @Transient
     private boolean isAlreadyCreated;
 
-    public GraphClusteredInteraction() {
+    public GraphClusteredInteraction(){
+
+    }
+
+    public GraphClusteredInteraction(ClusterDataFeed clusterDataFeed) {
+        setInteractions(clusterDataFeed.getInteractions());
+        setInteractorPA(clusterDataFeed.getInteractorA());
+        setInteractorPB(clusterDataFeed.getInteractorB());
+        setMiscore(clusterDataFeed.getMiscore());
+
         if (CreationConfig.createNatively) {
             createNodeNatively();
             if(!isAlreadyCreated()) {
