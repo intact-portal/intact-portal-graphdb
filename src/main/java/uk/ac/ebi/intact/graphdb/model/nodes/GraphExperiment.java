@@ -89,7 +89,7 @@ public class GraphExperiment implements Experiment {
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(interactionDetectionMethod, this.graphId, "interactionDetectionMethod");
         CommonUtility.createRelationShip(hostOrganism, this.graphId, "hostOrganism");
-        CommonUtility.createRelationShip(publication, this.graphId, "publication");
+        CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUB_EXP);
         CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
         CommonUtility.createConfidenceRelationShips(confidences,this.graphId,"confidences");

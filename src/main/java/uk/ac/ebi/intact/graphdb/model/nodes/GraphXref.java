@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.Feature;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -44,7 +45,7 @@ public class GraphXref implements Xref {
 
         setId(xref.getId());
         setVersion(xref.getVersion());
-        setUniqueKey(this.getId());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
@@ -105,7 +106,7 @@ public class GraphXref implements Xref {
         this(database, identifier);
         setQualifier(qualifier);
 
-        setUniqueKey(this.getId());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
@@ -243,5 +244,9 @@ public class GraphXref implements Xref {
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        return "xref_"+ this.getId() ;
     }
 }
