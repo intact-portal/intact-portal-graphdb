@@ -2,9 +2,11 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.model.Feature;
 import psidev.psi.mi.jami.model.Interactor;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
@@ -23,7 +25,8 @@ public class GraphClusteredInteraction {
 
     @GraphId
     private Long graphId;
-
+    @Index(unique = true, primary = true)
+    private String uniqueKey;
 
     private Set<GraphBinaryInteractionEvidence> interactions;
     private Interactor interactorPA;
@@ -42,7 +45,7 @@ public class GraphClusteredInteraction {
         setInteractorPA(clusterDataFeed.getInteractorA());
         setInteractorPB(clusterDataFeed.getInteractorB());
         setMiscore(clusterDataFeed.getMiscore());
-
+        setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
             if(!isAlreadyCreated()) {
@@ -56,6 +59,7 @@ public class GraphClusteredInteraction {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.put("miscore", this.getMiscore());
 
             Label[] labels = CommonUtility.getLabels(GraphClusteredInteraction.class);
@@ -123,5 +127,18 @@ public class GraphClusteredInteraction {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        return "cluster_"+this.getInteractorPA().getShortName()+"_"+this.getInteractorPB().getShortName();
     }
 }
