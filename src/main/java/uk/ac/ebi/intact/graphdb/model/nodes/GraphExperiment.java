@@ -9,6 +9,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.*;
 
@@ -57,7 +58,17 @@ public class GraphExperiment implements Experiment {
         setXrefs(experiment.getXrefs());
         setAnnotations(experiment.getAnnotations());
         setConfidences(experiment.getConfidences());
-        setVariableParameters(experiment.getVariableParameters());
+
+        boolean wasInitializedBefore=false;
+        if (GraphEntityCache.experimentCacheMap.get(this.getUniqueKey()) == null) {
+            GraphEntityCache.experimentCacheMap.put(this.getUniqueKey(), this);
+        }else{
+            wasInitializedBefore=true;
+        }
+
+        if (!wasInitializedBefore) {
+            setVariableParameters(experiment.getVariableParameters());
+        }
 
 
         if (CreationConfig.createNatively) {

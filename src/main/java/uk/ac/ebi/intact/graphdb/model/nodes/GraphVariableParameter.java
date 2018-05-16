@@ -15,6 +15,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,8 +55,15 @@ public class GraphVariableParameter implements VariableParameter {
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
-
-        setVariableValues(variableParameter.getVariableValues());
+        boolean wasInitializedBefore=false;
+        if (GraphEntityCache.parameterValueCacheMap.get(this.getUniqueKey()) == null) {
+            GraphEntityCache.parameterValueCacheMap.put(this.getUniqueKey(), this);
+        }else{
+            wasInitializedBefore=true;
+        }
+        if (!wasInitializedBefore) {
+            setVariableValues(variableParameter.getVariableValues());
+        }
 
         if (CreationConfig.createNatively) {
             if(!isAlreadyCreated()) {
