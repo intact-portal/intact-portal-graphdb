@@ -22,6 +22,8 @@ public class GraphExperiment implements Experiment {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    private String ac;
+
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.INCOMING)
     private GraphPublication publication;
     private Collection<GraphXref> xrefs;
@@ -49,6 +51,7 @@ public class GraphExperiment implements Experiment {
         setInteractionDetectionMethod(experiment.getInteractionDetectionMethod());
         setHostOrganism(experiment.getHostOrganism());
         setPubmedId(experiment.getPublication().getPubmedId());
+        setAc(CommonUtility.extractAc(experiment));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -409,6 +412,14 @@ public class GraphExperiment implements Experiment {
 
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override

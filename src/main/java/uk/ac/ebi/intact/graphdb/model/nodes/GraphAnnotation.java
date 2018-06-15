@@ -28,6 +28,7 @@ public class GraphAnnotation implements Annotation {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    private String ac;
     private GraphCvTerm topic;
     private String value;
 
@@ -48,6 +49,7 @@ public class GraphAnnotation implements Annotation {
         }
 
         setValue(annotation.getValue());
+        setAc(CommonUtility.extractAc(annotation));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -140,6 +142,14 @@ public class GraphAnnotation implements Annotation {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override

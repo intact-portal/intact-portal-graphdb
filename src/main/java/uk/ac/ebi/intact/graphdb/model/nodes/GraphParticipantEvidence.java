@@ -29,6 +29,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    private String ac;
     private GraphCvTerm experimentalRole;
     private GraphCvTerm biologicalRole;
     private GraphOrganism expressedIn;
@@ -76,6 +77,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             setBinaryInteractionEvidence(participantEvidence.getInteraction());
         }
         setChangeListener(participantEvidence.getChangeListener());
+        setAc(CommonUtility.extractAc(participantEvidence));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -502,6 +504,14 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         } else {
             this.causalRelationships = new ArrayList<GraphCausalRelationship>();
         }
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override

@@ -25,7 +25,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private String uniqueKey;
 
     private String ac;
-
     private String imexId;
     private GraphExperiment experiment;
     private String availability;
@@ -76,7 +75,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setUpdatedDate(binaryInteractionEvidence.getUpdatedDate());
         setCreatedDate(binaryInteractionEvidence.getCreatedDate());
         setInteractionType(binaryInteractionEvidence.getInteractionType());
-        initializeAc(binaryInteractionEvidence.getXrefs());
+        setAc(CommonUtility.extractAc(binaryInteractionEvidence));
         setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
@@ -146,15 +145,15 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         CommonUtility.createAnnotationRelationShips(annotations, graphId, "annotations");
     }
 
-    public void initializeAc(Collection<Xref> xrefs) {
+/*    public void initializeAc(InteractionEvidence binaryInteractionEvidence) {
         try {
             CommonUtility commonUtility = Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
-            setAc(commonUtility.extractAc(xrefs));
+            setAc(commonUtility.extractAc(binaryInteractionEvidence));
             Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public String getAc() {
         return ac;

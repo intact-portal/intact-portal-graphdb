@@ -29,6 +29,7 @@ public class GraphRange implements Range {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    private String ac;
     private GraphPosition start;
     private GraphPosition end;
     private boolean isLink;
@@ -46,6 +47,7 @@ public class GraphRange implements Range {
         setLink(range.isLink());
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
+        setAc(CommonUtility.extractAc(range));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -195,6 +197,14 @@ public class GraphRange implements Range {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override

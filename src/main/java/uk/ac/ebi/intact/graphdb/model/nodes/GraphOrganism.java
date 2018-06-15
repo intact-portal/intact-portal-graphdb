@@ -29,6 +29,7 @@ public class GraphOrganism implements Organism {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    private String ac;
     private String scientificName;
     private String commonName;
     private int taxId;
@@ -48,6 +49,7 @@ public class GraphOrganism implements Organism {
         setCellType(organism.getCellType());
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
+        setAc(CommonUtility.extractAc(organism));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -243,6 +245,14 @@ public class GraphOrganism implements Organism {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override

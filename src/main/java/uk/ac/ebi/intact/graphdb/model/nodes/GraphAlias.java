@@ -26,6 +26,7 @@ public class GraphAlias implements Alias {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    private String ac;
     private GraphCvTerm type;
     private String name;
 
@@ -44,6 +45,7 @@ public class GraphAlias implements Alias {
         }
 
         setName(alias.getName());
+        setAc(CommonUtility.extractAc(alias));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -125,6 +127,15 @@ public class GraphAlias implements Alias {
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
     }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -24,8 +24,8 @@ public class GraphCurationDepth {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    private String ac;
     private String curationDepth;
-
     @Transient
     private boolean isAlreadyCreated;
 
@@ -35,6 +35,7 @@ public class GraphCurationDepth {
 
     public GraphCurationDepth(CurationDepth curationDepth){
         setCurationDepth(curationDepth.name());
+        setAc(CommonUtility.extractAc(curationDepth));
         setUniqueKey(this.getCurationDepth());
 
         if (CreationConfig.createNatively) {
@@ -90,5 +91,13 @@ public class GraphCurationDepth {
 
     public void setCurationDepth(String curationDepth) {
         this.curationDepth = curationDepth;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 }

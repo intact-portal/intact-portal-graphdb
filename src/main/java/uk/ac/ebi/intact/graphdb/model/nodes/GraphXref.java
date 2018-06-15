@@ -28,8 +28,9 @@ public class GraphXref implements Xref {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
-    private String identifier;
 
+    private String ac;
+    private String identifier;
     private GraphCvTerm database;
     private String version;
     private GraphCvTerm qualifier;
@@ -45,6 +46,7 @@ public class GraphXref implements Xref {
 
         setId(xref.getId());
         setVersion(xref.getVersion());
+        setAc(CommonUtility.extractAc(xref));
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -248,5 +250,13 @@ public class GraphXref implements Xref {
 
     public String createUniqueKey(){
         return "xref_"+ this.getId() ;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 }

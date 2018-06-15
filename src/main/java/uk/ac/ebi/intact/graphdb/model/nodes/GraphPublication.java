@@ -26,8 +26,9 @@ public class GraphPublication implements Publication {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
-    private String pubmedIdStr;
 
+    private String ac;
+    private String pubmedIdStr;
     private String title;
     private String journal;
     private Date publicationDate;
@@ -68,6 +69,7 @@ public class GraphPublication implements Publication {
         setPubmedId(publication.getPubmedId());
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
+        setAc(CommonUtility.extractAc(publication));
         setUniqueKey(this.getPubmedIdStr());
 
         if (CreationConfig.createNatively) {
@@ -628,6 +630,14 @@ public class GraphPublication implements Publication {
 
     public void setGraphCurationDepth(GraphCurationDepth graphCurationDepth) {
         this.graphCurationDepth = graphCurationDepth;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Transient

@@ -34,6 +34,7 @@ public class GraphVariableParameter implements VariableParameter {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    private String ac;
     private String description;
     private GraphCvTerm unit;
     private Collection<GraphVariableParameterValue> variableValues;
@@ -50,6 +51,7 @@ public class GraphVariableParameter implements VariableParameter {
         setDescription(variableParameter.getDescription());
         setUnit(variableParameter.getUnit());
         setExperiment(variableParameter.getExperiment());
+        setAc(CommonUtility.extractAc(variableParameter));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -225,6 +227,14 @@ public class GraphVariableParameter implements VariableParameter {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     public boolean equals(Object o) {

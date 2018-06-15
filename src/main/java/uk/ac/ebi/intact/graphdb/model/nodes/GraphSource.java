@@ -22,7 +22,7 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     private String postalAddress;
     private String uniqueKey;
-
+    private String ac;
     /*private Annotation url;*/
     private String url;
     private GraphPublication publication;
@@ -38,6 +38,7 @@ public class GraphSource extends GraphCvTerm implements Source {
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
+        setAc(CommonUtility.extractAc(source));
         setUniqueKey(this.toString());
 
         if (CreationConfig.createNatively) {
@@ -114,6 +115,14 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 /*
     public GraphSource(String shortName) {

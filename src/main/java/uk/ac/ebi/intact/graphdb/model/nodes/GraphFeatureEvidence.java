@@ -30,6 +30,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    private String ac;
     private String shortName;
     private String fullName;
     private String interpro;
@@ -67,6 +68,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setInterpro(featureEvidence.getInterpro());
         setType(featureEvidence.getType());
         setRole(featureEvidence.getRole());
+        setAc(CommonUtility.extractAc(featureEvidence));
         setUniqueKey(createUniqueKey(featureEvidence));
 
         if (CreationConfig.createNatively) {
@@ -486,6 +488,14 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     public String toString() {

@@ -3,9 +3,11 @@ package uk.ac.ebi.intact.graphdb.utils;
 import org.apache.commons.lang3.ClassUtils;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
+import psidev.psi.mi.jami.model.InteractionEvidence;
 import psidev.psi.mi.jami.model.Xref;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
+import uk.ac.ebi.intact.jami.model.IntactPrimaryObject;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -17,14 +19,11 @@ public class CommonUtility {
 
     private static final Map<Class, Label[]> labelMap = new HashMap<>();
 
-    public String extractAc(Collection<Xref> xrefs) {
+    public static String extractAc(Object object) {
         String ac = null;
 
-        for (Xref xref : xrefs) {
-            if (xref.getDatabase() != null && xref.getDatabase().getShortName() != null & xref.getDatabase().getShortName().equals(Constants.INTACT_DB)) {
-                ac = xref.getId();
-                break;
-            }
+        if(object instanceof IntactPrimaryObject){
+            ac=((IntactPrimaryObject) object).getAc();
         }
 
         return ac;

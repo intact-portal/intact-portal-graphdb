@@ -25,6 +25,7 @@ public class GraphParameter implements Parameter {
     @GraphId
     private Long graphId;
 
+    private String ac;
     private GraphCvTerm type;
     private BigDecimal uncertainty;
     private GraphCvTerm unit;
@@ -41,6 +42,7 @@ public class GraphParameter implements Parameter {
         setUncertainty(parameter.getUncertainty());
         setUnit(parameter.getUnit());
         setValue(parameter.getValue());
+        setAc(CommonUtility.extractAc(parameter));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -190,6 +192,14 @@ public class GraphParameter implements Parameter {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
     @Override
