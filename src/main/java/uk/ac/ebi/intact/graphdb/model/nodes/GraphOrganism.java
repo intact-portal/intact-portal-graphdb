@@ -1,16 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
+import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -32,14 +29,24 @@ public class GraphOrganism implements Organism {
     private String scientificName;
     private String commonName;
     private int taxId;
+
+    @Relationship(type = RelationshipTypes.CELL_TYPE)
     private GraphCvTerm cellType;
+
+    @Relationship(type = RelationshipTypes.COMPARTMENT)
     private GraphCvTerm compartment;
+
+    @Relationship(type = RelationshipTypes.TISSUE)
     private GraphCvTerm tissue;
+
+    @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
 
     @Transient
     private boolean isAlreadyCreated;
 
+    public GraphOrganism() {
+    }
 
     public GraphOrganism(Organism organism) {
         setCommonName(organism.getCommonName());
@@ -65,8 +72,6 @@ public class GraphOrganism implements Organism {
 
     public void createNodeNatively() {
         try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getScientificName() != null) nodeProperties.put("scientificName", this.getScientificName());
@@ -75,7 +80,7 @@ public class GraphOrganism implements Organism {
 
             Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -85,10 +90,10 @@ public class GraphOrganism implements Organism {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(cellType, this.graphId, "cellType");
-        CommonUtility.createRelationShip(compartment, this.graphId, "compartment");
-        CommonUtility.createRelationShip(tissue, this.graphId, "tissue");
-        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
+        CommonUtility.createRelationShip(cellType, this.graphId, RelationshipTypes.CELL_TYPE);
+        CommonUtility.createRelationShip(compartment, this.graphId, RelationshipTypes.COMPARTMENT);
+        CommonUtility.createRelationShip(tissue, this.graphId, RelationshipTypes.TISSUE);
+        CommonUtility.createAliasRelationShips(aliases, this.graphId);
     }
 
     public GraphOrganism(int taxId) {

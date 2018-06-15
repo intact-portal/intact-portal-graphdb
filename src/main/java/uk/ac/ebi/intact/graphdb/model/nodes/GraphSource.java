@@ -3,11 +3,12 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Publication;
 import psidev.psi.mi.jami.model.Source;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -25,6 +26,8 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     /*private Annotation url;*/
     private String url;
+
+    @Relationship(type = RelationshipTypes.PUBLICATION)
     private GraphPublication publication;
 
     @Transient
@@ -50,8 +53,6 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     public void createNodeNatively() {
         try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             if (this.getPostalAddress() != null) nodeProperties.put("postalAddress", this.getPostalAddress());
             if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
@@ -71,7 +72,7 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(getPublication(), this.graphId, "publication");
+        CommonUtility.createRelationShip(getPublication(), this.graphId, RelationshipTypes.PUBLICATION);
     }
 
     public String getUniqueKey() {

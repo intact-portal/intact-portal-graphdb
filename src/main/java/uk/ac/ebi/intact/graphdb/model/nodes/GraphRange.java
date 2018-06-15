@@ -1,16 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
+import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -29,10 +26,18 @@ public class GraphRange implements Range {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.START)
     private GraphPosition start;
+
+    @Relationship(type = RelationshipTypes.END)
     private GraphPosition end;
+
     private boolean isLink;
+
+    @Relationship(type = RelationshipTypes.RESULTING_SEQUENCE)
     private GraphResultingSequence resultingSequence;
+
+    @Relationship(type = RelationshipTypes.PARTICIPANT)
     private GraphEntity participant;
 
     @Transient
@@ -58,8 +63,6 @@ public class GraphRange implements Range {
 
     public void createNodeNatively() {
         try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.put("isLink", this.isLink());
@@ -76,10 +79,10 @@ public class GraphRange implements Range {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(start, this.graphId, "start");
-        CommonUtility.createRelationShip(end, this.graphId, "end");
-        CommonUtility.createRelationShip(resultingSequence, this.graphId, "resultingSequence");
-        CommonUtility.createRelationShip(participant, this.graphId, "participant");
+        CommonUtility.createRelationShip(start, this.graphId, RelationshipTypes.START);
+        CommonUtility.createRelationShip(end, this.graphId, RelationshipTypes.END);
+        CommonUtility.createRelationShip(resultingSequence, this.graphId, RelationshipTypes.RESULTING_SEQUENCE);
+        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
     }
 
     public void setPositions(Position start, Position end) {

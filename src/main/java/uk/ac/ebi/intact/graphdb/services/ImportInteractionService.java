@@ -11,8 +11,8 @@ import psidev.psi.mi.jami.model.Interaction;
 import psidev.psi.mi.jami.tab.extension.MitabBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.error.GraphDbException;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
-import uk.ac.ebi.intact.graphdb.repositories.BinaryInteractionEvidenceRepository;
-import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
+import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
+import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
 
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ public class ImportInteractionService {
     private final InteractionProvider interactionProvider;
 
     @Autowired
-    private BinaryInteractionEvidenceRepository binaryInteractionEvidenceRepository;
+    private GraphBinaryInteractionEvidenceRepository graphBinaryInteractionEvidenceRepository;
 
     @Autowired
-    private InteractorRepository interactorRepository;
+    private GraphInteractorRepository graphInteractorRepository;
 
     @Autowired
     public ImportInteractionService(@Qualifier("miTabInteractionProvider") InteractionProvider interactionProvider) {
@@ -63,7 +63,7 @@ public class ImportInteractionService {
                 if (interaction instanceof MitabBinaryInteractionEvidence) {
                     MitabBinaryInteractionEvidence interactionEvidence = (MitabBinaryInteractionEvidence) interaction;
                     // process the interaction evidence
-                    binaryInteractionEvidenceRepository.save(new GraphBinaryInteractionEvidence(interactionEvidence));
+                    graphBinaryInteractionEvidenceRepository.save(new GraphBinaryInteractionEvidence(interactionEvidence));
                     interactions.add(interactionEvidence);
                 }
             }

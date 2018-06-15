@@ -1,11 +1,13 @@
 package uk.ac.ebi.intact.graphdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
-import uk.ac.ebi.intact.graphdb.repositories.InteractorRepository;
+import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
 
 import java.util.*;
 
@@ -16,13 +18,13 @@ import java.util.*;
  * Time: 17:43
  */
 @Service
-public class InteractorServiceImpl {
+public class GraphInteractorService {
 
-    final private InteractorRepository interactorRepository;
+    final private GraphInteractorRepository graphInteractorRepository;
 
     @Autowired
-    public InteractorServiceImpl(InteractorRepository interactorRepository) {
-        this.interactorRepository = interactorRepository;
+    public GraphInteractorService(GraphInteractorRepository graphInteractorRepository) {
+        this.graphInteractorRepository = graphInteractorRepository;
     }
 
     private Map<String, Object> toD3Format(Collection<GraphInteractor> interactors) {
@@ -57,8 +59,23 @@ public class InteractorServiceImpl {
 
     @Transactional(readOnly = true)
     public Map<String, Object>  graph(int limit) {
-        Collection<GraphInteractor> result = interactorRepository.graph(limit);
+        Collection<GraphInteractor> result = graphInteractorRepository.graph(limit);
         return toD3Format(result);
     }
 
+    public Page<GraphInteractor> findAll(Pageable page, int depth) {
+        return graphInteractorRepository.findAll(page, depth);
+    }
+
+    public Optional<GraphInteractor> find(Long id) {
+        return graphInteractorRepository.findById(id);
+    }
+
+    public GraphInteractor findByAc(String ac) {
+        return graphInteractorRepository.findByAc(ac);
+    }
+
+//    public List<Interactor> retrieveInteractors (String name) {
+//        return this.interactorRepository.findByName(name);
+//    }
 }

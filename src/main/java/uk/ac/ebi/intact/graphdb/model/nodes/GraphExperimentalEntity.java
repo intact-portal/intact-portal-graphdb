@@ -25,6 +25,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     public GraphExperimentalEntity() {
         super();
     }
+
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
         //TODO...
         super(experimentalEntity,true);

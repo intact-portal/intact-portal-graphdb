@@ -1,13 +1,11 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -33,18 +31,38 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     private String shortName;
     private String fullName;
     private String interpro;
+
+    @Relationship(type = RelationshipTypes.TYPE)
     private GraphCvTerm type;
+
+    @Relationship(type = RelationshipTypes.ROLE)
     private GraphCvTerm role;
+
+    @Relationship(type = RelationshipTypes.PARTICIPANT)
     private GraphExperimentalEntity participant;
 
+    @Relationship(type = RelationshipTypes.DETECTION_METHOD)
     private Collection<GraphCvTerm> detectionMethods;
+
+    @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
     // private GraphXref interpro; // To do
+    @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
+
+    @Relationship(type = RelationshipTypes.XREFS)
     private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
+
+    @Relationship(type = RelationshipTypes.RANGES)
     private Collection<GraphRange> ranges;
+
+    @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
+
+    @Relationship(type = RelationshipTypes.LINKED_FEATURES)
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
     @Transient
@@ -118,17 +136,17 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, "type");
-        CommonUtility.createRelationShip(role, this.graphId, "role");
-        CommonUtility.createRelationShip(participant, this.graphId, "participant");
-        CommonUtility.createCvTermRelationShips(detectionMethods, this.graphId, "detectionMethods");
-        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
-        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
-        CommonUtility.createRangeRelationShips(ranges, this.graphId, "ranges");
-        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
-        CommonUtility.createFeatureEvidenceRelationShips(linkedFeatures, this.graphId, "linkedFeatures");
+        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
+        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
+        CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.graphId);
+        CommonUtility.createParameterRelationShips(parameters, this.graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createRangeRelationShips(ranges, this.graphId);
+        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createFeatureEvidenceRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
     }
 
 

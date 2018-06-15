@@ -31,27 +31,47 @@ public class GraphPublication implements Publication {
     private String title;
     private String journal;
     private Date publicationDate;
+
     @Transient
     private CurationDepth curationDepth;
+
+    @Relationship(type = RelationshipTypes.GRAPH_CURATION_DEPTH)
     private GraphCurationDepth graphCurationDepth;
+
     private Date releasedDate;
+
+    @Relationship(type = RelationshipTypes.SOURCE)
     private GraphSource source;
+
+    @Relationship(type = RelationshipTypes.PMID)
     private GraphXref pubmedId;
+
+    @Relationship(type = RelationshipTypes.DOI)
     private GraphXref doi;
+
+    @Relationship(type = RelationshipTypes.IMEX_ID)
     private GraphXref imexId;
+
     @Transient
     private List<String> authors;
 
+    @Relationship(type = RelationshipTypes.GRAPH_AUTHORS)
     private Collection<GraphAuthor> graphAuthors;
-    private Collection<GraphXref> identifiers;
-    private Collection<GraphXref> xrefs;
-    private Collection<GraphAnnotation> annotations;
 
-    @Transient
-    private boolean isAlreadyCreated;
+    @Relationship(type = RelationshipTypes.IDENTIFIERS)
+    private Collection<GraphXref> identifiers;
+
+    @Relationship(type = RelationshipTypes.XREFS)
+    private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
+    private Collection<GraphAnnotation> annotations;
 
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
     private Collection<GraphExperiment> experiments;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
     public GraphPublication() {
         this.curationDepth = CurationDepth.undefined;
@@ -116,17 +136,16 @@ public class GraphPublication implements Publication {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, "graphCurationDepth");
-        CommonUtility.createRelationShip(imexId, this.graphId, "imexId");
-        CommonUtility.createRelationShip(source, this.graphId, "source");
-        CommonUtility.createRelationShip(pubmedId, this.graphId, "pubmedId");
-        CommonUtility.createRelationShip(doi, this.graphId, "doi");
-
-        CommonUtility.createXrefRelationShips(identifiers, this.graphId, "identifiers");
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
-        CommonUtility.createExperimentRelationShips(experiments, this.graphId, RelationshipTypes.PUB_EXP);
-        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId(),"graphAuthors");
+        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, RelationshipTypes.GRAPH_CURATION_DEPTH);
+        CommonUtility.createRelationShip(imexId, this.graphId, RelationshipTypes.IMEX_ID);
+        CommonUtility.createRelationShip(source, this.graphId,  RelationshipTypes.SOURCE);
+        CommonUtility.createRelationShip(pubmedId, this.graphId, RelationshipTypes.PMID);
+        CommonUtility.createRelationShip(doi, this.graphId, RelationshipTypes.DOI);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createExperimentRelationShips(experiments, this.graphId);
+        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId());
     }
 
     public GraphPublication(Xref identifier) {

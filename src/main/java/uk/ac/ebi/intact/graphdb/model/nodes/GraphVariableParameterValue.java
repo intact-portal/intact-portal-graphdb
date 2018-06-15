@@ -3,12 +3,14 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -28,6 +30,8 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
     private String value;
     private Integer order;
+
+    @Relationship(type = RelationshipTypes.VARIABLE_PARAMETER)
     private GraphVariableParameter variableParameter;
 
     @Transient
@@ -73,7 +77,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(variableParameter, this.graphId, "variableParameter");
+        CommonUtility.createRelationShip(variableParameter, this.graphId, RelationshipTypes.VARIABLE_PARAMETER);
     }
 
 /*    public GraphVariableParameterValue(String value, VariableParameter variableParameter){

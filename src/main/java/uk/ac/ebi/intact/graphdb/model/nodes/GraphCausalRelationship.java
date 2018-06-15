@@ -1,16 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CausalRelationship;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Participant;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -26,7 +24,10 @@ public class GraphCausalRelationship implements CausalRelationship {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.RELATION_TYPE)
     private GraphCvTerm relationType;
+
+    @Relationship(type = RelationshipTypes.TARGET)
     private GraphEntity target;
 
     @Transient
@@ -66,8 +67,8 @@ public class GraphCausalRelationship implements CausalRelationship {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(relationType, this.getGraphId(), "relationType");
-        CommonUtility.createRelationShip(target, this.getGraphId(), "target");
+        CommonUtility.createRelationShip(relationType, this.getGraphId(), RelationshipTypes.RELATION_TYPE);
+        CommonUtility.createRelationShip(target, this.getGraphId(), RelationshipTypes.TARGET);
     }
 
     public GraphCausalRelationship(CvTerm relationType, Participant target) {

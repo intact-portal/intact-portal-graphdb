@@ -10,6 +10,7 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -28,10 +29,19 @@ public class GraphCvTerm implements CvTerm {
 
     private String shortName;
     private String fullName;
+
+    @Relationship(type = RelationshipTypes.XREFS)
     private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
+
+    @Relationship(type = RelationshipTypes.SYNONYMS)
     private Collection<GraphAlias> synonyms;
+
     private String mIIdentifier;
     private String mODIdentifier;
     private String pARIdentifier;
@@ -108,11 +118,11 @@ public class GraphCvTerm implements CvTerm {
         }
     }
 
-    public void createRelationShipNatively(Long graphId){
-        CommonUtility.createXrefRelationShips(xrefs,graphId,"xrefs");
-        CommonUtility.createAliasRelationShips(synonyms,graphId,"synonyms");
-        CommonUtility.createAnnotationRelationShips(annotations,graphId,"annotations");
-        CommonUtility.createXrefRelationShips(identifiers,graphId,"identifiers");
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createSynonymRelationShips(synonyms, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
     }
 
     public GraphCvTerm(String shortName) {

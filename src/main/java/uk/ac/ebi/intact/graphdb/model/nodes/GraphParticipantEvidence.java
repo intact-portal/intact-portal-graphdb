@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
@@ -11,7 +10,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.*;
@@ -29,10 +27,19 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.EXPERIMENTAL_ROLE)
     private GraphCvTerm experimentalRole;
+
+    @Relationship(type = RelationshipTypes.BIOLOGICAL_ROLE)
     private GraphCvTerm biologicalRole;
+
+    @Relationship(type = RelationshipTypes.EXPRESSED_IN)
     private GraphOrganism expressedIn;
+
+    @Relationship(type = RelationshipTypes.STOICHIOMETRY)
     private GraphStoichiometry stoichiometry;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR)
     private GraphInteractor interactor;
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
@@ -40,22 +47,39 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.INCOMING)
     private GraphBinaryInteractionEvidence binaryInteractionEvidence;
+
+    @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
 
+    @Relationship(type = RelationshipTypes.FEATURES)
     private Collection<GraphFeatureEvidence> features;
+
+    @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphConfidence> confidences;
+
+    @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
+
+    @Relationship(type = RelationshipTypes.IDENTIFICATION_METHOD)
     private Collection<GraphCvTerm> identificationMethods;
+
+    @Relationship(type = RelationshipTypes.EXPERIMENTAL_PREPARATION)
     private Collection<GraphCvTerm> experimentalPreparations;
+
+    @Relationship(type = RelationshipTypes.XREFS)
     private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
+
+    @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
+
+    @Relationship(type = RelationshipTypes.CAUSAL_RELATIONSHIP)
     private Collection<GraphCausalRelationship> causalRelationships;
 
     @Transient
     private boolean isAlreadyCreated;
-
-
 
     public GraphParticipantEvidence() {
     }
@@ -101,8 +125,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public void createNodeNatively() {
         try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
 
@@ -118,23 +140,23 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(experimentalRole, this.graphId, "experimentalRole");
-        CommonUtility.createRelationShip(biologicalRole, this.graphId, "biologicalRole");
-        CommonUtility.createRelationShip(expressedIn, this.graphId, "expressedIn");
-        CommonUtility.createRelationShip(stoichiometry, this.graphId, "stoichiometry");
-        CommonUtility.createRelationShip(interactor, this.graphId, "interactor");
+        CommonUtility.createRelationShip(experimentalRole, this.graphId, RelationshipTypes.EXPERIMENTAL_ROLE);
+        CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
+        CommonUtility.createRelationShip(expressedIn, this.graphId, RelationshipTypes.EXPRESSED_IN);
+        CommonUtility.createRelationShip(stoichiometry, this.graphId, RelationshipTypes.STOICHIOMETRY);
+        CommonUtility.createRelationShip(interactor, this.graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
         CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(changeListener, this.graphId, "changeListener");
-        CommonUtility.createFeatureEvidenceRelationShips(features, this.graphId, "features");
-        CommonUtility.createConfidenceRelationShips(confidences, this.graphId, "confidences");
-        CommonUtility.createParameterRelationShips(parameters, this.graphId, "parameters");
-        CommonUtility.createCvTermRelationShips(identificationMethods, this.graphId, "identificationMethods");
-        CommonUtility.createCvTermRelationShips(experimentalPreparations, this.graphId, "experimentalPreparations");
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
-        CommonUtility.createAliasRelationShips(aliases, this.graphId, "aliases");
-        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, this.graphId, "causalRelationships");
+        CommonUtility.createRelationShip(changeListener, this.graphId, RelationshipTypes.CHANGE_LISTENER);
+        CommonUtility.createFeatureEvidenceRelationShips(features, this.graphId, RelationshipTypes.FEATURES);
+        CommonUtility.createConfidenceRelationShips(confidences, this.graphId);
+        CommonUtility.createParameterRelationShips(parameters, this.graphId);
+        CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.graphId);
+        CommonUtility.createExperimentalPreparationRelationShips(experimentalPreparations, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, this.graphId);
 
     }
 

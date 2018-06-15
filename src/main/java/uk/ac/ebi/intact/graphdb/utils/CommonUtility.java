@@ -10,6 +10,8 @@ import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.*;
+
 /**
  * Created by anjali on 06/12/17.
  */
@@ -97,38 +99,50 @@ public class CommonUtility {
         }
     }
 
-    /*
-    *
-    *
-    * */
-    public static void createXrefRelationShips(Collection<GraphXref> relCollection, long fromId, String relationName) {
+    public static void createXrefRelationShips(Collection<GraphXref> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphXref obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, XREFS);
             }
         }
     }
 
-    public static void createAliasRelationShips(Collection<GraphAlias> relCollection, long fromId, String relationName) {
+    public static void createIdentifierRelationShips(Collection<GraphXref> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphXref obj : relCollection) {
+                createRelationShip(obj, fromId, IDENTIFIERS);
+            }
+        }
+    }
+
+    public static void createAliasRelationShips(Collection<GraphAlias> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphAlias obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, ALIASES);
             }
         }
     }
 
-    public static void createAnnotationRelationShips(Collection<GraphAnnotation> relCollection, long fromId, String relationName) {
+    public static void createSynonymRelationShips(Collection<GraphAlias> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphAlias obj : relCollection) {
+                createRelationShip(obj, fromId, SYNONYMS);
+            }
+        }
+    }
+
+    public static void createAnnotationRelationShips(Collection<GraphAnnotation> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphAnnotation obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, ANNOTATIONS);
             }
         }
     }
 
-    public static void createBinaryInteractionEvidenceRelationShips(Collection<GraphBinaryInteractionEvidence> relCollection, long fromId, String relationName) {
+    public static void createBinaryInteractionEvidenceRelationShips(Collection<GraphBinaryInteractionEvidence> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphBinaryInteractionEvidence obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, INTERACTIONS);
 
             }
         }
@@ -142,27 +156,28 @@ public class CommonUtility {
         }
     }
 
-    public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId, String relationName) {
+    public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphCausalRelationship obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, CAUSAL_RELATIONSHIP);
             }
         }
     }
-    public static void createConfidenceRelationShips(Collection<GraphConfidence> relCollection, long fromId, String relationName) {
+    public static void createConfidenceRelationShips(Collection<GraphConfidence> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphConfidence obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, CONFIDENCE);
             }
         }
     }
-    public static void createVariableParameterRelationShips(Collection<GraphVariableParameter> relCollection, long fromId, String relationName) {
+    public static void createVariableParameterRelationShips(Collection<GraphVariableParameter> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphVariableParameter obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, VARIABLE_PARAMETER);
             }
         }
     }
+
     public static void createCvTermRelationShips(Collection<GraphCvTerm> relCollection, long fromId, String relationName) {
         if(relCollection!=null) {
             for (GraphCvTerm obj : relCollection) {
@@ -170,53 +185,78 @@ public class CommonUtility {
             }
         }
     }
-    public static void createParameterRelationShips(Collection<GraphParameter> relCollection, long fromId, String relationName) {
+
+    public static void createExperimentalPreparationRelationShips(Collection<GraphCvTerm> relCollection, long fromId) {
         if(relCollection!=null) {
-            for (GraphParameter obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
-            }
-        }
-    }
-    public static void createVariableParameterValueSetRelationShips(Collection<GraphVariableParameterValueSet> relCollection, long fromId, String relationName) {
-        if(relCollection!=null) {
-            for (GraphVariableParameterValueSet obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
-            }
-        }
-    }
-    public static void createVariableParameterValueRelationShips(Collection<GraphVariableParameterValue> relCollection, long fromId, String relationName) {
-        if(relCollection!=null) {
-            for (GraphVariableParameterValue obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
-            }
-        }
-    }
-    public static void createCheckSumRelationShips(Collection<GraphChecksum> relCollection, long fromId, String relationName) {
-        if(relCollection!=null) {
-            for (GraphChecksum obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
-            }
-        }
-    }
-    public static void createRangeRelationShips(Collection<GraphRange> relCollection, long fromId, String relationName) {
-        if(relCollection!=null) {
-            for (GraphRange obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
-            }
-        }
-    }
-    public static void createExperimentRelationShips(Collection<GraphExperiment> relCollection, long fromId, String relationName) {
-        if(relCollection!=null) {
-            for (GraphExperiment obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+            for (GraphCvTerm obj : relCollection) {
+                createRelationShip(obj, fromId, EXPERIMENTAL_PREPARATION);
             }
         }
     }
 
-    public static void createAuthorRelationShips(Collection<GraphAuthor> relCollection, long fromId, String relationName) {
+    public static void createIdentificationMethodRelationShips(Collection<GraphCvTerm> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphCvTerm obj : relCollection) {
+                createRelationShip(obj, fromId, IDENTIFICATION_METHOD);
+            }
+        }
+    }
+
+    public static void createDetectionMethodRelationShips(Collection<GraphCvTerm> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphCvTerm obj : relCollection) {
+                createRelationShip(obj, fromId, DETECTION_METHOD);
+            }
+        }
+    }
+
+    public static void createParameterRelationShips(Collection<GraphParameter> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphParameter obj : relCollection) {
+                createRelationShip(obj, fromId, PARAMETERS);
+            }
+        }
+    }
+    public static void createVariableParameterValueSetRelationShips(Collection<GraphVariableParameterValueSet> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphVariableParameterValueSet obj : relCollection) {
+                createRelationShip(obj, fromId, VARIABLE_PARAMETERS_VALUE_SETS);
+            }
+        }
+    }
+    public static void createVariableParameterValueRelationShips(Collection<GraphVariableParameterValue> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphVariableParameterValue obj : relCollection) {
+                createRelationShip(obj, fromId, VARIABLE_VALUES);
+            }
+        }
+    }
+    public static void createChecksumRelationShips(Collection<GraphChecksum> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphChecksum obj : relCollection) {
+                createRelationShip(obj, fromId, CHECKSUMS);
+            }
+        }
+    }
+    public static void createRangeRelationShips(Collection<GraphRange> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphRange obj : relCollection) {
+                createRelationShip(obj, fromId, RANGES);
+            }
+        }
+    }
+    public static void createExperimentRelationShips(Collection<GraphExperiment> relCollection, long fromId) {
+        if(relCollection!=null) {
+            for (GraphExperiment obj : relCollection) {
+                createRelationShip(obj, fromId, PUB_EXP);
+            }
+        }
+    }
+
+    public static void createAuthorRelationShips(Collection<GraphAuthor> relCollection, long fromId) {
         if(relCollection!=null) {
             for (GraphAuthor obj : relCollection) {
-                createRelationShip(obj, fromId, relationName);
+                createRelationShip(obj, fromId, GRAPH_AUTHORS);
             }
         }
     }

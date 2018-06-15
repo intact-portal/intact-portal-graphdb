@@ -1,10 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Experiment;
@@ -12,6 +9,7 @@ import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -35,8 +33,14 @@ public class GraphVariableParameter implements VariableParameter {
     private String uniqueKey;
 
     private String description;
+
+    @Relationship(type = RelationshipTypes.UNIT)
     private GraphCvTerm unit;
+
+    @Relationship(type = RelationshipTypes.VARIABLE_VALUES)
     private Collection<GraphVariableParameterValue> variableValues;
+
+    @Relationship(type = RelationshipTypes.EXPERIMENT)
     private GraphExperiment experiment;
 
     @Transient
@@ -92,9 +96,9 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(unit, this.graphId, "unit");
-        CommonUtility.createRelationShip(experiment, this.graphId, "experiment");
-        CommonUtility.createVariableParameterValueRelationShips(variableValues, this.graphId, "variableValues");
+        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(experiment, this.graphId, RelationshipTypes.EXPERIMENT);
+        CommonUtility.createVariableParameterValueRelationShips(variableValues, this.graphId);
     }
 
    /* public GraphVariableParameter(String description) {

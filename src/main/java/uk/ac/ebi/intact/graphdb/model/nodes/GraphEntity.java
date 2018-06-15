@@ -3,11 +3,13 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -24,10 +26,19 @@ public class GraphEntity implements ExperimentalEntity {
     @GraphId
     private Long graphId;
 
+    @Relationship(type = RelationshipTypes.INTERACTOR)
     private GraphInteractor interactor;
+
+    @Relationship(type = RelationshipTypes.FEATURES)
     private Collection<GraphFeatureEvidence> features;
+
+    @Relationship(type = RelationshipTypes.STOICHIOMETRY)
     private GraphStoichiometry stoichiometry;
+
+    @Relationship(type = RelationshipTypes.CAUSAL_RELATIONSHIP)
     private Collection<GraphCausalRelationship> causalRelationships;
+
+    @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
 
     @Transient
@@ -79,11 +90,11 @@ public class GraphEntity implements ExperimentalEntity {
     }
 
     public void createRelationShipNatively(Long graphId) {
-        CommonUtility.createRelationShip(interactor, graphId, "interactor");
-        CommonUtility.createRelationShip(stoichiometry, graphId, "stoichiometry");
-        CommonUtility.createRelationShip(changeListener, graphId, "changeListener");
-        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, "features");
-        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId, "causalRelationships");
+        CommonUtility.createRelationShip(interactor, graphId, RelationshipTypes.INTERACTOR);
+        CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
+        CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
+        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.FEATURES);
+        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 
     @Override

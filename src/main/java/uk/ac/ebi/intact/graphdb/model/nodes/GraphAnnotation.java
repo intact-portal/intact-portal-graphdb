@@ -1,15 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -28,7 +26,9 @@ public class GraphAnnotation implements Annotation {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.TOPIC)
     private GraphCvTerm topic;
+
     private String value;
 
     @Transient
@@ -76,7 +76,7 @@ public class GraphAnnotation implements Annotation {
     }
 
     private void createRelationShipNatively() {
-        CommonUtility.createRelationShip(topic, this.getGraphId(), "topic");
+        CommonUtility.createRelationShip(topic, this.getGraphId(), RelationshipTypes.TOPIC);
     }
 
 

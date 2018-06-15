@@ -74,7 +74,7 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
     }
 
 
