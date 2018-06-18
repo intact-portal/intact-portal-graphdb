@@ -98,6 +98,7 @@ public class GraphPublication implements Publication {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);

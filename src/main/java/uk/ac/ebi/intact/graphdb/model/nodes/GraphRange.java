@@ -64,6 +64,7 @@ public class GraphRange implements Range {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             nodeProperties.put("isLink", this.isLink());
 
             Label[] labels = CommonUtility.getLabels(GraphRange.class);

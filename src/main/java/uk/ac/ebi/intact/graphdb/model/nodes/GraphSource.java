@@ -56,6 +56,7 @@ public class GraphSource extends GraphCvTerm implements Source {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             if (this.getPostalAddress() != null) nodeProperties.put("postalAddress", this.getPostalAddress());
             if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getUrl() != null) nodeProperties.put("url", this.getUrl());
             nodeProperties.putAll(super.getNodeProperties());
 

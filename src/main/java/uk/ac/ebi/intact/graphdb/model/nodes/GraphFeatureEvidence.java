@@ -104,6 +104,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
             if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
             if (this.getInterpro() != null) nodeProperties.put("interpro", this.getInterpro());

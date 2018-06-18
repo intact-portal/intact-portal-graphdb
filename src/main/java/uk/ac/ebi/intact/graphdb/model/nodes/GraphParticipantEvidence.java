@@ -107,6 +107,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
 
             Label[] labels = CommonUtility.getLabels(GraphParticipantEvidence.class);
 

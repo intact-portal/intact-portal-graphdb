@@ -84,6 +84,7 @@ public class GraphCvTerm implements CvTerm {
 
     public void initialzeNodeProperties(){
         nodeProperties.put("uniqueKey", this.getUniqueKey());
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getShortName()!=null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName()!=null) nodeProperties.put("fullName", this.getFullName());
         if (this.getMIIdentifier()!=null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());

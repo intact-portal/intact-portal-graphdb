@@ -67,6 +67,7 @@ public class GraphAnnotation implements Annotation {
 
         Map<String, Object> nodeProperties = new HashMap<String, Object>();
         nodeProperties.put("uniqueKey", this.getUniqueKey());
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getValue() != null) nodeProperties.put("value", this.getValue());
 
         Label[] labels = CommonUtility.getLabels(GraphAnnotation.class);

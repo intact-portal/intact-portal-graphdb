@@ -80,6 +80,7 @@ public class GraphVariableParameter implements VariableParameter {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if(this.getDescription()!=null)nodeProperties.put("description", this.getDescription());
 
             Label[] labels = CommonUtility.getLabels(GraphVariableParameter.class);

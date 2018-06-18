@@ -57,6 +57,7 @@ public class GraphParameter implements Parameter {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty());
 
             Label[] labels = CommonUtility.getLabels(GraphParameter.class);

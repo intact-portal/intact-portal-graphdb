@@ -50,7 +50,7 @@ public class GraphInteractor implements Interactor {
         setFullName(interactor.getFullName());
         setOrganism(interactor.getOrganism());
         setInteractorType(interactor.getInteractorType());
-        initializeAc(interactor.getIdentifiers());
+        setAc(CommonUtility.extractAc(interactor));
         setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
@@ -74,7 +74,7 @@ public class GraphInteractor implements Interactor {
 
     public void initialzeNodeProperties(){
         nodeProperties.put("uniqueKey", this.getUniqueKey());
-        nodeProperties.put("ac", this.getAc());
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
     }

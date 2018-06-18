@@ -84,6 +84,7 @@ public class GraphXref implements Xref {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("identifier", this.getId());
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if(this.getVersion()!=null) nodeProperties.put("version", this.getVersion());
 
             Label[] labels=CommonUtility.getLabels(GraphXref.class);

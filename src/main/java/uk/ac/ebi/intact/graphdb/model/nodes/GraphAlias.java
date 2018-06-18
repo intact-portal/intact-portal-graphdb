@@ -63,6 +63,7 @@ public class GraphAlias implements Alias {
 
         Map<String, Object> nodeProperties = new HashMap<String, Object>();
         nodeProperties.put("uniqueKey", this.getUniqueKey());
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getName() != null) nodeProperties.put("name", this.getName());
 
         Label[] labels = CommonUtility.getLabels(GraphAlias.class);

@@ -87,6 +87,7 @@ public class GraphExperiment implements Experiment {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getPubmedId() != null) nodeProperties.put("pubmedId", this.getPubmedId());
 
             Label[] labels = CommonUtility.getLabels(GraphExperiment.class);

@@ -49,6 +49,7 @@ public class GraphCurationDepth {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             nodeProperties.put("curationDepth", this.getCurationDepth());
             Label[] labels = CommonUtility.getLabels(GraphEntity.class);
 
