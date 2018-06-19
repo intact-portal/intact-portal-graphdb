@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -24,6 +25,8 @@ public class GraphParameter implements Parameter {
 
     @GraphId
     private Long graphId;
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     private String ac;
     private GraphCvTerm type;
@@ -43,6 +46,7 @@ public class GraphParameter implements Parameter {
         setUnit(parameter.getUnit());
         setValue(parameter.getValue());
         setAc(CommonUtility.extractAc(parameter));
+        setUniqueKey(this.getAc());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -57,6 +61,7 @@ public class GraphParameter implements Parameter {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty());
 
@@ -228,4 +233,11 @@ public class GraphParameter implements Parameter {
         return UnambiguousParameterComparator.hashCode(this);
     }
 
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 }

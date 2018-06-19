@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CurationDepth;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * Created by anjali on 01/05/18.
  */
+@NodeEntity
 public class GraphCurationDepth {
 
     @GraphId
@@ -51,7 +53,7 @@ public class GraphCurationDepth {
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             nodeProperties.put("curationDepth", this.getCurationDepth());
-            Label[] labels = CommonUtility.getLabels(GraphEntity.class);
+            Label[] labels = CommonUtility.getLabels(GraphCurationDepth.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());

@@ -243,9 +243,11 @@ public class CommonUtility {
 
         if(isAlreadyCreated){
             id= Constants.createdNodeIdMap.get(uniqueKey);
-        }else{
+        }else {
             id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
-            Constants.createdNodeIdMap.put(uniqueKey,id);
+            if (uniqueKey!=null) {
+                Constants.createdNodeIdMap.put(uniqueKey, id);
+            }
         }
        return new NodeDataFeed(id,isAlreadyCreated);
     }
