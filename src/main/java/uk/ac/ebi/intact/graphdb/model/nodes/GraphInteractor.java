@@ -8,6 +8,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class GraphInteractor implements Interactor {
         setOrganism(interactor.getOrganism());
         setInteractorType(interactor.getInteractorType());
         setAc(CommonUtility.extractAc(interactor));
-        setUniqueKey(this.getAc());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
@@ -404,5 +405,10 @@ public class GraphInteractor implements Interactor {
         this.uniqueKey = uniqueKey;
     }
 
+    public String createUniqueKey(){
+        String uniqueString=this.getAc();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 
 }

@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class GraphAlias implements Alias {
 
         setName(alias.getName());
         setAc(CommonUtility.extractAc(alias));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -159,6 +160,12 @@ public class GraphAlias implements Alias {
     @Override
     public String toString() {
         return getName() + (this.type != null ? "(" + this.type.toString() + ")" : "");
+    }
+
+    public String createUniqueKey(){
+        String uniqueString=getName() + (this.type != null ? "(" + this.type.toString() + ")" : "");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
 

@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class GraphConfidence implements Confidence {
     public GraphConfidence(Confidence confidence) {
         setType(confidence.getType());
         setValue(confidence.getValue());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -152,5 +153,10 @@ public class GraphConfidence implements Confidence {
         return UnambiguousConfidenceComparator.hashCode(this);
     }
 
+    public String createUniqueKey(){
+        String uniqueString=this.type.toString() + ": " + getValue();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 
 }

@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @NodeEntity
@@ -52,7 +53,7 @@ public class GraphExperiment implements Experiment {
         setHostOrganism(experiment.getHostOrganism());
         setPubmedId(experiment.getPublication().getPubmedId());
         setAc(CommonUtility.extractAc(experiment));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -429,5 +430,11 @@ public class GraphExperiment implements Experiment {
                 + (getPubmedId() != null ? getPubmedId() : "no publication")
                 + "( " + getInteractionDetectionMethod().toString()
                 + (getHostOrganism() != null ? ", " + getHostOrganism().toString() : "") + " )";
+    }
+
+    public String createUniqueKey(){
+        String uniqueString=this.getAc();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class GraphCurationDepth {
     public GraphCurationDepth(CurationDepth curationDepth){
         setCurationDepth(curationDepth.name());
         setAc(CommonUtility.extractAc(curationDepth));
-        setUniqueKey(this.getCurationDepth());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -102,5 +103,11 @@ public class GraphCurationDepth {
 
     public void setAc(String ac) {
         this.ac = ac;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString=this.getCurationDepth();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

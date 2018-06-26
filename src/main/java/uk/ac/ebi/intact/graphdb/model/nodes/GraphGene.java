@@ -16,6 +16,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -444,6 +445,16 @@ public class GraphGene extends GraphMolecule implements Gene {
                 (getEnsemblGenome() != null ? getEnsemblGenome() :
                         (getEntrezGeneId() != null ? getEntrezGeneId() :
                                 (getRefseq() != null ? getRefseq() : super.toString()))));
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Gene: "
+                + (getEnsembl() != null ? getEnsembl() :
+                (getEnsemblGenome() != null ? getEnsemblGenome() :
+                        (getEntrezGeneId() != null ? getEntrezGeneId() :
+                                (getRefseq() != null ? getRefseq() : super.toString()))));
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
     @Transient

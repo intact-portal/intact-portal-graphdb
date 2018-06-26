@@ -12,6 +12,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         if(binaryInteractionEvidence.getParticipantA()!=null)setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
         if(binaryInteractionEvidence.getParticipantB()!=null)setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -207,6 +208,12 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     public String toString() {
         return (getAc() != null ? getAc() : "") + " Binary interaction: participant A=[" + (this.getParticipantA() != null ? this.getParticipantA().toString() : "") + "], participant B=[" + (this.getParticipantB() != null ? this.getParticipantB().toString() : "") + "], Complex expansion=[" + (this.getComplexExpansion() != null ? this.getComplexExpansion().toString() : "") + "]";
 
+    }
+
+    public String createUniqueKey(){
+        String uniqueString=(getAc() != null ? getAc() : getIdentifiers().toString()) + " Binary interaction: participant A=[" + (this.getParticipantA() != null ? this.getParticipantA().toString() : "") + "], participant B=[" + (this.getParticipantB() != null ? this.getParticipantB().toString() : "") + "], Complex expansion=[" + (this.getComplexExpansion() != null ? this.getComplexExpansion().toString() : "") + "]";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
 

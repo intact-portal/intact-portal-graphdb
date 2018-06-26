@@ -16,6 +16,7 @@ import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class GraphAnnotation implements Annotation {
 
         setValue(annotation.getValue());
         setAc(CommonUtility.extractAc(annotation));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -176,5 +177,9 @@ public class GraphAnnotation implements Annotation {
         return this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
     }
 
-
+    public String createUniqueKey(){
+        String uniqueString=this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 }

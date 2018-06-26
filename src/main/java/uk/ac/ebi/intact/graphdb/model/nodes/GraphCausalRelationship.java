@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     public GraphCausalRelationship(CausalRelationship causalRelationship) {
         setRelationType(causalRelationship.getRelationType());
         setTarget(causalRelationship.getTarget());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -143,6 +144,12 @@ public class GraphCausalRelationship implements CausalRelationship {
     @Override
     public String toString() {
         return this.relationType.toString() + ": " + this.target.toString();
+    }
+
+    public String createUniqueKey(){
+        String uniqueString=this.relationType.toString() + ": " + this.target.toString();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
 

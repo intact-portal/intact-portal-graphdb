@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -76,7 +77,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setCreatedDate(binaryInteractionEvidence.getCreatedDate());
         setInteractionType(binaryInteractionEvidence.getInteractionType());
         setAc(CommonUtility.extractAc(binaryInteractionEvidence));
-        setUniqueKey(this.getAc());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
@@ -609,6 +610,13 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     public String toString() {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
     }
+
+    public String createUniqueKey(){
+        String uniqueString=this.getAc();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
+
 
 
 }

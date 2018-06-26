@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -139,6 +140,8 @@ public class GraphClusteredInteraction {
     }
 
     public String createUniqueKey(){
-        return "cluster_"+this.getInteractorPA().getShortName()+"_"+this.getInteractorPB().getShortName();
+        String uniqueString="cluster_"+this.getInteractorPA().getShortName()+"_"+this.getInteractorPB().getShortName();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

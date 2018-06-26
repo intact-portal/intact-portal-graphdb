@@ -15,6 +15,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @NodeEntity
@@ -59,7 +60,7 @@ public class GraphCvTerm implements CvTerm {
         setMODIdentifier(cvTerm.getMODIdentifier());
         setPARIdentifier(cvTerm.getPARIdentifier());
         setAc(CommonUtility.extractAc(cvTerm));
-        setUniqueKey(cvTerm.getShortName());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
@@ -449,5 +450,22 @@ public class GraphCvTerm implements CvTerm {
 
     public void setAc(String ac) {
         this.ac = ac;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="";
+        if(this.getMIIdentifier()!=null){
+            uniqueString=this.getMIIdentifier();
+        }else if(this.getMODIdentifier()!=null){
+            uniqueString=this.getMODIdentifier();
+        }else if(this.getPARIdentifier()!=null){
+            uniqueString=this.getPARIdentifier();
+        }else if(this.getIdentifiers()!=null){
+            uniqueString=this.getIdentifiers().toString();
+        }else if(this.getShortName()!=null){
+            uniqueString=this.getShortName();
+        }
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

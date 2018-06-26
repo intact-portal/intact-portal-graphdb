@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,7 +70,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setType(featureEvidence.getType());
         setRole(featureEvidence.getRole());
         setAc(CommonUtility.extractAc(featureEvidence));
-        setUniqueKey(createUniqueKey(featureEvidence));
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -502,9 +503,10 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public String toString() {
         return "Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
     }
-
-    public String createUniqueKey(Feature feature){
-        return "Feature: " + (feature.getShortName() != null ? feature.getShortName() + " " : "") + (feature.getType() != null ? feature.getType().toString() + " " : "") + (!feature.getRanges().isEmpty() ? "(" + feature.getRanges().toString() + ")" : " (-)");
+    public String createUniqueKey(){
+        String uniqueString="Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (this.getRole() != null ? this.getRole().toString() + " " : "") + (this.getInterpro() != null ? this.getInterpro().toString() + " " : "") + (this.getIdentifiers() != null ? this.getIdentifiers().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
 }
