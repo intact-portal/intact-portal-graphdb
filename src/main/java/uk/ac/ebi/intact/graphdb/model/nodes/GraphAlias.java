@@ -163,7 +163,7 @@ public class GraphAlias implements Alias {
     }
 
     public String createUniqueKey(){
-        String uniqueString=getName() + (this.type != null ? "(" + this.type.toString() + ")" : "");
+        String uniqueString="Alias:"+getName() + (this.type != null ? "(" + this.type.getUniqueKey() + ")" : "");
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

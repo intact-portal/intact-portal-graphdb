@@ -178,7 +178,7 @@ public class GraphAnnotation implements Annotation {
     }
 
     public String createUniqueKey(){
-        String uniqueString=this.topic.toString() + (getValue() != null ? ": " + getValue() : "");
+        String uniqueString="Annotation:"+this.topic.getUniqueKey() + (getValue() != null ? ": " + getValue() : "");
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

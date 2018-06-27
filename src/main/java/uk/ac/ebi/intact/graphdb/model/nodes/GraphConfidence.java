@@ -154,7 +154,7 @@ public class GraphConfidence implements Confidence {
     }
 
     public String createUniqueKey(){
-        String uniqueString=this.type.toString() + ": " + getValue();
+        String uniqueString="Confidence:"+this.type.getUniqueKey() + ": " + getValue();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

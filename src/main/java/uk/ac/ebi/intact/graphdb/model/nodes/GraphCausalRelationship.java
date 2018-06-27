@@ -147,7 +147,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     }
 
     public String createUniqueKey(){
-        String uniqueString=this.relationType.toString() + ": " + this.target.toString();
+        String uniqueString="CausalRelationship:"+this.relationType.getUniqueKey() + ": " + this.target.getUniqueKey();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

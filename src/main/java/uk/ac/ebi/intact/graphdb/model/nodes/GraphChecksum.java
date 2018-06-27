@@ -152,7 +152,7 @@ public class GraphChecksum implements Checksum {
     }
 
     public String createUniqueKey(){
-        String uniqueString=this.method.toString() + ": " + getValue();
+        String uniqueString="Checksum:"+this.method.getUniqueKey() + ": " + getValue();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

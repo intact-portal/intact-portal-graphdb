@@ -16,6 +16,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         super(nucleicAcid,true);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -298,6 +299,14 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         return "Nucleic acid: "
                 + (getDdbjEmblGenbank() != null ? getDdbjEmblGenbank()
                 : (getRefseq() != null ? getRefseq() : super.toString()));
+    }
+
+    public String createUniqueKey(){
+        String uniqueString= "Nucleic acid: "
+                + (getDdbjEmblGenbank() != null ? getDdbjEmblGenbank()
+                : (getRefseq() != null ? getRefseq() : super.getUniqueKey()));
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
     @Transient

@@ -62,7 +62,7 @@ public class GraphGene extends GraphMolecule implements Gene {
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());
         setRefseq(gene.getRefseq());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
              createNodeNatively();
@@ -452,7 +452,7 @@ public class GraphGene extends GraphMolecule implements Gene {
                 + (getEnsembl() != null ? getEnsembl() :
                 (getEnsemblGenome() != null ? getEnsemblGenome() :
                         (getEntrezGeneId() != null ? getEntrezGeneId() :
-                                (getRefseq() != null ? getRefseq() : super.toString()))));
+                                (getRefseq() != null ? getRefseq() : super.getUniqueKey()))));
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

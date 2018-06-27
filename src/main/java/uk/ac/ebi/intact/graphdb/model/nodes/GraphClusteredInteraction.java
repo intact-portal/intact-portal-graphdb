@@ -30,8 +30,8 @@ public class GraphClusteredInteraction {
     private String uniqueKey;
 
     private Set<GraphBinaryInteractionEvidence> interactions;
-    private Interactor interactorPA;
-    private Interactor interactorPB;
+    private GraphInteractor interactorPA;
+    private GraphInteractor interactorPB;
     private double miscore;
 
     @Transient
@@ -97,20 +97,37 @@ public class GraphClusteredInteraction {
         this.miscore = miscore;
     }
 
-    public Interactor getInteractorPA() {
+    public GraphInteractor getInteractorPA() {
         return interactorPA;
     }
 
-    public void setInteractorPA(Interactor interactorPA) {
-        this.interactorPA = interactorPA;
+    public void setInteractorPA(Interactor interactorA) {
+        if (interactorA != null) {
+            if (interactorA instanceof GraphInteractor) {
+                this.interactorPA = (GraphInteractor) interactorA;
+            } else {
+                this.interactorPA = new GraphInteractor(interactorA,false);
+            }
+        } else {
+            this.interactorPA = null;
+        }
     }
 
-    public Interactor getInteractorPB() {
+    public GraphInteractor getinteractorPB() {
         return interactorPB;
     }
 
-    public void setInteractorPB(Interactor interactorPB) {
-        this.interactorPB = interactorPB;
+    public void setInteractorPB(Interactor interactorB) {
+        if (interactorB != null) {
+            if (interactorB instanceof GraphInteractor) {
+                this.interactorPB = (GraphInteractor) interactorB;
+            } else {
+                this.interactorPB = new GraphInteractor(interactorB,false);
+            }
+        } else {
+            this.interactorPB = null;
+        }
+
     }
 
 
@@ -140,7 +157,7 @@ public class GraphClusteredInteraction {
     }
 
     public String createUniqueKey(){
-        String uniqueString="cluster_"+this.getInteractorPA().getShortName()+"_"+this.getInteractorPB().getShortName();
+        String uniqueString="Cluster:"+this.interactorPA.getUniqueKey()+"_"+this.interactorPB.getUniqueKey();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

@@ -91,7 +91,7 @@ public class GraphAuthor {
     }
 
     public String createUniqueKey(){
-        String uniqueString=getAuthorName();
+        String uniqueString="Author:"+getAuthorName();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

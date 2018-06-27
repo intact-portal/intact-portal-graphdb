@@ -211,7 +211,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public String createUniqueKey(){
-        String uniqueString=(getAc() != null ? getAc() : getIdentifiers().toString()) + " Binary interaction: participant A=[" + (this.getParticipantA() != null ? this.getParticipantA().toString() : "") + "], participant B=[" + (this.getParticipantB() != null ? this.getParticipantB().toString() : "") + "], Complex expansion=[" + (this.getComplexExpansion() != null ? this.getComplexExpansion().toString() : "") + "]";
+        String uniqueString="BIE:"+(getAc() != null ? getAc() : getIdentifiers().toString()) + " Binary interaction: participant A=[" + (this.participantA != null ? this.participantA.getUniqueKey() : "") + "], participant B=[" + (this.participantB != null ? this.participantB.getUniqueKey() : "") + "], Complex expansion=[" + (this.complexExpansion != null ? this.complexExpansion.getUniqueKey() : "") + "]";
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

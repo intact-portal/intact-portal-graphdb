@@ -74,7 +74,7 @@ public class GraphInteractor implements Interactor {
     }
 
     public void initialzeNodeProperties(){
-        nodeProperties.put("uniqueKey", this.getUniqueKey());
+
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
@@ -85,7 +85,7 @@ public class GraphInteractor implements Interactor {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
-
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());

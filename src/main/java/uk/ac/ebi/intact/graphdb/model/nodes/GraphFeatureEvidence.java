@@ -504,7 +504,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         return "Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
     }
     public String createUniqueKey(){
-        String uniqueString="Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (this.getRole() != null ? this.getRole().toString() + " " : "") + (this.getInterpro() != null ? this.getInterpro().toString() + " " : "") + (this.getIdentifiers() != null ? this.getIdentifiers().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
+        String uniqueString="Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.type != null ? this.type.getUniqueKey() + " " : "") + (this.role != null ? this.role.getUniqueKey() + " " : "") + (this.getInterpro() != null ? this.getInterpro().toString() + " " : "") + (this.getIdentifiers() != null ? this.getIdentifiers().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

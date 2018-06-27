@@ -106,7 +106,7 @@ public class GraphCurationDepth {
     }
 
     public String createUniqueKey(){
-        String uniqueString=this.getCurationDepth();
+        String uniqueString="CurationDepth:"+this.getCurationDepth();
         BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
         return bi.toString();
     }

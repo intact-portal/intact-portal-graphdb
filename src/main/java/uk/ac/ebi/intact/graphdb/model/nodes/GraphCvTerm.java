@@ -453,7 +453,7 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public String createUniqueKey(){
-        String uniqueString="";
+        String uniqueString="CVTerm:";
         if(this.getMIIdentifier()!=null){
             uniqueString=this.getMIIdentifier();
         }else if(this.getMODIdentifier()!=null){
