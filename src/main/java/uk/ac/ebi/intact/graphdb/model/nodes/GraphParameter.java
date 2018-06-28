@@ -17,6 +17,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class GraphParameter implements Parameter {
         setUnit(parameter.getUnit());
         setValue(parameter.getValue());
         setAc(CommonUtility.extractAc(parameter));
-        setUniqueKey(this.getAc());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -239,5 +240,15 @@ public class GraphParameter implements Parameter {
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Parameter:";
+        uniqueString=uniqueString+this.type!=null?this.type.getUniqueKey():"";
+        uniqueString=uniqueString+(this.unit!=null?this.unit.getUniqueKey():"");
+        uniqueString=uniqueString+(this.value!=null?this.value.getUniqueKey():"");
+        uniqueString=uniqueString+(this.uncertainty!=null?this.uncertainty.toString():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

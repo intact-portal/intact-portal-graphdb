@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -10,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,9 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     @GraphId
     private Long graphId;
+
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -28,6 +33,8 @@ public class GraphExperimentalEntity extends GraphEntity {
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
         //TODO...
         super(experimentalEntity,true);
+        setUniqueKey(createUniqueKey());
+
         if (CreationConfig.createNatively) {
             createNodeNatively();
             if(!isAlreadyCreated()) {
@@ -73,5 +80,23 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    @Override
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    @Override
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="ExperimentalEntity:";
+        uniqueString=uniqueString+(super.getUniqueKey()!=null?super.getUniqueKey():"");
+        uniqueString=uniqueString+(this.getFeatures()!=null?this.getFeatures().toString():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

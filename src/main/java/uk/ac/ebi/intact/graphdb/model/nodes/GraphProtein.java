@@ -16,6 +16,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     @GraphId
     private Long graphId;
+    private String uniqueKey;
 
     private String uniprotName;
 
@@ -52,6 +54,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         setRefseq(protein.getRefseq());
         setChecksums(protein.getChecksums());
         setGeneName(protein.getGeneName());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -66,6 +69,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             if(this.getUniprotName()!=null) nodeProperties.put("uniprotName", this.getUniprotName());
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphProtein.class);
@@ -395,6 +399,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
                         (getRefseq() != null ? getRefseq() : super.toString())));
     }
 
+    @Override
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    @Override
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
     @Transient
     private class ProteinIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public ProteinIdentifierList() {
@@ -459,5 +473,15 @@ public class GraphProtein extends GraphPolymer implements Protein {
         protected void clearProperties() {
             clearPropertiesLinkedToAliases();
         }
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Protein:";
+        uniqueString=uniqueString+this.getUniprotkb()!=null?this.getUniprotkb():"";
+        uniqueString=uniqueString+(this.getRefseq()!=null?this.getRefseq():"");
+        uniqueString=uniqueString+(this.getRogid()!=null?this.getRogid():"");
+        uniqueString=uniqueString+(this.getGeneName()!=null?this.getGeneName():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

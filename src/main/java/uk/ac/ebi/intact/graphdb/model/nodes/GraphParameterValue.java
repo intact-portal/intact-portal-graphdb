@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -11,6 +12,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,11 +22,15 @@ public class GraphParameterValue extends ParameterValue {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
     @Transient
     private boolean isAlreadyCreated;
 
     public GraphParameterValue(BigDecimal factor, short base, short exponent) {
         super(factor, base, exponent);
+        setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
@@ -35,7 +41,7 @@ public class GraphParameterValue extends ParameterValue {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphParameterValue.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -61,5 +67,20 @@ public class GraphParameterValue extends ParameterValue {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="ParameterValue:";
+        uniqueString=uniqueString+(this.getFactor().multiply(BigDecimal.valueOf(Math.pow(this.getBase(), this.getExponent()))));
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

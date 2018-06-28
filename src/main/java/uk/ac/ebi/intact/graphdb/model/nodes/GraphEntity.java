@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -13,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +25,8 @@ public class GraphEntity implements ExperimentalEntity {
 
     @GraphId
     private Long graphId;
+
+    private String uniqueKey;
 
     private GraphInteractor interactor;
     private Collection<GraphFeatureEvidence> features;
@@ -42,6 +46,7 @@ public class GraphEntity implements ExperimentalEntity {
         setInteractor(entity.getInteractor());
         setStoichiometry(entity.getStoichiometry());
         setChangeListener(entity.getChangeListener());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
@@ -68,7 +73,7 @@ public class GraphEntity implements ExperimentalEntity {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Label[] labels = CommonUtility.getLabels(GraphEntity.class);
-
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
@@ -269,4 +274,19 @@ public class GraphEntity implements ExperimentalEntity {
         this.graphId = graphId;
     }
 
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Entity:";
+        uniqueString=uniqueString+this.interactor!=null?this.interactor.getUniqueKey():"";
+        uniqueString=uniqueString+(this.stoichiometry!=null?this.stoichiometry.getUniqueKey():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 }

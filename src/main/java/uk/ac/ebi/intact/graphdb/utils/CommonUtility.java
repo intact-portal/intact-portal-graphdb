@@ -245,7 +245,7 @@ public class CommonUtility {
             id= Constants.createdNodeIdMap.get(uniqueKey);
         }else {
             id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
-            if (uniqueKey!=null) {
+            if (uniqueKey!=null&&!uniqueKey.trim().equals("")) {
                 Constants.createdNodeIdMap.put(uniqueKey, id);
             }
         }

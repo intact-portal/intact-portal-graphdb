@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class GraphResultingSequence implements ResultingSequence {
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -166,5 +167,13 @@ public class GraphResultingSequence implements ResultingSequence {
 
     public String toString() {
         return (this.getOriginalSequence() != null ? "original sequence: " + this.getOriginalSequence() : "") + (this.getNewSequence() != null ? "new sequence: " + this.getNewSequence() : "");
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="ResultingSequence:";
+        uniqueString=uniqueString+this.getOriginalSequence()!=null?this.getOriginalSequence():"";
+        uniqueString=uniqueString+this.getNewSequence()!=null?this.getNewSequence():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

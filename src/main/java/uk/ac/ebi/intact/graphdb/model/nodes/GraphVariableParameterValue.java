@@ -12,6 +12,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         setValue(variableParameterValue.getValue());
         setOrder(variableParameterValue.getOrder());
         setVariableParameter(variableParameterValue.getVariableParameter());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -170,5 +171,14 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     @Override
     public String toString() {
         return (getValue() != null ? getValue().toString() : "-");
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="VariableParameterValue:";
+        uniqueString=uniqueString+this.getVariableParameter()!=null?this.getVariableParameter().getDescription():"";
+        uniqueString=uniqueString+this.getValue()!=null?this.getValue():"";
+        uniqueString=uniqueString+this.getOrder()!=null?this.getOrder().toString():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

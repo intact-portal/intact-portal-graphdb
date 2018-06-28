@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -70,7 +71,7 @@ public class GraphPublication implements Publication {
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
         setAc(CommonUtility.extractAc(publication));
-        setUniqueKey(this.getPubmedIdStr());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -683,5 +684,12 @@ public class GraphPublication implements Publication {
         protected void clearProperties() {
             clearPropertiesLinkedToXrefs();
         }
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Publication:";
+        uniqueString=uniqueString+this.getPubmedIdStr()!=null?this.getPubmedIdStr():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

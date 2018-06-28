@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.*;
 
 
@@ -78,7 +79,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         }
         setChangeListener(participantEvidence.getChangeListener());
         setAc(CommonUtility.extractAc(participantEvidence));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -543,5 +544,19 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public String toString() {
         return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null?", stoichiometry: " + this.getStoichiometry().toString():"") + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="ParticipantEvidence:";
+        uniqueString=uniqueString+this.interactor!=null?this.interactor.getUniqueKey():"";
+        uniqueString=uniqueString+(this.biologicalRole!=null?this.biologicalRole.getUniqueKey():"");
+        uniqueString=uniqueString+(this.experimentalRole!=null?this.experimentalRole.getUniqueKey():"");
+        uniqueString=uniqueString+(this.getIdentificationMethods()!=null?this.getIdentificationMethods().toString():"");
+        uniqueString=uniqueString+(this.getExperimentalPreparations()!=null?this.getExperimentalPreparations().toString():"");
+        uniqueString=uniqueString+(this.expressedIn!=null?this.expressedIn.getUniqueKey():"");
+        uniqueString=uniqueString+(this.getParameters()!=null?this.getParameters().toString():"");
+        uniqueString=uniqueString+(this.getFeatures()!=null?this.getFeatures().toString():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

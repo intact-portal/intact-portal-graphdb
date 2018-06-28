@@ -12,6 +12,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
+        setUniqueKey(createUniqueKey());
+
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
@@ -135,5 +138,13 @@ public class GraphStoichiometry implements Stoichiometry {
     @Override
     public String toString() {
         return "minValue: " + getMinValue() + ", maxValue: " + getMaxValue();
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Stoichiometry:";
+        uniqueString=uniqueString+this.getMinValue();
+        uniqueString=uniqueString+this.getMaxValue();
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

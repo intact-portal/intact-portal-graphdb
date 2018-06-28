@@ -15,6 +15,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     @GraphId
     private Long graphId;
+    private String uniqueKey;
 
     private String sequence;
 
@@ -45,6 +47,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     public GraphPolymer(Polymer polymer,boolean childAlreadyCreated) {
         super(polymer);
         setSequence(polymer.getSequence());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
@@ -64,6 +67,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Label[] labels = CommonUtility.getLabels(GraphPolymer.class);
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
@@ -176,5 +180,23 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     @Override
     public void setNodeProperties(Map<String, Object> nodeProperties) {
         this.nodeProperties = nodeProperties;
+    }
+
+    @Override
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    @Override
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Polymer:";
+        uniqueString=uniqueString+this.getOrganism()!=null?((GraphOrganism)this.getOrganism()).getUniqueKey():"";
+        uniqueString=uniqueString+(this.getSequence()!=null?this.getSequence():"");
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

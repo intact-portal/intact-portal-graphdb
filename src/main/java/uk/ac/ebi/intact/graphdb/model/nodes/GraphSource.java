@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class GraphSource extends GraphCvTerm implements Source {
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
         setAc(CommonUtility.extractAc(source));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -292,4 +293,11 @@ public class GraphSource extends GraphCvTerm implements Source {
             DefaultSource.this.clearPropertiesLinkedToAnnotations();
         }
     }*/
+
+    public String createUniqueKey(){
+        String uniqueString="Source:";
+        uniqueString=uniqueString+super.getUniqueKey()!=null?super.getUniqueKey():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 }

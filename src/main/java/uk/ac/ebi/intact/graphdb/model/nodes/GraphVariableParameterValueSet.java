@@ -2,17 +2,20 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.model.VariableParameterValueSet;
 import psidev.psi.mi.jami.model.impl.DefaultVariableParameterValueSet;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
 @NodeEntity
 public class GraphVariableParameterValueSet extends DefaultVariableParameterValueSet {
@@ -20,15 +23,26 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     @GraphId
     private Long graphId;
 
+    @Index(unique = true,primary = true)
+    private String uniqueKey;
+
+    private Collection<GraphVariableParameterValue> variableParameterValues;
+
     @Transient
     private boolean isAlreadyCreated;
 
     //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet){
+        setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
+            if(!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
 
         }
+
+        setVariableParameterValueSets(Arrays.asList((VariableParameterValue[])variableParameterValueSet.toArray()));
     }
 
     public void createNodeNatively() {
@@ -36,7 +50,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphVariableParameterValueSet.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -46,6 +60,10 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createVariableParameterValueRelationShips(variableParameterValues, this.graphId, "variableParameter");
     }
 
 
@@ -63,5 +81,35 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public Collection<GraphVariableParameterValue> getVariableParameterValues() {
+        if (this.variableParameterValues == null) {
+            this.variableParameterValues = new ArrayList<GraphVariableParameterValue>();
+        }
+        return this.variableParameterValues;
+    }
+
+    public void setVariableParameterValueSets(Collection<VariableParameterValue> variableParameterValues) {
+        if (variableParameterValues != null) {
+            this.variableParameterValues = CollectionAdaptor.convertVariableParameterValueIntoGraphModel(variableParameterValues);
+        } else {
+            this.variableParameterValues = new ArrayList<GraphVariableParameterValue>();
+        }
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="VariableParameterValueSet:";
+        uniqueString=uniqueString+this.getVariableParameterValues()!=null?this.getVariableParameterValues().toString():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }

@@ -15,6 +15,7 @@ import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class GraphOrganism implements Organism {
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
         setAc(CommonUtility.extractAc(organism));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -291,6 +292,25 @@ public class GraphOrganism implements Organism {
 
         return objName;
     }
+
+    public String createUniqueKey(){
+        String uniqueString = "Organism";
+        if (getTaxId() != 0) {
+            uniqueString = uniqueString + "Tax Id: " + getTaxId();
+        }
+        if (cellType != null && cellType.getUniqueKey() != null) {
+            uniqueString = uniqueString + "Cell Type :" + cellType.getUniqueKey();
+        }
+        if (tissue != null && tissue.getUniqueKey() != null) {
+            uniqueString = uniqueString + "Tissue :" + tissue.getUniqueKey();
+        }
+        if (compartment != null && compartment.getUniqueKey() != null) {
+            uniqueString = uniqueString + "Compartment :" + compartment.getUniqueKey();
+        }
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
+
 
 
 }

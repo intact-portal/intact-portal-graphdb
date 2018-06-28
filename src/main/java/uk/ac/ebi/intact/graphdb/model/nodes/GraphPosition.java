@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class GraphPosition implements Position {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private GraphCvTerm status;
@@ -44,11 +45,11 @@ public class GraphPosition implements Position {
         setStart(position.getStart());
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -60,13 +61,13 @@ public class GraphPosition implements Position {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-             nodeProperties.put("start", this.getStart());
+            nodeProperties.put("start", this.getStart());
             nodeProperties.put("end", this.getEnd());
             nodeProperties.put("isPositionUndetermined", this.isPositionUndetermined());
 
             Label[] labels = CommonUtility.getLabels(GraphParameter.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -96,7 +97,7 @@ public class GraphPosition implements Position {
             if (status instanceof GraphCvTerm) {
                 this.status = (GraphCvTerm) status;
             } else {
-                this.status = new GraphCvTerm(status,false);
+                this.status = new GraphCvTerm(status, false);
             }
         } else {
             this.status = null;
@@ -167,5 +168,14 @@ public class GraphPosition implements Position {
         return UnambiguousPositionComparator.hashCode(this);
     }
 
+    public String createUniqueKey() {
+        String uniqueString = "Position:";
+        uniqueString = uniqueString + (this.status != null ? this.status.getUniqueKey() : "");
+        uniqueString = uniqueString + (this.isPositionUndetermined());
+        uniqueString = uniqueString + (this.getStart());
+        uniqueString = uniqueString + (this.getEnd());
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
+    }
 
 }

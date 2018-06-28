@@ -17,6 +17,7 @@ import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -250,7 +251,12 @@ public class GraphXref implements Xref {
     }
 
     public String createUniqueKey(){
-        return "xref_"+ this.getId() ;
+        String uniqueString="Xref:";
+        uniqueString=uniqueString+this.database!=null?this.database.getUniqueKey():"";
+        uniqueString=uniqueString+this.qualifier!=null?this.qualifier.getUniqueKey():"";
+        uniqueString=uniqueString+this.getId()!=null?this.getId():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 
     public String getAc() {

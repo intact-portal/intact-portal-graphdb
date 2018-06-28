@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class GraphRange implements Range {
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
-        setUniqueKey(this.toString());
+        setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -211,5 +212,13 @@ public class GraphRange implements Range {
     @Override
     public String toString() {
         return this.start.toString() + " - " + this.end.toString() + (isLink() ? "(linked)" : "");
+    }
+
+    public String createUniqueKey(){
+        String uniqueString="Range:";
+        uniqueString=uniqueString+this.start!=null?this.start.getUniqueKey():"";
+        uniqueString=uniqueString+this.end!=null?this.end.getUniqueKey():"";
+        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
+        return bi.toString();
     }
 }
