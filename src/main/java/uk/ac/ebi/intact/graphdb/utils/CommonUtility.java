@@ -5,6 +5,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import psidev.psi.mi.jami.model.InteractionEvidence;
 import psidev.psi.mi.jami.model.Xref;
+import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousExternalIdentifierComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.jami.model.IntactPrimaryObject;
@@ -27,6 +28,26 @@ public class CommonUtility {
         }
 
         return ac;
+    }
+
+    public static int identifiersHashCode(Collection<Xref> xrefs){
+        int hashcode=0;
+
+        for (Xref ref : xrefs){
+            hashcode = 31*hashcode + UnambiguousExternalIdentifierComparator.hashCode(ref);
+        }
+
+        return hashcode;
+    }
+
+    public static int identifiersGraphHashCode(Collection<GraphXref> xrefs){
+        int hashcode=0;
+
+        for (Xref ref : xrefs){
+            hashcode = 31*hashcode + UnambiguousExternalIdentifierComparator.hashCode(ref);
+        }
+
+        return hashcode;
     }
 
     /**

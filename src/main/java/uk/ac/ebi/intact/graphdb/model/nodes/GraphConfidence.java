@@ -13,7 +13,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,11 +37,11 @@ public class GraphConfidence implements Confidence {
     public GraphConfidence(Confidence confidence) {
         setType(confidence.getType());
         setValue(confidence.getValue());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(confidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -58,7 +57,7 @@ public class GraphConfidence implements Confidence {
 
             Label[] labels = CommonUtility.getLabels(GraphConfidence.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
@@ -98,7 +97,7 @@ public class GraphConfidence implements Confidence {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type,false);
+                this.type = new GraphCvTerm(type, false);
             }
         } else {
             this.type = null;
@@ -153,10 +152,8 @@ public class GraphConfidence implements Confidence {
         return UnambiguousConfidenceComparator.hashCode(this);
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Confidence:"+this.type.getUniqueKey() + ": " + getValue();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Confidence confidence) {
+        return confidence != null ? confidence.hashCode() + "" : "";
     }
 
 }

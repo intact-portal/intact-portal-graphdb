@@ -14,7 +14,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,11 +46,11 @@ public class GraphAlias implements Alias {
 
         setName(alias.getName());
         setAc(CommonUtility.extractAc(alias));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(alias));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -69,7 +68,7 @@ public class GraphAlias implements Alias {
 
         Label[] labels = CommonUtility.getLabels(GraphAlias.class);
 
-        NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+        NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
         setGraphId(nodeDataFeed.getGraphId());
         setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
     }
@@ -107,7 +106,7 @@ public class GraphAlias implements Alias {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type,false);
+                this.type = new GraphCvTerm(type, false);
             }
         } else {
             this.type = null;
@@ -162,10 +161,8 @@ public class GraphAlias implements Alias {
         return getName() + (this.type != null ? "(" + this.type.toString() + ")" : "");
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Alias:"+getName() + (this.type != null ? "(" + this.type.getUniqueKey() + ")" : "");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Alias alias) {
+        return alias != null ? alias.hashCode() + "" : "";
     }
 
 

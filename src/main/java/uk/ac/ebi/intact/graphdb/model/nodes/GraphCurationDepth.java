@@ -11,7 +11,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,14 +31,14 @@ public class GraphCurationDepth {
     @Transient
     private boolean isAlreadyCreated;
 
-    public GraphCurationDepth(){
+    public GraphCurationDepth() {
 
     }
 
-    public GraphCurationDepth(CurationDepth curationDepth){
+    public GraphCurationDepth(CurationDepth curationDepth) {
         setCurationDepth(curationDepth.name());
         setAc(CommonUtility.extractAc(curationDepth));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(curationDepth));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -56,7 +55,7 @@ public class GraphCurationDepth {
             nodeProperties.put("curationDepth", this.getCurationDepth());
             Label[] labels = CommonUtility.getLabels(GraphCurationDepth.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -105,9 +104,16 @@ public class GraphCurationDepth {
         this.ac = ac;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="CurationDepth:"+this.getCurationDepth();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getCurationDepth() != null) {
+            hashcode = 31 * hashcode + this.getCurationDepth().toLowerCase().hashCode();
+        }
+
+        return hashcode;
+    }
+
+    public String createUniqueKey(CurationDepth curationDepth) {
+        return curationDepth != null ? curationDepth.hashCode() + "" : "";
     }
 }

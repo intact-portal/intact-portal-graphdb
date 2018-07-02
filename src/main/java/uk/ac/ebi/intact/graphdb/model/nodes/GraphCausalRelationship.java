@@ -6,15 +6,13 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.CausalRelationship;
-import psidev.psi.mi.jami.model.CvTerm;
-import psidev.psi.mi.jami.model.Entity;
-import psidev.psi.mi.jami.model.Participant;
+import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.utils.comparator.participant.CausalRelationshipComparator;
+import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousCausalRelationshipComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +37,11 @@ public class GraphCausalRelationship implements CausalRelationship {
     public GraphCausalRelationship(CausalRelationship causalRelationship) {
         setRelationType(causalRelationship.getRelationType());
         setTarget(causalRelationship.getTarget());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(causalRelationship));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -58,7 +56,7 @@ public class GraphCausalRelationship implements CausalRelationship {
 
             Label[] labels = CommonUtility.getLabels(GraphCausalRelationship.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
@@ -100,7 +98,7 @@ public class GraphCausalRelationship implements CausalRelationship {
             if (relationType instanceof GraphCvTerm) {
                 this.relationType = (GraphCvTerm) relationType;
             } else {
-                this.relationType = new GraphCvTerm(relationType,false);
+                this.relationType = new GraphCvTerm(relationType, false);
             }
         } else {
             this.relationType = null;
@@ -117,7 +115,7 @@ public class GraphCausalRelationship implements CausalRelationship {
             if (target instanceof GraphEntity) {
                 this.target = (GraphEntity) target;
             } else {
-                this.target = new GraphEntity(target,false);
+                this.target = new GraphEntity(target, false);
             }
         } else {
             this.target = null;
@@ -141,15 +139,33 @@ public class GraphCausalRelationship implements CausalRelationship {
         isAlreadyCreated = alreadyCreated;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof CausalRelationship)) {
+            return false;
+        }
+
+        return UnambiguousCausalRelationshipComparator.areEquals(this, (CausalRelationship) o);
+    }
+
+    @Override
+    public int hashCode() {
+        return UnambiguousCausalRelationshipComparator.hashCode(this);
+    }
+
+
     @Override
     public String toString() {
         return this.relationType.toString() + ": " + this.target.toString();
     }
 
-    public String createUniqueKey(){
-        String uniqueString="CausalRelationship:"+this.relationType.getUniqueKey() + ": " + this.target.getUniqueKey();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(CausalRelationship causalRelationship) {
+        return causalRelationship != null ? causalRelationship.hashCode() + "" : "";
     }
 
 

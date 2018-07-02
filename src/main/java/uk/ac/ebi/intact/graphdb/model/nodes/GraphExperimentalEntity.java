@@ -6,7 +6,10 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.model.Experiment;
 import psidev.psi.mi.jami.model.ExperimentalEntity;
+import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousExperimentComparator;
+import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousExperimentalEntityComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -91,6 +94,23 @@ public class GraphExperimentalEntity extends GraphEntity {
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
+
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Cluster".hashCode();
+
+        hashcode = 31 * hashcode + super.hashCode();
+
+
+        /*if (this.getinteractorPB() != null) {
+            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();
+        }*/
+
+
+        return hashcode;
+    }
+
 
     public String createUniqueKey(){
         String uniqueString="ExperimentalEntity:";

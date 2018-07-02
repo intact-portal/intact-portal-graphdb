@@ -12,7 +12,6 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,18 +45,21 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
-        super(binaryInteractionEvidence,true);
+        super(binaryInteractionEvidence, true);
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
-        if(binaryInteractionEvidence.getParticipantA()!=null)setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
-        if(binaryInteractionEvidence.getParticipantB()!=null)setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
+
+        if (binaryInteractionEvidence.getParticipantA() != null)
+            setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
+        if (binaryInteractionEvidence.getParticipantB() != null)
+            setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(binaryInteractionEvidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -72,7 +74,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
@@ -139,7 +141,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (expansion instanceof GraphCvTerm) {
                 this.complexExpansion = (GraphCvTerm) expansion;
             } else {
-                this.complexExpansion = new GraphCvTerm(expansion,false);
+                this.complexExpansion = new GraphCvTerm(expansion, false);
             }
         } else {
             this.complexExpansion = null;
@@ -155,7 +157,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorA instanceof GraphInteractor) {
                 this.interactorA = (GraphInteractor) interactorA;
             } else {
-                this.interactorA = new GraphInteractor(interactorA,false);
+                this.interactorA = new GraphInteractor(interactorA, false);
             }
         } else {
             this.interactorA = null;
@@ -171,7 +173,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorB instanceof GraphInteractor) {
                 this.interactorB = (GraphInteractor) interactorB;
             } else {
-                this.interactorB = new GraphInteractor(interactorB,false);
+                this.interactorB = new GraphInteractor(interactorB, false);
             }
         } else {
             this.interactorB = null;
@@ -210,10 +212,35 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     }
 
-    public String createUniqueKey(){
-        String uniqueString="BIE:"+(getAc() != null ? getAc() : getIdentifiers().toString()) + " Binary interaction: participant A=[" + (this.participantA != null ? this.participantA.getUniqueKey() : "") + "], participant B=[" + (this.participantB != null ? this.participantB.getUniqueKey() : "") + "], Complex expansion=[" + (this.complexExpansion != null ? this.complexExpansion.getUniqueKey() : "") + "]";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getParticipantA() != null) {
+            hashcode = 31 * hashcode + this.getParticipantA().hashCode();
+        } else if (this.getParticipantB() != null) {
+            hashcode = 31 * hashcode + this.getParticipantB().hashCode();
+        } else if (this.getComplexExpansion() != null) {
+            hashcode = 31 * hashcode + this.getComplexExpansion().hashCode();
+        } else if (!this.getIdentifiers().isEmpty()) {
+            hashcode = hashcode + CommonUtility.identifiersGraphHashCode(this.getIdentifiers());
+        }
+
+        return hashcode;
+    }
+
+    public String createUniqueKey(BinaryInteractionEvidence binaryInteractionEvidence) {
+        // since there was not hashcode implemented in jami, we had to come up with this
+        int hashcode = 31;
+        if (binaryInteractionEvidence.getParticipantA() != null) {
+            hashcode = 31 * hashcode + binaryInteractionEvidence.getParticipantA().hashCode();
+        } else if (binaryInteractionEvidence.getParticipantB() != null) {
+            hashcode = 31 * hashcode + binaryInteractionEvidence.getParticipantB().hashCode();
+        } else if (binaryInteractionEvidence.getComplexExpansion() != null) {
+            hashcode = 31 * hashcode + binaryInteractionEvidence.getComplexExpansion().hashCode();
+        } else if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
+            hashcode = hashcode + CommonUtility.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
+        }
+
+        return hashcode + "";
     }
 
 

@@ -1,9 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.cypher.internal.frontend.v2_3.ast.functions.Exp;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousExperimentComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
@@ -53,7 +56,7 @@ public class GraphExperiment implements Experiment {
         setHostOrganism(experiment.getHostOrganism());
         setPubmedId(experiment.getPublication().getPubmedId());
         setAc(CommonUtility.extractAc(experiment));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(experiment));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -425,6 +428,23 @@ public class GraphExperiment implements Experiment {
     }
 
     @Override
+    public int hashCode() {
+        return UnambiguousExperimentComparator.hashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Experiment)) {
+            return false;
+        }
+
+        return UnambiguousExperimentComparator.areEquals(this, (Experiment) o);
+    }
+    @Override
     public String toString() {
         return "Experiment: "
                 + (getPubmedId() != null ? getPubmedId() : "no publication")
@@ -432,9 +452,7 @@ public class GraphExperiment implements Experiment {
                 + (getHostOrganism() != null ? ", " + getHostOrganism().toString() : "") + " )";
     }
 
-    public String createUniqueKey(){
-        String uniqueString=this.getAc();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Experiment experiment){
+        return experiment != null ? experiment.hashCode() + "" : "";
     }
 }

@@ -9,7 +9,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public class GraphAuthor {
     @Transient
     private boolean isAlreadyCreated;
 
-    public GraphAuthor(){
+    public GraphAuthor() {
 
     }
 
@@ -52,7 +51,7 @@ public class GraphAuthor {
 
         Label[] labels = CommonUtility.getLabels(GraphAlias.class);
 
-        NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+        NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
         setGraphId(nodeDataFeed.getGraphId());
         setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
     }
@@ -90,9 +89,17 @@ public class GraphAuthor {
         isAlreadyCreated = alreadyCreated;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Author:"+getAuthorName();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getAuthorName() != null) {
+            hashcode = 31 * hashcode + this.getAuthorName().toLowerCase().hashCode();
+        }
+
+        return hashcode;
+    }
+
+    public String createUniqueKey() {
+        return hashCode() + "";
     }
 }

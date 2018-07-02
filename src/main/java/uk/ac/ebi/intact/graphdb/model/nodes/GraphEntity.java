@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -139,8 +138,8 @@ public class GraphEntity implements ExperimentalEntity {
         if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
             graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(feature.getShortName());
 
-        }else{
-            graphFeatureEvidence=new GraphFeatureEvidence(feature);
+        } else {
+            graphFeatureEvidence = new GraphFeatureEvidence(feature);
         }
         if (getFeatures().add(graphFeatureEvidence)) {
             feature.setParticipant(this);
@@ -282,11 +281,23 @@ public class GraphEntity implements ExperimentalEntity {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Entity:";
-        uniqueString=uniqueString+this.interactor!=null?this.interactor.getUniqueKey():"";
-        uniqueString=uniqueString+(this.stoichiometry!=null?this.stoichiometry.getUniqueKey():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+
+    @Override
+    public int hashCode() {
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Entity".hashCode();
+        if (this.getInteractor() != null) {
+            hashcode = 31 * hashcode + this.getInteractor().hashCode();
+        }
+        if (this.getStoichiometry() != null) {
+            hashcode = 31 * hashcode + this.getStoichiometry().hashCode();
+        }
+        return hashcode;
+    }
+
+
+    public String createUniqueKey() {
+        return hashCode() + "";
     }
 }

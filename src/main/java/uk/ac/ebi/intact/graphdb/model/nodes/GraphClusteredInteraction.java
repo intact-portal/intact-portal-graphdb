@@ -6,14 +6,12 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.Feature;
 import psidev.psi.mi.jami.model.Interactor;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +35,7 @@ public class GraphClusteredInteraction {
     @Transient
     private boolean isAlreadyCreated;
 
-    public GraphClusteredInteraction(){
+    public GraphClusteredInteraction() {
 
     }
 
@@ -49,7 +47,7 @@ public class GraphClusteredInteraction {
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -65,7 +63,7 @@ public class GraphClusteredInteraction {
 
             Label[] labels = CommonUtility.getLabels(GraphClusteredInteraction.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
@@ -106,7 +104,7 @@ public class GraphClusteredInteraction {
             if (interactorA instanceof GraphInteractor) {
                 this.interactorPA = (GraphInteractor) interactorA;
             } else {
-                this.interactorPA = new GraphInteractor(interactorA,false);
+                this.interactorPA = new GraphInteractor(interactorA, false);
             }
         } else {
             this.interactorPA = null;
@@ -122,7 +120,7 @@ public class GraphClusteredInteraction {
             if (interactorB instanceof GraphInteractor) {
                 this.interactorPB = (GraphInteractor) interactorB;
             } else {
-                this.interactorPB = new GraphInteractor(interactorB,false);
+                this.interactorPB = new GraphInteractor(interactorB, false);
             }
         } else {
             this.interactorPB = null;
@@ -156,9 +154,23 @@ public class GraphClusteredInteraction {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Cluster:"+this.interactorPA.getUniqueKey()+"_"+this.interactorPB.getUniqueKey();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Cluster".hashCode();
+
+        if (this.getInteractorPA() != null) {
+            hashcode = 31 * hashcode + this.getInteractorPA().hashCode();
+        }
+
+        if (this.getinteractorPB() != null) {
+            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();
+        }
+
+
+        return hashcode;
+    }
+
+    public String createUniqueKey() {
+        return hashCode() + "";
     }
 }

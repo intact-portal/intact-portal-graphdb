@@ -13,7 +13,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,11 +36,11 @@ public class GraphChecksum implements Checksum {
 
     public GraphChecksum(Checksum checksum) {
         this(checksum.getMethod(), checksum.getValue());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(checksum));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -57,7 +56,7 @@ public class GraphChecksum implements Checksum {
 
             Label[] labels = CommonUtility.getLabels(GraphChecksum.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
         } catch (Exception e) {
@@ -97,7 +96,7 @@ public class GraphChecksum implements Checksum {
             if (method instanceof GraphCvTerm) {
                 this.method = (GraphCvTerm) method;
             } else {
-                this.method = new GraphCvTerm(method,false);
+                this.method = new GraphCvTerm(method, false);
             }
         } else {
             this.method = null;
@@ -151,12 +150,9 @@ public class GraphChecksum implements Checksum {
         return this.method.toString() + ": " + getValue();
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Checksum:"+this.method.getUniqueKey() + ": " + getValue();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Checksum checksum) {
+        return checksum != null ? checksum.hashCode() + "" : "";
     }
-
 
 
 }
