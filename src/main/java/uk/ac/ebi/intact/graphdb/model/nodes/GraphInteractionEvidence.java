@@ -4,6 +4,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
@@ -611,10 +612,16 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         return "Interaction: " + (getShortName() != null ? getShortName() + ", " : "") + (getInteractionType() != null ? getInteractionType().toString() : "");
     }
 
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getAc() != null) {
+            hashcode = 31 * hashcode + this.getAc().hashCode();
+        }
+        return hashcode;
+    }
+
     public String createUniqueKey(){
-        String uniqueString=this.getAc();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+         return hashCode() + "";
     }
 
 

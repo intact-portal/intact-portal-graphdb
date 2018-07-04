@@ -79,7 +79,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         }
         setChangeListener(participantEvidence.getChangeListener());
         setAc(CommonUtility.extractAc(participantEvidence));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(participantEvidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -545,18 +545,40 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     public String toString() {
         return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null?", stoichiometry: " + this.getStoichiometry().toString():"") + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
     }
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getInteractor() != null) {
+            hashcode = 31 * hashcode + this.getInteractor().hashCode();
+        }
+        if (this.getBiologicalRole() != null) {
+            hashcode = 31 * hashcode + this.getBiologicalRole().hashCode();
+        }
+        if (this.getExperimentalRole() != null) {
+            hashcode = 31 * hashcode + this.getExperimentalRole().hashCode();
+        }
+        if (!this.getIdentificationMethods().isEmpty()) {
+            hashcode = hashcode + CommonUtility.cvTermsGraphHashCode(this.getIdentificationMethods());
+        }
+        if (this.getExperimentalPreparations() != null) {
+            hashcode = 31 * hashcode + CommonUtility.cvTermsGraphHashCode(this.getExperimentalPreparations());
+        }
+        if (this.getExpressedInOrganism() != null) {
+            hashcode = 31 * hashcode + this.getExpressedInOrganism().hashCode();
+        }
+        if (this.getParameters() != null) {
+            hashcode = 31 * hashcode +CommonUtility.parametersGraphHashCode(this.getParameters());
+        }
+        if (!this.getFeatures().isEmpty()) {
+            hashcode = hashcode + CommonUtility.featuresGraphHashCode(this.getFeatures());
+        }
 
-    public String createUniqueKey(){
-        String uniqueString="ParticipantEvidence:";
-        uniqueString=uniqueString+this.interactor!=null?this.interactor.getUniqueKey():"";
-        uniqueString=uniqueString+(this.biologicalRole!=null?this.biologicalRole.getUniqueKey():"");
-        uniqueString=uniqueString+(this.experimentalRole!=null?this.experimentalRole.getUniqueKey():"");
-        uniqueString=uniqueString+(this.getIdentificationMethods()!=null?this.getIdentificationMethods().toString():"");
-        uniqueString=uniqueString+(this.getExperimentalPreparations()!=null?this.getExperimentalPreparations().toString():"");
-        uniqueString=uniqueString+(this.expressedIn!=null?this.expressedIn.getUniqueKey():"");
-        uniqueString=uniqueString+(this.getParameters()!=null?this.getParameters().toString():"");
-        uniqueString=uniqueString+(this.getFeatures()!=null?this.getFeatures().toString():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return hashcode;
     }
+
+    public String createUniqueKey(ParticipantEvidence participantEvidence) {
+        // since there was not hashcode implemented in jami, we had to come up with this
+        int hashcode = CommonUtility.participantHashCode(participantEvidence);
+        return hashcode + "";
+    }
+
 }

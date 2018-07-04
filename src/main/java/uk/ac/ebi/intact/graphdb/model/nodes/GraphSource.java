@@ -297,7 +297,6 @@ public class GraphSource extends GraphCvTerm implements Source {
     public String createUniqueKey(){
         String uniqueString="Source:";
         uniqueString=uniqueString+super.getUniqueKey()!=null?super.getUniqueKey():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return uniqueString;
     }
 }

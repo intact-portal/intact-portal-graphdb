@@ -405,10 +405,16 @@ public class GraphInteractor implements Interactor {
         this.uniqueKey = uniqueKey;
     }
 
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getAc() != null) {
+            hashcode = 31 * hashcode + this.getAc().hashCode();
+        }
+        return hashcode;
+    }
+
     public String createUniqueKey(){
-        String uniqueString=this.getAc();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return hashCode() + "";
     }
 
 }

@@ -98,25 +98,16 @@ public class GraphExperimentalEntity extends GraphEntity {
     @Override
     public int hashCode() {
         int hashcode = 31;
-        hashcode = 31 * hashcode + "Cluster".hashCode();
-
+        hashcode = 31 * hashcode + "ExperimentalEntity".hashCode();
         hashcode = 31 * hashcode + super.hashCode();
-
-
-        /*if (this.getinteractorPB() != null) {
-            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();
-        }*/
-
-
+        if (this.getFeatures() != null) {
+            hashcode = 31 * hashcode + CommonUtility.featuresGraphHashCode(super.getFeatures());
+        }
         return hashcode;
     }
 
 
     public String createUniqueKey(){
-        String uniqueString="ExperimentalEntity:";
-        uniqueString=uniqueString+(super.getUniqueKey()!=null?super.getUniqueKey():"");
-        uniqueString=uniqueString+(this.getFeatures()!=null?this.getFeatures().toString():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return hashCode() + "";
     }
 }

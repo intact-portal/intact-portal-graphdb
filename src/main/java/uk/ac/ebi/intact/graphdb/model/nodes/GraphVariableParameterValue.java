@@ -43,7 +43,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         setValue(variableParameterValue.getValue());
         setOrder(variableParameterValue.getOrder());
         setVariableParameter(variableParameterValue.getVariableParameter());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(variableParameterValue));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -173,12 +173,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         return (getValue() != null ? getValue().toString() : "-");
     }
 
-    public String createUniqueKey(){
-        String uniqueString="VariableParameterValue:";
-        uniqueString=uniqueString+this.getVariableParameter()!=null?this.getVariableParameter().getDescription():"";
-        uniqueString=uniqueString+this.getValue()!=null?this.getValue():"";
-        uniqueString=uniqueString+this.getOrder()!=null?this.getOrder().toString():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(VariableParameterValue variableParameterValue) {
+        return variableParameterValue != null ? variableParameterValue.hashCode() + "" : "";
     }
 }

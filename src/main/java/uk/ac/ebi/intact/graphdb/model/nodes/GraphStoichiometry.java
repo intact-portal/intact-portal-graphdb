@@ -36,7 +36,7 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(stoichiometry));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -140,11 +140,7 @@ public class GraphStoichiometry implements Stoichiometry {
         return "minValue: " + getMinValue() + ", maxValue: " + getMaxValue();
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Stoichiometry:";
-        uniqueString=uniqueString+this.getMinValue();
-        uniqueString=uniqueString+this.getMaxValue();
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Stoichiometry stoichiometry) {
+        return stoichiometry != null ? stoichiometry.hashCode() + "" : "";
     }
 }

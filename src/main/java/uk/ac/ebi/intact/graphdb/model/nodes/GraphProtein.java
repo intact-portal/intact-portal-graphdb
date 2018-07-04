@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -16,7 +15,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +47,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public GraphProtein(Protein protein) {
-        super(protein,true);
+        super(protein, true);
         setUniprotkb(protein.getUniprotkb());
         setRefseq(protein.getRefseq());
         setChecksums(protein.getChecksums());
@@ -58,7 +56,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -70,11 +68,11 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if(this.getUniprotName()!=null) nodeProperties.put("uniprotName", this.getUniprotName());
+            if (this.getUniprotName() != null) nodeProperties.put("uniprotName", this.getUniprotName());
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphProtein.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -475,13 +473,28 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Protein:";
-        uniqueString=uniqueString+this.getUniprotkb()!=null?this.getUniprotkb():"";
-        uniqueString=uniqueString+(this.getRefseq()!=null?this.getRefseq():"");
-        uniqueString=uniqueString+(this.getRogid()!=null?this.getRogid():"");
-        uniqueString=uniqueString+(this.getGeneName()!=null?this.getGeneName():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Protein".hashCode();
+        if (this.getUniprotkb() != null) {
+            hashcode = 31 * hashcode + this.getUniprotkb().hashCode();
+        }
+        if (this.getRefseq() != null) {
+            hashcode = 31 * hashcode + this.getRefseq().hashCode();
+        }
+        if (this.getRogid() != null) {
+            hashcode = 31 * hashcode + this.getRogid().hashCode();
+        }
+        if (this.getGeneName() != null) {
+            hashcode = 31 * hashcode + this.getGeneName().hashCode();
+        }
+        return hashcode;
     }
+
+
+    public String createUniqueKey() {
+        return hashCode() + "";
+    }
+
 }

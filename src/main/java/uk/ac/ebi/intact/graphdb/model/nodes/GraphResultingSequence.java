@@ -44,7 +44,7 @@ public class GraphResultingSequence implements ResultingSequence {
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(resultingSequence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -169,11 +169,7 @@ public class GraphResultingSequence implements ResultingSequence {
         return (this.getOriginalSequence() != null ? "original sequence: " + this.getOriginalSequence() : "") + (this.getNewSequence() != null ? "new sequence: " + this.getNewSequence() : "");
     }
 
-    public String createUniqueKey(){
-        String uniqueString="ResultingSequence:";
-        uniqueString=uniqueString+this.getOriginalSequence()!=null?this.getOriginalSequence():"";
-        uniqueString=uniqueString+this.getNewSequence()!=null?this.getNewSequence():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(ResultingSequence resultingSequence) {
+        return resultingSequence != null ? resultingSequence.hashCode() + "" : "";
     }
 }

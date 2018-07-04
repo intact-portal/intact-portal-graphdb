@@ -77,10 +77,15 @@ public class GraphParameterValue extends ParameterValue {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="ParameterValue:";
-        uniqueString=uniqueString+(this.getFactor().multiply(BigDecimal.valueOf(Math.pow(this.getBase(), this.getExponent()))));
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode(){
+
+        int hashcode = 31;
+        hashcode = 31*hashcode + (this.getFactor().multiply(BigDecimal.valueOf(Math.pow(this.getBase(), this.getExponent())))).hashCode();
+
+        return hashcode;
+    }
+
+    public String createUniqueKey() {
+        return hashCode() + "";
     }
 }

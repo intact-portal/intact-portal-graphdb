@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Polymer;
@@ -47,7 +48,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     public GraphPolymer(Polymer polymer,boolean childAlreadyCreated) {
         super(polymer);
         setSequence(polymer.getSequence());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(polymer));
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
@@ -192,11 +193,22 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Polymer:";
-        uniqueString=uniqueString+this.getOrganism()!=null?((GraphOrganism)this.getOrganism()).getUniqueKey():"";
-        uniqueString=uniqueString+(this.getSequence()!=null?this.getSequence():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getOrganism() != null) {
+            hashcode = 31 * hashcode + this.getOrganism().hashCode();
+        }
+        if (this.getSequence() != null) {
+            hashcode = 31 * hashcode + this.getSequence().hashCode();
+        }
+        return hashcode;
     }
+
+    public String createUniqueKey(Polymer polymer) {
+        // since there was not hashcode implemented in jami, we had to come up with this
+       int hashcode = CommonUtility.polymerHashCode(polymer);
+
+        return hashcode + "";
+    }
+
 }

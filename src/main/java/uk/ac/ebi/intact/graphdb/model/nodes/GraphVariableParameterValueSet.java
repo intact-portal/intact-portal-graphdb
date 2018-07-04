@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.model.VariableParameterValueSet;
 import psidev.psi.mi.jami.model.impl.DefaultVariableParameterValueSet;
@@ -104,6 +105,24 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
         } else {
             this.variableParameterValues = new ArrayList<GraphVariableParameterValue>();
         }
+    }
+
+    public int hashCode() {
+        int hashcode = 31;
+        if (this.getVariableParameterValues() != null) {
+            hashcode = 31 * hashcode + CommonUtility.variableParametersValuesGraphHashCode(this.getVariableParameterValues());
+        }
+        return hashcode;
+    }
+
+    public String createUniqueKey(VariableParameterValueSet variableParameterValueSet) {
+        // since there was not hashcode implemented in jami, we had to come up with this
+        int hashcode = 31;
+        if (this.getVariableParameterValues() != null) {
+            hashcode = 31 * hashcode + CommonUtility.variableParametersValuesHashCode(variableParameterValueSet);
+        }
+
+        return hashcode + "";
     }
 
     public String createUniqueKey(){

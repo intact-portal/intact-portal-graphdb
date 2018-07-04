@@ -447,14 +447,28 @@ public class GraphGene extends GraphMolecule implements Gene {
                                 (getRefseq() != null ? getRefseq() : super.toString()))));
     }
 
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Gene".hashCode();
+        if (this.getEnsembl() != null) {
+            hashcode = 31 * hashcode + this.getEnsembl().hashCode();
+        }
+        if (this.getEnsemblGenome() != null) {
+            hashcode = 31 * hashcode + this.getEnsemblGenome().hashCode();
+        }
+        if (this.getEntrezGeneId() != null) {
+            hashcode = 31 * hashcode + this.getEntrezGeneId().hashCode();
+        }
+        if (this.getRefseq() != null) {
+            hashcode = 31 * hashcode + this.getRefseq().hashCode();
+        }
+        return hashcode;
+    }
+
+
     public String createUniqueKey(){
-        String uniqueString="Gene: "
-                + (getEnsembl() != null ? getEnsembl() :
-                (getEnsemblGenome() != null ? getEnsemblGenome() :
-                        (getEntrezGeneId() != null ? getEntrezGeneId() :
-                                (getRefseq() != null ? getRefseq() : super.getUniqueKey()))));
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return hashCode() + "";
     }
 
     @Transient

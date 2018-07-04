@@ -10,11 +10,11 @@ import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
+import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class GraphRange implements Range {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String ac;
@@ -49,11 +49,11 @@ public class GraphRange implements Range {
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(range));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -70,7 +70,7 @@ public class GraphRange implements Range {
 
             Label[] labels = CommonUtility.getLabels(GraphRange.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -177,7 +177,7 @@ public class GraphRange implements Range {
             if (participant instanceof GraphPosition) {
                 this.participant = (GraphEntity) participant;
             } else {
-                this.participant = new GraphEntity(participant,false);
+                this.participant = new GraphEntity(participant, false);
             }
         } else {
             this.participant = null;
@@ -210,15 +210,29 @@ public class GraphRange implements Range {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Range)) {
+            return false;
+        }
+
+        return UnambiguousRangeComparator.areEquals(this, (Range) o);
+    }
+
+    @Override
+    public int hashCode() {
+        return UnambiguousRangeComparator.hashCode(this);
+    }
+
+    @Override
     public String toString() {
         return this.start.toString() + " - " + this.end.toString() + (isLink() ? "(linked)" : "");
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Range:";
-        uniqueString=uniqueString+this.start!=null?this.start.getUniqueKey():"";
-        uniqueString=uniqueString+this.end!=null?this.end.getUniqueKey():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Range range) {
+        return range != null ? range.hashCode() + "" : "";
     }
 }

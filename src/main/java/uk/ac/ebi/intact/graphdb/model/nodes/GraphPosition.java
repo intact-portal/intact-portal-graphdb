@@ -45,7 +45,7 @@ public class GraphPosition implements Position {
         setStart(position.getStart());
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(position));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -168,14 +168,8 @@ public class GraphPosition implements Position {
         return UnambiguousPositionComparator.hashCode(this);
     }
 
-    public String createUniqueKey() {
-        String uniqueString = "Position:";
-        uniqueString = uniqueString + (this.status != null ? this.status.getUniqueKey() : "");
-        uniqueString = uniqueString + (this.isPositionUndetermined());
-        uniqueString = uniqueString + (this.getStart());
-        uniqueString = uniqueString + (this.getEnd());
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Position position) {
+        return position != null ? position.hashCode() + "" : "";
     }
 
 }

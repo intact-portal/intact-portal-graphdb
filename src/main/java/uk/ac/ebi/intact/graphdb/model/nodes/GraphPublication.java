@@ -686,10 +686,17 @@ public class GraphPublication implements Publication {
         }
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Publication:";
-        uniqueString=uniqueString+this.getPubmedIdStr()!=null?this.getPubmedIdStr():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Publication".hashCode();
+        if (this.getPubmedIdStr() != null) {
+            hashcode = 31 * hashcode + this.getPubmedIdStr().hashCode();
+        }
+        return hashcode;
     }
+
+    public String createUniqueKey(){
+        return hashCode() + "";
+    }
+
 }

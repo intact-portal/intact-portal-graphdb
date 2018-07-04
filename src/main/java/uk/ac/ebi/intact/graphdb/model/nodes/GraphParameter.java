@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.exception.IllegalParameterException;
 import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Parameter;
 import psidev.psi.mi.jami.model.ParameterValue;
 import psidev.psi.mi.jami.utils.ParameterUtils;
@@ -47,7 +48,7 @@ public class GraphParameter implements Parameter {
         setUnit(parameter.getUnit());
         setValue(parameter.getValue());
         setAc(CommonUtility.extractAc(parameter));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(parameter));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -242,13 +243,7 @@ public class GraphParameter implements Parameter {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Parameter:";
-        uniqueString=uniqueString+this.type!=null?this.type.getUniqueKey():"";
-        uniqueString=uniqueString+(this.unit!=null?this.unit.getUniqueKey():"");
-        uniqueString=uniqueString+(this.value!=null?this.value.getUniqueKey():"");
-        uniqueString=uniqueString+(this.uncertainty!=null?this.uncertainty.toString():"");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Parameter parameter){
+        return parameter != null ? parameter.hashCode() + "" : "";
     }
 }

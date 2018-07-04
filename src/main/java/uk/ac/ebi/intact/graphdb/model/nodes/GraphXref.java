@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Feature;
+import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -48,7 +49,7 @@ public class GraphXref implements Xref {
         setId(xref.getId());
         setVersion(xref.getVersion());
         setAc(CommonUtility.extractAc(xref));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(xref));
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
@@ -110,7 +111,7 @@ public class GraphXref implements Xref {
         this(database, identifier);
         setQualifier(qualifier);
 
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(this.hashCode()+"");
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
@@ -250,13 +251,8 @@ public class GraphXref implements Xref {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(){
-        String uniqueString="Xref:";
-        uniqueString=uniqueString+this.database!=null?this.database.getUniqueKey():"";
-        uniqueString=uniqueString+this.qualifier!=null?this.qualifier.getUniqueKey():"";
-        uniqueString=uniqueString+this.getId()!=null?this.getId():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+    public String createUniqueKey(Xref xref) {
+        return xref != null ? xref.hashCode() + "" : "";
     }
 
     public String getAc() {

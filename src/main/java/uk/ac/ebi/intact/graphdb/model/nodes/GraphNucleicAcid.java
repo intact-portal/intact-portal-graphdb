@@ -301,12 +301,22 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
                 : (getRefseq() != null ? getRefseq() : super.toString()));
     }
 
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Nucleic acid".hashCode();
+        if (this.getDdbjEmblGenbank() != null) {
+            hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();
+        }
+        if (this.getRefseq() != null) {
+            hashcode = 31 * hashcode + this.getRefseq().hashCode();
+        }
+        return hashcode;
+    }
+
+
     public String createUniqueKey(){
-        String uniqueString= "Nucleic acid: "
-                + (getDdbjEmblGenbank() != null ? getDdbjEmblGenbank()
-                : (getRefseq() != null ? getRefseq() : super.getUniqueKey()));
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+        return hashCode() + "";
     }
 
     @Transient

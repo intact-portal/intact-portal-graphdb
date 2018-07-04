@@ -216,11 +216,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         int hashcode = 31;
         if (this.getParticipantA() != null) {
             hashcode = 31 * hashcode + this.getParticipantA().hashCode();
-        } else if (this.getParticipantB() != null) {
+        }
+        if (this.getParticipantB() != null) {
             hashcode = 31 * hashcode + this.getParticipantB().hashCode();
-        } else if (this.getComplexExpansion() != null) {
+        }
+        if (this.getComplexExpansion() != null) {
             hashcode = 31 * hashcode + this.getComplexExpansion().hashCode();
-        } else if (!this.getIdentifiers().isEmpty()) {
+        }
+        if (!this.getIdentifiers().isEmpty()) {
             hashcode = hashcode + CommonUtility.identifiersGraphHashCode(this.getIdentifiers());
         }
 
@@ -231,12 +234,15 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         // since there was not hashcode implemented in jami, we had to come up with this
         int hashcode = 31;
         if (binaryInteractionEvidence.getParticipantA() != null) {
-            hashcode = 31 * hashcode + binaryInteractionEvidence.getParticipantA().hashCode();
-        } else if (binaryInteractionEvidence.getParticipantB() != null) {
-            hashcode = 31 * hashcode + binaryInteractionEvidence.getParticipantB().hashCode();
-        } else if (binaryInteractionEvidence.getComplexExpansion() != null) {
+            hashcode = 31 * hashcode + CommonUtility.participantHashCode(binaryInteractionEvidence.getParticipantA());
+        }
+        if (binaryInteractionEvidence.getParticipantB() != null) {
+            hashcode = 31 * hashcode + CommonUtility.participantHashCode(binaryInteractionEvidence.getParticipantB());
+        }
+        if (binaryInteractionEvidence.getComplexExpansion() != null) {
             hashcode = 31 * hashcode + binaryInteractionEvidence.getComplexExpansion().hashCode();
-        } else if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
+        }
+        if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
             hashcode = hashcode + CommonUtility.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
         }
 

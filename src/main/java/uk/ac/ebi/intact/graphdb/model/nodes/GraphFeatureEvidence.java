@@ -70,7 +70,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setType(featureEvidence.getType());
         setRole(featureEvidence.getRole());
         setAc(CommonUtility.extractAc(featureEvidence));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(featureEvidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -503,10 +503,45 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public String toString() {
         return "Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.getType() != null ? this.getType().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
     }
-    public String createUniqueKey(){
-        String uniqueString="Feature: " + (this.getShortName() != null ? this.getShortName() + " " : "") + (this.type != null ? this.type.getUniqueKey() + " " : "") + (this.role != null ? this.role.getUniqueKey() + " " : "") + (this.getInterpro() != null ? this.getInterpro().toString() + " " : "") + (this.getIdentifiers() != null ? this.getIdentifiers().toString() + " " : "") + (!this.getRanges().isEmpty() ? "(" + this.getRanges().toString() + ")" : " (-)");
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Feature:".hashCode();
+
+        if (this.getShortName() != null) {
+            hashcode = 31 * hashcode + this.getShortName().hashCode();
+        }
+
+        if (this.getType() != null) {
+            hashcode = 31 * hashcode + this.getType().hashCode();
+        }
+
+        if (this.getRole() != null) {
+            hashcode = 31 * hashcode + this.getRole().hashCode();
+        }
+
+        if (this.getInterpro() != null) {
+            hashcode = 31 * hashcode + this.getInterpro().hashCode();
+        }
+
+        if (this.getIdentifiers() != null) {
+            hashcode = 31 * hashcode + CommonUtility.identifiersGraphHashCode(this.getIdentifiers());
+        }
+
+        if (this.getRanges() != null) {
+            hashcode = 31 * hashcode + CommonUtility.rangesGraphHashCode(this.getRanges());
+        }
+
+
+
+        return hashcode;
+    }
+
+
+    public String createUniqueKey(FeatureEvidence featureEvidence){
+        int hashcode = CommonUtility.featureHashCode(featureEvidence);
+
+        return hashcode + "";
     }
 
 }

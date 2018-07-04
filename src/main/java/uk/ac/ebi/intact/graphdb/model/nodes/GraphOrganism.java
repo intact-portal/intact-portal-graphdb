@@ -9,6 +9,7 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
+import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
@@ -51,7 +52,7 @@ public class GraphOrganism implements Organism {
         setCompartment(organism.getCompartment());
         setTissue(organism.getTissue());
         setAc(CommonUtility.extractAc(organism));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(organism));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -293,22 +294,9 @@ public class GraphOrganism implements Organism {
         return objName;
     }
 
-    public String createUniqueKey(){
-        String uniqueString = "Organism";
-        if (getTaxId() != 0) {
-            uniqueString = uniqueString + "Tax Id: " + getTaxId();
-        }
-        if (cellType != null && cellType.getUniqueKey() != null) {
-            uniqueString = uniqueString + "Cell Type :" + cellType.getUniqueKey();
-        }
-        if (tissue != null && tissue.getUniqueKey() != null) {
-            uniqueString = uniqueString + "Tissue :" + tissue.getUniqueKey();
-        }
-        if (compartment != null && compartment.getUniqueKey() != null) {
-            uniqueString = uniqueString + "Compartment :" + compartment.getUniqueKey();
-        }
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
+
+    public String createUniqueKey(Organism organism){
+        return organism != null ? organism.hashCode() + "" : "";
     }
 
 
