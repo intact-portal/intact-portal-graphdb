@@ -165,7 +165,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     }
 
     public String createUniqueKey(CausalRelationship causalRelationship) {
-        return causalRelationship != null ? causalRelationship.hashCode() + "" : "";
+        return causalRelationship != null ? UnambiguousCausalRelationshipComparator.hashCode(causalRelationship) + "" : "";
     }
 
 

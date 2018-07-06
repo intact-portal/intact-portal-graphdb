@@ -153,7 +153,7 @@ public class GraphConfidence implements Confidence {
     }
 
     public String createUniqueKey(Confidence confidence) {
-        return confidence != null ? confidence.hashCode() + "" : "";
+        return confidence != null ? UnambiguousConfidenceComparator.hashCode(confidence) + "" : "";
     }
 
 }

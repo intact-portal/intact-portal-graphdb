@@ -252,7 +252,7 @@ public class GraphXref implements Xref {
     }
 
     public String createUniqueKey(Xref xref) {
-        return xref != null ? xref.hashCode() + "" : "";
+        return xref != null ? UnambiguousXrefComparator.hashCode(xref) + "" : "";
     }
 
     public String getAc() {

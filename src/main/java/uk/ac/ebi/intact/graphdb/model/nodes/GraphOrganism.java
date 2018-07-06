@@ -296,7 +296,7 @@ public class GraphOrganism implements Organism {
 
 
     public String createUniqueKey(Organism organism){
-        return organism != null ? organism.hashCode() + "" : "";
+        return organism != null ? UnambiguousOrganismComparator.hashCode(organism) + "" : "";
     }
 
 

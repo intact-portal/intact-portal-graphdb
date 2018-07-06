@@ -252,7 +252,7 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public String createUniqueKey(VariableParameter variableParameter) {
-        return variableParameter != null ? variableParameter.hashCode() + "" : "";
+        return variableParameter != null ? UnambiguousVariableParameterComparator.hashCode(variableParameter) + "" : "";
     }
 
 }

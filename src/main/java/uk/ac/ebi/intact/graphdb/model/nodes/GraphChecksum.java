@@ -151,7 +151,7 @@ public class GraphChecksum implements Checksum {
     }
 
     public String createUniqueKey(Checksum checksum) {
-        return checksum != null ? checksum.hashCode() + "" : "";
+        return checksum != null ? UnambiguousChecksumComparator.hashCode(checksum) + "" : "";
     }
 
 

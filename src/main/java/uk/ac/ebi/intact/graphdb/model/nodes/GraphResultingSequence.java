@@ -170,6 +170,6 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public String createUniqueKey(ResultingSequence resultingSequence) {
-        return resultingSequence != null ? resultingSequence.hashCode() + "" : "";
+        return resultingSequence != null ? ResultingSequenceComparator.hashCode(resultingSequence) + "" : "";
     }
 }

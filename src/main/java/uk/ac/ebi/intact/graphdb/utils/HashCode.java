@@ -1,6 +1,10 @@
 package uk.ac.ebi.intact.graphdb.utils;
 
 import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
+import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
+import psidev.psi.mi.jami.utils.comparator.parameter.UnambiguousParameterComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousExternalIdentifierComparator;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
@@ -76,7 +80,7 @@ public class HashCode {
         int hashcode = 0;
 
         for (CvTerm cvTerm : cvTerms) {
-            hashcode = 31 * hashcode + cvTerm.hashCode();
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(cvTerm);
         }
 
         return hashcode;
@@ -106,7 +110,7 @@ public class HashCode {
         int hashcode = 0;
 
         for (Parameter parameter : parameters) {
-            hashcode = 31 * hashcode + parameter.hashCode();
+            hashcode = 31 * hashcode + UnambiguousParameterComparator.hashCode(parameter);
         }
 
         return hashcode;
@@ -115,8 +119,8 @@ public class HashCode {
     public static int variableParametersValuesHashCode(Collection<VariableParameterValue> variableParameterValues) {
         int hashcode = 0;
 
-        for (VariableParameterValue parameter : variableParameterValues) {
-            hashcode = 31 * hashcode + parameter.hashCode();
+        for (VariableParameterValue parameterValue : variableParameterValues) {
+            hashcode = 31 * hashcode + VariableParameterValueComparator.hashCode(parameterValue);
         }
 
         return hashcode;
@@ -142,11 +146,11 @@ public class HashCode {
         }
 
         if (featureEvidence.getType() != null) {
-            hashcode = 31 * hashcode + featureEvidence.getType().hashCode();
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(featureEvidence.getType());
         }
 
         if (featureEvidence.getRole() != null) {
-            hashcode = 31 * hashcode + featureEvidence.getRole().hashCode();
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(featureEvidence.getRole());
         }
 
         if (featureEvidence.getInterpro() != null) {
@@ -172,10 +176,10 @@ public class HashCode {
             hashcode = 31 * hashcode + interactorHashCode(participantEvidence.getInteractor());
         }
         if (participantEvidence.getBiologicalRole() != null) {
-            hashcode = 31 * hashcode + participantEvidence.getBiologicalRole().hashCode();
+            hashcode = 31 * hashcode +  UnambiguousCvTermComparator.hashCode(participantEvidence.getBiologicalRole());
         }
         if (participantEvidence.getExperimentalRole() != null) {
-            hashcode = 31 * hashcode + participantEvidence.getExperimentalRole().hashCode();
+            hashcode = 31 * hashcode +  UnambiguousCvTermComparator.hashCode(participantEvidence.getExperimentalRole());
         }
         if (!participantEvidence.getIdentificationMethods().isEmpty()) {
             hashcode = hashcode + HashCode.cvTermsHashCode(participantEvidence.getIdentificationMethods());
@@ -184,7 +188,7 @@ public class HashCode {
             hashcode = 31 * hashcode + HashCode.cvTermsHashCode(participantEvidence.getExperimentalPreparations());
         }
         if (participantEvidence.getExpressedInOrganism() != null) {
-            hashcode = 31 * hashcode + participantEvidence.getExpressedInOrganism().hashCode();
+            hashcode = 31 * hashcode + UnambiguousOrganismComparator.hashCode(participantEvidence.getExpressedInOrganism());
         }
         if (participantEvidence.getParameters() != null) {
             hashcode = 31 * hashcode + HashCode.parametersHashCode(participantEvidence.getParameters());
@@ -201,7 +205,7 @@ public class HashCode {
 
         int hashcode = 31;
         if (polymer.getOrganism() != null) {
-            hashcode = 31 * hashcode + polymer.getOrganism().hashCode();
+            hashcode = 31 * hashcode + UnambiguousOrganismComparator.hashCode(polymer.getOrganism());
         }
         if (polymer.getSequence() != null) {
             hashcode = 31 * hashcode + polymer.getSequence().hashCode();

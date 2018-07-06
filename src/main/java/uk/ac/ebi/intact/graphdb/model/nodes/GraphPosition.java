@@ -169,7 +169,7 @@ public class GraphPosition implements Position {
     }
 
     public String createUniqueKey(Position position) {
-        return position != null ? position.hashCode() + "" : "";
+        return position != null ? UnambiguousPositionComparator.hashCode(position) + "" : "";
     }
 
 }

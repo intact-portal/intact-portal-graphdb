@@ -141,6 +141,6 @@ public class GraphStoichiometry implements Stoichiometry {
     }
 
     public String createUniqueKey(Stoichiometry stoichiometry) {
-        return stoichiometry != null ? stoichiometry.hashCode() + "" : "";
+        return stoichiometry != null ? StoichiometryComparator.hashCode(stoichiometry) + "" : "";
     }
 }

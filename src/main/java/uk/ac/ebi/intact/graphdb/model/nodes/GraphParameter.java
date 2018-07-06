@@ -244,6 +244,6 @@ public class GraphParameter implements Parameter {
     }
 
     public String createUniqueKey(Parameter parameter){
-        return parameter != null ? parameter.hashCode() + "" : "";
+        return parameter != null ? UnambiguousParameterComparator.hashCode(parameter) + "" : "";
     }
 }

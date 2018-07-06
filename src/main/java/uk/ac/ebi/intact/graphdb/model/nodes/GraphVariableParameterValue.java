@@ -174,6 +174,6 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     }
 
     public String createUniqueKey(VariableParameterValue variableParameterValue) {
-        return variableParameterValue != null ? variableParameterValue.hashCode() + "" : "";
+        return variableParameterValue != null ? VariableParameterValueComparator.hashCode(variableParameterValue) + "" : "";
     }
 }

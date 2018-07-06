@@ -451,6 +451,6 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public String createUniqueKey(CvTerm cvTerm) {
-        return cvTerm != null ? cvTerm.hashCode() + "" : "";
+        return cvTerm != null ? UnambiguousCvTermComparator.hashCode(cvTerm) + "" : "";
     }
 }
