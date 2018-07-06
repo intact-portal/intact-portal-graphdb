@@ -6,8 +6,10 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.utils.comparator.participant.CausalRelationshipComparator;
+import psidev.psi.mi.jami.model.CausalRelationship;
+import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.Entity;
+import psidev.psi.mi.jami.model.Participant;
 import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousCausalRelationshipComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -155,7 +157,14 @@ public class GraphCausalRelationship implements CausalRelationship {
 
     @Override
     public int hashCode() {
-        return UnambiguousCausalRelationshipComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousCausalRelationshipComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
 

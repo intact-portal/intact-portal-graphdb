@@ -8,7 +8,6 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.exception.IllegalParameterException;
 import psidev.psi.mi.jami.model.CvTerm;
-import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Parameter;
 import psidev.psi.mi.jami.model.ParameterValue;
 import psidev.psi.mi.jami.utils.ParameterUtils;
@@ -18,7 +17,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class GraphParameter implements Parameter {
 
     @GraphId
     private Long graphId;
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String ac;
@@ -52,7 +50,7 @@ public class GraphParameter implements Parameter {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -69,7 +67,7 @@ public class GraphParameter implements Parameter {
 
             Label[] labels = CommonUtility.getLabels(GraphParameter.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -135,7 +133,7 @@ public class GraphParameter implements Parameter {
             if (type instanceof GraphCvTerm) {
                 this.type = (GraphCvTerm) type;
             } else {
-                this.type = new GraphCvTerm(type,false);
+                this.type = new GraphCvTerm(type, false);
             }
         } else {
             this.type = null;
@@ -160,7 +158,7 @@ public class GraphParameter implements Parameter {
             if (unit instanceof GraphCvTerm) {
                 this.unit = (GraphCvTerm) unit;
             } else {
-                this.unit = new GraphCvTerm(unit,false);
+                this.unit = new GraphCvTerm(unit, false);
             }
         } else {
             this.unit = null;
@@ -232,7 +230,14 @@ public class GraphParameter implements Parameter {
 
     @Override
     public int hashCode() {
-        return UnambiguousParameterComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousParameterComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     public String getUniqueKey() {
@@ -243,7 +248,7 @@ public class GraphParameter implements Parameter {
         this.uniqueKey = uniqueKey;
     }
 
-    public String createUniqueKey(Parameter parameter){
+    public String createUniqueKey(Parameter parameter) {
         return parameter != null ? UnambiguousParameterComparator.hashCode(parameter) + "" : "";
     }
 }

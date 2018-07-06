@@ -14,7 +14,6 @@ import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -162,7 +161,14 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public int hashCode() {
-        return ResultingSequenceComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = ResultingSequenceComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     public String toString() {

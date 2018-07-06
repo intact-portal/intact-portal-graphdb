@@ -429,7 +429,14 @@ public class GraphExperiment implements Experiment {
 
     @Override
     public int hashCode() {
-        return UnambiguousExperimentComparator.hashCode(this);
+        int hashcode;
+        try{
+            hashcode=UnambiguousExperimentComparator.hashCode(this);
+        }catch(Exception e){
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode=super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

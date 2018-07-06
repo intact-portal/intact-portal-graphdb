@@ -8,6 +8,7 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
+import psidev.psi.mi.jami.utils.comparator.range.ResultingSequenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -165,7 +166,14 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
     @Override
     public int hashCode() {
-        return VariableParameterValueComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = VariableParameterValueComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

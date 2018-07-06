@@ -10,6 +10,7 @@ import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
+import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -224,7 +225,14 @@ public class GraphRange implements Range {
 
     @Override
     public int hashCode() {
-        return UnambiguousRangeComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousRangeComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

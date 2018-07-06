@@ -10,6 +10,7 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Feature;
 import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
+import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -219,7 +220,14 @@ public class GraphXref implements Xref {
 
     @Override
     public int hashCode() {
-        return UnambiguousXrefComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousXrefComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.utils.comparator.checksum.UnambiguousChecksumComparator;
 import psidev.psi.mi.jami.utils.comparator.confidence.UnambiguousConfidenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
@@ -149,7 +150,14 @@ public class GraphConfidence implements Confidence {
 
     @Override
     public int hashCode() {
-        return UnambiguousConfidenceComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousConfidenceComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     public String createUniqueKey(Confidence confidence) {

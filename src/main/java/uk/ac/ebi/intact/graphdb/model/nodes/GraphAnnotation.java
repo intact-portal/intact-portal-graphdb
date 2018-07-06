@@ -155,7 +155,14 @@ public class GraphAnnotation implements Annotation {
 
     @Override
     public int hashCode() {
-        return UnambiguousAnnotationComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousAnnotationComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

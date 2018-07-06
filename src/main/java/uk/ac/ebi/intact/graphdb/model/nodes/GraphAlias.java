@@ -153,7 +153,14 @@ public class GraphAlias implements Alias {
 
     @Override
     public int hashCode() {
-        return UnambiguousAliasComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousAliasComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override

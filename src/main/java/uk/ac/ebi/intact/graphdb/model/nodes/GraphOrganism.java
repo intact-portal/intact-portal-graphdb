@@ -9,14 +9,12 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
-import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,7 +59,7 @@ public class GraphOrganism implements Organism {
         setAliases(organism.getAliases());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -79,7 +77,7 @@ public class GraphOrganism implements Organism {
 
             Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -186,7 +184,7 @@ public class GraphOrganism implements Organism {
             if (cellType instanceof GraphCvTerm) {
                 this.cellType = (GraphCvTerm) cellType;
             } else {
-                this.cellType = new GraphCvTerm(cellType,false);
+                this.cellType = new GraphCvTerm(cellType, false);
             }
         } else {
             this.cellType = null;
@@ -202,7 +200,7 @@ public class GraphOrganism implements Organism {
             if (compartment instanceof GraphCvTerm) {
                 this.compartment = (GraphCvTerm) compartment;
             } else {
-                this.compartment = new GraphCvTerm(compartment,false);
+                this.compartment = new GraphCvTerm(compartment, false);
             }
         } else {
             this.compartment = null;
@@ -218,7 +216,7 @@ public class GraphOrganism implements Organism {
             if (tissue instanceof GraphCvTerm) {
                 this.tissue = (GraphCvTerm) tissue;
             } else {
-                this.tissue = new GraphCvTerm(tissue,false);
+                this.tissue = new GraphCvTerm(tissue, false);
             }
         } else {
             this.tissue = null;
@@ -272,7 +270,14 @@ public class GraphOrganism implements Organism {
 
     @Override
     public int hashCode() {
-        return UnambiguousOrganismComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousOrganismComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     @Override
@@ -295,10 +300,9 @@ public class GraphOrganism implements Organism {
     }
 
 
-    public String createUniqueKey(Organism organism){
+    public String createUniqueKey(Organism organism) {
         return organism != null ? UnambiguousOrganismComparator.hashCode(organism) + "" : "";
     }
-
 
 
 }

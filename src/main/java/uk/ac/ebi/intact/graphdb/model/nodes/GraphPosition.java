@@ -13,7 +13,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,7 +164,14 @@ public class GraphPosition implements Position {
 
     @Override
     public int hashCode() {
-        return UnambiguousPositionComparator.hashCode(this);
+        int hashcode;
+        try {
+            hashcode = UnambiguousPositionComparator.hashCode(this);
+        } catch (Exception e) {
+            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
+            hashcode = super.hashCode();
+        }
+        return hashcode;
     }
 
     public String createUniqueKey(Position position) {
