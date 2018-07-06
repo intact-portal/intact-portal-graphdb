@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.math.BigInteger;
@@ -525,11 +526,11 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         }
 
         if (this.getIdentifiers() != null) {
-            hashcode = 31 * hashcode + CommonUtility.identifiersGraphHashCode(this.getIdentifiers());
+            hashcode = 31 * hashcode + HashCode.identifiersGraphHashCode(this.getIdentifiers());
         }
 
         if (this.getRanges() != null) {
-            hashcode = 31 * hashcode + CommonUtility.rangesGraphHashCode(this.getRanges());
+            hashcode = 31 * hashcode + HashCode.rangesGraphHashCode(this.getRanges());
         }
 
 
@@ -539,7 +540,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
 
     public String createUniqueKey(FeatureEvidence featureEvidence){
-        int hashcode = CommonUtility.featureHashCode(featureEvidence);
+        int hashcode = HashCode.featureHashCode(featureEvidence);
 
         return hashcode + "";
     }

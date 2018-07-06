@@ -9,10 +9,7 @@ import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.*;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -557,19 +554,19 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             hashcode = 31 * hashcode + this.getExperimentalRole().hashCode();
         }
         if (!this.getIdentificationMethods().isEmpty()) {
-            hashcode = hashcode + CommonUtility.cvTermsGraphHashCode(this.getIdentificationMethods());
+            hashcode = hashcode + HashCode.cvTermsGraphHashCode(this.getIdentificationMethods());
         }
         if (this.getExperimentalPreparations() != null) {
-            hashcode = 31 * hashcode + CommonUtility.cvTermsGraphHashCode(this.getExperimentalPreparations());
+            hashcode = 31 * hashcode + HashCode.cvTermsGraphHashCode(this.getExperimentalPreparations());
         }
         if (this.getExpressedInOrganism() != null) {
             hashcode = 31 * hashcode + this.getExpressedInOrganism().hashCode();
         }
         if (this.getParameters() != null) {
-            hashcode = 31 * hashcode +CommonUtility.parametersGraphHashCode(this.getParameters());
+            hashcode = 31 * hashcode +HashCode.parametersGraphHashCode(this.getParameters());
         }
         if (!this.getFeatures().isEmpty()) {
-            hashcode = hashcode + CommonUtility.featuresGraphHashCode(this.getFeatures());
+            hashcode = hashcode + HashCode.featuresGraphHashCode(this.getFeatures());
         }
 
         return hashcode;
@@ -577,7 +574,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public String createUniqueKey(ParticipantEvidence participantEvidence) {
         // since there was not hashcode implemented in jami, we had to come up with this
-        int hashcode = CommonUtility.participantHashCode(participantEvidence);
+        int hashcode = HashCode.participantHashCode(participantEvidence);
         return hashcode + "";
     }
 

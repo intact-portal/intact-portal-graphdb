@@ -13,6 +13,7 @@ import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousExperimentalEn
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -101,7 +102,7 @@ public class GraphExperimentalEntity extends GraphEntity {
         hashcode = 31 * hashcode + "ExperimentalEntity".hashCode();
         hashcode = 31 * hashcode + super.hashCode();
         if (this.getFeatures() != null) {
-            hashcode = 31 * hashcode + CommonUtility.featuresGraphHashCode(super.getFeatures());
+            hashcode = 31 * hashcode + HashCode.featuresGraphHashCode(super.getFeatures());
         }
         return hashcode;
     }

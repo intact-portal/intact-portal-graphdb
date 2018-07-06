@@ -114,6 +114,6 @@ public class GraphCurationDepth {
     }
 
     public String createUniqueKey(CurationDepth curationDepth) {
-        return curationDepth != null ? curationDepth.hashCode() + "" : "";
+        return hashCode()+"";
     }
 }

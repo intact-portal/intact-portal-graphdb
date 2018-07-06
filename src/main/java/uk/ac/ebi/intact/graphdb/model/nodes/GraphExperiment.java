@@ -453,6 +453,6 @@ public class GraphExperiment implements Experiment {
     }
 
     public String createUniqueKey(Experiment experiment){
-        return experiment != null ? experiment.hashCode() + "" : "";
+        return experiment != null ? UnambiguousExperimentComparator.hashCode(experiment) + "" : "";
     }
 }

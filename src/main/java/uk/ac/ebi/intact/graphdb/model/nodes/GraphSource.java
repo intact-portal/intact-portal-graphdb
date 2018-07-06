@@ -294,9 +294,19 @@ public class GraphSource extends GraphCvTerm implements Source {
         }
     }*/
 
-    public String createUniqueKey(){
-        String uniqueString="Source:";
-        uniqueString=uniqueString+super.getUniqueKey()!=null?super.getUniqueKey():"";
-        return uniqueString;
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Source".hashCode();
+        if (this.getShortName() != null) {
+            hashcode = 31 * hashcode + this.getShortName().toLowerCase().hashCode();
+        }
+        return hashcode;
     }
+
+
+    public String createUniqueKey(){
+        return hashCode() + "";
+    }
+
 }

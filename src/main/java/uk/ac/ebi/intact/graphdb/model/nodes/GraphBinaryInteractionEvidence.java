@@ -7,10 +7,12 @@ import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
+import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -224,7 +226,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             hashcode = 31 * hashcode + this.getComplexExpansion().hashCode();
         }
         if (!this.getIdentifiers().isEmpty()) {
-            hashcode = hashcode + CommonUtility.identifiersGraphHashCode(this.getIdentifiers());
+            hashcode = hashcode + HashCode.identifiersGraphHashCode(this.getIdentifiers());
         }
 
         return hashcode;
@@ -234,16 +236,16 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         // since there was not hashcode implemented in jami, we had to come up with this
         int hashcode = 31;
         if (binaryInteractionEvidence.getParticipantA() != null) {
-            hashcode = 31 * hashcode + CommonUtility.participantHashCode(binaryInteractionEvidence.getParticipantA());
+            hashcode = 31 * hashcode + HashCode.participantHashCode(binaryInteractionEvidence.getParticipantA());
         }
         if (binaryInteractionEvidence.getParticipantB() != null) {
-            hashcode = 31 * hashcode + CommonUtility.participantHashCode(binaryInteractionEvidence.getParticipantB());
+            hashcode = 31 * hashcode + HashCode.participantHashCode(binaryInteractionEvidence.getParticipantB());
         }
         if (binaryInteractionEvidence.getComplexExpansion() != null) {
-            hashcode = 31 * hashcode + binaryInteractionEvidence.getComplexExpansion().hashCode();
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());
         }
         if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
-            hashcode = hashcode + CommonUtility.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
+            hashcode = hashcode + HashCode.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
         }
 
         return hashcode + "";

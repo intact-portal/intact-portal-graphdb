@@ -162,7 +162,7 @@ public class GraphAlias implements Alias {
     }
 
     public String createUniqueKey(Alias alias) {
-        return alias != null ? alias.hashCode() + "" : "";
+        return alias != null ? UnambiguousAliasComparator.hashCode(alias) + "" : "";
     }
 
 

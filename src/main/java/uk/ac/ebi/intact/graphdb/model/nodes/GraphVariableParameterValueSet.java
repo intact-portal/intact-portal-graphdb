@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -34,7 +35,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
 
     //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet){
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(variableParameterValueSet));
         if (CreationConfig.createNatively) {
             createNodeNatively();
             if(!isAlreadyCreated()) {
@@ -110,7 +111,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     public int hashCode() {
         int hashcode = 31;
         if (this.getVariableParameterValues() != null) {
-            hashcode = 31 * hashcode + CommonUtility.variableParametersValuesGraphHashCode(this.getVariableParameterValues());
+            hashcode = 31 * hashcode + HashCode.variableParametersValuesGraphHashCode(this.getVariableParameterValues());
         }
         return hashcode;
     }
@@ -119,16 +120,10 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
         // since there was not hashcode implemented in jami, we had to come up with this
         int hashcode = 31;
         if (this.getVariableParameterValues() != null) {
-            hashcode = 31 * hashcode + CommonUtility.variableParametersValuesHashCode(variableParameterValueSet);
+            hashcode = 31 * hashcode + HashCode.variableParametersValuesHashCode(variableParameterValueSet);
         }
 
         return hashcode + "";
     }
 
-    public String createUniqueKey(){
-        String uniqueString="VariableParameterValueSet:";
-        uniqueString=uniqueString+this.getVariableParameterValues()!=null?this.getVariableParameterValues().toString():"";
-        BigInteger bi = new BigInteger(uniqueString.toLowerCase().getBytes());
-        return bi.toString();
-    }
 }

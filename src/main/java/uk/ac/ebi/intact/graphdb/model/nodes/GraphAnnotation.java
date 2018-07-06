@@ -177,6 +177,6 @@ public class GraphAnnotation implements Annotation {
     }
 
     public String createUniqueKey(Annotation annotation) {
-        return annotation != null ? annotation.hashCode() + "" : "";
+        return annotation != null ? UnambiguousAnnotationComparator.hashCode(annotation) + "" : "";
     }
 }

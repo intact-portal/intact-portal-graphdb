@@ -15,6 +15,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -206,7 +207,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public String createUniqueKey(Polymer polymer) {
         // since there was not hashcode implemented in jami, we had to come up with this
-       int hashcode = CommonUtility.polymerHashCode(polymer);
+       int hashcode = HashCode.polymerHashCode(polymer);
 
         return hashcode + "";
     }
