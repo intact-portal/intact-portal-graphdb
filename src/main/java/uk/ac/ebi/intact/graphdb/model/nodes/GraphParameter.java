@@ -63,7 +63,7 @@ public class GraphParameter implements Parameter {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty());
+            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty().toString());
 
             Label[] labels = CommonUtility.getLabels(GraphParameter.class);
 
