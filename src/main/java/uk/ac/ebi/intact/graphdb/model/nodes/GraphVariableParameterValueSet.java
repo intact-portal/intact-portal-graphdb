@@ -6,7 +6,6 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.model.VariableParameterValueSet;
 import psidev.psi.mi.jami.model.impl.DefaultVariableParameterValueSet;
@@ -16,7 +15,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
-import java.math.BigInteger;
 import java.util.*;
 
 @NodeEntity
@@ -25,7 +23,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private Collection<GraphVariableParameterValue> variableParameterValues;
@@ -34,17 +32,18 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     private boolean isAlreadyCreated;
 
     //TODO Review it
-    public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet){
+    public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet) {
         setUniqueKey(createUniqueKey(variableParameterValueSet));
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
 
         }
-
-        setVariableParameterValueSets(Arrays.asList((VariableParameterValue[])variableParameterValueSet.toArray()));
+        if (variableParameterValueSet != null) {
+            setVariableParameterValueSets(Arrays.asList(Arrays.copyOf(variableParameterValueSet.toArray(), variableParameterValueSet.toArray().length, VariableParameterValue[].class)));
+        }
     }
 
     public void createNodeNatively() {
@@ -55,7 +54,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphVariableParameterValueSet.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
