@@ -16,7 +16,7 @@ import java.util.Collection;
  * Time: 20:32
  */
 @RepositoryRestResource(collectionResourceRel = "interactor", path = "interactor")
-public interface GraphInteractorRepository extends Neo4jRepository<GraphInteractor, Long> {
+public interface GraphInteractorRepository extends Neo4jRepository<GraphInteractor, String> {
 
     GraphInteractor findByShortName(@Param("shortName") String shortName );
 

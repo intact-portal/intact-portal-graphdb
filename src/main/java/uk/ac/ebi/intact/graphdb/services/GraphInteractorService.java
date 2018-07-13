@@ -67,8 +67,12 @@ public class GraphInteractorService {
         return graphInteractorRepository.findAll(page, depth);
     }
 
-    public Optional<GraphInteractor> find(Long id) {
+    public Optional<GraphInteractor> find(String id) {
         return graphInteractorRepository.findById(id);
+    }
+
+    public Optional<GraphInteractor> findWithDepth(String id,int depth) {
+        return graphInteractorRepository.findById(id,depth);
     }
 
     public GraphInteractor findByAc(String ac) {
