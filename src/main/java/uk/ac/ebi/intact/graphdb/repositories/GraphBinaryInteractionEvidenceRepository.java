@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphClusteredInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
@@ -32,5 +33,8 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
 
     @Query(CypherQueries.INTERACTOR_PAIR_COUNT)
     long getInteractorPairCount();
+
+    @Query(CypherQueries.GET_CLUSTERED_INTERACTION)
+    GraphClusteredInteraction getClusteredInteraction(String uniqueKey);
 
 }

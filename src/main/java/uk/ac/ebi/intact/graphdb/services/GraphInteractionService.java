@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphClusteredInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
@@ -24,5 +25,9 @@ public class GraphInteractionService {
 
     public Page<GraphBinaryInteractionEvidence> findAll(Pageable page, int depth) {
         return this.graphInteractionEvidenceRepository.findAll(page, depth);
+    }
+
+    public GraphClusteredInteraction findClusteredInteraction(String uniqueKey) {
+        return this.graphInteractionEvidenceRepository.getClusteredInteraction(uniqueKey);
     }
 }
