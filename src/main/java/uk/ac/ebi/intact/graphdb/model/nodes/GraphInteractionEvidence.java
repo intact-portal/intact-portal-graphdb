@@ -1,19 +1,18 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.utils.comparator.alias.UnambiguousAliasComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-
-import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,7 +27,10 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     private String ac;
     private String imexId;
+
+    @Relationship(type = RelationshipTypes.EXPERIMENT)
     private GraphExperiment experiment;
+
     private String availability;
     private boolean isInferred = false;
     private boolean isNegative;
@@ -36,27 +38,39 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private String rigid;
     private Date updatedDate;
     private Date createdDate;
+
+    @Relationship(type = RelationshipTypes.INTERACTION_TYPE)
     private GraphCvTerm interactionType;
 
+    @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
+
+    @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphConfidence> confidences;
+
+    @Relationship(type = RelationshipTypes.VARIABLE_PARAMETERS_VALUE_SETS)
     private Collection<GraphVariableParameterValueSet> variableParameterValueSets;
+
+    @Relationship(type = RelationshipTypes.CHECKSUMS)
     private Collection<GraphChecksum> checksums;
+
+    @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
+
+    @Relationship(type = RelationshipTypes.XREFS)
     private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
-
-    @Transient
-    private boolean isAlreadyCreated;
-    @Transient
-    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
-
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
     private Collection<GraphParticipantEvidence> participants;
 
-    @Relationship(type = "HAS", direction = Relationship.OUTGOING)
-    private Collection<GraphInteractor> interactors;
+    @Transient
+    private boolean isAlreadyCreated;
+
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
 
     public GraphInteractionEvidence() {
@@ -138,24 +152,14 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     public void createRelationShipNatively(Long graphId) {
         CommonUtility.createRelationShip(experiment, graphId, "experiment");
         CommonUtility.createRelationShip(interactionType, graphId, "interactionType");
-        CommonUtility.createParameterRelationShips(parameters, graphId, "parameters");
-        CommonUtility.createConfidenceRelationShips(confidences, graphId, "confidences");
-        CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets,graphId, "variableParameterValueSets");
-        CommonUtility.createCheckSumRelationShips(checksums, graphId, "checksums");
-        CommonUtility.createXrefRelationShips(identifiers,graphId, "identifiers");
-        CommonUtility.createXrefRelationShips(xrefs, graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, graphId, "annotations");
+        CommonUtility.createParameterRelationShips(parameters, graphId);
+        CommonUtility.createConfidenceRelationShips(confidences, graphId);
+        CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets, graphId);
+        CommonUtility.createChecksumRelationShips(checksums, graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers,graphId);
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
     }
-
-/*    public void initializeAc(InteractionEvidence binaryInteractionEvidence) {
-        try {
-            CommonUtility commonUtility = Constants.COMMON_UTILITY_OBJECT_POOL.borrowObject();
-            setAc(commonUtility.extractAc(binaryInteractionEvidence));
-            Constants.COMMON_UTILITY_OBJECT_POOL.returnObject(commonUtility);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public String getAc() {
         return ac;
@@ -467,14 +471,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             }
         }*/
         return false;
-    }
-
-    public Collection<? extends Interactor> getInteractors() {
-        return interactors;
-    }
-
-    public void setInteractors(Collection<GraphInteractor> interactors) {
-        this.interactors = interactors;
     }
 
 

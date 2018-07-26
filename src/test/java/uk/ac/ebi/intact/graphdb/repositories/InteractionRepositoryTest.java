@@ -24,15 +24,15 @@ public class InteractionRepositoryTest {
     @Autowired
     private ProteinRepository proteinRepository;
     @Autowired
-    private InteractorRepository interactorRepository;
+    private GraphInteractorRepository graphInteractorRepository;
     @Autowired
-    private InteractionEvidenceRepository interactionRepository;
+    private GraphInteractionEvidenceRepository interactionRepository;
 
     @Before
     public void setUp() throws Exception {
 
         proteinRepository.deleteAll();
-        interactorRepository.deleteAll();
+        graphInteractorRepository.deleteAll();
 
 //
         GraphProtein p12345 = new GraphProtein(P12345);

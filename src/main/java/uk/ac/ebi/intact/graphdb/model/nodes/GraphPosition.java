@@ -1,15 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -28,7 +26,9 @@ public class GraphPosition implements Position {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.STATUS)
     private GraphCvTerm status;
+
     private long start;
     private long end;
     private boolean isPositionUndetermined;
@@ -64,7 +64,7 @@ public class GraphPosition implements Position {
             nodeProperties.put("end", this.getEnd());
             nodeProperties.put("isPositionUndetermined", this.isPositionUndetermined());
 
-            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
+            Label[] labels = CommonUtility.getLabels(GraphPosition.class);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
@@ -76,7 +76,7 @@ public class GraphPosition implements Position {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(status, this.graphId, "status");
+        CommonUtility.createRelationShip(status, this.graphId, RelationshipTypes.STATUS);
     }
 
     public String getUniqueKey() {

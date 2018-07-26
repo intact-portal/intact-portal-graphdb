@@ -1,7 +1,7 @@
 package uk.ac.ebi.intact.graphdb.repositories;
 
 
-import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
@@ -15,7 +15,7 @@ import psidev.psi.mi.jami.model.Xref;
  */
 
 @RepositoryRestResource(collectionResourceRel = "interactions", path = "interactions")
-public interface InteractionEvidenceRepository extends GraphRepository<BinaryInteractionEvidence> {
+public interface GraphInteractionEvidenceRepository extends Neo4jRepository<BinaryInteractionEvidence, Long> {
 
     BinaryInteractionEvidence findByShortName(@Param("shortName") String shortName);
 

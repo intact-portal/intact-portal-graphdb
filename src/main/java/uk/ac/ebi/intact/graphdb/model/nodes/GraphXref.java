@@ -1,18 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
-import psidev.psi.mi.jami.model.Feature;
-import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -34,8 +30,13 @@ public class GraphXref implements Xref {
 
     private String ac;
     private String identifier;
+
+    @Relationship(type = RelationshipTypes.DATABASE)
     private GraphCvTerm database;
+
     private String version;
+
+    @Relationship(type = RelationshipTypes.QUALIFIER)
     private GraphCvTerm qualifier;
 
     @Transient
@@ -104,8 +105,8 @@ public class GraphXref implements Xref {
     }
 
     private void createRelationShipNatively(){
-        CommonUtility.createRelationShip(database, this.getGraphId(),"database");
-        CommonUtility.createRelationShip(qualifier, this.getGraphId(),"qualifier");
+        CommonUtility.createRelationShip(database, this.getGraphId(),RelationshipTypes.DATABASE);
+        CommonUtility.createRelationShip(qualifier, this.getGraphId(),RelationshipTypes.QUALIFIER);
     }
 
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {

@@ -1,16 +1,14 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.checksum.UnambiguousChecksumComparator;
 import psidev.psi.mi.jami.utils.comparator.confidence.UnambiguousConfidenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -26,7 +24,9 @@ public class GraphConfidence implements Confidence {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.TYPE)
     private GraphCvTerm type;
+
     private String value;
 
     @Transient
@@ -67,7 +67,7 @@ public class GraphConfidence implements Confidence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.getGraphId(), "type");
+        CommonUtility.createRelationShip(type, this.getGraphId(), RelationshipTypes.TYPE);
     }
 
 /*    public GraphConfidence(CvTerm type, String value) {

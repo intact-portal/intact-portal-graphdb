@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -13,6 +14,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -29,7 +31,10 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.DDBJ_EMBL_GENBANK)
     private GraphXref ddbjEmblGenbank;
+
+    @Relationship(type = RelationshipTypes.REFSEQ)
     private GraphXref refseq;
 
     @Transient
@@ -73,8 +78,8 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, "ddbjEmblGenbank");
-        CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
+        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, RelationshipTypes.DDBJ_EMBL_GENBANK);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     public GraphNucleicAcid(String name, CvTerm type) {

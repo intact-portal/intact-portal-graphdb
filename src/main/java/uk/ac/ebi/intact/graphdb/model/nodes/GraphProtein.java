@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
@@ -12,8 +13,10 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.GraphAliasUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +37,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     private String uniprotName;
 
+    @Relationship(type = RelationshipTypes.UNIPROTKB)
     private GraphXref uniprotkb;
+
+    @Relationship(type = RelationshipTypes.REFSEQ)
     private GraphXref refseq;
+
+    @Relationship(type = RelationshipTypes.GENE_NAME)
     private GraphAlias geneName;
+
+    @Relationship(type = RelationshipTypes.ROGID)
     private GraphChecksum rogid;
 
     @Transient
@@ -83,10 +93,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(uniprotkb, this.graphId, "uniprotkb");
-        CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
-        CommonUtility.createRelationShip(geneName, this.graphId, "geneName");
-        CommonUtility.createRelationShip(rogid, this.graphId, "rogid");
+        CommonUtility.createRelationShip(uniprotkb, this.graphId, RelationshipTypes.UNIPROTKB);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(geneName, this.graphId, RelationshipTypes.GENE_NAME);
+        CommonUtility.createRelationShip(rogid, this.graphId, RelationshipTypes.ROGID);
     }
 
     public GraphProtein(String name, CvTerm type) {
@@ -240,7 +250,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
         // remove all gene names if the collection is not empty
         else if (!proteinAliases.isEmpty()) {
-            AliasUtils.removeAllAliasesWithType(proteinAliases, Alias.GENE_NAME_MI, Alias.GENE_NAME);
+            GraphAliasUtils.removeAllAliasesWithType(proteinAliases, Alias.GENE_NAME_MI, Alias.GENE_NAME);
             this.geneName = null;
         }
     }

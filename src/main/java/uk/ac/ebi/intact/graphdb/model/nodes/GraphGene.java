@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -13,6 +14,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -44,9 +46,16 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.ENSEMBL)
     private GraphXref ensembl;
+
+    @Relationship(type = RelationshipTypes.ENSEMBL_GENOME)
     private GraphXref ensemblGenome;
+
+    @Relationship(type = RelationshipTypes.ENTREZ_GENE_ID)
     private GraphXref entrezGeneId;
+
+    @Relationship(type = RelationshipTypes.REFSEQ)
     private GraphXref refseq;
 
     @Transient
@@ -92,10 +101,10 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ensembl, this.graphId, "ensembl");
-        CommonUtility.createRelationShip(ensemblGenome, this.graphId, "ensemblGenome");
-        CommonUtility.createRelationShip(entrezGeneId, this.graphId, "entrezGeneId");
-        CommonUtility.createRelationShip(refseq, this.graphId, "refseq");
+        CommonUtility.createRelationShip(ensembl, this.graphId, RelationshipTypes.ENSEMBL);
+        CommonUtility.createRelationShip(ensemblGenome, this.graphId, RelationshipTypes.ENSEMBL_GENOME);
+        CommonUtility.createRelationShip(entrezGeneId, this.graphId, RelationshipTypes.ENTREZ_GENE_ID);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     public GraphGene(String name) {

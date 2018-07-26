@@ -1,6 +1,5 @@
 package uk.ac.ebi.intact.graphdb;
 
-import org.junit.experimental.categories.Categories;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

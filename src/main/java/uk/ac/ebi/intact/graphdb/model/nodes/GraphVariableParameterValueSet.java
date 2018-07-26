@@ -64,7 +64,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createVariableParameterValueRelationShips(variableParameterValues, this.graphId, "variableParameter");
+        CommonUtility.createVariableParameterValueRelationShips(variableParameterValues, this.graphId);
     }
 
 

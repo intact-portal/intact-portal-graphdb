@@ -17,6 +17,8 @@ import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 import java.math.BigInteger;
 import java.util.*;
 
+import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.INTERACTION_DETECTION_METHOD;
+
 @NodeEntity
 public class GraphExperiment implements Experiment {
 
@@ -30,14 +32,27 @@ public class GraphExperiment implements Experiment {
 
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.INCOMING)
     private GraphPublication publication;
+
+    @Relationship(type = RelationshipTypes.XREFS)
     private Collection<GraphXref> xrefs;
+
+    @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
+
+    @Relationship(type = INTERACTION_DETECTION_METHOD)
     private GraphCvTerm interactionDetectionMethod;
+
+    @Relationship(type = RelationshipTypes.HOST_ORGANISM)
     private GraphOrganism hostOrganism;
+
     //private Collection<InteractionEvidence> interactions;
 
+    @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphConfidence> confidences;
+
+    @Relationship(type = RelationshipTypes.VARIABLE_PARAMETER)
     private Collection<GraphVariableParameter> variableParameters;
+
     private String pubmedId;
 
     @Transient
@@ -106,13 +121,13 @@ public class GraphExperiment implements Experiment {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(interactionDetectionMethod, this.graphId, "interactionDetectionMethod");
-        CommonUtility.createRelationShip(hostOrganism, this.graphId, "hostOrganism");
+        CommonUtility.createRelationShip(interactionDetectionMethod, this.graphId,  RelationshipTypes.INTERACTION_DETECTION_METHOD);
+        CommonUtility.createRelationShip(hostOrganism, this.graphId,  RelationshipTypes.HOST_ORGANISM);
         CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUB_EXP);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId, "xrefs");
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId, "annotations");
-        CommonUtility.createConfidenceRelationShips(confidences,this.graphId,"confidences");
-        CommonUtility.createVariableParameterRelationShips(variableParameters,this.graphId,"variableParameters");
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createConfidenceRelationShips(confidences,this.graphId);
+        CommonUtility.createVariableParameterRelationShips(variableParameters,this.graphId);
     }
 
 /*    public GraphExperiment(Publication publication) {

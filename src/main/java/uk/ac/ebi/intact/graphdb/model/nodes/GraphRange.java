@@ -1,11 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
+import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
@@ -13,6 +9,7 @@ import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -31,11 +28,21 @@ public class GraphRange implements Range {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+
     private String ac;
+
+    @Relationship(type = RelationshipTypes.START)
     private GraphPosition start;
+
+    @Relationship(type = RelationshipTypes.END)
     private GraphPosition end;
+
     private boolean isLink;
+
+    @Relationship(type = RelationshipTypes.RESULTING_SEQUENCE)
     private GraphResultingSequence resultingSequence;
+
+    @Relationship(type = RelationshipTypes.PARTICIPANT)
     private GraphEntity participant;
 
     @Transient
@@ -62,8 +69,6 @@ public class GraphRange implements Range {
 
     public void createNodeNatively() {
         try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
@@ -81,10 +86,10 @@ public class GraphRange implements Range {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(start, this.graphId, "start");
-        CommonUtility.createRelationShip(end, this.graphId, "end");
-        CommonUtility.createRelationShip(resultingSequence, this.graphId, "resultingSequence");
-        CommonUtility.createRelationShip(participant, this.graphId, "participant");
+        CommonUtility.createRelationShip(start, this.graphId, RelationshipTypes.START);
+        CommonUtility.createRelationShip(end, this.graphId, RelationshipTypes.END);
+        CommonUtility.createRelationShip(resultingSequence, this.graphId, RelationshipTypes.RESULTING_SEQUENCE);
+        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
     }
 
     public void setPositions(Position start, Position end) {
@@ -237,7 +242,7 @@ public class GraphRange implements Range {
 
     @Override
     public String toString() {
-        return this.start.toString() + " - " + this.end.toString() + (isLink() ? "(linked)" : "");
+        return (this.start!=null?this.start.toString()+"-":"") + (this.end!=null?this.end.toString():"") + (isLink() ? "(linked)" : "");
     }
 
     public String createUniqueKey(Range range) {

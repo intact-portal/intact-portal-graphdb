@@ -4,6 +4,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.exception.IllegalParameterException;
@@ -13,6 +14,7 @@ import psidev.psi.mi.jami.model.ParameterValue;
 import psidev.psi.mi.jami.utils.ParameterUtils;
 import psidev.psi.mi.jami.utils.comparator.parameter.UnambiguousParameterComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -29,9 +31,16 @@ public class GraphParameter implements Parameter {
     private String uniqueKey;
 
     private String ac;
+
+    @Relationship(type = RelationshipTypes.TYPE)
     private GraphCvTerm type;
+
     private BigDecimal uncertainty;
+
+    @Relationship(type = RelationshipTypes.UNIT)
     private GraphCvTerm unit;
+
+    @Relationship(type = RelationshipTypes.VALUE)
     private GraphParameterValue value;
 
     @Transient
@@ -77,9 +86,9 @@ public class GraphParameter implements Parameter {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, "type");
-        CommonUtility.createRelationShip(unit, this.graphId, "unit");
-        CommonUtility.createRelationShip(value, this.graphId, "value");
+        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(unit, this.graphId,  RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(value, this.graphId, RelationshipTypes.VALUE);
     }
 
     public GraphParameter(CvTerm type, ParameterValue value) {

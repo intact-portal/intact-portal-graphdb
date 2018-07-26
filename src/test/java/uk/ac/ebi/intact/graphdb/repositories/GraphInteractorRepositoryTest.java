@@ -17,7 +17,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class InteractorRepositoryTest {
+public class GraphInteractorRepositoryTest {
 
     public static final String P12345 = "P12345";
     public static final String P12346 = "P12346";
@@ -35,13 +35,13 @@ public class InteractorRepositoryTest {
     @Autowired
     protected ProteinRepository proteinRepository;
     @Autowired
-    protected InteractorRepository interactorRepository;
+    protected GraphInteractorRepository graphInteractorRepository;
 
     @Before
     public void setUp() throws Exception {
 
         proteinRepository.deleteAll();
-        interactorRepository.deleteAll();
+        graphInteractorRepository.deleteAll();
 
 //
 //        GraphProtein p12345 = new GraphProtein("P12345");
@@ -75,16 +75,16 @@ public class InteractorRepositoryTest {
 
         //OR
 
-        interactorRepository.save(p12345);
-        interactorRepository.save(p12346);
-        interactorRepository.save(p12347);
+        graphInteractorRepository.save(p12345);
+        graphInteractorRepository.save(p12346);
+        graphInteractorRepository.save(p12347);
 
-        p12345 = (GraphInteractor) interactorRepository.findByShortName(p12345.getShortName());
+        p12345 = (GraphInteractor) graphInteractorRepository.findByShortName(p12345.getShortName());
 //        p12345.interactsWith(p12346, 0.0);
 //        p12345.interactsWith(p12347, 0.0);
-        interactorRepository.save(p12345);
+        graphInteractorRepository.save(p12345);
 
-        p12346 = (GraphInteractor) interactorRepository.findByShortName(p12346.getShortName());
+        p12346 = (GraphInteractor) graphInteractorRepository.findByShortName(p12346.getShortName());
 //        p12346 = interactorRepository.findByShortName(p12346.getShortName());
 //        p12346.interactsWith(p12347, 0.0);
 
@@ -98,15 +98,15 @@ public class InteractorRepositoryTest {
     public void tearDown() throws Exception {
 
         proteinRepository.deleteAll();
-        interactorRepository.deleteAll();
+        graphInteractorRepository.deleteAll();
     }
 
     @Test
     public void testInteractorRepository() throws Exception {
 
-        Interactor interactorA = interactorRepository.findByShortName(P12345);
-        Interactor interactorB = interactorRepository.findByShortName(P12346);
-        Interactor interactorC = interactorRepository.findByShortName(P12347);
+        Interactor interactorA = graphInteractorRepository.findByShortName(P12345);
+        Interactor interactorB = graphInteractorRepository.findByShortName(P12346);
+        Interactor interactorC = graphInteractorRepository.findByShortName(P12347);
         Assert.assertEquals(interactorA.getShortName(), P12345);
         Assert.assertEquals(interactorB.getShortName(), P12346);
         Assert.assertEquals(interactorC.getShortName(), P12347);
@@ -118,12 +118,12 @@ public class InteractorRepositoryTest {
 //        Assert.assertEquals(interactorResultB.single().getShortName(), P12346);
 //        Assert.assertEquals(interactorResultC.single().getShortName(), P12347);
 
-        Assert.assertEquals(interactorRepository.count(), 3);
-        for (Interactor interactor : interactorRepository.findAll()) {
+        Assert.assertEquals(graphInteractorRepository.count(), 3);
+        for (Interactor interactor : graphInteractorRepository.findAll()) {
             System.out.println(interactor);
         }
 
-        Page<GraphInteractor> page = interactorRepository.findAll(new PageRequest(0, 10));
+        Page<GraphInteractor> page = graphInteractorRepository.findAll(new PageRequest(0, 10));
         Assert.assertEquals(page.getTotalElements(), 3);
         for (Interactor interactor : page.getContent()) {
             System.out.println(interactor);
@@ -136,7 +136,7 @@ public class InteractorRepositoryTest {
 
         System.out.println("Lookup each interactor by accession...");
         for (String name : new String[]{P12345, P12346, P12347}) {
-            GraphInteractor interactor = interactorRepository.findByShortName(name);
+            GraphInteractor interactor = graphInteractorRepository.findByShortName(name);
             Assert.assertEquals(interactor.getShortName(), name);
             Assert.assertNotNull(interactor.getInteractions());
             Assert.assertEquals(interactor.getInteractions().size(), 2);

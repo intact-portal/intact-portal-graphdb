@@ -1,14 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Interactor;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -27,9 +25,15 @@ public class GraphClusteredInteraction {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.INTERACTIONS)
     private Set<GraphBinaryInteractionEvidence> interactions;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR_PA)
     private GraphInteractor interactorPA;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR_PB)
     private GraphInteractor interactorPB;
+
     private double miscore;
 
     @Transient
@@ -72,9 +76,9 @@ public class GraphClusteredInteraction {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(interactorPA, this.getGraphId(), "interactorPA");
-        CommonUtility.createRelationShip(interactorPB, this.getGraphId(), "interactorPB");
-        CommonUtility.createBinaryInteractionEvidenceRelationShips(interactions, this.getGraphId(), "interactions");
+        CommonUtility.createRelationShip(interactorPA, this.getGraphId(), RelationshipTypes.INTERACTOR_PA);
+        CommonUtility.createRelationShip(interactorPB, this.getGraphId(), RelationshipTypes.INTERACTOR_PB);
+        CommonUtility.createBinaryInteractionEvidenceRelationShips(interactions, this.getGraphId());
     }
 
 

@@ -1,15 +1,13 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Checksum;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.checksum.UnambiguousChecksumComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
@@ -25,7 +23,9 @@ public class GraphChecksum implements Checksum {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
+    @Relationship(type = RelationshipTypes.METHOD)
     private GraphCvTerm method;
+
     private String value;
 
     @Transient
@@ -65,7 +65,7 @@ public class GraphChecksum implements Checksum {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(method, this.getGraphId(), "method");
+        CommonUtility.createRelationShip(method, this.getGraphId(), RelationshipTypes.METHOD);
     }
 
     public GraphChecksum(CvTerm method, String value) {

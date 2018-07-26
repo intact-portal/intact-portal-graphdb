@@ -32,7 +32,7 @@ public class ProteinRepositoryTest {
     @Autowired
     protected ProteinRepository proteinRepository;
     @Autowired
-    protected InteractorRepository interactorRepository;
+    protected GraphInteractorRepository graphInteractorRepository;
 
     @Before
     public void setUp() throws Exception {

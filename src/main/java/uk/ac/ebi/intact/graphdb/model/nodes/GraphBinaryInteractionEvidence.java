@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,17 +27,26 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A, direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantA;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.OUTGOING)
     private GraphParticipantEvidence participantB;
 
+    @Relationship(type = RelationshipTypes.INTERACTOR_A)
     private GraphInteractor interactorA;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR_B)
     private GraphInteractor interactorB;
 
+    //TODO
+    @Relationship(type = RelationshipTypes.HAS, direction = Relationship.OUTGOING)
+    private Collection<GraphInteractor> interactors;
+
+    @Relationship(type = RelationshipTypes.COMPLEX_EXPANSION)
     private GraphCvTerm complexExpansion;
 
+    //TODO
     private GraphInteractionEvidence graphInteractionEvidence;
 
     @Transient
@@ -86,11 +96,11 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(participantA, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(participantB, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(interactorA, this.getGraphId(), "interactorA");
-        CommonUtility.createRelationShip(interactorB, this.getGraphId(), "interactorB");
-        CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), "complexExpansion");
+        CommonUtility.createRelationShip(participantA, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT_A);
+        CommonUtility.createRelationShip(participantB, this.getGraphId(), RelationshipTypes.BIE_PARTICIPANT_B);
+        CommonUtility.createRelationShip(interactorA, this.getGraphId(), RelationshipTypes.INTERACTOR_A);
+        CommonUtility.createRelationShip(interactorB, this.getGraphId(), RelationshipTypes.INTERACTOR_B);
+        CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), RelationshipTypes.COMPLEX_EXPANSION);
     }
 
     public String getUniqueKey() {
@@ -183,6 +193,13 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     }
 
+    public Collection<? extends Interactor> getInteractors() {
+        return interactors;
+    }
+
+    public void setInteractors(Collection<GraphInteractor> interactors) {
+        this.interactors = interactors;
+    }
 
     public GraphInteractionEvidence getGraphInteractionEvidence() {
         return graphInteractionEvidence;
@@ -242,7 +259,8 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             hashcode = 31 * hashcode + HashCode.participantHashCode(binaryInteractionEvidence.getParticipantB());
         }
         if (binaryInteractionEvidence.getComplexExpansion() != null) {
-            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());
+            hashcode = 31 * hashcode +
+                    UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());
         }
         if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
             hashcode = hashcode + HashCode.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
