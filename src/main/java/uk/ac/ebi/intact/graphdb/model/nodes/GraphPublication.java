@@ -92,12 +92,13 @@ public class GraphPublication implements Publication {
         assignImexId(publication.getImexId());
         setAc(CommonUtility.extractAc(publication));
         setUniqueKey(createUniqueKey());
+        setAuthors(publication.getAuthors());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
 
-        setAuthors(publication.getAuthors());
+
         initializeGraphAuthors(this.getAuthors());
         setIdentifiers(publication.getIdentifiers());
         setXrefs(publication.getXrefs());

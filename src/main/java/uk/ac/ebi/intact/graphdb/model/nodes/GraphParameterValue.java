@@ -28,6 +28,10 @@ public class GraphParameterValue extends ParameterValue {
     @Transient
     private boolean isAlreadyCreated;
 
+    public GraphParameterValue(){
+       super(new BigDecimal(0));
+    }
+
     public GraphParameterValue(BigDecimal factor, short base, short exponent) {
         super(factor, base, exponent);
         setUniqueKey(createUniqueKey());

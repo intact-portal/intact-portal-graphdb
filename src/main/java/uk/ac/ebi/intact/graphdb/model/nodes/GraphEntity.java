@@ -40,7 +40,7 @@ public class GraphEntity implements ExperimentalEntity {
     private GraphStoichiometry stoichiometry;
 
     @Relationship(type = RelationshipTypes.CAUSAL_RELATIONSHIP)
-    private Collection<GraphCausalRelationship> gcausalRelationships;
+    private Collection<GraphCausalRelationship> causalRelationships;
 
     @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
@@ -66,7 +66,7 @@ public class GraphEntity implements ExperimentalEntity {
         }
 
         setFeatures(entity.getFeatures());
-        setGcausalRelationships(entity.getCausalRelationships());
+        setCausalRelationships(entity.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated() && !childAlreadyCreated) {
@@ -99,7 +99,7 @@ public class GraphEntity implements ExperimentalEntity {
         CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
         CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
         CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.FEATURES);
-        CommonUtility.createCausalRelationshipRelationShips(gcausalRelationships, graphId);
+        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 
     @Override
@@ -242,24 +242,19 @@ public class GraphEntity implements ExperimentalEntity {
         this.nodeProperties = nodeProperties;
     }
 
-
-    public Collection<GraphCausalRelationship> getGcausalRelationships() {
-        if (this.gcausalRelationships == null) {
-            this.gcausalRelationships = new ArrayList<GraphCausalRelationship>();
-        }
-        return this.gcausalRelationships;
-    }
-
     @Override
-    public Collection<CausalRelationship> getCausalRelationships(){
-        return new ArrayList<CausalRelationship>();
+    public Collection<GraphCausalRelationship> getCausalRelationships() {
+        if (this.causalRelationships == null) {
+            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
+        }
+        return this.causalRelationships;
     }
 
-    public void setGcausalRelationships(Collection<CausalRelationship> causalRelationships) {
+    public void setCausalRelationships(Collection<CausalRelationship> causalRelationships) {
         if (causalRelationships != null) {
-            this.gcausalRelationships = CollectionAdaptor.convertCausalRelationshipIntoGraphModel(causalRelationships);
+            this.causalRelationships = CollectionAdaptor.convertCausalRelationshipIntoGraphModel(causalRelationships);
         } else {
-            this.gcausalRelationships = new ArrayList<GraphCausalRelationship>();
+            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
         }
     }
 

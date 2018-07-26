@@ -30,7 +30,7 @@ public class GraphResultingSequence implements ResultingSequence {
 
     private String originalSequence;
     private String newSequence;
-    private Collection<GraphXref> gxrefs;
+    private Collection<GraphXref> xrefs;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -42,7 +42,7 @@ public class GraphResultingSequence implements ResultingSequence {
     public GraphResultingSequence(ResultingSequence resultingSequence) {
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
-        setGxrefs(resultingSequence.getXrefs());
+        setXrefs(resultingSequence.getXrefs());
         setUniqueKey(createUniqueKey(resultingSequence));
 
         if (CreationConfig.createNatively) {
@@ -74,7 +74,7 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createXrefRelationShips(gxrefs, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
     }
 
 
@@ -125,23 +125,18 @@ public class GraphResultingSequence implements ResultingSequence {
         this.originalSequence = sequence;
     }
 
-    public Collection<GraphXref> getGxrefs() {
-        if (gxrefs == null) {
-            this.gxrefs = new ArrayList<GraphXref>();
+    public Collection<GraphXref> getXrefs() {
+        if (xrefs == null) {
+            this.xrefs = new ArrayList<GraphXref>();
         }
-        return this.gxrefs;
+        return this.xrefs;
     }
 
-    @Override
-    public Collection<Xref> getXrefs(){
-        return new ArrayList<Xref>();
-    }
-
-    public void setGxrefs(Collection<Xref> xrefs) {
+    public void setXrefs(Collection<Xref> xrefs) {
         if (xrefs != null) {
-            this.gxrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
+            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
         } else {
-            this.gxrefs = new ArrayList<GraphXref>();
+            this.xrefs = new ArrayList<GraphXref>();
         }
     }
 

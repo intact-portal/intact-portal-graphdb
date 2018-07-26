@@ -16,7 +16,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.GraphAliasUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -250,7 +249,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
         // remove all gene names if the collection is not empty
         else if (!proteinAliases.isEmpty()) {
-            GraphAliasUtils.removeAllAliasesWithType(proteinAliases, Alias.GENE_NAME_MI, Alias.GENE_NAME);
+            AliasUtils.removeAllAliasesWithType(proteinAliases, Alias.GENE_NAME_MI, Alias.GENE_NAME);
             this.geneName = null;
         }
     }
