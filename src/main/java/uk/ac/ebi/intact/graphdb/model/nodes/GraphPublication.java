@@ -127,7 +127,13 @@ public class GraphPublication implements Publication {
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
             if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
-            if (this.getAuthors() != null) nodeProperties.put("authors", (String[])this.getAuthors().toArray());
+
+            if (this.getAuthors() != null){
+                String[] authorArray = new String[this.getAuthors().size()];
+                authorArray = this.getAuthors().toArray(authorArray);
+                nodeProperties.put("authors", authorArray);
+            }
+
 
             Label[] labels = CommonUtility.getLabels(GraphPublication.class);
 
