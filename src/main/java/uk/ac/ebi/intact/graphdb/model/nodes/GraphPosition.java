@@ -159,7 +159,16 @@ public class GraphPosition implements Position {
 
     @Override
     public String toString() {
-        return this.status.toString() + ": " + getStart() + ".." + getEnd();
+        String stringValue = "";
+        if (this.status != null) {
+            stringValue = this.status.toString();
+        }
+
+        stringValue += ":" + getStart();
+        stringValue += ".." + getEnd();
+
+        return stringValue;
+
     }
 
     @Override

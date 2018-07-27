@@ -242,7 +242,7 @@ public class GraphRange implements Range {
 
     @Override
     public String toString() {
-        return (this.start!=null?this.start.toString()+"-":"") + (this.end!=null?this.end.toString():"") + (isLink() ? "(linked)" : "");
+        return (this.start!=null?this.start.toString():"") + (this.end!=null?this.end.toString():"") + (isLink() ? "(linked)" : "");
     }
 
     public String createUniqueKey(Range range) {
