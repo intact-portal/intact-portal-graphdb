@@ -54,7 +54,6 @@ public class GraphPublication implements Publication {
     @Relationship(type = RelationshipTypes.IMEX_ID)
     private GraphXref imexId;
 
-    @Transient
     private List<String> authors;
 
     @Relationship(type = RelationshipTypes.GRAPH_AUTHORS)
