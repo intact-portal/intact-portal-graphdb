@@ -56,11 +56,12 @@ public class GraphSource extends GraphCvTerm implements Source {
     public void createNodeNatively() {
         try {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.putAll(super.getNodeProperties());
             if (this.getPostalAddress() != null) nodeProperties.put("postalAddress", this.getPostalAddress());
             if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getUrl() != null) nodeProperties.put("url", this.getUrl());
-            nodeProperties.putAll(super.getNodeProperties());
+
 
             Label[] labels = CommonUtility.getLabels(GraphSource.class);
 
