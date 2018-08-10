@@ -8,13 +8,11 @@ import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.*;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
-
-import java.math.BigInteger;
 import java.util.*;
 
 
@@ -27,7 +25,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String ac;
@@ -126,7 +124,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setCausalRelationships(participantEvidence.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -140,7 +138,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
             Label[] labels = CommonUtility.getLabels(GraphParticipantEvidence.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -189,10 +187,10 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             if (experimentalRole instanceof GraphCvTerm) {
                 this.experimentalRole = (GraphCvTerm) experimentalRole;
             } else {
-                this.experimentalRole = new GraphCvTerm(experimentalRole,false);
+                this.experimentalRole = new GraphCvTerm(experimentalRole, false);
             }
         } else {
-            this.experimentalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(),false);
+            this.experimentalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(), false);
         }
     }
 
@@ -207,10 +205,10 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             if (biologicalRole instanceof GraphCvTerm) {
                 this.biologicalRole = (GraphCvTerm) biologicalRole;
             } else {
-                this.biologicalRole = new GraphCvTerm(biologicalRole,false);
+                this.biologicalRole = new GraphCvTerm(biologicalRole, false);
             }
         } else {
-            this.biologicalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(),false);
+            this.biologicalRole = new GraphCvTerm(CvTermUtils.createUnspecifiedRole(), false);
         }
         //TODO login it
     }
@@ -288,7 +286,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             }else if(interactor instanceof NucleicAcid){
                 this.interactor = new GraphNucleicAcid((NucleicAcid) interactor);
             }else {*/
-                this.interactor = new GraphInteractor(interactor, false);
+            this.interactor = new GraphInteractor(interactor, false);
 //            }
         }
         if (this.changeListener != null) {
@@ -323,7 +321,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             } else if (interaction instanceof BinaryInteractionEvidence) {
                 this.interaction = new GraphBinaryInteractionEvidence((BinaryInteractionEvidence) interaction);
             } else {
-                this.interaction = new GraphInteractionEvidence(interaction,false);
+                this.interaction = new GraphInteractionEvidence(interaction, false);
             }
         } else {
             this.interaction = null;
@@ -362,7 +360,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             this.binaryInteractionEvidenceB = null;
         }
     }
-
 
 
     @Override
@@ -601,8 +598,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public String toString() {
-        return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null?", stoichiometry: " + this.getStoichiometry().toString():"") + (this.getExperimentalRole() != null?", " + this.getExperimentalRole().toString():"") + (this.getExpressedInOrganism() != null?", " + this.getExpressedInOrganism().toString():"");
+        return "Participant: " + this.getInteractor().toString() + (this.getStoichiometry() != null ? ", stoichiometry: " + this.getStoichiometry().toString() : "") + (this.getExperimentalRole() != null ? ", " + this.getExperimentalRole().toString() : "") + (this.getExpressedInOrganism() != null ? ", " + this.getExpressedInOrganism().toString() : "");
     }
+
     public int hashCode() {
         int hashcode = 31;
         if (this.getInteractor() != null) {
@@ -624,7 +622,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             hashcode = 31 * hashcode + this.getExpressedInOrganism().hashCode();
         }
         if (this.getParameters() != null) {
-            hashcode = 31 * hashcode +HashCode.parametersGraphHashCode(this.getParameters());
+            hashcode = 31 * hashcode + HashCode.parametersGraphHashCode(this.getParameters());
         }
         if (!this.getFeatures().isEmpty()) {
             hashcode = hashcode + HashCode.featuresGraphHashCode(this.getFeatures());

@@ -27,9 +27,9 @@ public class CommonUtility {
                 boolean acClassFound = true;
                 while (acClassFound && classItr.getName().contains("uk.ac.ebi.intact")) {
                     try {
-                          Method method = classItr.getMethod("getAc");
-                          ac = (String) method.invoke(classItr.cast(object));
-                          acClassFound = false;
+                        Method method = classItr.getMethod("getAc");
+                        ac = (String) method.invoke(classItr.cast(object));
+                        acClassFound = false;
 
                     } catch (NoSuchMethodException e) {
                         classItr = classItr.getSuperclass();
