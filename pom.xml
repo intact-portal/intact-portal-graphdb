@@ -89,7 +89,7 @@
 
 
         <!--Jami-->
-        <dependency>
+<!--        <dependency>
             <groupId>uk.ac.ebi.intact.jami</groupId>
             <artifactId>intact-jami</artifactId>
             <version>${intact.jami.version}</version>
@@ -111,7 +111,7 @@
                     <artifactId>jami-enricher</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.neo4j</groupId>

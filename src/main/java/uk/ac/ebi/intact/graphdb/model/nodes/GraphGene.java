@@ -66,7 +66,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public GraphGene(Gene gene) {
-        super(gene);
+        super(gene,true);
         setEnsembl(gene.getEnsembl());
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());

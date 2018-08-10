@@ -48,6 +48,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Relationship(type = RelationshipTypes.ROGID)
     private GraphChecksum rogid;
 
+    private String refseqStr;
+    private String geneNameStr;
+    private String rogidStr;
+
     @Transient
     private boolean isAlreadyCreated;
 
@@ -57,10 +61,13 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public GraphProtein(Protein protein) {
         super(protein, true);
-        setUniprotkb(protein.getUniprotkb());
-        setRefseq(protein.getRefseq());
+      //  setUniprotkb(protein.getUniprotkb());
+        setUniprotName(protein.getUniprotkb());
+      //  setRefseq(protein.getRefseq());
+        setRefseqStr(protein.getRefseq());
         setChecksums(protein.getChecksums());
-        setGeneName(protein.getGeneName());
+      //  setGeneName(protein.getGeneName());
+        setGeneNameStr(protein.getGeneName());
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -78,6 +85,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getUniprotName() != null) nodeProperties.put("uniprotName", this.getUniprotName());
+            if (this.getRefseqStr() != null) nodeProperties.put("refseqStr", this.getRefseqStr());
+            if (this.getGeneNameStr() != null) nodeProperties.put("geneNameStr", this.getGeneNameStr());
+
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphProtein.class);
 
@@ -184,7 +194,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public void setUniprotkb(String ac) {
 
-        setUniprotName(ac);
+       /* setUniprotName(ac);
         GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
         // add new uniprotkb if not null
@@ -202,7 +212,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         else if (!proteinIdentifiers.isEmpty()) {
             XrefUtils.removeAllXrefsWithDatabase(proteinIdentifiers, Xref.UNIPROTKB_MI, Xref.UNIPROTKB);
             this.uniprotkb = null;
-        }
+        }*/
     }
 
     public String getRefseq() {
@@ -210,7 +220,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setRefseq(String ac) {
-        GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
+        /*GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
         // add new refseq if not null
         if (ac != null) {
@@ -227,7 +237,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         else if (!proteinIdentifiers.isEmpty()) {
             XrefUtils.removeAllXrefsWithDatabase(proteinIdentifiers, Xref.REFSEQ_MI, Xref.REFSEQ);
             this.refseq = null;
-        }
+        }*/
     }
 
     public String getGeneName() {
@@ -235,7 +245,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setGeneName(String name) {
-        GraphProtein.ProteinAliasList proteinAliases = (GraphProtein.ProteinAliasList) getAliases();
+/*        GraphProtein.ProteinAliasList proteinAliases = (GraphProtein.ProteinAliasList) getAliases();
 
         // add new gene name if not null
         if (name != null) {
@@ -251,7 +261,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         else if (!proteinAliases.isEmpty()) {
             AliasUtils.removeAllAliasesWithType(proteinAliases, Alias.GENE_NAME_MI, Alias.GENE_NAME);
             this.geneName = null;
-        }
+        }*/
     }
 
     public String getRogid() {
@@ -259,7 +269,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     public void setRogid(String rogid) {
-        GraphProtein.ProteinChecksumList proteinChecksums = (GraphProtein.ProteinChecksumList) getChecksums();
+/*        GraphProtein.ProteinChecksumList proteinChecksums = (GraphProtein.ProteinChecksumList) getChecksums();
 
         if (rogid != null) {
             CvTerm rogidMethod = CvTermUtils.createRogid();
@@ -274,7 +284,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         else if (!proteinChecksums.isEmpty()) {
             ChecksumUtils.removeAllChecksumWithMethod(proteinChecksums, Checksum.ROGID_MI, Checksum.ROGID);
             this.rogid = null;
-        }
+        }*/
     }
 
     public boolean isAlreadyCreated() {
@@ -414,6 +424,30 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Override
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
+    }
+
+    public String getRefseqStr() {
+        return refseqStr;
+    }
+
+    public void setRefseqStr(String refseqStr) {
+        this.refseqStr = refseqStr;
+    }
+
+    public String getGeneNameStr() {
+        return geneNameStr;
+    }
+
+    public void setGeneNameStr(String geneNameStr) {
+        this.geneNameStr = geneNameStr;
+    }
+
+    public String getRogidStr() {
+        return rogidStr;
+    }
+
+    public void setRogidStr(String rogidStr) {
+        this.rogidStr = rogidStr;
     }
 
     @Transient

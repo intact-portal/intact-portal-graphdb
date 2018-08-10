@@ -6,7 +6,6 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Polymer;
@@ -17,7 +16,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,22 +44,32 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         super();
     }
 
-    public GraphPolymer(Polymer polymer,boolean childAlreadyCreated) {
-        super(polymer);
+    public GraphPolymer(Polymer polymer, boolean childAlreadyCreated) {
+        super(polymer, true);
         setSequence(polymer.getSequence());
         setUniqueKey(createUniqueKey(polymer));
 
         if (CreationConfig.createNatively) {
-            initialzeNodeProperties();
-            if(!childAlreadyCreated) {
+            this.initialzeNodeProperties();
+            if (!childAlreadyCreated) {
                 createNodeNatively();
+            }
+        }
+
+        if (CreationConfig.createNatively) {
+            if (!isAlreadyCreated() && !childAlreadyCreated) {
+                this.createRelationShipNatively(this.getGraphId());
             }
         }
     }
 
-    public void initialzeNodeProperties(){
-        if(this.getSequence()!=null) getNodeProperties().put("sequence", this.getSequence());
+    public void initialzeNodeProperties() {
+        if (this.getSequence() != null) getNodeProperties().put("sequence", this.getSequence());
         this.getNodeProperties().putAll(super.getNodeProperties());
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
     }
 
     public void createNodeNatively() {
@@ -71,7 +79,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
             Label[] labels = CommonUtility.getLabels(GraphPolymer.class);
             nodeProperties.put("uniqueKey", this.getUniqueKey());
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(getNodeProperties(), labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -158,10 +166,9 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
      */
     @Override
     public void setInteractorType(CvTerm interactorType) {
-        if (interactorType == null){
+        if (interactorType == null) {
             super.setInteractorType(CvTermUtils.createPolymerInteractorType());
-        }
-        else {
+        } else {
             super.setInteractorType(interactorType);
         }
     }
@@ -207,7 +214,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public String createUniqueKey(Polymer polymer) {
         // since there was not hashcode implemented in jami, we had to come up with this
-       int hashcode = HashCode.polymerHashCode(polymer);
+        int hashcode = HashCode.polymerHashCode(polymer);
 
         return hashcode + "";
     }

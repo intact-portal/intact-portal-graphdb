@@ -8,6 +8,9 @@ import psidev.psi.mi.jami.model.Molecule;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Xref;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @NodeEntity
 public class GraphMolecule extends GraphInteractor implements Molecule {
 
@@ -21,8 +24,8 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         super();
     }
 
-    public GraphMolecule(Molecule molecule) {
-        super(molecule,true);
+    public GraphMolecule(Molecule molecule,boolean childAlreadyCreated) {
+        super(molecule,childAlreadyCreated);
     }
 
     public GraphMolecule(String name, CvTerm type) {
@@ -96,4 +99,5 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
     }
+
 }

@@ -78,7 +78,7 @@ public class GraphInteractor implements Interactor {
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
-            initialzeNodeProperties();
+            initializeNodeProperties();
             if(!childAlreadyCreated) {
                 createNodeNatively();
             }
@@ -97,7 +97,7 @@ public class GraphInteractor implements Interactor {
         }
     }
 
-    public void initialzeNodeProperties(){
+    public void initializeNodeProperties(){
 
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
