@@ -57,6 +57,9 @@ public class GraphInteractor implements Interactor {
     @Relationship(type = RelationshipTypes.HAS , direction = Relationship.INCOMING)
     private Collection<GraphInteractionEvidence> interactionEvidence;
 
+    @Relationship(type = RelationshipTypes.INTERACTOR,direction = Relationship.INCOMING)
+    private Collection<GraphParticipantEvidence> participantEvidences;
+
     @Transient
     private Collection<GraphBinaryInteractionEvidence> interactions;
 
@@ -451,4 +454,12 @@ public class GraphInteractor implements Interactor {
         return hashCode() + "";
     }
 
+
+    public Collection<GraphParticipantEvidence> getParticipantEvidences() {
+        return participantEvidences;
+    }
+
+    public void setParticipantEvidences(Collection<GraphParticipantEvidence> participantEvidences) {
+        this.participantEvidences = participantEvidences;
+    }
 }
