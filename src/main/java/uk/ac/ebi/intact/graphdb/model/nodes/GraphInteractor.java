@@ -26,6 +26,7 @@ public class GraphInteractor implements Interactor {
 
     private String shortName;
     private String fullName;
+    private String preferredName;
 
     @Relationship(type = RelationshipTypes.ORGANISM)
     private GraphOrganism organism;
@@ -78,6 +79,7 @@ public class GraphInteractor implements Interactor {
         setOrganism(interactor.getOrganism());
         setInteractorType(interactor.getInteractorType());
         setAc(CommonUtility.extractAc(interactor));
+        setPreferredName(interactor.getPreferredName());
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -103,6 +105,7 @@ public class GraphInteractor implements Interactor {
     public void initializeNodeProperties(){
 
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+        if (this.getPreferredName() != null) nodeProperties.put("preferredName", this.getPreferredName());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
     }
@@ -461,5 +464,14 @@ public class GraphInteractor implements Interactor {
 
     public void setParticipantEvidences(Collection<GraphParticipantEvidence> participantEvidences) {
         this.participantEvidences = participantEvidences;
+    }
+
+    @Override
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
     }
 }
