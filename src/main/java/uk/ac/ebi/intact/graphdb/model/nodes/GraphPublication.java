@@ -117,7 +117,7 @@ public class GraphPublication implements Publication {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
+            if (this.getPubmedIdStr() != null) nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
