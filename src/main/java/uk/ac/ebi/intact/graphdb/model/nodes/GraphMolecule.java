@@ -1,12 +1,18 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Molecule;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Xref;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +23,8 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @GraphId
     private Long graphId;
 
+    private String uniqueKey;
+
     @Transient
     private boolean isAlreadyCreated;
 
@@ -25,7 +33,37 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     }
 
     public GraphMolecule(Molecule molecule,boolean childAlreadyCreated) {
-        super(molecule,childAlreadyCreated);
+        super(molecule,true);
+        if (CreationConfig.createNatively) {
+            if (!childAlreadyCreated) {
+                this.createNodeNatively();
+            }
+            if (!isAlreadyCreated()&& !childAlreadyCreated) {
+                this.createRelationShipNatively();
+            }
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.putAll(super.getNodeProperties());
+            Label[] labels = CommonUtility.getLabels(GraphMolecule.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
     }
 
     public GraphMolecule(String name, CvTerm type) {
@@ -100,4 +138,23 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         isAlreadyCreated = alreadyCreated;
     }
 
+    @Override
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    @Override
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    @Override
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    @Override
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
 }

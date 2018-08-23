@@ -18,7 +18,6 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +65,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
     public GraphGene(Gene gene) {
-        super(gene,true);
+        super(gene, true);
         setEnsembl(gene.getEnsembl());
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());
@@ -74,8 +73,8 @@ public class GraphGene extends GraphMolecule implements Gene {
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
-             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            createNodeNatively();
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -90,7 +89,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphGene.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -217,6 +216,14 @@ public class GraphGene extends GraphMolecule implements Gene {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), organism);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void initialiseIdentifiers() {
+        initialiseIdentifiersWith(new GeneIdentifierList());
+    }
+
     @Override
     public Xref getPreferredIdentifier() {
         return ensembl != null ? ensembl : (ensemblGenome != null ? ensemblGenome : (entrezGeneId != null ? entrezGeneId : (refseq != null ? refseq : super.getPreferredIdentifier())));
@@ -245,7 +252,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.ensembl != null) {
                 geneIdentifiers.removeOnly(this.ensembl);
             }
-            this.ensembl = new GraphXref(ensemblDatabase, ac, identityQualifier);
+            this.ensembl = new GraphXref(new GraphXref(ensemblDatabase, ac, identityQualifier));
             geneIdentifiers.addOnly(this.ensembl);
         }
         // remove all ensembl if the collection is not empty
@@ -270,7 +277,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.ensemblGenome != null) {
                 geneIdentifiers.removeOnly(this.ensemblGenome);
             }
-            this.ensemblGenome = new GraphXref(ensemblGenomesDatabase, ac, identityQualifier);
+            this.ensemblGenome = new GraphXref(new GraphXref(ensemblGenomesDatabase, ac, identityQualifier));
             geneIdentifiers.addOnly(this.ensemblGenome);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -295,7 +302,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.entrezGeneId != null) {
                 geneIdentifiers.removeOnly(this.entrezGeneId);
             }
-            this.entrezGeneId = new GraphXref(entrezDatabase, id, identityQualifier);
+            this.entrezGeneId = new GraphXref(new GraphXref(entrezDatabase, id, identityQualifier));
             geneIdentifiers.addOnly(this.entrezGeneId);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -321,7 +328,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             if (this.refseq != null) {
                 geneIdentifiers.removeOnly(this.refseq);
             }
-            this.refseq = new GraphXref(refseqDatabase, ac, identityQualifier);
+            this.refseq = new GraphXref(new GraphXref(refseqDatabase, ac, identityQualifier));
             geneIdentifiers.addOnly(this.refseq);
         }
         // remove all ensembl genomes if the collection is not empty
@@ -476,7 +483,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     }
 
 
-    public String createUniqueKey(){
+    public String createUniqueKey() {
         return hashCode() + "";
     }
 

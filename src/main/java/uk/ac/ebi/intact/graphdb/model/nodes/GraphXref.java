@@ -113,12 +113,12 @@ public class GraphXref implements Xref {
         this(database, identifier);
         setQualifier(qualifier);
 
-        setUniqueKey(this.hashCode()+"");
+/*        setUniqueKey(this.hashCode()+"");
 
         if (CreationConfig.createNatively) {
             createNodesNatively();
             createRelationShipNatively();
-        }
+        }*/
     }
 
     public GraphXref(CvTerm database, String identifier, String version, CvTerm qualifier) {

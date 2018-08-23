@@ -18,7 +18,6 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,6 +154,13 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void initialiseIdentifiers() {
+        initialiseIdentifiersWith(new NucleicAcidIdentifierList());
+    }
+    /**
      * @return The first ddbjEmblGenbank if provided, then the first refseq identifier if provided, otherwise the first identifier in the list
      */
     @Override
@@ -178,7 +184,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (this.ddbjEmblGenbank != null) {
                 nucleicAcidIdentifiers.removeOnly(this.ddbjEmblGenbank);
             }
-            this.ddbjEmblGenbank = new GraphXref(ddbjEmblGenbankDatabase, id, identityQualifier);
+            this.ddbjEmblGenbank = new GraphXref(new GraphXref(ddbjEmblGenbankDatabase, id, identityQualifier));
             nucleicAcidIdentifiers.addOnly(this.ddbjEmblGenbank);
         }
         // remove all ddbj/embl/genbank if the collection is not empty
@@ -203,7 +209,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             if (this.refseq != null) {
                 nucleicAcidIdentifiers.removeOnly(this.refseq);
             }
-            this.refseq = new GraphXref(refseqDatabase, id, identityQualifier);
+            this.refseq = new GraphXref(new GraphXref(refseqDatabase, id, identityQualifier));
             nucleicAcidIdentifiers.addOnly(this.refseq);
         }
         // remove all ensembl genomes if the collection is not empty

@@ -259,7 +259,7 @@ public class GraphPublication implements Publication {
             if (this.pubmedId != null) {
                 identifiers.remove(this.pubmedId);
             }
-            this.pubmedId = new GraphXref(pubmedDatabase, pubmedId, identityQualifier);
+            this.pubmedId = new GraphXref(new GraphXref(pubmedDatabase, pubmedId, identityQualifier));
             identifiers.add(this.pubmedId);
         }
         // remove all pubmed if the collection is not empty
@@ -284,7 +284,7 @@ public class GraphPublication implements Publication {
             if (this.doi != null) {
                 identifiers.remove(this.doi);
             }
-            this.doi = new GraphXref(doiDatabase, doi, identityQualifier);
+            this.doi = new GraphXref(new GraphXref(doiDatabase, doi, identityQualifier));
             identifiers.add(this.doi);
         }
         // remove all doi if the collection is not empty
@@ -325,7 +325,7 @@ public class GraphPublication implements Publication {
             if (this.imexId != null) {
                 xrefs.remove(this.imexId);
             }
-            this.imexId = new GraphXref(imexDatabase, identifier, imexPrimaryQualifier);
+            this.imexId = new GraphXref(new GraphXref(imexDatabase, identifier, imexPrimaryQualifier));
             xrefs.add(this.imexId);
 
             this.curationDepth = CurationDepth.IMEx;

@@ -8,11 +8,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.*;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @NodeEntity
 public class GraphInteractor implements Interactor {
@@ -55,10 +51,10 @@ public class GraphInteractor implements Interactor {
     @Relationship(type = RelationshipTypes.INTERACTOR_B, direction = Relationship.INCOMING)
     private Collection<GraphBinaryInteractionEvidence> interactionsB;
 
-    @Relationship(type = RelationshipTypes.HAS , direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.HAS, direction = Relationship.INCOMING)
     private Collection<GraphInteractionEvidence> interactionEvidence;
 
-    @Relationship(type = RelationshipTypes.INTERACTOR,direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.INTERACTOR, direction = Relationship.INCOMING)
     private Collection<GraphParticipantEvidence> participantEvidences;
 
     @Transient
@@ -84,7 +80,7 @@ public class GraphInteractor implements Interactor {
 
         if (CreationConfig.createNatively) {
             initializeNodeProperties();
-            if(!childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 createNodeNatively();
             }
         }
@@ -96,13 +92,13 @@ public class GraphInteractor implements Interactor {
         setXrefs(interactor.getXrefs());
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()&&!childAlreadyCreated) {
+            if (!isAlreadyCreated() && !childAlreadyCreated) {
                 createRelationShipNatively(this.getGraphId());
             }
         }
     }
 
-    public void initializeNodeProperties(){
+    public void initializeNodeProperties() {
 
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getPreferredName() != null) nodeProperties.put("preferredName", this.getPreferredName());
@@ -116,7 +112,7 @@ public class GraphInteractor implements Interactor {
 
             Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -264,18 +260,80 @@ public class GraphInteractor implements Interactor {
         this.fullName = name;
     }
 
+    /**
+     * <p>initialiseIdentifiersWith</p>
+     *
+     * @param identifiers a {@link java.util.Collection} object.
+     */
+    protected void initialiseIdentifiersWith(Collection<GraphXref> identifiers) {
+        if (identifiers == null) {
+            this.identifiers = Collections.EMPTY_LIST;
+        } else {
+            this.identifiers = identifiers;
+        }
+    }
+
+    /**
+     * <p>initialiseIdentifiers</p>
+     */
+    protected void initialiseIdentifiers() {
+        this.identifiers = new ArrayList<GraphXref>();
+    }
+
+    /**
+     * <p>initialiseAliases</p>
+     */
+    protected void initialiseAliases() {
+        this.aliases = new ArrayList<GraphAlias>();
+    }
+
+    /**
+     * <p>initialiseChecksums</p>
+     */
+    protected void initialiseChecksums() {
+        this.checksums = new ArrayList<GraphChecksum>();
+    }
+
+    /**
+     * <p>initialiseChecksumsWith</p>
+     *
+     * @param checksums a {@link java.util.Collection} object.
+     */
+    protected void initialiseChecksumsWith(Collection<GraphChecksum> checksums) {
+        if (checksums == null) {
+            this.checksums = Collections.EMPTY_LIST;
+        } else {
+            this.checksums = checksums;
+        }
+    }
+
+
+    /**
+     * <p>initialiseAliasesWith</p>
+     *
+     * @param aliases a {@link java.util.Collection} object.
+     */
+    protected void initialiseAliasesWith(Collection<GraphAlias> aliases) {
+        if (aliases == null) {
+            this.aliases = Collections.EMPTY_LIST;
+        } else {
+            this.aliases = aliases;
+        }
+    }
+
     public Collection<GraphXref> getIdentifiers() {
         if (identifiers == null) {
-            this.identifiers = new ArrayList<GraphXref>();
+            initialiseIdentifiers();
         }
         return this.identifiers;
     }
 
     public void setIdentifiers(Collection<Xref> identifiers) {
+        initialiseIdentifiers();
         if (identifiers != null) {
-            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
+            this.getIdentifiers().addAll(CollectionAdaptor.convertXrefIntoGraphModel(identifiers));
         } else {
-            this.identifiers = new ArrayList<GraphXref>();
+            this.identifiers = getIdentifiers();
         }
     }
 
@@ -296,16 +354,17 @@ public class GraphInteractor implements Interactor {
 
     public Collection<GraphChecksum> getChecksums() {
         if (checksums == null) {
-            this.checksums = new ArrayList<GraphChecksum>();
+            initialiseChecksums();
         }
         return this.checksums;
     }
 
     public void setChecksums(Collection<Checksum> checksums) {
+        initialiseChecksums();
         if (checksums != null) {
-            this.checksums = CollectionAdaptor.convertChecksumIntoGraphModel(checksums);
+            this.getChecksums().addAll(CollectionAdaptor.convertChecksumIntoGraphModel(checksums));
         } else {
-            this.checksums = new ArrayList<GraphChecksum>();
+            this.checksums = getChecksums();
         }
     }
 
@@ -341,16 +400,17 @@ public class GraphInteractor implements Interactor {
 
     public Collection<GraphAlias> getAliases() {
         if (aliases == null) {
-            this.aliases = new ArrayList<GraphAlias>();
+            initialiseAliases();
         }
         return this.aliases;
     }
 
     public void setAliases(Collection<Alias> aliases) {
+        initialiseAliases();
         if (aliases != null) {
-            this.aliases = CollectionAdaptor.convertAliasIntoGraphModel(aliases);
+            this.getAliases().addAll(CollectionAdaptor.convertAliasIntoGraphModel(aliases));
         } else {
-            this.aliases = new ArrayList<GraphAlias>();
+            this.aliases = getAliases();
         }
     }
 
@@ -380,7 +440,7 @@ public class GraphInteractor implements Interactor {
             if (interactorType instanceof GraphCvTerm) {
                 this.interactorType = (GraphCvTerm) interactorType;
             } else {
-                this.interactorType = new GraphCvTerm(interactorType,false);
+                this.interactorType = new GraphCvTerm(interactorType, false);
             }
         } else {
             initialiseDefaultInteractorType();
@@ -453,7 +513,7 @@ public class GraphInteractor implements Interactor {
         return hashcode;
     }
 
-    public String createUniqueKey(){
+    public String createUniqueKey() {
         return hashCode() + "";
     }
 
