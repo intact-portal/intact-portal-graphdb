@@ -275,19 +275,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            if (interactor instanceof Protein) {
-                this.interactor = new GraphProtein((Protein) interactor);
-            } else if (interactor instanceof Gene) {
-                this.interactor = new GraphGene((Gene) interactor);
-            } else if (interactor instanceof Polymer) {
-                this.interactor = new GraphPolymer((Polymer) interactor, false);
-            } else if (interactor instanceof Molecule) {
-                this.interactor = new GraphMolecule((Molecule) interactor, false);
-            } else if (interactor instanceof NucleicAcid) {
-                this.interactor = new GraphNucleicAcid((NucleicAcid) interactor);
-            } else {
-                this.interactor = new GraphInteractor(interactor, false);
-            }
+            this.interactor=CommonUtility.initializeInteractor(interactor);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);

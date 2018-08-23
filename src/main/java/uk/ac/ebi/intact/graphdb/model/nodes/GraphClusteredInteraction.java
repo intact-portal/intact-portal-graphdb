@@ -108,7 +108,7 @@ public class GraphClusteredInteraction {
             if (interactorA instanceof GraphInteractor) {
                 this.interactorPA = (GraphInteractor) interactorA;
             } else {
-                this.interactorPA = new GraphInteractor(interactorA, false);
+                this.interactorPA = CommonUtility.initializeInteractor(interactorA);
             }
         } else {
             this.interactorPA = null;
@@ -124,7 +124,7 @@ public class GraphClusteredInteraction {
             if (interactorB instanceof GraphInteractor) {
                 this.interactorPB = (GraphInteractor) interactorB;
             } else {
-                this.interactorPB = new GraphInteractor(interactorB, false);
+                this.interactorPB = CommonUtility.initializeInteractor(interactorB);
             }
         } else {
             this.interactorPB = null;

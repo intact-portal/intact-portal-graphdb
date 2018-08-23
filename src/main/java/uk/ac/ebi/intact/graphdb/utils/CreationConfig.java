@@ -33,6 +33,7 @@ public  static void createSchemaConstraint(){
     CommonUtility.createSchemaConstraint(GraphInteractionEvidence.class, "uniqueKey");
     CommonUtility.createSchemaConstraint(GraphInteractor.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphNucleicAcid.class,"uniqueKey");
+    CommonUtility.createSchemaConstraint(GraphMolecule.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphPolymer.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphOrganism.class,"uniqueKey");
     CommonUtility.createSchemaConstraint(GraphParticipantEvidence.class,"uniqueKey");

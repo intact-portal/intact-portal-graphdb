@@ -116,7 +116,7 @@ public class GraphEntity implements ExperimentalEntity {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            this.interactor = new GraphInteractor(interactor, false);
+            this.interactor = CommonUtility.initializeInteractor(interactor);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);

@@ -219,4 +219,13 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         return hashcode + "";
     }
 
+    @Override
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    @Override
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
 }

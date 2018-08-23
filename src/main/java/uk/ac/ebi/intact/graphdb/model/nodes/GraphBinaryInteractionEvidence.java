@@ -169,7 +169,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorA instanceof GraphInteractor) {
                 this.interactorA = (GraphInteractor) interactorA;
             } else {
-                this.interactorA = new GraphInteractor(interactorA, false);
+                this.interactorA = CommonUtility.initializeInteractor(interactorA);
             }
         } else {
             this.interactorA = null;
@@ -185,7 +185,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             if (interactorB instanceof GraphInteractor) {
                 this.interactorB = (GraphInteractor) interactorB;
             } else {
-                this.interactorB = new GraphInteractor(interactorB, false);
+                this.interactorB = CommonUtility.initializeInteractor(interactorB);
             }
         } else {
             this.interactorB = null;

@@ -3,6 +3,7 @@ package uk.ac.ebi.intact.graphdb.utils;
 import org.apache.commons.lang3.ClassUtils;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
+import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
@@ -311,6 +312,27 @@ public class CommonUtility {
             }
         }
         return new NodeDataFeed(id, isAlreadyCreated);
+    }
+
+    public static GraphInteractor initializeInteractor(Interactor interactor){
+
+        GraphInteractor graphInteractor=null;
+
+        if (interactor instanceof Protein) {
+            graphInteractor = new GraphProtein((Protein) interactor);
+        } else if (interactor instanceof Gene) {
+            graphInteractor = new GraphGene((Gene) interactor);
+        } else if (interactor instanceof Polymer) {
+            graphInteractor = new GraphPolymer((Polymer) interactor, false);
+        } else if (interactor instanceof Molecule) {
+            graphInteractor = new GraphMolecule((Molecule) interactor, false);
+        } else if (interactor instanceof NucleicAcid) {
+            graphInteractor = new GraphNucleicAcid((NucleicAcid) interactor);
+        } else {
+            graphInteractor = new GraphInteractor(interactor, false);
+        }
+
+        return  graphInteractor;
     }
 
 
