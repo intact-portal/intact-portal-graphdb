@@ -11,7 +11,7 @@ public class GraphEntityCache {
 
     public static HashMap<String,GraphCvTerm> cvTermCacheMap = new HashMap<String,GraphCvTerm>();
     public static HashMap<String,GraphXref> xrefCacheMap = new HashMap<String,GraphXref>();
-    public static HashMap<String,GraphFeatureEvidence> featureCacheMap = new HashMap<String,GraphFeatureEvidence>();
+    public static HashMap<String,GraphFeature> featureCacheMap = new HashMap<String,GraphFeature>();
     public static HashMap<String,GraphExperiment> experimentCacheMap = new HashMap<String,GraphExperiment>();
     public static HashMap<String,GraphVariableParameter> parameterValueCacheMap = new HashMap<String,GraphVariableParameter>();
 

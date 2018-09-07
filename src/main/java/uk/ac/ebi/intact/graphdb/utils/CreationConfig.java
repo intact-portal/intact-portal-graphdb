@@ -1,6 +1,5 @@
 package uk.ac.ebi.intact.graphdb.utils;
 
-import org.neo4j.graphdb.Label;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 

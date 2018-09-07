@@ -169,6 +169,14 @@ public class CommonUtility {
         }
     }
 
+    public static void createFeatureRelationShips(Collection<GraphFeature> relCollection, long fromId, String relationName) {
+        if (relCollection != null) {
+            for (GraphFeature obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
+        }
+    }
+
     public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphCausalRelationship obj : relCollection) {

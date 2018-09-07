@@ -15,14 +15,13 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphEntity implements ExperimentalEntity {
+public class GraphEntity implements Entity<Feature> {
 
     @GraphId
     private Long graphId;
@@ -34,7 +33,7 @@ public class GraphEntity implements ExperimentalEntity {
     private GraphInteractor interactor;
 
     @Relationship(type = RelationshipTypes.FEATURES)
-    private Collection<GraphFeatureEvidence> features;
+    private Collection<GraphFeature> features;
 
     @Relationship(type = RelationshipTypes.STOICHIOMETRY)
     private GraphStoichiometry stoichiometry;
@@ -98,7 +97,7 @@ public class GraphEntity implements ExperimentalEntity {
         CommonUtility.createRelationShip(interactor, graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
         CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
-        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.FEATURES);
+        CommonUtility.createFeatureRelationShips(features, graphId, RelationshipTypes.FEATURES);
         CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 
@@ -124,36 +123,35 @@ public class GraphEntity implements ExperimentalEntity {
     }
 
     @Override
-    public Collection<GraphFeatureEvidence> getFeatures() {
+    public Collection<GraphFeature> getFeatures() {
         if (features == null) {
-            features = new ArrayList<GraphFeatureEvidence>();
+            features = new ArrayList<GraphFeature>();
         }
         return this.features;
     }
 
-    public void setFeatures(Collection<FeatureEvidence> features) {
+    public void setFeatures(Collection<Feature> features) {
         if (features != null) {
             addAllFeatures(features);
         } else {
-            this.features = new ArrayList<GraphFeatureEvidence>();
+            this.features = new ArrayList<GraphFeature>();
         }
     }
 
 
     @Override
-    public boolean addFeature(FeatureEvidence feature) {
+    public boolean addFeature(Feature feature) {
         if (feature == null) {
             return false;
         }
 
-        GraphFeatureEvidence graphFeatureEvidence = null;
+        GraphFeature graphFeature = null;
         if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
-            graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(feature.getShortName());
-
+            graphFeature = GraphEntityCache.featureCacheMap.get(feature.getShortName());
         } else {
-            graphFeatureEvidence = new GraphFeatureEvidence(feature);
+            graphFeature = new GraphFeature(feature, false);
         }
-        if (getFeatures().add(graphFeatureEvidence)) {
+        if (getFeatures().add(graphFeature)) {
             feature.setParticipant(this);
             return true;
         }
@@ -163,7 +161,7 @@ public class GraphEntity implements ExperimentalEntity {
 
     //Todo review
     @Override
-    public boolean removeFeature(FeatureEvidence feature) {
+    public boolean removeFeature(Feature feature) {
         if (feature == null) {
             return false;
         }
@@ -176,13 +174,13 @@ public class GraphEntity implements ExperimentalEntity {
     }
 
     @Override
-    public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
+    public boolean addAllFeatures(Collection<? extends Feature> features) {
         if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (FeatureEvidence feature : features) {
+        for (Feature feature : features) {
             if (addFeature(feature)) {
                 added = true;
             }
@@ -191,13 +189,13 @@ public class GraphEntity implements ExperimentalEntity {
     }
 
     @Override
-    public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
+    public boolean removeAllFeatures(Collection<? extends Feature> features) {
         if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (FeatureEvidence feature : features) {
+        for (Feature feature : features) {
             if (removeFeature(feature)) {
                 added = true;
             }

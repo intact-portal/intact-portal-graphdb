@@ -12,7 +12,6 @@ import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import java.util.Map;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphFeatureEvidence implements FeatureEvidence {
+public class GraphFeatureEvidence extends GraphFeature {
 
     @GraphId
     private Long graphId;
@@ -30,43 +29,11 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    private String ac;
-    private String shortName;
-    private String fullName;
-    private String interpro;
-
-    @Relationship(type = RelationshipTypes.TYPE)
-    private GraphCvTerm type;
-
-    @Relationship(type = RelationshipTypes.ROLE)
-    private GraphCvTerm role;
-
-    @Relationship(type = RelationshipTypes.PARTICIPANT)
-    private GraphExperimentalEntity participant;
-
     @Relationship(type = RelationshipTypes.DETECTION_METHOD)
     private Collection<GraphCvTerm> detectionMethods;
 
     @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
-    // private GraphXref interpro; // To do
-    @Relationship(type = RelationshipTypes.IDENTIFIERS)
-    private Collection<GraphXref> identifiers;
-
-    @Relationship(type = RelationshipTypes.XREFS)
-    private Collection<GraphXref> xrefs;
-
-    @Relationship(type = RelationshipTypes.ANNOTATIONS)
-    private Collection<GraphAnnotation> annotations;
-
-    @Relationship(type = RelationshipTypes.RANGES)
-    private Collection<GraphRange> ranges;
-
-    @Relationship(type = RelationshipTypes.ALIASES)
-    private Collection<GraphAlias> aliases;
-
-    @Relationship(type = RelationshipTypes.LINKED_FEATURES)
-    private Collection<GraphFeatureEvidence> linkedFeatures;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -76,44 +43,18 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     }
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
-
-        boolean wasInitializedBefore=false;
-        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
-            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
-        }else{
-            wasInitializedBefore=true;
-        }
-        setShortName(featureEvidence.getShortName());
-        setFullName(featureEvidence.getFullName());
-        setInterpro(featureEvidence.getInterpro());
-        setType(featureEvidence.getType());
-        setRole(featureEvidence.getRole());
-        setAc(CommonUtility.extractAc(featureEvidence));
-        setUniqueKey(createUniqueKey(featureEvidence));
+        super(featureEvidence,true);
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
+            this.createNodeNatively();
         }
-
-        setParticipant(featureEvidence.getParticipant());
 
         setDetectionMethods(featureEvidence.getDetectionMethods());
         setParameters(featureEvidence.getParameters());
-        setIdentifiers(featureEvidence.getIdentifiers());
-        setXrefs(featureEvidence.getXrefs());
-        setAnnotations(featureEvidence.getAnnotations());
-        setRanges(featureEvidence.getRanges());
-        setAliases(featureEvidence.getAliases());
-
-        if (!wasInitializedBefore) {
-            setLinkedFeatures(featureEvidence.getLinkedFeatures());
-        }
-
-
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if (!isAlreadyCreated()) {
+                this.createRelationShipNatively();
             }
         }
     }
@@ -124,10 +65,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
-            if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
-            if (this.getInterpro() != null) nodeProperties.put("interpro", this.getInterpro());
+            nodeProperties.putAll(super.getNodeProperties());
 
             Label[] labels = CommonUtility.getLabels(GraphFeatureEvidence.class);
 
@@ -141,17 +79,9 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.graphId);
         CommonUtility.createParameterRelationShips(parameters, this.graphId);
-        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createRangeRelationShips(ranges, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
-        CommonUtility.createFeatureEvidenceRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
     }
 
 
@@ -185,9 +115,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         }
     }
 
-    public String getShortName() {
-        return this.shortName;
-    }
+
 /*protected void initialiseParameters() {
         this.parameters = new ArrayList<Parameter>();
     }
@@ -214,10 +142,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         }
     }*/
 
-    public void setShortName(String name) {
-        this.shortName = name;
-    }
-
     public String getUniqueKey() {
         return uniqueKey;
     }
@@ -225,275 +149,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
-
-    public String getFullName() {
-        return this.fullName;
-    }
-
-    public void setFullName(String name) {
-        this.fullName = name;
-    }
-
-    public String getInterpro() {
-        return this.interpro != null ? this.interpro : null;
-    }
-
-    public void setInterpro(String interpro) {
-       /* Collection<Xref> featureIdentifiers = getIdentifiers();
-
-        // add new interpro if not null
-        if (interpro != null){
-            CvTerm interproDatabase = CvTermUtils.createInterproDatabase();
-            CvTerm identityQualifier = CvTermUtils.createIdentityQualifier();
-            // first remove old chebi if not null
-            if (this.interpro != null){
-                featureIdentifiers.remove(this.interpro);
-            }
-            this.interpro = new DefaultXref(interproDatabase, interpro, identityQualifier);
-            featureIdentifiers.add(this.interpro);
-        }
-        // remove all interpro if the collection is not empty
-        else if (!featureIdentifiers.isEmpty()) {
-            XrefUtils.removeAllXrefsWithDatabase(featureIdentifiers, Xref.INTERPRO_MI, Xref.INTERPRO);
-            this.interpro = null;
-        }*/
-
-        this.interpro = interpro;
-    }
-
-    /*protected void initialiseIdentifiers(){
-       // this.identifiers = new AbstractFeature.FeatureIdentifierList();
-    }
-
-    protected void initialiseAnnotations(){
-        this.annotations = new ArrayList<Annotation>();
-    }
-
-    protected void initialiseXrefs(){
-        this.xrefs = new ArrayList<Xref>();
-    }
-
-    protected void initialiseRanges(){
-        this.ranges = new ArrayList<Range>();
-    }
-
-    protected void initialiseIdentifiersWith(Collection<Xref> identifiers){
-        if (identifiers == null){
-            this.identifiers = Collections.EMPTY_LIST;
-        }
-        else {
-            this.identifiers = identifiers;
-        }
-    }
-
-    protected void initialiseAnnotationsWith(Collection<Annotation> annotations){
-        if (annotations == null){
-            this.annotations = Collections.EMPTY_LIST;
-        }
-        else {
-            this.annotations = annotations;
-        }
-    }
-
-    protected void initialiseXrefsWith(Collection<Xref> xrefs){
-        if (xrefs == null){
-            this.xrefs = Collections.EMPTY_LIST;
-        }
-        else {
-            this.xrefs = xrefs;
-        }
-    }
-
-    protected void initialiseRangesWith(Collection<Range> ranges){
-        if (ranges == null){
-            this.ranges = Collections.EMPTY_LIST;
-        }
-        else {
-            this.ranges = ranges;
-        }
-    }
-
-    protected void initialiseLinkedFeatures(){
-        this.linkedFeatures = new ArrayList<FeatureEvidence>();
-    }
-
-    protected void initialiseLinkedFeaturesWith(Collection<FeatureEvidence> features){
-        if (features == null){
-            this.linkedFeatures = Collections.EMPTY_LIST;
-        }
-        else {
-            this.linkedFeatures = features;
-        }
-    }
-
-    protected void initialiseAliases(){
-        this.aliases = new ArrayList<Alias>();
-    }
-
-    protected void initialiseAliasesWith(Collection<Alias> aliases){
-        if (aliases == null){
-            this.aliases = Collections.EMPTY_LIST;
-        }
-        else {
-            this.aliases = aliases;
-        }
-    }*/
-
-    public Collection<GraphXref> getIdentifiers() {
-        if (this.identifiers == null) {
-            this.identifiers = new ArrayList<GraphXref>();
-        }
-        return this.identifiers;
-    }
-
-    public void setIdentifiers(Collection<Xref> identifiers) {
-        if (identifiers != null) {
-            this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
-        } else {
-            this.identifiers = new ArrayList<GraphXref>();
-        }
-    }
-
-    public Collection<GraphXref> getXrefs() {
-        if (this.xrefs == null) {
-            this.xrefs = new ArrayList<GraphXref>();
-        }
-        return this.xrefs;
-    }
-
-    public void setXrefs(Collection<Xref> xrefs) {
-        if (xrefs != null) {
-            this.xrefs = CollectionAdaptor.convertXrefIntoGraphModel(xrefs);
-        } else {
-            this.xrefs = new ArrayList<GraphXref>();
-        }
-    }
-
-   /* public String getInterpro() {
-        return this.interpro != null ? this.interpro.getId() : null;
-    }*/
-
-    public Collection<GraphAnnotation> getAnnotations() {
-        if (this.annotations == null) {
-            this.annotations = new ArrayList<GraphAnnotation>();
-        }
-        return this.annotations;
-    }
-
-    public void setAnnotations(Collection<Annotation> annotations) {
-        if (annotations != null) {
-            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
-        } else {
-            this.annotations = new ArrayList<GraphAnnotation>();
-        }
-    }
-
-    public CvTerm getType() {
-        return this.type;
-    }
-
-    public void setType(CvTerm type) {
-        if (type != null) {
-            if (type instanceof GraphCvTerm) {
-                this.type = (GraphCvTerm) type;
-            } else {
-                this.type = new GraphCvTerm(type,false);
-            }
-        } else {
-            this.type = null;
-        }
-    }
-
-    public Collection<GraphRange> getRanges() {
-        if (this.ranges == null) {
-            this.ranges = new ArrayList<GraphRange>();
-        }
-        return this.ranges;
-    }
-
-    public void setRanges(Collection<Range> ranges) {
-        if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges);
-        } else {
-            this.ranges = new ArrayList<GraphRange>();
-        }
-    }
-
-    public CvTerm getRole() {
-        return this.role;
-    }
-
-    public void setRole(CvTerm role) {
-        if (role != null) {
-            if (role instanceof GraphCvTerm) {
-                this.role = (GraphCvTerm) role;
-            } else {
-                this.role = new GraphCvTerm(role,false);
-            }
-        } else {
-            this.role = null;
-        }
-    }
-
-    @Override
-    public ExperimentalEntity getParticipant() {
-        return this.participant;
-    }
-
-    @Override
-    public void setParticipant(ExperimentalEntity participant) {
-        if (participant != null) {
-            if (participant instanceof GraphExperimentalEntity) {
-                this.participant = (GraphExperimentalEntity) participant;
-            } else {
-                this.participant = new GraphExperimentalEntity(participant);
-            }
-        } else {
-            this.participant = null;
-        }
-    }
-
-    @Override
-    public void setParticipantAndAddFeature(ExperimentalEntity participant) {
-        if (this.participant != null) {
-            this.participant.removeFeature(this);
-        }
-
-        if (participant != null) {
-            participant.addFeature(this);
-        }
-    }
-
-    public Collection<GraphFeatureEvidence> getLinkedFeatures() {
-        if (this.linkedFeatures == null) {
-            this.linkedFeatures = new ArrayList<GraphFeatureEvidence>();
-        }
-        return this.linkedFeatures;
-    }
-
-    public void setLinkedFeatures(Collection<FeatureEvidence> linkedFeatures) {
-        if (linkedFeatures != null) {
-            this.linkedFeatures = CollectionAdaptor.convertFeatureEvidenceIntoGraphModel(linkedFeatures);
-        } else {
-            this.linkedFeatures = new ArrayList<GraphFeatureEvidence>();
-        }
-    }
-
-    public Collection<GraphAlias> getAliases() {
-        if (aliases == null) {
-            this.aliases = new ArrayList<GraphAlias>();
-        }
-        return this.aliases;
-    }
-
-    public void setAliases(Collection<Alias> aliases) {
-        if (aliases != null) {
-            this.aliases = CollectionAdaptor.convertAliasIntoGraphModel(aliases);
-        } else {
-            this.aliases = new ArrayList<GraphAlias>();
-        }
-    }
-
 
     public Long getGraphId() {
         return graphId;
@@ -509,14 +164,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
-    }
-
-    public String getAc() {
-        return ac;
-    }
-
-    public void setAc(String ac) {
-        this.ac = ac;
     }
 
     public String toString() {

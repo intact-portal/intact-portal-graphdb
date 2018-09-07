@@ -56,10 +56,10 @@ public class HashCode {
         return hashcode;
     }
 
-    public static int featuresGraphHashCode(Collection<GraphFeatureEvidence> featureEvidences) {
+    public static int featuresGraphHashCode(Collection<? extends GraphFeature> featureEvidences) {
         int hashcode = 0;
 
-        for (GraphFeatureEvidence featureEvidence : featureEvidences) {
+        for (GraphFeature featureEvidence : featureEvidences) {
             hashcode = 31 * hashcode + featureEvidence.hashCode();
         }
 
@@ -137,7 +137,7 @@ public class HashCode {
     }
 
     /*This had to be included as jami does not have this method yet*/
-    public static int featureHashCode(FeatureEvidence featureEvidence) {
+    public static int featureHashCode(Feature featureEvidence) {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Feature:".hashCode();
 

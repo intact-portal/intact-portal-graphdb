@@ -4,7 +4,6 @@ import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 
 import java.util.List;
 import java.util.Set;

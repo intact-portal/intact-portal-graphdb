@@ -246,6 +246,7 @@ public class GraphRange implements Range {
     }
 
     public String createUniqueKey(Range range) {
-        return range != null ? UnambiguousRangeComparator.hashCode(range) + "" : "";
+        //return range != null ? UnambiguousRangeComparator.hashCode(range) + "" : "";
+        return this.getAc();
     }
 }

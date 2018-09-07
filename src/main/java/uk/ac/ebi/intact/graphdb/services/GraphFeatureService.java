@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.repositories.GraphFeatureRepository;
-import uk.ac.ebi.intact.graphdb.repositories.GraphParticpantRepository;
 
 import java.util.List;
 import java.util.Optional;
