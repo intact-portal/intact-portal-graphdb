@@ -75,8 +75,11 @@ public class GraphFeature implements Feature {
     public GraphFeature(Feature featureEvidence, boolean childAlreadyCreated) {
 
         boolean wasInitializedBefore = false;
+
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
-            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+            if (!childAlreadyCreated) {
+                GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+            }
         } else {
             wasInitializedBefore = true;
         }
@@ -92,19 +95,19 @@ public class GraphFeature implements Feature {
             initializeNodeProperties();
             if (!childAlreadyCreated) {
                 createNodeNatively();
+                if (!wasInitializedBefore) {
+                    setLinkedFeatures(featureEvidence.getLinkedFeatures());// to avoid looping
+                    setParticipant(featureEvidence.getParticipant());// to avoid looping
+                }
+
             }
         }
 
-        setParticipant(featureEvidence.getParticipant());
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
         setRanges(featureEvidence.getRanges());
         setAliases(featureEvidence.getAliases());
-
-        if (!wasInitializedBefore) {
-            setLinkedFeatures(featureEvidence.getLinkedFeatures());
-        }
 
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated() && !childAlreadyCreated) {
@@ -140,15 +143,15 @@ public class GraphFeature implements Feature {
     }
 
     public void createRelationShipNatively(Long graphId) {
-        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
-        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createRangeRelationShips(ranges, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
-        CommonUtility.createFeatureRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
+        CommonUtility.createRelationShip(type, graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(role, graphId, RelationshipTypes.ROLE);
+        CommonUtility.createRelationShip(participant, graphId, RelationshipTypes.PARTICIPANT);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
+        CommonUtility.createRangeRelationShips(ranges, graphId);
+        CommonUtility.createAliasRelationShips(aliases, graphId);
+        CommonUtility.createFeatureRelationShips(linkedFeatures, graphId, RelationshipTypes.LINKED_FEATURES);
     }
 
 
@@ -413,7 +416,7 @@ public class GraphFeature implements Feature {
             if (participant instanceof GraphEntity) {
                 this.participant = (GraphEntity) participant;
             } else {
-                this.participant = new GraphEntity(participant,false);
+                this.participant = new GraphEntity(participant, false);
             }
         } else {
             this.participant = null;

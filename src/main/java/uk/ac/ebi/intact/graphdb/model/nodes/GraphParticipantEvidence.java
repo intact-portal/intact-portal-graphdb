@@ -371,9 +371,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (feature == null) {
             return false;
         }
-
-        if (getFeatures().add(new GraphFeatureEvidence(feature))) {
-            feature.setParticipant(this);
+        GraphFeatureEvidence graphFeatureEvidence=new GraphFeatureEvidence(feature);
+        if (getFeatures().add(graphFeatureEvidence)) {
+            graphFeatureEvidence.setParticipant(this);
             return true;
         }
         return false;

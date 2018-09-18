@@ -148,11 +148,13 @@ public class GraphEntity implements Entity<Feature> {
         GraphFeature graphFeature = null;
         if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
             graphFeature = GraphEntityCache.featureCacheMap.get(feature.getShortName());
+        } else if (feature instanceof FeatureEvidence) {
+            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
         } else {
             graphFeature = new GraphFeature(feature, false);
         }
         if (getFeatures().add(graphFeature)) {
-            feature.setParticipant(this);
+            graphFeature.setParticipant(this);
             return true;
         }
 

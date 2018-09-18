@@ -44,6 +44,12 @@ public class GraphFeatureEvidence extends GraphFeature {
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
         super(featureEvidence,true);
+        boolean wasInitializedBefore = false;
+        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
+              GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+        }else {
+            wasInitializedBefore = true;
+        }
 
         if (CreationConfig.createNatively) {
             this.createNodeNatively();
@@ -51,7 +57,10 @@ public class GraphFeatureEvidence extends GraphFeature {
 
         setDetectionMethods(featureEvidence.getDetectionMethods());
         setParameters(featureEvidence.getParameters());
-
+        if (!wasInitializedBefore) {
+            setParticipant(featureEvidence.getParticipant());// to avoid looping
+            setLinkedFeatures(((Feature) featureEvidence).getLinkedFeatures());// to avoid looping
+        }
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated()) {
                 this.createRelationShipNatively();
