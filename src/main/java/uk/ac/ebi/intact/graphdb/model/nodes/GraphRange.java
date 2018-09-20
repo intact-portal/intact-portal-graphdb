@@ -70,7 +70,7 @@ public class GraphRange implements Range {
     public void createNodeNatively() {
         try {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
             nodeProperties.put("isLink", this.isLink());
 
