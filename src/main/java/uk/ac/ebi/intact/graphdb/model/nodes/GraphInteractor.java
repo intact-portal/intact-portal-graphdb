@@ -24,6 +24,9 @@ public class GraphInteractor implements Interactor {
     private String fullName;
     private String preferredName;
 
+    @Transient
+    private String preferredIdentifierStr;
+
     @Relationship(type = RelationshipTypes.ORGANISM)
     private GraphOrganism organism;
 
@@ -76,6 +79,7 @@ public class GraphInteractor implements Interactor {
         setInteractorType(interactor.getInteractorType());
         setAc(CommonUtility.extractAc(interactor));
         setPreferredName(interactor.getPreferredName());
+        setPreferredIdentifierStr(interactor.getPreferredIdentifier().getId());
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -92,7 +96,7 @@ public class GraphInteractor implements Interactor {
         setXrefs(interactor.getXrefs());
 
         if (CreationConfig.createNatively) {
-            if (!isAlreadyCreated() && !childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 createRelationShipNatively(this.getGraphId());
             }
         }
@@ -507,8 +511,8 @@ public class GraphInteractor implements Interactor {
 
     public int hashCode() {
         int hashcode = 31;
-        if (this.getAc() != null) {
-            hashcode = 31 * hashcode + this.getAc().hashCode();
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
         }
         return hashcode;
     }
@@ -533,5 +537,13 @@ public class GraphInteractor implements Interactor {
 
     public void setPreferredName(String preferredName) {
         this.preferredName = preferredName;
+    }
+
+    public String getPreferredIdentifierStr() {
+        return preferredIdentifierStr;
+    }
+
+    public void setPreferredIdentifierStr(String preferredIdentifierStr) {
+        this.preferredIdentifierStr = preferredIdentifierStr;
     }
 }

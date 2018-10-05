@@ -93,7 +93,7 @@ public class GraphCvTerm implements CvTerm {
 
 
     public void initialzeNodeProperties() {
-        nodeProperties.put("uniqueKey", this.getUniqueKey());
+
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
@@ -105,7 +105,7 @@ public class GraphCvTerm implements CvTerm {
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
-
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphCvTerm.class);
 
             //create node

@@ -123,7 +123,7 @@ public class GraphPublication implements Publication {
             if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
             if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
 

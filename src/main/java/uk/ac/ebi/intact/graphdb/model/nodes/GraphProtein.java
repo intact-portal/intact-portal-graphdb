@@ -66,9 +66,9 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if (!isAlreadyCreated()) {
+            /*if (!isAlreadyCreated()) {*/
                 createRelationShipNatively();
-            }
+            //}
         }
     }
 
@@ -505,16 +505,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
     public int hashCode() {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Protein".hashCode();
-        if (this.getUniprotkb() != null) {
+
+        if(this.getPreferredIdentifier()!=null){
+            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        }else if (this.getUniprotkb() != null) {
             hashcode = 31 * hashcode + this.getUniprotkb().hashCode();
-        }
-        if (this.getRefseq() != null) {
+        }else if (this.getRefseq() != null) {
             hashcode = 31 * hashcode + this.getRefseq().hashCode();
-        }
-        if (this.getRogid() != null) {
+        }else if (this.getRogid() != null) {
             hashcode = 31 * hashcode + this.getRogid().hashCode();
-        }
-        if (this.getGeneName() != null) {
+        }else if (this.getGeneName() != null) {
             hashcode = 31 * hashcode + this.getGeneName().hashCode();
         }
         return hashcode;

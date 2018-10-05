@@ -57,7 +57,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         }
 
         if (CreationConfig.createNatively) {
-            if (!isAlreadyCreated() && !childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 this.createRelationShipNatively();
             }
         }

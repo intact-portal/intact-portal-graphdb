@@ -128,7 +128,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         if (this.getShortName() != null) getNodeProperties().put("shortName", this.getShortName());
         if (this.getRigid() != null) getNodeProperties().put("rigid", this.getRigid());
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (this.getUpdatedDate() != null) getNodeProperties().put("updatedDate", dateFormat.format(this.getUpdatedDate()));
         if (this.getCreatedDate() != null) getNodeProperties().put("createdDate", dateFormat.format(this.getCreatedDate()));
     }

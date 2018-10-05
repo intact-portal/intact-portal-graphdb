@@ -295,9 +295,12 @@ public class CommonUtility {
                 Class clazz = relObj.getClass();
                 Method method = clazz.getMethod("getGraphId");
                 long endId = (Long) method.invoke(clazz.cast(relObj));
-                if (fromId != endId) {
+                String relationIdentity=""+fromId+"-"+endId+"-"+relationName;
+                boolean relationshipAlreadyCreated=Constants.createdRelationShipList.contains(relationIdentity);
+                if (!relationshipAlreadyCreated&&fromId != endId) {
                     RelationshipType relationshipType = RelationshipType.withName(relationName);
                     CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+                    Constants.createdRelationShipList.add(relationIdentity);
                 }
             }
         } catch (Exception e) {

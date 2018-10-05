@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +35,12 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
 
     public GraphMolecule(Molecule molecule,boolean childAlreadyCreated) {
         super(molecule,true);
+        setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
                 this.createNodeNatively();
             }
-            if (!isAlreadyCreated()&& !childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 this.createRelationShipNatively();
             }
         }
@@ -156,5 +158,21 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Override
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Molecule".hashCode();
+
+        if(this.getPreferredIdentifier()!=null){
+            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        }
+        return hashcode;
+    }
+
+
+    public String createUniqueKey() {
+        return hashCode() + "";
     }
 }

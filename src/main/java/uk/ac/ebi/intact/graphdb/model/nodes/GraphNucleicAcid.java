@@ -51,9 +51,9 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            /*if(!isAlreadyCreated()) {*/
                 createRelationShipNatively();
-            }
+            //}
         }
     }
 
@@ -316,11 +316,14 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     public int hashCode() {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Nucleic acid".hashCode();
-        if (this.getDdbjEmblGenbank() != null) {
-            hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();
-        }
-        if (this.getRefseq() != null) {
-            hashcode = 31 * hashcode + this.getRefseq().hashCode();
+        if(this.getPreferredIdentifier()!=null){
+            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        }else {
+            if (this.getDdbjEmblGenbank() != null) {
+                hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();
+            }else if (this.getRefseq() != null) {
+                hashcode = 31 * hashcode + this.getRefseq().hashCode();
+            }
         }
         return hashcode;
     }

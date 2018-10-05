@@ -74,9 +74,9 @@ public class GraphGene extends GraphMolecule implements Gene {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if (!isAlreadyCreated()) {
+           /* if (!isAlreadyCreated()) {*/
                 createRelationShipNatively();
-            }
+           // }
         }
     }
 
@@ -467,16 +467,16 @@ public class GraphGene extends GraphMolecule implements Gene {
     public int hashCode() {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Gene".hashCode();
-        if (this.getEnsembl() != null) {
+
+        if (this.getPreferredIdentifier() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        } else if (this.getEnsembl() != null) {
             hashcode = 31 * hashcode + this.getEnsembl().hashCode();
-        }
-        if (this.getEnsemblGenome() != null) {
+        } else if (this.getEnsemblGenome() != null) {
             hashcode = 31 * hashcode + this.getEnsemblGenome().hashCode();
-        }
-        if (this.getEntrezGeneId() != null) {
+        } else if (this.getEntrezGeneId() != null) {
             hashcode = 31 * hashcode + this.getEntrezGeneId().hashCode();
-        }
-        if (this.getRefseq() != null) {
+        } else if (this.getRefseq() != null) {
             hashcode = 31 * hashcode + this.getRefseq().hashCode();
         }
         return hashcode;
