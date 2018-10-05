@@ -10,10 +10,8 @@ import psidev.psi.mi.jami.model.Molecule;
 import psidev.psi.mi.jami.model.Organism;
 import psidev.psi.mi.jami.model.Xref;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
-import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +31,8 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         super();
     }
 
-    public GraphMolecule(Molecule molecule,boolean childAlreadyCreated) {
-        super(molecule,true);
+    public GraphMolecule(Molecule molecule, boolean childAlreadyCreated) {
+        super(molecule, true);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
@@ -165,7 +163,7 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Molecule".hashCode();
 
-        if(this.getPreferredIdentifier()!=null){
+        if (this.getPreferredIdentifier() != null) {
             hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
         }
         return hashcode;

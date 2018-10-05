@@ -44,7 +44,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     }
 
     public GraphNucleicAcid(NucleicAcid nucleicAcid) {
-        super(nucleicAcid,true);
+        super(nucleicAcid, true);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
         setUniqueKey(createUniqueKey());
@@ -52,7 +52,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         if (CreationConfig.createNatively) {
             createNodeNatively();
             /*if(!isAlreadyCreated()) {*/
-                createRelationShipNatively();
+            createRelationShipNatively();
             //}
         }
     }
@@ -66,7 +66,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphNucleicAcid.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -160,6 +160,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     protected void initialiseIdentifiers() {
         initialiseIdentifiersWith(new NucleicAcidIdentifierList());
     }
+
     /**
      * @return The first ddbjEmblGenbank if provided, then the first refseq identifier if provided, otherwise the first identifier in the list
      */
@@ -316,12 +317,12 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     public int hashCode() {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Nucleic acid".hashCode();
-        if(this.getPreferredIdentifier()!=null){
+        if (this.getPreferredIdentifier() != null) {
             hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
-        }else {
+        } else {
             if (this.getDdbjEmblGenbank() != null) {
                 hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();
-            }else if (this.getRefseq() != null) {
+            } else if (this.getRefseq() != null) {
                 hashcode = 31 * hashcode + this.getRefseq().hashCode();
             }
         }
@@ -329,7 +330,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     }
 
 
-    public String createUniqueKey(){
+    public String createUniqueKey() {
         return hashCode() + "";
     }
 

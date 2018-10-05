@@ -14,7 +14,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -106,7 +105,7 @@ public class GraphPublication implements Publication {
 
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -124,10 +123,12 @@ public class GraphPublication implements Publication {
             if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
             //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            if (this.getPublicationDate() != null) nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
-            if (this.getReleasedDate() != null) nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
+            if (this.getPublicationDate() != null)
+                nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
+            if (this.getReleasedDate() != null)
+                nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
 
-            if (this.getAuthors() != null){
+            if (this.getAuthors() != null) {
                 String[] authorArray = new String[this.getAuthors().size()];
                 authorArray = this.getAuthors().toArray(authorArray);
                 nodeProperties.put("authors", authorArray);
@@ -136,7 +137,7 @@ public class GraphPublication implements Publication {
 
             Label[] labels = CommonUtility.getLabels(GraphPublication.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -148,14 +149,14 @@ public class GraphPublication implements Publication {
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(graphCurationDepth, this.graphId, RelationshipTypes.GRAPH_CURATION_DEPTH);
         CommonUtility.createRelationShip(imexId, this.graphId, RelationshipTypes.IMEX_ID);
-        CommonUtility.createRelationShip(source, this.graphId,  RelationshipTypes.SOURCE);
+        CommonUtility.createRelationShip(source, this.graphId, RelationshipTypes.SOURCE);
         CommonUtility.createRelationShip(pubmedId, this.graphId, RelationshipTypes.PMID);
         CommonUtility.createRelationShip(doi, this.graphId, RelationshipTypes.DOI);
         CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
         CommonUtility.createXrefRelationShips(xrefs, this.graphId);
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
         CommonUtility.createExperimentRelationShips(experiments, this.graphId);
-        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(),this.getGraphId());
+        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(), this.getGraphId());
     }
 
     public GraphPublication(Xref identifier) {
@@ -220,12 +221,12 @@ public class GraphPublication implements Publication {
         assignImexId(imexId);
     }
 
-    public void initializeAc(){
-        String ac=null;
+    public void initializeAc() {
+        String ac = null;
 
-        for(Xref xref:xrefs){
-            if(xref.getDatabase()!=null&&xref.getDatabase().getShortName()!=null&xref.getDatabase().getShortName().equals(Constants.INTACT_DB)){
-                ac=xref.getId();
+        for (Xref xref : xrefs) {
+            if (xref.getDatabase() != null && xref.getDatabase().getShortName() != null & xref.getDatabase().getShortName().equals(Constants.INTACT_DB)) {
+                ac = xref.getId();
             }
         }
 
@@ -249,7 +250,7 @@ public class GraphPublication implements Publication {
 
         setPubmedIdStr(pubmedId);
         //changed this method as it was giving problems
-        Collection<GraphXref> identifiers =  getIdentifiers();
+        Collection<GraphXref> identifiers = getIdentifiers();
 
         // add new pubmed if not null
         if (pubmedId != null) {
@@ -275,7 +276,7 @@ public class GraphPublication implements Publication {
 
     public void setDoi(String doi) {
         //changed this method as it was giving problems
-        Collection<GraphXref> identifiers =  getIdentifiers();
+        Collection<GraphXref> identifiers = getIdentifiers();
         // add new doi if not null
         if (doi != null) {
             CvTerm doiDatabase = CvTermUtils.createDoiDatabase();
@@ -315,7 +316,7 @@ public class GraphPublication implements Publication {
 
     public void assignImexId(String identifier) {
         //changed this method as it was giving problems
-        Collection<GraphXref> identifiers =  getXrefs();
+        Collection<GraphXref> identifiers = getXrefs();
 
         // add new imex if not null
         if (identifier != null) {
@@ -357,7 +358,6 @@ public class GraphPublication implements Publication {
     public void setPublicationDate(Date date) {
         this.publicationDate = date;
     }
-
 
 
     public Collection<GraphXref> getXrefs() {
@@ -407,7 +407,7 @@ public class GraphPublication implements Publication {
     }
 
     public CurationDepth getCurationDepth() {
-        if(this.curationDepth==null&&this.getGraphCurationDepth()!=null) {
+        if (this.curationDepth == null && this.getGraphCurationDepth() != null) {
             this.curationDepth = CurationDepth.valueOf(this.getGraphCurationDepth().getCurationDepth());
         }
         return this.curationDepth;
@@ -620,9 +620,9 @@ public class GraphPublication implements Publication {
 
     @Override
     public List<String> getAuthors() {
-        if(this.authors==null&&this.graphAuthors!=null){
-           List<String> authorsList=new ArrayList<String>();
-            for(GraphAuthor graphAuthor:graphAuthors){
+        if (this.authors == null && this.graphAuthors != null) {
+            List<String> authorsList = new ArrayList<String>();
+            for (GraphAuthor graphAuthor : graphAuthors) {
                 authorsList.add(graphAuthor.getAuthorName());
             }
 
@@ -633,7 +633,7 @@ public class GraphPublication implements Publication {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
-         }
+    }
 
     public boolean isAlreadyCreated() {
         return isAlreadyCreated;
@@ -643,7 +643,7 @@ public class GraphPublication implements Publication {
         isAlreadyCreated = alreadyCreated;
     }
 
-    private void initializeGraphAuthors(List<String> authors){
+    private void initializeGraphAuthors(List<String> authors) {
         if (graphAuthors != null) {
             this.graphAuthors = CollectionAdaptor.convertAuthorStringIntoGraphModel(authors);
         } else {
@@ -720,7 +720,7 @@ public class GraphPublication implements Publication {
         return hashcode;
     }
 
-    public String createUniqueKey(){
+    public String createUniqueKey() {
         return hashCode() + "";
     }
 

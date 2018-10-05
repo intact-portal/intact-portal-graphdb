@@ -67,7 +67,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
         if (CreationConfig.createNatively) {
             createNodeNatively();
             /*if (!isAlreadyCreated()) {*/
-                createRelationShipNatively();
+            createRelationShipNatively();
             //}
         }
     }
@@ -417,19 +417,25 @@ public class GraphProtein extends GraphPolymer implements Protein {
         this.uniqueKey = uniqueKey;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initialiseIdentifiers() {
         initialiseIdentifiersWith(new ProteinIdentifierList());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initialiseChecksums() {
         initialiseChecksumsWith(new ProteinChecksumList());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initialiseAliases() {
         initialiseAliasesWith(new ProteinAliasList());
@@ -506,15 +512,15 @@ public class GraphProtein extends GraphPolymer implements Protein {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Protein".hashCode();
 
-        if(this.getPreferredIdentifier()!=null){
+        if (this.getPreferredIdentifier() != null) {
             hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
-        }else if (this.getUniprotkb() != null) {
+        } else if (this.getUniprotkb() != null) {
             hashcode = 31 * hashcode + this.getUniprotkb().hashCode();
-        }else if (this.getRefseq() != null) {
+        } else if (this.getRefseq() != null) {
             hashcode = 31 * hashcode + this.getRefseq().hashCode();
-        }else if (this.getRogid() != null) {
+        } else if (this.getRogid() != null) {
             hashcode = 31 * hashcode + this.getRogid().hashCode();
-        }else if (this.getGeneName() != null) {
+        } else if (this.getGeneName() != null) {
             hashcode = 31 * hashcode + this.getGeneName().hashCode();
         }
         return hashcode;

@@ -75,8 +75,8 @@ public class GraphGene extends GraphMolecule implements Gene {
         if (CreationConfig.createNatively) {
             createNodeNatively();
            /* if (!isAlreadyCreated()) {*/
-                createRelationShipNatively();
-           // }
+            createRelationShipNatively();
+            // }
         }
     }
 

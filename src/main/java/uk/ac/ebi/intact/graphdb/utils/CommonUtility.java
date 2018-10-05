@@ -295,9 +295,9 @@ public class CommonUtility {
                 Class clazz = relObj.getClass();
                 Method method = clazz.getMethod("getGraphId");
                 long endId = (Long) method.invoke(clazz.cast(relObj));
-                String relationIdentity=""+fromId+"-"+endId+"-"+relationName;
-                boolean relationshipAlreadyCreated=Constants.createdRelationShipList.contains(relationIdentity);
-                if (!relationshipAlreadyCreated&&fromId != endId) {
+                String relationIdentity = "" + fromId + "-" + endId + "-" + relationName;
+                boolean relationshipAlreadyCreated = Constants.createdRelationShipList.contains(relationIdentity);
+                if (!relationshipAlreadyCreated && fromId != endId) {
                     RelationshipType relationshipType = RelationshipType.withName(relationName);
                     CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
                     Constants.createdRelationShipList.add(relationIdentity);
@@ -325,9 +325,9 @@ public class CommonUtility {
         return new NodeDataFeed(id, isAlreadyCreated);
     }
 
-    public static GraphInteractor initializeInteractor(Interactor interactor){
+    public static GraphInteractor initializeInteractor(Interactor interactor) {
 
-        GraphInteractor graphInteractor=null;
+        GraphInteractor graphInteractor = null;
 
         if (interactor instanceof Protein) {
             graphInteractor = new GraphProtein((Protein) interactor);
@@ -343,7 +343,7 @@ public class CommonUtility {
             graphInteractor = new GraphInteractor(interactor, false);
         }
 
-        return  graphInteractor;
+        return graphInteractor;
     }
 
 
