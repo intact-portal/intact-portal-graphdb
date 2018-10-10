@@ -52,7 +52,7 @@ public class GraphStoichiometry implements Stoichiometry {
             nodeProperties.put("minValue", this.getMinValue());
             nodeProperties.put("maxValue", this.getMaxValue());
 
-            Label[] labels = CommonUtility.getLabels(GraphRange.class);
+            Label[] labels = CommonUtility.getLabels(GraphStoichiometry.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
