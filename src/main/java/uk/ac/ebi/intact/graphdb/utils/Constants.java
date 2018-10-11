@@ -7,6 +7,7 @@ import uk.ac.ebi.intact.graphdb.utils.objectpool.CommonUtilityFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -22,6 +23,6 @@ public class Constants {
     public static final ObjectPool<CommonUtility> COMMON_UTILITY_OBJECT_POOL = new GenericObjectPool<CommonUtility>(new CommonUtilityFactory(), new GenericObjectPoolConfig());
 
     public static final HashMap<String, Long> createdNodeIdMap = new HashMap<String, Long>();
-    public static final List<String> createdRelationShipList = new ArrayList<String>();
+    public static final HashSet<String> createdRelationShipList = new HashSet<String>();
 
 }
