@@ -203,6 +203,9 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public int hashCode() {
         int hashcode = 31;
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
+        }
         if (this.getOrganism() != null) {
             hashcode = 31 * hashcode + this.getOrganism().hashCode();
         }

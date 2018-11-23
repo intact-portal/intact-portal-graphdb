@@ -512,8 +512,8 @@ public class GraphProtein extends GraphPolymer implements Protein {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Protein".hashCode();
 
-        if (this.getPreferredIdentifier() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
         } else if (this.getUniprotkb() != null) {
             hashcode = 31 * hashcode + this.getUniprotkb().hashCode();
         } else if (this.getRefseq() != null) {

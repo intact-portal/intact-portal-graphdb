@@ -163,8 +163,8 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Molecule".hashCode();
 
-        if (this.getPreferredIdentifier() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
         }
         return hashcode;
     }

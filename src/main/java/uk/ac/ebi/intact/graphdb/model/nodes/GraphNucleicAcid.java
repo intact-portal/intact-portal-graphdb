@@ -317,8 +317,8 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     public int hashCode() {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Nucleic acid".hashCode();
-        if (this.getPreferredIdentifier() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
         } else {
             if (this.getDdbjEmblGenbank() != null) {
                 hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();

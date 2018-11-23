@@ -468,8 +468,8 @@ public class GraphGene extends GraphMolecule implements Gene {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Gene".hashCode();
 
-        if (this.getPreferredIdentifier() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifier().hashCode();
+        if (this.getPreferredIdentifierStr() != null) {
+            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
         } else if (this.getEnsembl() != null) {
             hashcode = 31 * hashcode + this.getEnsembl().hashCode();
         } else if (this.getEnsemblGenome() != null) {

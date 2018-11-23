@@ -24,7 +24,6 @@ public class GraphInteractor implements Interactor {
     private String fullName;
     private String preferredName;
 
-    @Transient
     private String preferredIdentifierStr;
 
     @Relationship(type = RelationshipTypes.ORGANISM)
@@ -106,6 +105,7 @@ public class GraphInteractor implements Interactor {
 
         if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
         if (this.getPreferredName() != null) nodeProperties.put("preferredName", this.getPreferredName());
+        if (this.getPreferredIdentifierStr() != null) nodeProperties.put("preferredIdentifierStr", this.getPreferredIdentifierStr());
         if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
         if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
     }
