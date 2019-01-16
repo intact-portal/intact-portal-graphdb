@@ -6,7 +6,7 @@
     <groupId>uk.ac.ebi.intact.graphdb</groupId>
     <artifactId>intact-graphdb</artifactId>
 
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT-ELI</version>
     <packaging>jar</packaging>
 
     <name>IntAct :: Graph DB prototype</name>

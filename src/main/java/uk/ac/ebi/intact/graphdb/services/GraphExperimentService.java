@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.GraphExperimentRepository;
 
 import java.util.Optional;
@@ -13,12 +14,12 @@ import java.util.Optional;
  * Created by anjali on 24/07/18.
  */
 @Service
-public class GraphExprimentService {
+public class GraphExperimentService {
 
     final private GraphExperimentRepository graphExperimentRepository;
 
     @Autowired
-    public GraphExprimentService(GraphExperimentRepository graphExperimentRepository) {
+    public GraphExperimentService(GraphExperimentRepository graphExperimentRepository) {
         this.graphExperimentRepository = graphExperimentRepository;
     }
 
@@ -33,4 +34,9 @@ public class GraphExprimentService {
     public Page<GraphExperiment> findAll(Pageable page, int depth) {
         return graphExperimentRepository.findAll(page, depth);
     }
+
+    public GraphExperiment findByAc(String ac) {
+        return graphExperimentRepository.findByAc(ac);
+    }
+
 }
