@@ -520,22 +520,6 @@ public class GraphInteractor implements Interactor {
         this.participantEvidences = participantEvidences;
     }
 
-    public Collection<GraphBinaryInteractionEvidence> getInteractionsA() {
-        return interactionsA;
-    }
-
-    public void setInteractionsA(Collection<GraphBinaryInteractionEvidence> interactionsA) {
-        this.interactionsA = interactionsA;
-    }
-
-    public Collection<GraphBinaryInteractionEvidence> getInteractionsB() {
-        return interactionsB;
-    }
-
-    public void setInteractionsB(Collection<GraphBinaryInteractionEvidence> interactionsB) {
-        this.interactionsB = interactionsB;
-    }
-
     @Override
     public String getPreferredName() {
         return preferredName;
