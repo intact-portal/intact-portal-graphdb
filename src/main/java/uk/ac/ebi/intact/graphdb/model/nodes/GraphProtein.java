@@ -509,6 +509,11 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "Protein".hashCode();
 

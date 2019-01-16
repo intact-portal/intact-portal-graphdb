@@ -47,20 +47,14 @@ public class GraphInteractor implements Interactor {
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
 
-    @Relationship(type = RelationshipTypes.INTERACTOR_A, direction = Relationship.INCOMING)
-    private Collection<GraphBinaryInteractionEvidence> interactionsA;
-
-    @Relationship(type = RelationshipTypes.INTERACTOR_B, direction = Relationship.INCOMING)
-    private Collection<GraphBinaryInteractionEvidence> interactionsB;
-
     @Relationship(type = RelationshipTypes.HAS, direction = Relationship.INCOMING)
     private Collection<GraphInteractionEvidence> interactionEvidence;
 
     @Relationship(type = RelationshipTypes.INTERACTOR, direction = Relationship.INCOMING)
     private Collection<GraphParticipantEvidence> participantEvidences;
 
-    @Transient
-    private Collection<GraphBinaryInteractionEvidence> interactions;
+    @Relationship(type = RelationshipTypes.INTERACTORS, direction = Relationship.UNDIRECTED)
+    private List<GraphBinaryInteractionEvidence> interactions;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -453,20 +447,11 @@ public class GraphInteractor implements Interactor {
     }
 
     //TODO improve this part
-    public Collection<GraphBinaryInteractionEvidence> getInteractions() {
-        if (interactions == null) {
-            interactions = new ArrayList<>();
-            if (interactionsA != null) {
-                interactions.addAll(interactionsA);
-            }
-            if (interactionsB != null) {
-                interactions.addAll(interactionsB);
-            }
-        }
+    public List<GraphBinaryInteractionEvidence> getInteractions() {
         return interactions;
     }
 
-    public void setInteractions(Collection<GraphBinaryInteractionEvidence> interactions) {
+    public void setInteractions(List<GraphBinaryInteractionEvidence> interactions) {
         this.interactions = interactions;
     }
 
@@ -510,6 +495,11 @@ public class GraphInteractor implements Interactor {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         if (this.getPreferredIdentifierStr() != null) {
             hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();

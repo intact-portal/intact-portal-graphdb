@@ -142,6 +142,11 @@ public class GraphChecksum implements Checksum {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode;
         try {
             hashcode = UnambiguousChecksumComparator.hashCode(this);

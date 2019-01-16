@@ -85,7 +85,7 @@ public class GraphGene extends GraphMolecule implements Gene {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getAc());
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphGene.class);
 
@@ -465,6 +465,11 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "Gene".hashCode();
 
