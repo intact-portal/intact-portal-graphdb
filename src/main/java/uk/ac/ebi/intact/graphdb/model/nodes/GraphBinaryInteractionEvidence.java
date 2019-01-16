@@ -14,9 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
@@ -40,8 +38,8 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     private GraphInteractor interactorB;
 
     //TODO
-    @Relationship(type = RelationshipTypes.HAS, direction = Relationship.OUTGOING)
-    private Collection<GraphInteractor> interactors;
+    @Relationship(type = RelationshipTypes.INTERACTORS, direction = Relationship.UNDIRECTED)
+    private List<GraphInteractor> interactors;
 
     @Relationship(type = RelationshipTypes.COMPLEX_EXPANSION)
     private GraphCvTerm complexExpansion;
@@ -68,7 +66,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             setInteractorB(binaryInteractionEvidence.getParticipantB().getInteractor());
         setComplexExpansion(binaryInteractionEvidence.getComplexExpansion());
         setUniqueKey(createUniqueKey(binaryInteractionEvidence));
-
+        initializeInteractors();
         if (CreationConfig.createNatively) {
             createNodeNatively();
             if (!isAlreadyCreated()) {
@@ -101,6 +99,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         CommonUtility.createRelationShip(interactorA, this.getGraphId(), RelationshipTypes.INTERACTOR_A);
         CommonUtility.createRelationShip(interactorB, this.getGraphId(), RelationshipTypes.INTERACTOR_B);
         CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), RelationshipTypes.COMPLEX_EXPANSION);
+        CommonUtility.createInteractorRelationShips(interactors,this.graphId);
     }
 
     public String getUniqueKey() {
@@ -193,12 +192,24 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     }
 
-    public Collection<? extends Interactor> getInteractors() {
+    public List<? extends Interactor> getInteractors() {
         return interactors;
     }
 
-    public void setInteractors(Collection<GraphInteractor> interactors) {
+    public void setInteractors(List<GraphInteractor> interactors) {
         this.interactors = interactors;
+    }
+
+    public void initializeInteractors(){
+        if(interactors==null){
+            interactors=new ArrayList<GraphInteractor>();
+            if(this.getInteractorA()!=null) {
+                interactors.add(this.getInteractorA());
+            }
+            if(this.getInteractorB()!=null) {
+                interactors.add(this.getInteractorB());
+            }
+        }
     }
 
     public GraphInteractionEvidence getGraphInteractionEvidence() {
@@ -232,6 +243,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
         int hashcode = 31;
         if (this.getParticipantA() != null) {
             hashcode = 31 * hashcode + this.getParticipantA().hashCode();

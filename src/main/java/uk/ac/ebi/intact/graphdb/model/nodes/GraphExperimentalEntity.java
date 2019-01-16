@@ -99,6 +99,11 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "ExperimentalEntity".hashCode();
         hashcode = 31 * hashcode + super.hashCode();

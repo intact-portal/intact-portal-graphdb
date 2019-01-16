@@ -590,6 +590,11 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         if (this.getInteractor() != null) {
             hashcode = 31 * hashcode + this.getInteractor().hashCode();

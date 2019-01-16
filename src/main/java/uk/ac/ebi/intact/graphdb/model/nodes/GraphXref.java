@@ -221,6 +221,11 @@ public class GraphXref implements Xref {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode;
         try {
             hashcode = UnambiguousXrefComparator.hashCode(this);

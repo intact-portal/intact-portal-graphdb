@@ -180,6 +180,11 @@ public class GraphFeatureEvidence extends GraphFeature {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "Feature:".hashCode();
 

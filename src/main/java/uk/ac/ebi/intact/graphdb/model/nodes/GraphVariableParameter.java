@@ -248,6 +248,11 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         return UnambiguousVariableParameterComparator.hashCode(this);
     }
 

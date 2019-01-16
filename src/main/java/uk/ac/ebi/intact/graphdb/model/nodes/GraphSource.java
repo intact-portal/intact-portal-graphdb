@@ -298,6 +298,11 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "Source".hashCode();
         if (this.getShortName() != null) {

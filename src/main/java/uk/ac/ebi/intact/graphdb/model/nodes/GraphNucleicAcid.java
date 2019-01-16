@@ -315,6 +315,11 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         hashcode = 31 * hashcode + "Nucleic acid".hashCode();
         if (this.getPreferredIdentifierStr() != null) {

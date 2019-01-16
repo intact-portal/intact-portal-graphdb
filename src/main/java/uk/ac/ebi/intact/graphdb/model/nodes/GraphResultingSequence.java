@@ -161,6 +161,11 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode;
         try {
             hashcode = ResultingSequenceComparator.hashCode(this);

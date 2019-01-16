@@ -609,6 +609,11 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         if (this.getAc() != null) {
             hashcode = 31 * hashcode + this.getAc().hashCode();

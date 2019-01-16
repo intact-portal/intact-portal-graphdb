@@ -91,6 +91,11 @@ public class GraphAuthor {
 
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         if (this.getAuthorName() != null) {
             hashcode = 31 * hashcode + this.getAuthorName().toLowerCase().hashCode();

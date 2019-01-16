@@ -161,6 +161,15 @@ public class CommonUtility {
         }
     }
 
+    public static void createInteractorRelationShips(Collection<GraphInteractor> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphInteractor obj : relCollection) {
+                createRelationShip(obj, fromId, INTERACTORS);
+
+            }
+        }
+    }
+
     public static void createFeatureEvidenceRelationShips(Collection<GraphFeatureEvidence> relCollection, long fromId, String relationName) {
         if (relCollection != null) {
             for (GraphFeatureEvidence obj : relCollection) {

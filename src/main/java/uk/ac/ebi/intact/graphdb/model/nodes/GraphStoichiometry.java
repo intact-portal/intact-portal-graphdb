@@ -132,6 +132,11 @@ public class GraphStoichiometry implements Stoichiometry {
 
     @Override
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         return StoichiometryComparator.hashCode(this);
     }
 

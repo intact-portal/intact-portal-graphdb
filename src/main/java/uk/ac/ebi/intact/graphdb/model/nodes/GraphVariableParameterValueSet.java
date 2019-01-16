@@ -31,6 +31,10 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     @Transient
     private boolean isAlreadyCreated;
 
+    public GraphVariableParameterValueSet() {
+
+    }
+
     //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet) {
         setUniqueKey(createUniqueKey(variableParameterValueSet));
@@ -108,6 +112,11 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     }
 
     public int hashCode() {
+
+        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
         int hashcode = 31;
         if (this.getVariableParameterValues() != null) {
             hashcode = 31 * hashcode + HashCode.variableParametersValuesGraphHashCode(this.getVariableParameterValues());

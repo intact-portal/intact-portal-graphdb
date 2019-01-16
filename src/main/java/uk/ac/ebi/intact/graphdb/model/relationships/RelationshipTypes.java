@@ -133,6 +133,7 @@ public class RelationshipTypes {
     //TO SORT
 
     public static final String INTERACTIONS = "interactions";
+    public static final String INTERACTORS = "interactors";
 
     public static final String FEATURES = "features";
     public static final String LINKED_FEATURES = "linkedFeatures";
