@@ -31,11 +31,15 @@ public class GraphChecksum implements Checksum {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphChecksum() {
     }
 
     public GraphChecksum(Checksum checksum) {
         this(checksum.getMethod(), checksum.getValue());
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(checksum));
 
         if (CreationConfig.createNatively) {
@@ -143,7 +147,7 @@ public class GraphChecksum implements Checksum {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -167,4 +171,11 @@ public class GraphChecksum implements Checksum {
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

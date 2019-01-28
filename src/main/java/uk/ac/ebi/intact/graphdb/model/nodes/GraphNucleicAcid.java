@@ -39,12 +39,16 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphNucleicAcid() {
         super();
     }
 
     public GraphNucleicAcid(NucleicAcid nucleicAcid) {
         super(nucleicAcid, true);
+        setForceHashCodeGeneration(true);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
         setUniqueKey(createUniqueKey());
@@ -316,7 +320,7 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -337,6 +341,16 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 
     @Transient

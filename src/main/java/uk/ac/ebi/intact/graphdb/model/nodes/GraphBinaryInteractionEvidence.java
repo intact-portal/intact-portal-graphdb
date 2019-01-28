@@ -50,12 +50,16 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphBinaryInteractionEvidence() {
         super();
     }
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         super(binaryInteractionEvidence, true);
+        setForceHashCodeGeneration(true);
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
@@ -244,7 +248,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
         int hashcode = 31;
@@ -285,4 +289,11 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

@@ -6,16 +6,12 @@ import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.Experiment;
 import psidev.psi.mi.jami.model.ExperimentalEntity;
-import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousExperimentComparator;
-import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousExperimentalEntityComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +27,9 @@ public class GraphExperimentalEntity extends GraphEntity {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphExperimentalEntity() {
         super();
     }
@@ -38,6 +37,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
         //TODO...
         super(experimentalEntity,true);
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -100,7 +100,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -116,5 +116,15 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     public String createUniqueKey(){
         return hashCode() + "";
+    }
+
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

@@ -31,12 +31,16 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphVariableParameterValueSet() {
 
     }
 
     //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet) {
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(variableParameterValueSet));
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -113,7 +117,7 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -134,4 +138,11 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
         return hashcode + "";
     }
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

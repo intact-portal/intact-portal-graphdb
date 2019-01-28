@@ -51,12 +51,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphProtein() {
         super();
     }
 
     public GraphProtein(Protein protein) {
         super(protein, true);
+        setForceHashCodeGeneration(true);
         setUniprotkb(protein.getUniprotkb());
         setUniprotName(protein.getUniprotkb());
         setRefseq(protein.getRefseq());
@@ -441,6 +445,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
         initialiseAliasesWith(new ProteinAliasList());
     }
 
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
     @Transient
     private class ProteinIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public ProteinIdentifierList() {
@@ -510,7 +524,7 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 

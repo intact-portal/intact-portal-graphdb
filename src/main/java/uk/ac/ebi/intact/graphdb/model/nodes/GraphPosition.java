@@ -36,10 +36,15 @@ public class GraphPosition implements Position {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphPosition() {
     }
 
     public GraphPosition(Position position) {
+
+        setForceHashCodeGeneration(true);
         setStatus(position.getStatus());
         setStart(position.getStart());
         setEnd(position.getEnd());
@@ -174,7 +179,7 @@ public class GraphPosition implements Position {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -192,4 +197,11 @@ public class GraphPosition implements Position {
         return position != null ? UnambiguousPositionComparator.hashCode(position) + "" : "";
     }
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

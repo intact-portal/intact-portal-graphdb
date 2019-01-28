@@ -46,10 +46,14 @@ public class GraphOrganism implements Organism {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphOrganism() {
     }
 
     public GraphOrganism(Organism organism) {
+        setForceHashCodeGeneration(true);
         setCommonName(organism.getCommonName());
         setScientificName(organism.getScientificName());
         setTaxId(organism.getTaxId());
@@ -276,7 +280,7 @@ public class GraphOrganism implements Organism {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -315,4 +319,11 @@ public class GraphOrganism implements Organism {
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

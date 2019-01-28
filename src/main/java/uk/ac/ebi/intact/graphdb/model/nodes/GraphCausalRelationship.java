@@ -34,10 +34,14 @@ public class GraphCausalRelationship implements CausalRelationship {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphCausalRelationship() {
     }
 
     public GraphCausalRelationship(CausalRelationship causalRelationship) {
+        setForceHashCodeGeneration(true);
         setRelationType(causalRelationship.getRelationType());
         setTarget(causalRelationship.getTarget());
         setUniqueKey(createUniqueKey(causalRelationship));
@@ -159,7 +163,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -184,4 +188,11 @@ public class GraphCausalRelationship implements CausalRelationship {
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

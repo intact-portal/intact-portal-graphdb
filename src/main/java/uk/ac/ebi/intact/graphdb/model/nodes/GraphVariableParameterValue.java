@@ -9,13 +9,11 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.VariableParameter;
 import psidev.psi.mi.jami.model.VariableParameterValue;
 import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
-import psidev.psi.mi.jami.utils.comparator.range.ResultingSequenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,12 +37,16 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphVariableParameterValue() {
 
     }
 
 
     public GraphVariableParameterValue(VariableParameterValue variableParameterValue) {
+        setForceHashCodeGeneration(true);
         setValue(variableParameterValue.getValue());
         setOrder(variableParameterValue.getOrder());
         setVariableParameter(variableParameterValue.getVariableParameter());
@@ -171,7 +173,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -192,5 +194,13 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
     public String createUniqueKey(VariableParameterValue variableParameterValue) {
         return variableParameterValue != null ? VariableParameterValueComparator.hashCode(variableParameterValue) + "" : "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

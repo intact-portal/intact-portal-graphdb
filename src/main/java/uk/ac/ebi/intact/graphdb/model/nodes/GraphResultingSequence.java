@@ -35,11 +35,15 @@ public class GraphResultingSequence implements ResultingSequence {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphResultingSequence() {
 
     }
 
     public GraphResultingSequence(ResultingSequence resultingSequence) {
+        setForceHashCodeGeneration(true);
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
@@ -162,7 +166,7 @@ public class GraphResultingSequence implements ResultingSequence {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -182,5 +186,13 @@ public class GraphResultingSequence implements ResultingSequence {
 
     public String createUniqueKey(ResultingSequence resultingSequence) {
         return resultingSequence != null ? ResultingSequenceComparator.hashCode(resultingSequence) + "" : "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

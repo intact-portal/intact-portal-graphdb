@@ -46,10 +46,14 @@ public class GraphParameter implements Parameter {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphParameter() {
     }
 
     public GraphParameter(Parameter parameter) {
+        setForceHashCodeGeneration(true);
         setType(parameter.getType());
         setUncertainty(parameter.getUncertainty());
         setUnit(parameter.getUnit());
@@ -240,7 +244,7 @@ public class GraphParameter implements Parameter {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -264,5 +268,13 @@ public class GraphParameter implements Parameter {
 
     public String createUniqueKey(Parameter parameter) {
         return parameter != null ? UnambiguousParameterComparator.hashCode(parameter) + "" : "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

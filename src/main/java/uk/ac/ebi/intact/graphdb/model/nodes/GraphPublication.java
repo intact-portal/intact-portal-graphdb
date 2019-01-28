@@ -73,11 +73,15 @@ public class GraphPublication implements Publication {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphPublication() {
         this.curationDepth = CurationDepth.undefined;
     }
 
     public GraphPublication(Publication publication) {
+        setForceHashCodeGeneration(true);
         setTitle(publication.getTitle());
         setJournal(publication.getJournal());
         setPublicationDate(publication.getPublicationDate());
@@ -667,6 +671,14 @@ public class GraphPublication implements Publication {
         this.ac = ac;
     }
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
     @Transient
     private class PublicationIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public PublicationIdentifierList() {
@@ -713,7 +725,7 @@ public class GraphPublication implements Publication {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 

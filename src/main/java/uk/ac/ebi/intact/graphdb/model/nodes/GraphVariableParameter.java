@@ -15,7 +15,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,11 +47,15 @@ public class GraphVariableParameter implements VariableParameter {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphVariableParameter() {
 
     }
 
     public GraphVariableParameter(VariableParameter variableParameter) {
+        setForceHashCodeGeneration(true);
         setDescription(variableParameter.getDescription());
         setUnit(variableParameter.getUnit());
         setExperiment(variableParameter.getExperiment());
@@ -249,7 +252,7 @@ public class GraphVariableParameter implements VariableParameter {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -264,4 +267,11 @@ public class GraphVariableParameter implements VariableParameter {
         return variableParameter != null ? UnambiguousVariableParameterComparator.hashCode(variableParameter) + "" : "";
     }
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

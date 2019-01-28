@@ -6,7 +6,6 @@ import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
-import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -48,10 +47,14 @@ public class GraphRange implements Range {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphRange() {
     }
 
     public GraphRange(Range range) {
+        setForceHashCodeGeneration(true);
         setPositions(range.getStart(), range.getEnd());
         setLink(range.isLink());
         setResultingSequence(range.getResultingSequence());
@@ -231,7 +234,7 @@ public class GraphRange implements Range {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -255,5 +258,13 @@ public class GraphRange implements Range {
         String uniqueKey=null;
         if(this.getAc()!=null) uniqueKey=this.getAc().hashCode()+"";
         return uniqueKey;
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

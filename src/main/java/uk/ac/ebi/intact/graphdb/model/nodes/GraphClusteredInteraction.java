@@ -39,11 +39,15 @@ public class GraphClusteredInteraction {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphClusteredInteraction() {
 
     }
 
     public GraphClusteredInteraction(ClusterDataFeed clusterDataFeed) {
+        setForceHashCodeGeneration(true);
         setInteractions(clusterDataFeed.getInteractions());
         setInteractorPA(clusterDataFeed.getInteractorA());
         setInteractorPB(clusterDataFeed.getInteractorB());
@@ -160,7 +164,7 @@ public class GraphClusteredInteraction {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -181,5 +185,13 @@ public class GraphClusteredInteraction {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

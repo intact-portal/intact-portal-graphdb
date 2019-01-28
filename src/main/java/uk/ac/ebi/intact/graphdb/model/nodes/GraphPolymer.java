@@ -38,6 +38,9 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     private boolean isAlreadyCreated;
 
     @Transient
+    private boolean forceHashCodeGeneration;
+
+    @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     public GraphPolymer() {
@@ -46,6 +49,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public GraphPolymer(Polymer polymer, boolean childAlreadyCreated) {
         super(polymer, true);
+        setForceHashCodeGeneration(true);
         setSequence(polymer.getSequence());
         setUniqueKey(createUniqueKey(polymer));
 
@@ -203,7 +207,7 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -235,5 +239,15 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     @Override
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

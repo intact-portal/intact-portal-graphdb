@@ -60,12 +60,16 @@ public class GraphGene extends GraphMolecule implements Gene {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphGene() {
         super();
     }
 
     public GraphGene(Gene gene) {
         super(gene, true);
+        setForceHashCodeGeneration(true);
         setEnsembl(gene.getEnsembl());
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());
@@ -466,7 +470,7 @@ public class GraphGene extends GraphMolecule implements Gene {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -490,6 +494,14 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 
     @Transient

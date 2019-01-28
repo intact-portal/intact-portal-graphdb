@@ -66,6 +66,9 @@ public class GraphFeature implements Feature {
     private boolean isAlreadyCreated;
 
     @Transient
+    private boolean forceHashCodeGeneration;
+
+    @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     public GraphFeature() {
@@ -74,6 +77,7 @@ public class GraphFeature implements Feature {
 
     public GraphFeature(Feature featureEvidence, boolean childAlreadyCreated) {
 
+        setForceHashCodeGeneration(true);
         boolean wasInitializedBefore = false;
 
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
@@ -495,7 +499,7 @@ public class GraphFeature implements Feature {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -543,5 +547,13 @@ public class GraphFeature implements Feature {
 
     public void setNodeProperties(Map<String, Object> nodeProperties) {
         this.nodeProperties = nodeProperties;
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

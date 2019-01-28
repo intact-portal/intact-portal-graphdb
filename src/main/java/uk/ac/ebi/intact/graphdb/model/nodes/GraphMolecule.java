@@ -27,12 +27,16 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphMolecule() {
         super();
     }
 
     public GraphMolecule(Molecule molecule, boolean childAlreadyCreated) {
         super(molecule, true);
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
@@ -161,7 +165,7 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -177,5 +181,15 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

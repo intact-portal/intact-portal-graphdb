@@ -72,6 +72,9 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
 
     public GraphInteractionEvidence() {
 
@@ -80,7 +83,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence,boolean childAlreadyCreated) {
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
 
-
+        setForceHashCodeGeneration(true);
         setImexId(binaryInteractionEvidence.getImexId());
         setExperiment(binaryInteractionEvidence.getExperiment());
         setAvailability(binaryInteractionEvidence.getAvailability());
@@ -108,9 +111,13 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setIdentifiers(binaryInteractionEvidence.getIdentifiers());
         setXrefs(binaryInteractionEvidence.getXrefs());
         setAnnotations(binaryInteractionEvidence.getAnnotations());
-        if (!callingClasses.contains("GraphParticipantEvidence")) {
+
+        //Enable below if you will create GraphInteractionEvidence as a separate node in future
+        /*if(!childAlreadyCreated) {
+         if (!callingClasses.contains("GraphParticipantEvidence")) {
             setParticipants(binaryInteractionEvidence.getParticipants());
         }
+        }*/
 
         if (CreationConfig.createNatively) {
             if(!isAlreadyCreated()&&!childAlreadyCreated) {
@@ -610,7 +617,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -626,5 +633,11 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
 
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

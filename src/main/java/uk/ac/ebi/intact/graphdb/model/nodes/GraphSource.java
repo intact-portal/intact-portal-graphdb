@@ -12,7 +12,6 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,11 +33,15 @@ public class GraphSource extends GraphCvTerm implements Source {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphSource() {
     }
 
     public GraphSource(Source source) {
         super(source,true);
+        setForceHashCodeGeneration(true);
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
@@ -299,7 +302,7 @@ public class GraphSource extends GraphCvTerm implements Source {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -316,4 +319,13 @@ public class GraphSource extends GraphCvTerm implements Source {
         return hashCode() + "";
     }
 
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

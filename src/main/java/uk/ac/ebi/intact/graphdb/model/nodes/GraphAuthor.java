@@ -28,11 +28,15 @@ public class GraphAuthor {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphAuthor() {
 
     }
 
     public GraphAuthor(String authorName) {
+        setForceHashCodeGeneration(true);
         this.setAuthorName(authorName);
         setUniqueKey(createUniqueKey());
 
@@ -92,7 +96,7 @@ public class GraphAuthor {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -106,5 +110,13 @@ public class GraphAuthor {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

@@ -12,7 +12,6 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +27,16 @@ public class GraphParameterValue extends ParameterValue {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphParameterValue(){
        super(new BigDecimal(0));
     }
 
     public GraphParameterValue(BigDecimal factor, short base, short exponent) {
         super(factor, base, exponent);
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -83,7 +86,7 @@ public class GraphParameterValue extends ParameterValue {
 
     public int hashCode(){
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -95,5 +98,13 @@ public class GraphParameterValue extends ParameterValue {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

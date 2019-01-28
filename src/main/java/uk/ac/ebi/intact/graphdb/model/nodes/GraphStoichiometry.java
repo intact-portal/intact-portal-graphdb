@@ -12,7 +12,6 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +30,15 @@ public class GraphStoichiometry implements Stoichiometry {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphStoichiometry() {
     }
 
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
+        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(stoichiometry));
 
         if (CreationConfig.createNatively) {
@@ -133,7 +136,7 @@ public class GraphStoichiometry implements Stoichiometry {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -147,5 +150,13 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public String createUniqueKey(Stoichiometry stoichiometry) {
         return stoichiometry != null ? StoichiometryComparator.hashCode(stoichiometry) + "" : "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

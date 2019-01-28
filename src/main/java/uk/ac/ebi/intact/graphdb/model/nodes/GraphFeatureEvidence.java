@@ -38,12 +38,16 @@ public class GraphFeatureEvidence extends GraphFeature {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphFeatureEvidence() {
 
     }
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
         super(featureEvidence,true);
+        setForceHashCodeGeneration(true);
         boolean wasInitializedBefore = false;
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
               GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
@@ -181,7 +185,7 @@ public class GraphFeatureEvidence extends GraphFeature {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -224,4 +228,13 @@ public class GraphFeatureEvidence extends GraphFeature {
         return hashcode + "";
     }
 
+    @Override
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    @Override
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

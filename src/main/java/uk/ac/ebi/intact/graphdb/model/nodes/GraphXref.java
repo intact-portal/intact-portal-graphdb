@@ -5,7 +5,6 @@ import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Xref;
-import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -15,7 +14,6 @@ import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.EntityCache;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,12 +40,15 @@ public class GraphXref implements Xref {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphXref() {
     }
 
     public GraphXref(Xref xref) {
 
-
+        setForceHashCodeGeneration(true);
         setId(xref.getId());
         setVersion(xref.getVersion());
         setAc(CommonUtility.extractAc(xref));
@@ -222,7 +223,7 @@ public class GraphXref implements Xref {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -275,5 +276,13 @@ public class GraphXref implements Xref {
 
     public void setAc(String ac) {
         this.ac = ac;
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

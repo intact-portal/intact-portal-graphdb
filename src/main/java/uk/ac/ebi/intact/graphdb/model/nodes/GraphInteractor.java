@@ -62,10 +62,14 @@ public class GraphInteractor implements Interactor {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphInteractor() {
     }
 
     public GraphInteractor(Interactor interactor, boolean childAlreadyCreated) {
+        setForceHashCodeGeneration(true);
         setShortName(interactor.getShortName());
         setFullName(interactor.getFullName());
         setOrganism(interactor.getOrganism());
@@ -496,7 +500,7 @@ public class GraphInteractor implements Interactor {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -535,5 +539,13 @@ public class GraphInteractor implements Interactor {
 
     public void setPreferredIdentifierStr(String preferredIdentifierStr) {
         this.preferredIdentifierStr = preferredIdentifierStr;
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

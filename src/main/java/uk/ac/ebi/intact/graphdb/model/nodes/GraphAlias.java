@@ -34,11 +34,14 @@ public class GraphAlias implements Alias {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphAlias() {
     }
 
     public GraphAlias(Alias alias) {
-
+        setForceHashCodeGeneration(true);
         if (GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()) != null) {
             type = (GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()));
         } else {
@@ -155,7 +158,7 @@ public class GraphAlias implements Alias {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -185,5 +188,13 @@ public class GraphAlias implements Alias {
 
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

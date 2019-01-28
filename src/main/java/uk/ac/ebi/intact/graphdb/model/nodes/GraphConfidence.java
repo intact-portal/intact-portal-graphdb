@@ -5,7 +5,6 @@ import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
-import psidev.psi.mi.jami.utils.comparator.checksum.UnambiguousChecksumComparator;
 import psidev.psi.mi.jami.utils.comparator.confidence.UnambiguousConfidenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -32,10 +31,14 @@ public class GraphConfidence implements Confidence {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphConfidence() {
     }
 
     public GraphConfidence(Confidence confidence) {
+        setForceHashCodeGeneration(true);
         setType(confidence.getType());
         setValue(confidence.getValue());
         setUniqueKey(createUniqueKey(confidence));
@@ -151,7 +154,7 @@ public class GraphConfidence implements Confidence {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -169,4 +172,11 @@ public class GraphConfidence implements Confidence {
         return confidence != null ? UnambiguousConfidenceComparator.hashCode(confidence) + "" : "";
     }
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }

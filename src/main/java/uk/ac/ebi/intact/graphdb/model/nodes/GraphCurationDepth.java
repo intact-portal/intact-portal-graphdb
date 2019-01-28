@@ -31,11 +31,15 @@ public class GraphCurationDepth {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphCurationDepth() {
 
     }
 
     public GraphCurationDepth(CurationDepth curationDepth) {
+        setForceHashCodeGeneration(true);
         setCurationDepth(curationDepth.name());
         setAc(CommonUtility.extractAc(curationDepth));
         setUniqueKey(createUniqueKey(curationDepth));
@@ -106,7 +110,7 @@ public class GraphCurationDepth {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -120,5 +124,13 @@ public class GraphCurationDepth {
 
     public String createUniqueKey(CurationDepth curationDepth) {
         return hashCode()+"";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

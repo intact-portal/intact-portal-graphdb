@@ -49,10 +49,14 @@ public class GraphEntity implements Entity<Feature> {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphEntity() {
     }
 
     public GraphEntity(Entity entity, boolean childAlreadyCreated) {
+        setForceHashCodeGeneration(true);
         setInteractor(entity.getInteractor());
         setStoichiometry(entity.getStoichiometry());
         setChangeListener(entity.getChangeListener());
@@ -297,7 +301,7 @@ public class GraphEntity implements Entity<Feature> {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -315,5 +319,13 @@ public class GraphEntity implements Entity<Feature> {
 
     public String createUniqueKey() {
         return hashCode() + "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

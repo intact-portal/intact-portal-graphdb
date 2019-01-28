@@ -36,11 +36,15 @@ public class GraphAnnotation implements Annotation {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private boolean forceHashCodeGeneration;
+
     public GraphAnnotation() {
     }
 
     public GraphAnnotation(Annotation annotation) {
 
+        setForceHashCodeGeneration(true);
         if (annotation.getTopic() != null) {
             if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
                 topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
@@ -157,7 +161,7 @@ public class GraphAnnotation implements Annotation {
     @Override
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -191,5 +195,13 @@ public class GraphAnnotation implements Annotation {
 
     public String createUniqueKey(Annotation annotation) {
         return annotation != null ? UnambiguousAnnotationComparator.hashCode(annotation) + "" : "";
+    }
+
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }

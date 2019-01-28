@@ -85,6 +85,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private Collection<GraphCausalRelationship> causalRelationships;
 
     @Transient
+    private boolean forceHashCodeGeneration;
+
+    @Transient
     private boolean isAlreadyCreated;
 
     public GraphParticipantEvidence() {
@@ -92,7 +95,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public GraphParticipantEvidence(ParticipantEvidence participantEvidence) {
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
-
+        setForceHashCodeGeneration(true);
         setExperimentalRole(participantEvidence.getExperimentalRole());
         setBiologicalRole(participantEvidence.getBiologicalRole());
         setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
@@ -591,7 +594,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public int hashCode() {
 
-        if(this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -631,4 +634,11 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
 
+    public boolean isForceHashCodeGeneration() {
+        return forceHashCodeGeneration;
+    }
+
+    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
+        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
 }
