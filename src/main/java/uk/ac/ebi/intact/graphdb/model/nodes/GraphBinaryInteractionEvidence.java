@@ -271,12 +271,21 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     public String createUniqueKey(BinaryInteractionEvidence binaryInteractionEvidence) {
         // since there was not hashcode implemented in jami, we had to come up with this
         int hashcode = 31;
+
+        int hashcodeParticpantA=0;
+        int hashcodeParticpantB=0;
         if (binaryInteractionEvidence.getParticipantA() != null) {
-            hashcode = 31 * hashcode + HashCode.participantHashCode(binaryInteractionEvidence.getParticipantA());
+            hashcodeParticpantA = HashCode.participantHashCode(binaryInteractionEvidence.getParticipantA());
+            hashcode = 31 * hashcode + hashcodeParticpantA;
         }
         if (binaryInteractionEvidence.getParticipantB() != null) {
-            hashcode = 31 * hashcode + HashCode.participantHashCode(binaryInteractionEvidence.getParticipantB());
+            hashcodeParticpantB=HashCode.participantHashCode(binaryInteractionEvidence.getParticipantB());
+            hashcode = 31 * hashcode + hashcodeParticpantB;
         }
+
+        String uniqueSumValue = "" + hashcodeParticpantA + "-" +hashcodeParticpantB;
+        hashcode = 31 * hashcode + uniqueSumValue.hashCode();
+
         if (binaryInteractionEvidence.getComplexExpansion() != null) {
             hashcode = 31 * hashcode +
                     UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());

@@ -176,13 +176,13 @@ public class HashCode {
             hashcode = 31 * hashcode + interactorHashCode(participantEvidence.getInteractor());
         }
         if (participantEvidence.getBiologicalRole() != null) {
-            hashcode = 31 * hashcode +  UnambiguousCvTermComparator.hashCode(participantEvidence.getBiologicalRole());
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(participantEvidence.getBiologicalRole());
         }
         if (participantEvidence.getExperimentalRole() != null) {
-            hashcode = 31 * hashcode +  UnambiguousCvTermComparator.hashCode(participantEvidence.getExperimentalRole());
+            hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(participantEvidence.getExperimentalRole());
         }
         if (!participantEvidence.getIdentificationMethods().isEmpty()) {
-            hashcode = hashcode + HashCode.cvTermsHashCode(participantEvidence.getIdentificationMethods());
+            hashcode = 31 * hashcode + HashCode.cvTermsHashCode(participantEvidence.getIdentificationMethods());
         }
         if (participantEvidence.getExperimentalPreparations() != null) {
             hashcode = 31 * hashcode + HashCode.cvTermsHashCode(participantEvidence.getExperimentalPreparations());
@@ -194,9 +194,21 @@ public class HashCode {
             hashcode = 31 * hashcode + HashCode.parametersHashCode(participantEvidence.getParameters());
         }
         if (!participantEvidence.getFeatures().isEmpty()) {
-            hashcode = hashcode + HashCode.featuresHashCode(participantEvidence.getFeatures());
+            hashcode = 31 * hashcode + HashCode.featuresHashCode(participantEvidence.getFeatures());
         }
 
+        return hashcode;
+    }
+
+    /*This had to be included as jami does not have this method yet*/
+    public static int moleculeHashCode(Molecule molecule) {
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Molecule".hashCode();
+        String preferredIdentifierStr = molecule.getPreferredIdentifier().getId();
+        if (molecule.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+            hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+        }
         return hashcode;
     }
 
@@ -204,6 +216,11 @@ public class HashCode {
     public static int polymerHashCode(Polymer polymer) {
 
         int hashcode = 31;
+
+        String preferredIdentifierStr = polymer.getPreferredIdentifier().getId();
+        if (polymer.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+            hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+        }
         if (polymer.getOrganism() != null) {
             hashcode = 31 * hashcode + UnambiguousOrganismComparator.hashCode(polymer.getOrganism());
         }
@@ -219,6 +236,11 @@ public class HashCode {
 
         int hashcode = 31;
         hashcode = 31 * hashcode + "Protein".hashCode();
+
+        String preferredIdentifierStr = protein.getPreferredIdentifier().getId();
+        if (protein.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+            hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+        }
         if (protein.getUniprotkb() != null) {
             hashcode = 31 * hashcode + protein.getUniprotkb().hashCode();
         }
@@ -238,6 +260,11 @@ public class HashCode {
     public static int nucleicAcidHashCode(NucleicAcid nucleicAcid) {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Nucleic acid".hashCode();
+
+        String preferredIdentifierStr = nucleicAcid.getPreferredIdentifier().getId();
+        if (nucleicAcid.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+            hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+        }
         if (nucleicAcid.getDdbjEmblGenbank() != null) {
             hashcode = 31 * hashcode + nucleicAcid.getDdbjEmblGenbank().hashCode();
         }
@@ -248,9 +275,14 @@ public class HashCode {
     }
 
     /*This had to be included as jami does not have this method yet*/
-    public static int geneHashCode(Gene gene){
+    public static int geneHashCode(Gene gene) {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Gene".hashCode();
+
+        String preferredIdentifierStr = gene.getPreferredIdentifier().getId();
+        if (gene.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+            hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+        }
         if (gene.getEnsembl() != null) {
             hashcode = 31 * hashcode + gene.getEnsembl().hashCode();
         }
@@ -267,19 +299,29 @@ public class HashCode {
     }
 
     /*This had to be included as jami does not have this method yet*/
-    public static int interactorHashCode(Interactor interactor){
-        int hashcode=0;
-        if(interactor instanceof Polymer){
-            hashcode=polymerHashCode((Polymer)interactor);
+    public static int interactorHashCode(Interactor interactor) {
+        int hashcode = 0;
+        if (interactor instanceof Polymer) {
+            hashcode = polymerHashCode((Polymer) interactor);
         }
-        if(interactor instanceof Protein){
-            hashcode=proteinHashCode((Protein)interactor);
+        if (interactor instanceof Protein) {
+            hashcode = proteinHashCode((Protein) interactor);
         }
-        if(interactor instanceof NucleicAcid){
-            hashcode=nucleicAcidHashCode((NucleicAcid)interactor);
+        if (interactor instanceof NucleicAcid) {
+            hashcode = nucleicAcidHashCode((NucleicAcid) interactor);
         }
-        if(interactor instanceof Gene){
-            hashcode=geneHashCode((Gene)interactor);
+        if (interactor instanceof Gene) {
+            hashcode = geneHashCode((Gene) interactor);
+        }
+        if (interactor instanceof Molecule) {
+            hashcode = moleculeHashCode((Molecule) interactor);
+        } else {
+            hashcode = 31;
+            hashcode = 31 * hashcode + "Interactor".hashCode();
+            String preferredIdentifierStr = interactor.getPreferredIdentifier().getId();
+            if (interactor.getPreferredIdentifier() != null && preferredIdentifierStr != null) {
+                hashcode = 31 * hashcode + preferredIdentifierStr.hashCode();
+            }
         }
 
         return hashcode;
