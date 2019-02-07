@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -28,6 +29,7 @@ public class GraphExperiment implements Experiment {
     private String ac;
 
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.INCOMING)
+    @JsonManagedReference
     private GraphPublication publication;
 
     @Relationship(type = RelationshipTypes.XREFS)

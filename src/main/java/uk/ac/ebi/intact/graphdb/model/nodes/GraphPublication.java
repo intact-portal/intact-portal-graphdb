@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -68,6 +69,7 @@ public class GraphPublication implements Publication {
     private Collection<GraphAnnotation> annotations;
 
     @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
+    @JsonBackReference
     private Collection<GraphExperiment> experiments;
 
     @Transient
