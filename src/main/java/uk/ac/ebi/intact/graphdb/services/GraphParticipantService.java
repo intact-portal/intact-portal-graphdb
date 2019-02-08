@@ -2,8 +2,10 @@ package uk.ac.ebi.intact.graphdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
@@ -34,5 +36,9 @@ public class GraphParticipantService {
 
     public Page<GraphParticipantEvidence> findAll(Pageable page, int depth) {
         return graphParticpantRepository.findAll(page, depth);
+    }
+
+    public Page<GraphParticipantEvidence> findByInteractionAc(String ac,int pageNumber,int pageSize) {
+       return graphParticpantRepository.findByInteractionAc(ac,new PageRequest(pageNumber,pageSize));
     }
 }

@@ -41,7 +41,7 @@ public class GraphInteractionService {
         return this.graphBinaryInteractionEvidenceRepository.getClusteredInteraction(uniqueKey);
     }
 
-    public GraphInteractionEvidence getInteractionEvidenceByAc(String ac, int depth) {
+    public GraphInteractionEvidence findByInteractionAc(String ac, int depth) {
         GraphInteractionEvidence graphInteractionEvidence=null;
         Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac,new PageRequest(0,1),depth);
         if(page!=null&&page.getContent()!=null&&!page.getContent().isEmpty()){

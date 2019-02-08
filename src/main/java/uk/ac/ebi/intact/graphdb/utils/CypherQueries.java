@@ -13,4 +13,13 @@ public class CypherQueries {
 
     public static final String GET_CLUSTERED_INTERACTION="MATCH (n:GraphClusteredInteraction)-->(m:GraphBinaryInteractionEvidence{ uniqueKey: {0}}) RETURN (n)";
 
+    public static final String GET_PARTICIPANTS_BY_INTERACTION_AC=
+            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence) " +
+            "OPTIONAL MATCH (participantEvidenceN)-[expRoleR:experimentalRole]-(expRoleN:GraphCvTerm)" +
+            "OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:biologicalRole]-(bioRoleN:GraphCvTerm)" +
+            "OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:identificationMethods]-(identificationMethodN:GraphCvTerm)" +
+            "RETURN  participantEvidenceN,expRoleR,expRoleN,bioRoleR,bioRoleN,COLLECT(identificationMethodR),COLLECT(identificationMethodN)";
+
+    public static final String GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT="MATCH (gie:GraphBinaryInteractionEvidence{ ac: {0} }) --(p:GraphParticipantEvidence)  RETURN COUNT(DISTINCT p)";
+
 }
