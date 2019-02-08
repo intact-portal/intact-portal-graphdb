@@ -26,11 +26,11 @@ import java.util.Optional;
 @RepositoryRestResource(collectionResourceRel = "interactions", path = "interactions")
 public interface GraphInteractionEvidenceRepository extends Neo4jRepository<GraphInteractionEvidence, Long> {
 
-    GraphInteractionEvidence findByShortName(@Param("shortName") String shortName);
+    GraphInteractionEvidence findByShortName(String shortName);
 
     GraphInteractionEvidence findByIdentifiers(Xref identifier);
 
-    Page<GraphInteractionEvidence> findTopByAc(@Param("ac") String ac, Pageable pageable, @Depth int depth);
+    Page<GraphInteractionEvidence> findTopByAc(String ac, Pageable pageable, @Depth int depth);
 //
 //    Page<BinaryInteractionEvidence> findByInteractorA_ShortName(Pageable pageable, @Param("shortName") String shortName);
 //
