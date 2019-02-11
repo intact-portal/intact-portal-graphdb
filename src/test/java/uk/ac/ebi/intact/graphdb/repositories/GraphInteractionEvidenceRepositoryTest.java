@@ -27,7 +27,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         GraphInteractionEvidence graphInteractionEvidence=null;
         String ac="EBI-10000974";
         int depth=2;
-        Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac,new PageRequest(0,1),depth);
+        Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0,1), depth);
         if(page!=null&&page.getContent()!=null&&!page.getContent().isEmpty()){
             graphInteractionEvidence=page.getContent().get(0);
         }

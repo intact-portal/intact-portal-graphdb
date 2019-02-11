@@ -28,9 +28,10 @@ public class GraphInteractionService {
     final private GraphInteractionEvidenceRepository graphInteractionEvidenceRepository;
 
     @Autowired
-    public GraphInteractionService(GraphBinaryInteractionEvidenceRepository graphBinaryInteractionEvidenceRepository,GraphInteractionEvidenceRepository graphInteractionEvidenceRepository) {
+    public GraphInteractionService(GraphBinaryInteractionEvidenceRepository graphBinaryInteractionEvidenceRepository,
+                                   GraphInteractionEvidenceRepository graphInteractionEvidenceRepository) {
         this.graphBinaryInteractionEvidenceRepository = graphBinaryInteractionEvidenceRepository;
-        this.graphInteractionEvidenceRepository=graphInteractionEvidenceRepository;
+        this.graphInteractionEvidenceRepository = graphInteractionEvidenceRepository;
     }
 
     public Page<GraphBinaryInteractionEvidence> findAll(Pageable page, int depth) {
@@ -42,10 +43,10 @@ public class GraphInteractionService {
     }
 
     public GraphInteractionEvidence findByInteractionAc(String ac, int depth) {
-        GraphInteractionEvidence graphInteractionEvidence=null;
-        Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac,new PageRequest(0,1),depth);
-        if(page!=null&&page.getContent()!=null&&!page.getContent().isEmpty()){
-            graphInteractionEvidence=page.getContent().get(0);
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0,1), depth);
+        if (page != null && page.getContent() != null && !page.getContent().isEmpty()){
+            graphInteractionEvidence = page.getContent().get(0);
         }
         return graphInteractionEvidence;
     }

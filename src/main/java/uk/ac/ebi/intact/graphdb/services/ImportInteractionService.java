@@ -43,38 +43,4 @@ public class ImportInteractionService {
     public ImportInteractionService(@Qualifier("miTabInteractionProvider") InteractionProvider interactionProvider) {
         this.interactionProvider = interactionProvider;
     }
-
-    public List<Interaction> importInteractions() {
-
-        List<Interaction> interactions = new ArrayList<Interaction>();
-
-//        log.info("Deleting previous interactions");
-//        cleanDb();
-//        log.info("Previous interactions deleted");
-
-        log.info("Loading interactions");
-        try {
-            Iterator<BinaryInteractionEvidence> interactionIterator = interactionProvider.getInteractions();
-
-            while (interactionIterator.hasNext()) {
-                psidev.psi.mi.jami.model.Interaction interaction = (psidev.psi.mi.jami.model.Interaction) interactionIterator.next();
-
-                // most of the interactions will have experimental data attached to them so they will be of type InteractionEvidence
-                if (interaction instanceof MitabBinaryInteractionEvidence) {
-                    MitabBinaryInteractionEvidence interactionEvidence = (MitabBinaryInteractionEvidence) interaction;
-                    // process the interaction evidence
-                    graphBinaryInteractionEvidenceRepository.save(new GraphBinaryInteractionEvidence(interactionEvidence));
-                    interactions.add(interactionEvidence);
-                }
-            }
-
-        } catch (GraphDbException e) {
-            log.error(e.getMessage());
-        }
-
-        log.info("Loaded " + interactions.size() + " interactions");
-
-        return interactions;
-
-    }
 }
