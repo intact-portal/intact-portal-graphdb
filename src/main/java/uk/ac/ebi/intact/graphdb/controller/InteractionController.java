@@ -31,7 +31,7 @@ public class InteractionController {
         return "Welcome to Spring Boot GraphDB Example";
     }
 
-    @RequestMapping(value = "/getInteractionByAc",
+    @RequestMapping(value = "/details",
             params = {"ac"},
             method = RequestMethod.GET)
     public GraphInteractionEvidence getInteractionByAc(
