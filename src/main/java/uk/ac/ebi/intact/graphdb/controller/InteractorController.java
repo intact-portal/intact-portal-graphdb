@@ -14,7 +14,8 @@ import java.util.Map;
  * Date: 04/09/2014
  * Time: 17:44
  */
-@RestController("/interactor")
+@RestController
+@RequestMapping("/graph/interactor")
 public class InteractorController {
 
     final GraphInteractorService graphInteractorService;
@@ -24,8 +25,4 @@ public class InteractorController {
         this.graphInteractorService = graphInteractorService;
     }
 
-    @RequestMapping("/graph")
-    public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return graphInteractorService.graph(limit == null ? 100 : limit);
-    }
 }
