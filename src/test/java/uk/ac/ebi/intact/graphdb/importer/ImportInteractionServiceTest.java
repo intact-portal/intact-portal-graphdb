@@ -54,7 +54,7 @@ public class ImportInteractionServiceTest {
      // when(interactionProvider.getInteractions()).thenReturn(interactions);
 
      //   ImportInteractionService importInteractionService = new ImportInteractionService(interactionProvider);
-        importInteractionService.importInteractions();
+//        importInteractionService.importInteractions();
 //        verify(interactionProvider, times(1)).getInteractions();
 
     }

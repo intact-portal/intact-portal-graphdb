@@ -19,24 +19,24 @@ import java.util.List;
 @RequestMapping("/graph/interaction")
 public class InteractionController {
 
-    final ImportInteractionService importInteractionService;
+    private GraphInteractionService graphInteractionService;
 
     @Autowired
-    GraphInteractionService graphInteractionService;
+    public InteractionController(GraphInteractionService graphInteractionService) {
+        this.graphInteractionService = graphInteractionService;
+    }
 
-    @Autowired
-    public InteractionController(ImportInteractionService importInteractionService) {
-        this.importInteractionService = importInteractionService;
+    @RequestMapping("/")
+    public String SpringBootSolrExample() {
+        return "Welcome to Spring Boot GraphDB Example";
     }
 
     @RequestMapping(value = "/getInteractionByAc",
-            params = {
-                    "ac",
-                    "depth"
-            },
+            params = {"ac"},
             method = RequestMethod.GET)
-    public GraphInteractionEvidence getInteractionByAc(@RequestParam(value = "ac") String ac,
-                                                       @RequestParam(value = "depth",required = false) int depth) {
-        return graphInteractionService.findByInteractionAc(ac,depth);
+    public GraphInteractionEvidence getInteractionByAc(
+            @RequestParam(value = "ac") String ac,
+            @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
+        return graphInteractionService.findByInteractionAc(ac, depth);
     }
 }

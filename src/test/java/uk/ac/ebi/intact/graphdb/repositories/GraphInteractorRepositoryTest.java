@@ -33,7 +33,7 @@ public class GraphInteractorRepositoryTest {
     public static final String P12347 = "P12347";
     
     @Autowired
-    protected ProteinRepository proteinRepository;
+    protected GraphProteinRepository proteinRepository;
     @Autowired
     protected GraphInteractorRepository graphInteractorRepository;
 

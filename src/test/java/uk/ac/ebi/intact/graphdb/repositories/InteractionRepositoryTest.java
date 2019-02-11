@@ -22,7 +22,7 @@ public class InteractionRepositoryTest {
 //    private Session session;
 
     @Autowired
-    private ProteinRepository proteinRepository;
+    private GraphProteinRepository proteinRepository;
     @Autowired
     private GraphInteractorRepository graphInteractorRepository;
     @Autowired
@@ -70,13 +70,13 @@ public class InteractionRepositoryTest {
 //        interactorRepository.save(p12346);
 //        interactorRepository.save(p12347);
 
-        p12345 = (GraphProtein) proteinRepository.findByShortName(p12345.getShortName());
+//        p12345 = (GraphProtein) proteinRepository.findByShortName(p12345.getShortName());
 //        p12345 = interactorRepository.findByAccession(p12345.getAccession());
 //        p12345.interactsWith(p12346, 0.0);
 //        p12345.interactsWith(p12347, 0.0);
         proteinRepository.save(p12345);
 
-        p12346 = (GraphProtein) proteinRepository.findByShortName(p12346.getShortName());
+//        p12346 = (GraphProtein) proteinRepository.findByShortName(p12346.getShortName());
 //        p12346 = interactorRepository.findByAccession(p12346.getAccession());
 //        p12346.interactsWith(p12347, 0.0);
 
