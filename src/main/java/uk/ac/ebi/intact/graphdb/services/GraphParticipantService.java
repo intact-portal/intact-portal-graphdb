@@ -5,11 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
-import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
-import uk.ac.ebi.intact.graphdb.repositories.GraphParticpantRepository;
+import uk.ac.ebi.intact.graphdb.repositories.GraphParticipantRepository;
 
 import java.util.Optional;
 
@@ -19,10 +16,10 @@ import java.util.Optional;
 @Service
 public class GraphParticipantService {
 
-    final private GraphParticpantRepository graphParticpantRepository;
+    final private GraphParticipantRepository graphParticpantRepository;
 
     @Autowired
-    public GraphParticipantService(GraphParticpantRepository graphParticpantRepository) {
+    public GraphParticipantService(GraphParticipantRepository graphParticpantRepository) {
         this.graphParticpantRepository = graphParticpantRepository;
     }
 

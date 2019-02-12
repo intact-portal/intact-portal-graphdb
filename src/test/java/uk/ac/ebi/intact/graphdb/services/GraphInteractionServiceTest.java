@@ -27,6 +27,6 @@ public class GraphInteractionServiceTest {
         int depth=2;
         graphInteractionEvidence=graphInteractionService.findByInteractionAc(ac,depth);
 
-        Assert.assertEquals(ac,graphInteractionEvidence.getAc());
+        Assert.assertEquals("Interaction not present", ac,graphInteractionEvidence.getAc());
     }
 }

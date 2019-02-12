@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 
 /**
  * Created by anjali on 07/02/19.
@@ -32,6 +33,12 @@ public class GraphInteractionEvidenceRepositoryTest {
             graphInteractionEvidence=page.getContent().get(0);
         }
 
-        Assert.assertEquals(ac,graphInteractionEvidence.getAc());
+        Assert.assertEquals("Interaction not present",ac,graphInteractionEvidence.getAc());
+
+        //test for depth coverage
+
+        Assert.assertNotNull("Experiment not present",graphInteractionEvidence.getExperiment());
+        Assert.assertNotNull("Publication not present",graphInteractionEvidence.getExperiment().getPublication());
+        Assert.assertEquals("Publication shortlabel not present","25314077",((GraphPublication)graphInteractionEvidence.getExperiment().getPublication()).getPubmedIdStr());
     }
 }
