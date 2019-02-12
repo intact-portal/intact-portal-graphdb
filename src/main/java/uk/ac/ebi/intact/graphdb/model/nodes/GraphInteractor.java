@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -51,6 +52,7 @@ public class GraphInteractor implements Interactor {
     private Collection<GraphInteractionEvidence> interactionEvidence;
 
     @Relationship(type = RelationshipTypes.INTERACTOR, direction = Relationship.INCOMING)
+    @JsonBackReference
     private Collection<GraphParticipantEvidence> participantEvidences;
 
     @Relationship(type = RelationshipTypes.INTERACTORS, direction = Relationship.UNDIRECTED)

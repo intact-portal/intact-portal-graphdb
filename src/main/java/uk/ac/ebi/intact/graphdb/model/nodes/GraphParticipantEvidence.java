@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
@@ -43,6 +44,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphStoichiometry stoichiometry;
 
     @Relationship(type = RelationshipTypes.INTERACTOR)
+    @JsonManagedReference
     private GraphInteractor interactor;
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
