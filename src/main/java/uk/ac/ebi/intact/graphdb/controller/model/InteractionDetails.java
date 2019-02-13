@@ -9,16 +9,18 @@ public class InteractionDetails {
 
     private String interactionAc;
     private String interactionType;
+    private String shortLabel;
     private Collection<InteractionDetailsXRefs> xrefs;
     private Collection<TypeValueObject> annotations;
     private Collection<TypeValueObject> parameters;
     private Collection<TypeValueObject> confidences;
 
-    public InteractionDetails(String interactionAc, String interactionType, Collection<InteractionDetailsXRefs> xrefs,
-                              Collection<TypeValueObject> annotations, Collection<TypeValueObject> parameters,
-                              Collection<TypeValueObject> confidences) {
+    public InteractionDetails(String interactionAc, String interactionType, String shortLabel,
+                              Collection<InteractionDetailsXRefs> xrefs, Collection<TypeValueObject> annotations,
+                              Collection<TypeValueObject> parameters, Collection<TypeValueObject> confidences) {
         this.interactionAc = interactionAc;
         this.interactionType = interactionType;
+        this.shortLabel = shortLabel;
         this.xrefs = xrefs;
         this.annotations = annotations;
         this.parameters = parameters;
@@ -39,6 +41,14 @@ public class InteractionDetails {
 
     public void setInteractionType(String interactionType) {
         this.interactionType = interactionType;
+    }
+
+    public String getShortLabel() {
+        return shortLabel;
+    }
+
+    public void setShortLabel(String shortLabel) {
+        this.shortLabel = shortLabel;
     }
 
     public Collection<InteractionDetailsXRefs> getXrefs() {

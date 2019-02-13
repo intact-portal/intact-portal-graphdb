@@ -63,6 +63,8 @@ public class InteractionController {
 
         String interactionType = graphInteractionEvidence.getInteractionType().getShortName();
 
+        String shortLabel = graphInteractionEvidence.getShortName();
+
         List<InteractionDetailsXRefs> xrefs = new ArrayList<>();
         graphInteractionEvidence.getXrefs().forEach(xref ->
                 xrefs.add(new InteractionDetailsXRefs(xref.getDatabase().getShortName(), xref.getId())));
@@ -79,7 +81,7 @@ public class InteractionController {
         graphInteractionEvidence.getConfidences().forEach(confidence ->
                 confidences.add(new TypeValueObject(confidence.getType().getShortName(), confidence.getValue())));
 
-        return new InteractionDetails(ac, interactionType, xrefs, annotations, parameters, confidences);
+        return new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences);
     }
 
 }
