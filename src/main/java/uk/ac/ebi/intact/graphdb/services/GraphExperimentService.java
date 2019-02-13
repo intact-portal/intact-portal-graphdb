@@ -40,7 +40,11 @@ public class GraphExperimentService {
     }
 
     public GraphExperiment findByInteractionAc(String ac) {
-        return graphExperimentRepository.findByInteractionAc(ac).get();
+        if(graphExperimentRepository.findByInteractionAc(ac).isPresent()) {
+            return graphExperimentRepository.findByInteractionAc(ac).get();
+        }
+
+        return null;
     }
 
 }
