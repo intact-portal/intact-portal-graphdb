@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,9 @@ public class GraphFeatureService {
 
     public List<GraphFeatureEvidence> findByUniqueKeyIn(Set<String> uniqueKeys, @Depth int depth){
         return graphFeatureRepository.findByUniqueKeyIn(uniqueKeys,depth);
+    }
+
+    public Page<GraphFeatureEvidence> findByInteractionAc(String ac,int pageNumber,int pageSize) {
+        return graphFeatureRepository.findByInteractionAc(ac,PageRequest.of(pageNumber,pageSize));
     }
 }

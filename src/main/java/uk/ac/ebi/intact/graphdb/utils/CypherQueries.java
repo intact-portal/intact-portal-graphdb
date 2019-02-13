@@ -86,4 +86,31 @@ public class CypherQueries {
                     "COLLECT(expAnnotationsNTopicR),COLLECT(expAnnotationsNTopicN),COLLECT(pubXrefsR),COLLECT(pubXrefsN),COLLECT(pubXrefsDatabaseR),COLLECT(pubXrefsDatabaseN)," +
                     "COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
 
+    public static final String GET_FEATURES_BY_INTERACTION_AC_COUNT =
+            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeature)" +
+            "RETURN COUNT(DISTINCT graphFeaturesN)";
+
+    /*
+      Equivalent Query String : MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:features]-(graphFeaturesN:GraphFeature)
+                                MATCH (graphParticipantEvidenceN)-[interactorR:interactor]-(interactorN:GraphInteractor)
+                                OPTIONAL MATCH (graphFeaturesN)-[typeR:type]-(typeN:GraphCvTerm)
+                                OPTIONAL MATCH (graphFeaturesN)-[rangesR:ranges]-(rangesN:GraphRange)
+                                OPTIONAL MATCH (rangesN)-[startR:start]-(startN:GraphPosition)
+                                OPTIONAL MATCH (rangesN)-[endR:end]-(endN:GraphPosition)
+                                OPTIONAL MATCH (endN)-[statusR:status]-(statusN:GraphCvTerm)
+                                RETURN graphParticipantEvidenceN,COLLECT(graphFeaturesN),COLLECT(graphFeaturesR),COLLECT(interactorR),COLLECT(interactorN),COLLECT(typeR),COLLECT(typeN),COLLECT(rangesR),
+                                       COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN)
+    * */
+
+    public static final String GET_FEATURES_BY_INTERACTION_AC=
+            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:"+RelationshipTypes.FEATURES+"]-(graphFeaturesN:GraphFeature)" +
+            "MATCH (graphParticipantEvidenceN)-[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
+            "OPTIONAL MATCH (graphFeaturesN)-[typeR:"+RelationshipTypes.TYPE+"]-(typeN:GraphCvTerm)" +
+            "OPTIONAL MATCH (graphFeaturesN)-[rangesR:"+RelationshipTypes.RANGES+"]-(rangesN:GraphRange)" +
+            "OPTIONAL MATCH (rangesN)-[startR:"+RelationshipTypes.START+"]-(startN:GraphPosition)" +
+            "OPTIONAL MATCH (rangesN)-[endR:"+RelationshipTypes.END+"]-(endN:GraphPosition)" +
+            "OPTIONAL MATCH (endN)-[statusR:"+RelationshipTypes.STATUS+"]-(statusN:GraphCvTerm)"+
+            "RETURN graphParticipantEvidenceN,COLLECT(graphFeaturesN),COLLECT(graphFeaturesR),COLLECT(interactorR),COLLECT(interactorN),COLLECT(typeR),COLLECT(typeN),COLLECT(rangesR)," +
+                    "COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN)";
+
 }

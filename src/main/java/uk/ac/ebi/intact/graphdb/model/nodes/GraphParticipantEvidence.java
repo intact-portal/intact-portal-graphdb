@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
@@ -59,7 +60,8 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
 
-    @Relationship(type = RelationshipTypes.FEATURES)
+    @Relationship(type = RelationshipTypes.FEATURES,direction = Relationship.OUTGOING)
+    @JsonBackReference
     private Collection<GraphFeatureEvidence> features;
 
     @Relationship(type = RelationshipTypes.CONFIDENCE)

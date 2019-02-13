@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -34,6 +35,10 @@ public class GraphFeatureEvidence extends GraphFeature {
 
     @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
+
+    @Relationship(type = RelationshipTypes.FEATURES,direction = Relationship.INCOMING)
+    @JsonManagedReference
+    private GraphParticipantEvidence participantEvidence;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -236,5 +241,13 @@ public class GraphFeatureEvidence extends GraphFeature {
     @Override
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
+    public GraphParticipantEvidence getParticipantEvidence() {
+        return participantEvidence;
+    }
+
+    public void setParticipantEvidence(GraphParticipantEvidence participantEvidence) {
+        this.participantEvidence = participantEvidence;
     }
 }
