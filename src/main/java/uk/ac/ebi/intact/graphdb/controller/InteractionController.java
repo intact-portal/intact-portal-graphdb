@@ -1,10 +1,7 @@
 package uk.ac.ebi.intact.graphdb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.intact.graphdb.controller.model.InteractionDetails;
 import uk.ac.ebi.intact.graphdb.controller.model.TypeValueObject;
 import uk.ac.ebi.intact.graphdb.controller.model.InteractionDetailsXRefs;
@@ -33,11 +30,9 @@ public class InteractionController {
         return "Welcome to Spring Boot GraphDB Example";
     }
 
-    @RequestMapping(value = "/details",
-            params = {"ac"},
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/details/{ac}", method = RequestMethod.GET)
     public InteractionDetails getInteractionDetails(
-            @RequestParam(value = "ac") String ac,
+            @PathVariable String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
 
         GraphInteractionEvidence gie = graphInteractionService.findByInteractionAc(ac, depth);
