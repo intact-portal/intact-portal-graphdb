@@ -148,4 +148,6 @@ public class RelationshipTypes {
 
     public static final String INTERACTOR_PA = "interactorPA";
     public static final String INTERACTOR_PB = "interactorPB";
+
+    public static final String PREFERRED_IDENTIFIER = "preferredIdentifier";
 }

@@ -27,6 +27,9 @@ public class GraphInteractor implements Interactor {
 
     private String preferredIdentifierStr;
 
+    @Relationship(type = RelationshipTypes.PREFERRED_IDENTIFIER)
+    private GraphXref preferredIdentifier;
+
     @Relationship(type = RelationshipTypes.ORGANISM)
     private GraphOrganism organism;
 
@@ -79,6 +82,7 @@ public class GraphInteractor implements Interactor {
         setAc(CommonUtility.extractAc(interactor));
         setPreferredName(interactor.getPreferredName());
         setPreferredIdentifierStr(interactor.getPreferredIdentifier().getId());
+        setPreferredIdentifier(interactor.getPreferredIdentifier());
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
@@ -128,6 +132,7 @@ public class GraphInteractor implements Interactor {
     public void createRelationShipNatively(Long graphId) {
         CommonUtility.createRelationShip(organism, graphId, RelationshipTypes.ORGANISM);
         CommonUtility.createRelationShip(interactorType, graphId, RelationshipTypes.INTERACTOR_TYPE);
+        CommonUtility.createRelationShip(preferredIdentifier, graphId, RelationshipTypes.PREFERRED_IDENTIFIER);
         CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createChecksumRelationShips(checksums, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);
@@ -349,12 +354,7 @@ public class GraphInteractor implements Interactor {
         this.ac = ac;
     }
 
-    /**
-     * @return the first identifier in the list of identifiers or null if the list is empty
-     */
-    public Xref getPreferredIdentifier() {
-        return !getIdentifiers().isEmpty() ? getIdentifiers().iterator().next() : null;
-    }
+
 
     public Collection<GraphChecksum> getChecksums() {
         if (checksums == null) {
@@ -549,5 +549,22 @@ public class GraphInteractor implements Interactor {
 
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
+    @Override
+    public Xref getPreferredIdentifier() {
+        return preferredIdentifier;
+    }
+
+    public void setPreferredIdentifier(Xref preferredIdentifier) {
+        if (preferredIdentifier != null) {
+            if (preferredIdentifier instanceof GraphXref) {
+                this.preferredIdentifier = (GraphXref) preferredIdentifier;
+            } else {
+                this.preferredIdentifier = new GraphXref(preferredIdentifier);
+            }
+        } else {
+            this.preferredIdentifier = null;
+        }
     }
 }

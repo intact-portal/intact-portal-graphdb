@@ -6,6 +6,7 @@ import psidev.psi.mi.jami.model.Entity;
 import psidev.psi.mi.jami.model.Position;
 import psidev.psi.mi.jami.model.Range;
 import psidev.psi.mi.jami.model.ResultingSequence;
+import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -38,6 +39,8 @@ public class GraphRange implements Range {
 
     private boolean isLink;
 
+    private String rangeString;
+
     @Relationship(type = RelationshipTypes.RESULTING_SEQUENCE)
     private GraphResultingSequence resultingSequence;
 
@@ -60,6 +63,7 @@ public class GraphRange implements Range {
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
+        setRangeString(RangeUtils.convertRangeToString(range));
         setUniqueKey(createUniqueKey(range));
 
         if (CreationConfig.createNatively) {
@@ -75,6 +79,7 @@ public class GraphRange implements Range {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             if (this.getUniqueKey() != null) nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getRangeString() != null) nodeProperties.put("rangeString", this.getRangeString());
             nodeProperties.put("isLink", this.isLink());
 
             Label[] labels = CommonUtility.getLabels(GraphRange.class);
@@ -266,5 +271,13 @@ public class GraphRange implements Range {
 
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
+    public String getRangeString() {
+        return rangeString;
+    }
+
+    public void setRangeString(String rangeString) {
+        this.rangeString = rangeString;
     }
 }
