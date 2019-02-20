@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.intact.graphdb.controller.model.*;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 import uk.ac.ebi.intact.graphdb.services.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.services.GraphInteractionService;
 
@@ -115,7 +116,8 @@ public class InteractionController {
 
     private PublicationDetails createPublicationDetails(GraphExperiment graphExperiment) {
 
-        String pubmedId = graphExperiment.getPublication().getPubmedId();
+        GraphPublication graphPublication = (GraphPublication) graphExperiment.getPublication();
+        String pubmedId = graphPublication.getPubmedIdStr(); //TODO: WHEN FIXED extract from the pubmedId method
         String title = graphExperiment.getPublication().getTitle();
         String journal = graphExperiment.getPublication().getJournal();
         List<String> authors = graphExperiment.getPublication().getAuthors();
