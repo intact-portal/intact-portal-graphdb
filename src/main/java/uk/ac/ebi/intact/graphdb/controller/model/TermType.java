@@ -3,11 +3,11 @@ package uk.ac.ebi.intact.graphdb.controller.model;
 /**
  * @author Elisabet Barrera
  */
-public class TypeValueObject {
+public class TermType {
     private String type;
     private String value;
 
-    public TypeValueObject(String type, String value) {
+    public TermType(String type, String value) {
         this.type = type;
         this.value = value;
     }

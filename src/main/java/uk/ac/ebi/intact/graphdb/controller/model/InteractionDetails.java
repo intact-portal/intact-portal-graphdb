@@ -10,16 +10,16 @@ public class InteractionDetails {
     private String interactionAc;
     private String interactionType;
     private String shortLabel;
-    private Collection<InteractionDetailsXRefs> xrefs;
+    private Collection<Xref> xrefs;
     private Collection<Annotation> annotations;
-    private Collection<TypeValueObject> parameters;
-    private Collection<TypeValueObject> confidences;
+    private Collection<TermType> parameters;
+    private Collection<TermType> confidences;
     private ExperimentDetails experiment;
     private PublicationDetails publication;
 
     public InteractionDetails(String interactionAc, String interactionType, String shortLabel,
-                              Collection<InteractionDetailsXRefs> xrefs, Collection<Annotation> annotations,
-                              Collection<TypeValueObject> parameters, Collection<TypeValueObject> confidences,
+                              Collection<Xref> xrefs, Collection<Annotation> annotations,
+                              Collection<TermType> parameters, Collection<TermType> confidences,
                               ExperimentDetails experiment, PublicationDetails publication) {
         this.interactionAc = interactionAc;
         this.interactionType = interactionType;
@@ -56,11 +56,11 @@ public class InteractionDetails {
         this.shortLabel = shortLabel;
     }
 
-    public Collection<InteractionDetailsXRefs> getXrefs() {
+    public Collection<Xref> getXrefs() {
         return xrefs;
     }
 
-    public void setXrefs(Collection<InteractionDetailsXRefs> xrefs) {
+    public void setXrefs(Collection<Xref> xrefs) {
         this.xrefs = xrefs;
     }
 
@@ -72,19 +72,19 @@ public class InteractionDetails {
         this.annotations = annotations;
     }
 
-    public Collection<TypeValueObject> getParameters() {
+    public Collection<TermType> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Collection<TypeValueObject> parameters) {
+    public void setParameters(Collection<TermType> parameters) {
         this.parameters = parameters;
     }
 
-    public Collection<TypeValueObject> getConfidences() {
+    public Collection<TermType> getConfidences() {
         return confidences;
     }
 
-    public void setConfidences(Collection<TypeValueObject> confidences) {
+    public void setConfidences(Collection<TermType> confidences) {
         this.confidences = confidences;
     }
 

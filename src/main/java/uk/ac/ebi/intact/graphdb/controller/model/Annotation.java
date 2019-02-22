@@ -4,21 +4,19 @@ package uk.ac.ebi.intact.graphdb.controller.model;
  * @author Elisabet Barrera
  */
 public class Annotation {
-    private String topic;
+    private CvTerm topic;
     private String description;
-    private String miIdentifier;
 
-    public Annotation(String topic, String description, String miIdentifier) {
+    public Annotation(CvTerm topic, String description) {
         this.topic = topic;
         this.description = description;
-        this.miIdentifier = miIdentifier;
     }
 
-    public String getTopic() {
+    public CvTerm getTopic() {
         return topic;
     }
 
-    public void setTopic(String topic) {
+    public void setTopic(CvTerm topic) {
         this.topic = topic;
     }
 
@@ -28,13 +26,5 @@ public class Annotation {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getMiIdentifier() {
-        return miIdentifier;
-    }
-
-    public void setMiIdentifier(String miIdentifier) {
-        this.miIdentifier = miIdentifier;
     }
 }

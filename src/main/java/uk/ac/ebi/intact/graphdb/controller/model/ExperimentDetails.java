@@ -10,11 +10,11 @@ public class ExperimentDetails {
     private String experimentAc;
     private String interactionDetMethod;
     private String hostOrganism;
-    private Collection<InteractionDetailsXRefs> experimentXrefs;
+    private Collection<Xref> experimentXrefs;
     private Collection<Annotation> experimentAnnotations;
 
     public ExperimentDetails(String experimentAc, String interactionDetMethod, String hostOrganism,
-                             Collection<InteractionDetailsXRefs> experimentXrefs,
+                             Collection<Xref> experimentXrefs,
                              Collection<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
         this.interactionDetMethod = interactionDetMethod;
@@ -47,11 +47,11 @@ public class ExperimentDetails {
         this.hostOrganism = hostOrganism;
     }
 
-    public Collection<InteractionDetailsXRefs> getExperimentXrefs() {
+    public Collection<Xref> getExperimentXrefs() {
         return experimentXrefs;
     }
 
-    public void setExperimentXrefs(Collection<InteractionDetailsXRefs> experimentXrefs) {
+    public void setExperimentXrefs(Collection<Xref> experimentXrefs) {
         this.experimentXrefs = experimentXrefs;
     }
 
