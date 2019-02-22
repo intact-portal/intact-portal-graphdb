@@ -1,17 +1,16 @@
 package uk.ac.ebi.intact.graphdb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import uk.ac.ebi.intact.graphdb.controller.model.InteractionDetails;
-import uk.ac.ebi.intact.graphdb.controller.model.TypeValueObject;
-import uk.ac.ebi.intact.graphdb.controller.model.InteractionDetailsXRefs;
+import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.intact.graphdb.controller.model.*;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
+import uk.ac.ebi.intact.graphdb.services.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.services.GraphInteractionService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,10 +21,13 @@ import java.util.List;
 public class InteractionController {
 
     private GraphInteractionService graphInteractionService;
+    private GraphExperimentService graphExperimentService;
 
     @Autowired
-    public InteractionController(GraphInteractionService graphInteractionService) {
+    public InteractionController(GraphInteractionService graphInteractionService,
+                                 GraphExperimentService graphExperimentService) {
         this.graphInteractionService = graphInteractionService;
+        this.graphExperimentService = graphExperimentService;
     }
 
     @RequestMapping("/")
@@ -33,16 +35,15 @@ public class InteractionController {
         return "Welcome to Spring Boot GraphDB Example";
     }
 
-    @RequestMapping(value = "/details",
-            params = {"ac"},
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/details/{ac}", method = RequestMethod.GET)
     public InteractionDetails getInteractionDetails(
-            @RequestParam(value = "ac") String ac,
+            @PathVariable String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
 
-        GraphInteractionEvidence gie = graphInteractionService.findByInteractionAc(ac, depth);
+        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac, depth);
+        GraphExperiment graphExperiment = graphExperimentService.findByInteractionAc(ac);
 
-        return createInteractionDetails(gie);
+        return createInteractionDetails(graphInteractionEvidence, graphExperiment);
     }
 
     @RequestMapping(value = "/detailsOld",
@@ -54,34 +55,92 @@ public class InteractionController {
         return graphInteractionService.findByInteractionAc(ac, depth);
     }
 
-    /**
-     * CONVERTS from GraphInteractionEvidence to InteractionDetails model
-     **/
-    private InteractionDetails createInteractionDetails(GraphInteractionEvidence graphInteractionEvidence) {
+    @RequestMapping(value = "/experiment/{ac}", method = RequestMethod.GET)
+    public GraphExperiment getExperimentAndPublicationDetails(
+            @PathVariable String ac) {
+        return graphExperimentService.findByInteractionAc(ac);
+    }
 
+    /**
+     * CONVERTS from GraphInteractionEvidence and GraphExperiment to InteractionDetails model
+     **/
+    private InteractionDetails createInteractionDetails(GraphInteractionEvidence graphInteractionEvidence,
+                                                        GraphExperiment graphExperiment) {
         String ac = graphInteractionEvidence.getAc();
 
         String interactionType = graphInteractionEvidence.getInteractionType().getShortName();
 
         String shortLabel = graphInteractionEvidence.getShortName();
 
-        List<InteractionDetailsXRefs> xrefs = new ArrayList<>();
-        graphInteractionEvidence.getXrefs().forEach(xref ->
-                xrefs.add(new InteractionDetailsXRefs(xref.getDatabase().getShortName(), xref.getId())));
+        List<Xref> xrefs = new ArrayList<>();
+        graphInteractionEvidence.getXrefs().forEach(xref -> {
+            CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+            xrefs.add(new Xref(term, xref.getId()));
+        });
 
-        List<TypeValueObject> annotations = new ArrayList<>();
-        graphInteractionEvidence.getAnnotations().forEach(annotation ->
-                annotations.add(new TypeValueObject(annotation.getTopic().getShortName(), annotation.getValue())));
+        List<Annotation> annotations = new ArrayList<>();
+        graphInteractionEvidence.getAnnotations().forEach(annotation -> {
+            CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
+            annotations.add(new Annotation(term, annotation.getValue()));
+        });
 
-        List<TypeValueObject> parameters = new ArrayList<>();
+        List<TermType> parameters = new ArrayList<>();
         graphInteractionEvidence.getParameters().forEach(param ->
-                parameters.add(new TypeValueObject(param.getType().getShortName(), param.getValue().toString())));
+                parameters.add(new TermType(param.getType().getShortName(), param.getValue().toString())));
 
-        List<TypeValueObject> confidences = new ArrayList<>();
+        List<TermType> confidences = new ArrayList<>();
         graphInteractionEvidence.getConfidences().forEach(confidence ->
-                confidences.add(new TypeValueObject(confidence.getType().getShortName(), confidence.getValue())));
+                confidences.add(new TermType(confidence.getType().getShortName(), confidence.getValue())));
 
-        return new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences);
+        ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
+        PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
+
+        return new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, experimentDetails, publicationDetails);
+    }
+
+    private ExperimentDetails createExperimentDetails(GraphExperiment graphExperiment) {
+        String experimentAc = graphExperiment.getAc();
+        String hostOrganism = graphExperiment.getHostOrganism().getScientificName();
+        String interactionDetMethod = graphExperiment.getInteractionDetectionMethod().getShortName();
+
+        List<Xref> experimentXrefs = new ArrayList<>();
+        graphExperiment.getXrefs().forEach(xref -> {
+                CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                experimentXrefs.add(new Xref(term, xref.getId()));
+        });
+
+        List<Annotation> experimentAnnotations = new ArrayList<>();
+        graphExperiment.getAnnotations().forEach(annotation -> {
+            CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
+
+            experimentAnnotations.add(new Annotation(term, annotation.getValue()));
+        });
+
+        return new ExperimentDetails(experimentAc, interactionDetMethod, hostOrganism, experimentXrefs, experimentAnnotations);
+    }
+
+    private PublicationDetails createPublicationDetails(GraphExperiment graphExperiment) {
+
+        GraphPublication graphPublication = (GraphPublication) graphExperiment.getPublication();
+        String pubmedId = graphPublication.getPubmedIdStr(); //TODO: WHEN FIXED extract from the pubmedId method
+        String title = graphExperiment.getPublication().getTitle();
+        String journal = graphExperiment.getPublication().getJournal();
+        List<String> authors = graphExperiment.getPublication().getAuthors();
+        Date publicationDate = graphExperiment.getPublication().getPublicationDate();
+
+        List<Xref> publicationXrefs = new ArrayList<>();
+        graphExperiment.getPublication().getXrefs().forEach(xref -> {
+            CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+            publicationXrefs.add(new Xref(term, xref.getId()));
+        });
+
+        List<Annotation> publicationAnnotation = new ArrayList<>();
+        graphExperiment.getPublication().getAnnotations().forEach(annotation -> {
+            CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
+            publicationAnnotation.add(new Annotation(term, annotation.getValue()));
+        });
+
+        return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
     }
 
 }
