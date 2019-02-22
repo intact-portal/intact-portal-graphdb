@@ -20,7 +20,7 @@ public interface GraphFeatureRepository extends Neo4jRepository<GraphFeatureEvid
 
     List<GraphFeatureEvidence> findByUniqueKeyIn(Set<String> uniqueKey, @Depth int depth);
 
-    @Query(value= CypherQueries.GET_FEATURES_BY_INTERACTION_AC,
-            countQuery= CypherQueries.GET_FEATURES_BY_INTERACTION_AC_COUNT)
+    @Query(value = CypherQueries.GET_FEATURES_BY_INTERACTION_AC,
+            countQuery = CypherQueries.GET_FEATURES_BY_INTERACTION_AC_COUNT)
     Page<GraphFeatureEvidence> findByInteractionAc(String ac, Pageable page);
 }

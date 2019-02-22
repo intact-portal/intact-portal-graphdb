@@ -14,7 +14,7 @@ import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 @RepositoryRestResource(collectionResourceRel = "participants", path = "participants")
 public interface GraphParticipantRepository extends Neo4jRepository<GraphParticipantEvidence, String> {
 
-    @Query(value= CypherQueries.GET_PARTICIPANTS_BY_INTERACTION_AC,
-            countQuery=CypherQueries.GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT)
-    Page<GraphParticipantEvidence> findByInteractionAc(String ac,Pageable page);
+    @Query(value = CypherQueries.GET_PARTICIPANTS_BY_INTERACTION_AC,
+            countQuery = CypherQueries.GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT)
+    Page<GraphParticipantEvidence> findByInteractionAc(String ac, Pageable page);
 }

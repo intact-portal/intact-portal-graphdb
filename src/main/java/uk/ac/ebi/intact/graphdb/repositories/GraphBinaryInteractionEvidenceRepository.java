@@ -1,6 +1,5 @@
 package uk.ac.ebi.intact.graphdb.repositories;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.neo4j.annotation.Depth;
@@ -27,11 +26,11 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
 
     GraphBinaryInteractionEvidence findByIdentifiers(GraphXref identifier);
 
-   // @Query(value=CypherQueries.COMM_NEIGH_OF_INTOR,countQuery=CypherQueries.INTERACTOR_PAIR_COUNT)
-   @Query(value=CypherQueries.COMM_NEIGH_OF_INTOR)
-   Slice<ClusterDataFeed> getInteractorPairWithEvidences(Pageable page);
+    // @Query(value=CypherQueries.COMM_NEIGH_OF_INTOR,countQuery=CypherQueries.INTERACTOR_PAIR_COUNT)
+    @Query(value = CypherQueries.COMM_NEIGH_OF_INTOR)
+    Slice<ClusterDataFeed> getInteractorPairWithEvidences(Pageable page);
 
-    List<GraphBinaryInteractionEvidence> findByUniqueKeyIn(Set<String> uniqueKey,@Depth int depth);
+    List<GraphBinaryInteractionEvidence> findByUniqueKeyIn(Set<String> uniqueKey, @Depth int depth);
 
     @Query(CypherQueries.INTERACTOR_PAIR_COUNT)
     long getInteractorPairCount();
