@@ -14,11 +14,11 @@ public class PublicationDetails {
     private String journal;
     private List<String> authors;
     private Date publicationDate;
-    private Collection<InteractionDetailsXRefs> publicationXrefs;
+    private Collection<Xref> publicationXrefs;
     private Collection<Annotation> publicationAnnotations;
 
     public PublicationDetails(String pubmedId, String title, String journal, List<String> authors, Date publicationDate,
-                              Collection<InteractionDetailsXRefs> publicationXrefs, Collection<Annotation> publicationAnnotations) {
+                              Collection<Xref> publicationXrefs, Collection<Annotation> publicationAnnotations) {
         this.pubmedId = pubmedId;
         this.title = title;
         this.journal = journal;
@@ -68,11 +68,11 @@ public class PublicationDetails {
         this.publicationDate = publicationDate;
     }
 
-    public Collection<InteractionDetailsXRefs> getPublicationXrefs() {
+    public Collection<Xref> getPublicationXrefs() {
         return publicationXrefs;
     }
 
-    public void setPublicationXrefs(Collection<InteractionDetailsXRefs> publicationXrefs) {
+    public void setPublicationXrefs(Collection<Xref> publicationXrefs) {
         this.publicationXrefs = publicationXrefs;
     }
 

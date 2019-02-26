@@ -28,14 +28,15 @@ public class GraphParticipantService {
     }
 
     public Optional<GraphParticipantEvidence> findWithDepth(String id, int depth) {
-        return graphParticpantRepository.findById(id,depth);
+        return graphParticpantRepository.findById(id, depth);
     }
 
     public Page<GraphParticipantEvidence> findAll(Pageable page, int depth) {
         return graphParticpantRepository.findAll(page, depth);
     }
 
-    public Page<GraphParticipantEvidence> findByInteractionAc(String ac,int pageNumber,int pageSize) {
-       return graphParticpantRepository.findByInteractionAc(ac,PageRequest.of(pageNumber,pageSize));
+    public Page<GraphParticipantEvidence> findByInteractionAc(String ac, int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        return graphParticpantRepository.findByInteractionAc(ac, pageRequest);
     }
 }

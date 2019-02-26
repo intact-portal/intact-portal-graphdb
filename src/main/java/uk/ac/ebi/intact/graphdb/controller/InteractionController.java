@@ -85,12 +85,16 @@ public class InteractionController {
         });
 
         List<TermType> parameters = new ArrayList<>();
-        graphInteractionEvidence.getParameters().forEach(param ->
-                parameters.add(new TermType(param.getType().getShortName(), param.getValue().toString())));
+        graphInteractionEvidence.getParameters().forEach(param -> {
+            CvTerm cvTerm = new CvTerm(param.getType().getShortName(), param.getType().getMIIdentifier());
+                parameters.add(new TermType(cvTerm, param.getValue().toString()));
+        });
 
         List<TermType> confidences = new ArrayList<>();
-        graphInteractionEvidence.getConfidences().forEach(confidence ->
-                confidences.add(new TermType(confidence.getType().getShortName(), confidence.getValue())));
+        graphInteractionEvidence.getConfidences().forEach(confidence -> {
+            CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
+            confidences.add(new TermType(cvTerm, confidence.getValue()));
+        });
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
         PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
