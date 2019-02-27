@@ -6,7 +6,7 @@
     <groupId>uk.ac.ebi.intact.graphdb</groupId>
     <artifactId>intact-graphdb</artifactId>
 
-    <version>3.0.7-SNAPSHOT</version>
+    <version>3.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>IntAct :: Graph DB prototype</name>
@@ -82,6 +82,12 @@
         <dependency>
             <groupId>psidev.psi.mi.jami</groupId>
             <artifactId>jami-commons</artifactId>
+            <version>${psi.jami.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>psidev.psi.mi.jami</groupId>
+            <artifactId>jami-interactionviewer-json</artifactId>
             <version>${psi.jami.version}</version>
         </dependency>
 

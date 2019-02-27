@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.GraphExperimentRepository;
 
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class GraphExperimentService {
     }
 
     public Optional<GraphExperiment> findWithDepth(String id, int depth) {
-        return graphExperimentRepository.findById(id,depth);
+        return graphExperimentRepository.findById(id, depth);
     }
 
     public Page<GraphExperiment> findAll(Pageable page, int depth) {
@@ -40,10 +39,10 @@ public class GraphExperimentService {
     }
 
     public GraphExperiment findByInteractionAc(String ac) {
-        if(graphExperimentRepository.findByInteractionAc(ac).isPresent()) {
-            return graphExperimentRepository.findByInteractionAc(ac).get();
+        Optional<GraphExperiment> optionalExp = graphExperimentRepository.findByInteractionAc(ac);
+        if (optionalExp.isPresent()) {
+            return optionalExp.get();
         }
-
         return null;
     }
 

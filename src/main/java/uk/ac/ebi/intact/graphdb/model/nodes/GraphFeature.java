@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
@@ -17,9 +18,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+*/
 /**
  * Created by anjali on 07/09/18.
- */
+ *//*
+
 @NodeEntity
 public class GraphFeature implements Feature {
 
@@ -162,6 +165,7 @@ public class GraphFeature implements Feature {
     public String getShortName() {
         return this.shortName;
     }
+*/
 /*protected void initialiseParameters() {
         this.parameters = new ArrayList<Parameter>();
     }
@@ -186,7 +190,8 @@ public class GraphFeature implements Feature {
         else {
             this.parameters = parameters;
         }
-    }*/
+    }*//*
+
 
     public void setShortName(String name) {
         this.shortName = name;
@@ -213,7 +218,8 @@ public class GraphFeature implements Feature {
     }
 
     public void setInterpro(String interpro) {
-       /* Collection<Xref> featureIdentifiers = getIdentifiers();
+       */
+/* Collection<Xref> featureIdentifiers = getIdentifiers();
 
         // add new interpro if not null
         if (interpro != null){
@@ -230,12 +236,14 @@ public class GraphFeature implements Feature {
         else if (!featureIdentifiers.isEmpty()) {
             XrefUtils.removeAllXrefsWithDatabase(featureIdentifiers, Xref.INTERPRO_MI, Xref.INTERPRO);
             this.interpro = null;
-        }*/
+        }*//*
+
 
         this.interpro = interpro;
     }
 
-    /*protected void initialiseIdentifiers(){
+    */
+/*protected void initialiseIdentifiers(){
        // this.identifiers = new AbstractFeature.FeatureIdentifierList();
     }
 
@@ -311,7 +319,8 @@ public class GraphFeature implements Feature {
         else {
             this.aliases = aliases;
         }
-    }*/
+    }*//*
+
 
     public Collection<GraphXref> getIdentifiers() {
         if (this.identifiers == null) {
@@ -343,9 +352,11 @@ public class GraphFeature implements Feature {
         }
     }
 
-   /* public String getInterpro() {
+   */
+/* public String getInterpro() {
         return this.interpro != null ? this.interpro.getId() : null;
-    }*/
+    }*//*
+
 
     public Collection<GraphAnnotation> getAnnotations() {
         if (this.annotations == null) {
@@ -557,3 +568,4 @@ public class GraphFeature implements Feature {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 }
+*/

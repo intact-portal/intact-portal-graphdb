@@ -49,18 +49,21 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private GraphInteractor interactor;
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
+    @JsonBackReference
     private GraphInteractionEvidence interaction;
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A, direction = Relationship.INCOMING)
+    @JsonBackReference
     private GraphBinaryInteractionEvidence binaryInteractionEvidenceA;
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.INCOMING)
+    @JsonBackReference
     private GraphBinaryInteractionEvidence binaryInteractionEvidenceB;
 
     @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
 
-    @Relationship(type = RelationshipTypes.FEATURES,direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.FEATURES, direction = Relationship.OUTGOING)
     @JsonBackReference
     private Collection<GraphFeatureEvidence> features;
 
@@ -282,7 +285,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            this.interactor=CommonUtility.initializeInteractor(interactor);
+            this.interactor = CommonUtility.initializeInteractor(interactor);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);
@@ -378,9 +381,9 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (feature == null) {
             return false;
         }
-        GraphFeatureEvidence graphFeatureEvidence=new GraphFeatureEvidence(feature);
-        if (getFeatures().add(graphFeatureEvidence)) {
-            graphFeatureEvidence.setParticipant(this);
+
+        if (getFeatures().add(new GraphFeatureEvidence(feature))) {
+            feature.setParticipant(this);
             return true;
         }
         return false;
@@ -598,7 +601,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 
