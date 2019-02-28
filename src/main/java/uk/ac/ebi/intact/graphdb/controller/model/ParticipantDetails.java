@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.controller.model;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Elisabet Barrera
