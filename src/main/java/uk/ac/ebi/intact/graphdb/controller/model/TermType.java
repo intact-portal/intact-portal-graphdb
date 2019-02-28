@@ -4,19 +4,19 @@ package uk.ac.ebi.intact.graphdb.controller.model;
  * @author Elisabet Barrera
  */
 public class TermType {
-    private String type;
+    private CvTerm type;
     private String value;
 
-    public TermType(String type, String value) {
+    public TermType(CvTerm type, String value) {
         this.type = type;
         this.value = value;
     }
 
-    public String getType() {
+    public CvTerm getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CvTerm type) {
         this.type = type;
     }
 
