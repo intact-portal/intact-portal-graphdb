@@ -21,7 +21,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     @Transient
@@ -34,16 +34,18 @@ public class GraphExperimentalEntity extends GraphEntity {
         super();
     }
 
-    public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
+    public GraphExperimentalEntity(ExperimentalEntity experimentalEntity, boolean childAlreadyCreated) {
         //TODO...
-        super(experimentalEntity,true);
+        super(experimentalEntity, true);
         setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
-            if(!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if (!childAlreadyCreated) {
+                createNodeNatively();
+                if (!isAlreadyCreated()) {
+                    createRelationShipNatively();
+                }
             }
         }
     }
@@ -56,7 +58,7 @@ public class GraphExperimentalEntity extends GraphEntity {
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphExperimentalEntity.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -100,7 +102,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -114,7 +116,7 @@ public class GraphExperimentalEntity extends GraphEntity {
     }
 
 
-    public String createUniqueKey(){
+    public String createUniqueKey() {
         return hashCode() + "";
     }
 

@@ -1,6 +1,5 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -13,10 +12,7 @@ import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.HashCode;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by anjali on 21/11/17.
@@ -41,7 +37,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Relationship(type = RelationshipTypes.ROLE)
     private GraphCvTerm role;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT)
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.INCOMING)
     private GraphExperimentalEntity participant;
 
     @Relationship(type = RelationshipTypes.DETECTION_METHOD)
@@ -68,10 +64,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Relationship(type = RelationshipTypes.LINKED_FEATURES)
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
-    @Relationship(type = RelationshipTypes.FEATURES, direction = Relationship.INCOMING)
-    @JsonManagedReference
-    private GraphParticipantEvidence participantEvidence;
-
     @Transient
     private boolean isAlreadyCreated;
 
@@ -85,6 +77,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
         setForceHashCodeGeneration(true);
         boolean wasInitializedBefore = false;
+        String callingClass = Arrays.toString(Thread.currentThread().getStackTrace());
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
             GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
         } else {
@@ -102,7 +95,9 @@ public class GraphFeatureEvidence implements FeatureEvidence {
             createNodeNatively();
         }
 
-        setParticipant(featureEvidence.getParticipant());
+        if (!callingClass.contains("GraphEntity")) {
+            setParticipant(featureEvidence.getParticipant());
+        }
 
         setDetectionMethods(featureEvidence.getDetectionMethods());
         setParameters(featureEvidence.getParameters());
@@ -149,7 +144,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
         CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
+        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.graphId);
         CommonUtility.createParameterRelationShips(parameters, this.graphId);
         CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
@@ -451,8 +446,10 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         if (participant != null) {
             if (participant instanceof GraphExperimentalEntity) {
                 this.participant = (GraphExperimentalEntity) participant;
+            } else if (participant instanceof ParticipantEvidence) {
+                this.participant = new GraphParticipantEvidence((ParticipantEvidence) participant);
             } else {
-                this.participant = new GraphExperimentalEntity(participant);
+                this.participant = new GraphExperimentalEntity(participant, false);
             }
         } else {
             this.participant = null;
@@ -579,14 +576,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
-
-    public GraphParticipantEvidence getParticipantEvidence() {
-        return participantEvidence;
-    }
-
-    public void setParticipantEvidence(GraphParticipantEvidence participantEvidence) {
-        this.participantEvidence = participantEvidence;
     }
 
 }

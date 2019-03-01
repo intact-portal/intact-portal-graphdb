@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 
 import java.util.List;
 
@@ -52,13 +53,13 @@ public class GraphFeatureRepositoryTest {
         Assert.assertNotNull("Feature ranges is null", graphFeatureEvidence.getRanges());
         Assert.assertEquals("Feature range count is incorrect", 1, graphFeatureEvidence.getRanges().size());
         Assert.assertEquals("Feature range is incorrect", "n-n", graphFeatureEvidence.getRanges().iterator().next().getRangeString());
-        Assert.assertNotNull("Participant is null", graphFeatureEvidence.getParticipantEvidence());
-        Assert.assertEquals("Participant is not correct", "EBI-10000978", graphFeatureEvidence.getParticipantEvidence().getAc());
-        Assert.assertNotNull("Interactor is null", graphFeatureEvidence.getParticipantEvidence().getInteractor());
+        Assert.assertNotNull("Participant is null", graphFeatureEvidence.getParticipant());
+        Assert.assertEquals("Participant is not correct", "EBI-10000978", ((GraphParticipantEvidence) graphFeatureEvidence.getParticipant()).getAc());
+        Assert.assertNotNull("Interactor is null", graphFeatureEvidence.getParticipant().getInteractor());
         Assert.assertNotNull("Interactor preferredIdentifier xref not present",
-                             graphFeatureEvidence.getParticipantEvidence().getInteractor().getPreferredIdentifier());
+                graphFeatureEvidence.getParticipant().getInteractor().getPreferredIdentifier());
         Assert.assertEquals("Interactor preferredIdentifier xref is not correct", "EBI-9998887",
-                             graphFeatureEvidence.getParticipantEvidence().getInteractor().getPreferredIdentifier().getId());
+                graphFeatureEvidence.getParticipant().getInteractor().getPreferredIdentifier().getId());
 
     }
 }

@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -30,9 +32,11 @@ public class GraphEntity implements ExperimentalEntity {
     private String uniqueKey;
 
     @Relationship(type = RelationshipTypes.INTERACTOR)
+    @JsonManagedReference
     private GraphInteractor interactor;
 
-    @Relationship(type = RelationshipTypes.FEATURES)
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.OUTGOING)
+    @JsonBackReference
     private Collection<GraphFeatureEvidence> features;
 
     @Relationship(type = RelationshipTypes.STOICHIOMETRY)
@@ -101,7 +105,7 @@ public class GraphEntity implements ExperimentalEntity {
         CommonUtility.createRelationShip(interactor, graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
         CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
-        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.FEATURES);
+        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 

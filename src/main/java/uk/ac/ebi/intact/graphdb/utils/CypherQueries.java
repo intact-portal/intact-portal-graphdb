@@ -56,7 +56,7 @@ public class CypherQueries {
                                  OPTIONAL MATCH (participantEvidenceN)-[parametersR:parameters]-(parametersN:GraphParameter)
                                  OPTIONAL MATCH (participantEvidenceN)-[confidencesR:confidences]-(confidencesN:GraphConfidence)
                                  OPTIONAL MATCH (participantEvidenceN)-[aliasesR:aliases]-(aliasesN:GraphAlias)
-                                 OPTIONAL MATCH (participantEvidenceN)-[featuresR:features]-(featuresN:GraphFeature)
+                                 OPTIONAL MATCH (participantEvidenceN)-[featuresR:PARTICIPANT_FEATURE]-(featuresN:GraphFeatureEvidence)
                                  OPTIONAL MATCH (interactorN)-[itorAliasesR:aliases]-(itorAliasesN:GraphAlias)
                                  OPTIONAL MATCH (interactorN)-[organismR:organism]-(organismN:GraphOrganism)
                                  OPTIONAL MATCH (interactorN)-[interactorTypeR:interactorType]-(interactorTypeN:GraphCvTerm)
@@ -76,7 +76,7 @@ public class CypherQueries {
             "OPTIONAL MATCH (participantEvidenceN)-[parametersR:"+RelationshipTypes.PARAMETERS+"]-(parametersN:GraphParameter)" +
             "OPTIONAL MATCH (participantEvidenceN)-[confidencesR:"+RelationshipTypes.CONFIDENCE+"]-(confidencesN:GraphConfidence)" +
             "OPTIONAL MATCH (participantEvidenceN)-[aliasesR:"+RelationshipTypes.ALIASES+"]-(aliasesN:GraphAlias)" +
-            "OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.FEATURES+"]-(featuresN:GraphFeature)" +
+            "OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresN:GraphFeatureEvidence)" +
             "OPTIONAL MATCH (interactorN)-[itorAliasesR:"+RelationshipTypes.ALIASES+"]-(itorAliasesN:GraphAlias)" +
             "OPTIONAL MATCH (interactorN)-[organismR:"+RelationshipTypes.ORGANISM+"]-(organismN:GraphOrganism)" +
             "OPTIONAL MATCH (interactorN)-[interactorTypeR:"+RelationshipTypes.INTERACTOR_TYPE+"]-(interactorTypeN:GraphCvTerm)" +
@@ -123,11 +123,11 @@ public class CypherQueries {
                     "COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
 
     public static final String GET_FEATURES_BY_INTERACTION_AC_COUNT =
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeature)" +
+            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeatureEvidence)" +
             "RETURN COUNT(DISTINCT graphFeaturesN)";
 
     /*
-      Equivalent Query String : MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:features]-(graphFeaturesN:GraphFeature)
+      Equivalent Query String : MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:PARTICIPANT_FEATURE]-(graphFeaturesN:GraphFeatureEvidence)
                                 MATCH (graphParticipantEvidenceN)-[interactorR:interactor]-(interactorN:GraphInteractor)
                                 OPTIONAL MATCH (interactorN)-[preferredIdentifierR:preferredIdentifier]-(preferredIdentifierN:GraphXref)
                                 OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:database]-(preferredIdentifierDatabaseN:GraphCvTerm)
@@ -142,7 +142,7 @@ public class CypherQueries {
     * */
 
     public static final String GET_FEATURES_BY_INTERACTION_AC=
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:"+RelationshipTypes.FEATURES+"]-(graphFeaturesN:GraphFeature)" +
+            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(graphFeaturesN:GraphFeatureEvidence)" +
             "MATCH (graphParticipantEvidenceN)-[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
             "OPTIONAL MATCH (interactorN)-[preferredIdentifierR:"+RelationshipTypes.PREFERRED_IDENTIFIER+"]-(preferredIdentifierN:GraphXref)" +
             "OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:"+RelationshipTypes.DATABASE+"]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
@@ -172,7 +172,17 @@ public class CypherQueries {
          OPTIONAL MATCH (participantEvidenceN)-[expRoleR:experimentalRole]-(expRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:biologicalRole]-(bioRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:identificationMethods]-(identificationMethodN:GraphCvTerm)
-         OPTIONAL MATCH (participantEvidenceN)-[featuresR:features]-(featuresN:GraphFeature)
+         OPTIONAL MATCH (participantEvidenceN)-[featuresR:PARTICIPANT_FEATURE]-(featuresN:GraphFeatureEvidence)
+         OPTIONAL MATCH (featuresN)-[featuresTypeR:type]-(featuresTypeN:GraphCvTerm)
+         OPTIONAL MATCH (featuresN)-[featuresRangeR:ranges]-(featuresRangeN:GraphRange)
+	     OPTIONAL MATCH (featuresN)-[featuresParticipantR:PARTICIPANT_FEATURE]-(featuresParticipantN:GraphExperimentalEntity)
+	     OPTIONAL MATCH (featuresParticipantN)-[featuresParticipantInteractorR:interactor]-(featuresParticipantInteractorN:GraphInteractor)
+         OPTIONAL MATCH (featuresRangeN)-[featuresRangeStartPositionR:start]-(featuresRangeStartPositionN:GraphPosition)
+         OPTIONAL MATCH (featuresRangeN)-[featuresRangeEndPositionR:end]-(featuresRangeEndPositionN:GraphPosition)
+         OPTIONAL MATCH (featuresRangeN)-[featuresRangeParticipantR:participant]-(featuresRangeParticipantN:GraphEntity)
+	     OPTIONAL MATCH (featuresRangeParticipantN)-[featuresRangeParticipantInteractorR:interactor]-(featuresRangeParticipantInteractorN:GraphInteractor)
+         OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:status]-(featuresRangeStartPositionStatusN:GraphCvTerm)
+         OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:status]-(featuresRangeEndPositionStatusN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:stoichiometry]-(stoichiometryN:GraphStoichiometry)
          OPTIONAL MATCH (interactorN)-[organismR:organism]-(organismN:GraphOrganism)
          OPTIONAL MATCH (interactorN)-[interactorTypeR:interactorType]-(interactorTypeN:GraphCvTerm)
@@ -185,8 +195,12 @@ public class CypherQueries {
                 COLLECT(interactionXrefsDatabaseR),COLLECT(interactionXrefsDatabaseN), COLLECT(participantEvidenceN),
                 COLLECT(expRoleR),COLLECT(expRoleN),COLLECT(bioRoleR),COLLECT(bioRoleN),COLLECT(interactorR),COLLECT(interactorN),
                 COLLECT(organismR),COLLECT(organismN),COLLECT(interactorTypeR),COLLECT(interactorTypeN),COLLECT(identificationMethodR),
-                COLLECT(identificationMethodN),COLLECT(featuresR),COLLECT(featuresN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN),
-                COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN),COLLECT(stoichiometryR),COLLECT(stoichiometryN)
+                COLLECT(identificationMethodN),COLLECT(featuresR),COLLECT(featuresN),COLLECT(featuresParticipantR),COLLECT(featuresParticipantN),
+                COLLECT(featuresParticipantInteractorR),COLLECT(featuresParticipantInteractorN),COLLECT(featuresTypeR),COLLECT(featuresTypeN),COLLECT(featuresRangeR),
+                COLLECT(featuresRangeN),COLLECT(featuresRangeParticipantR),COLLECT(featuresRangeParticipantN),
+                COLLECT(featuresRangeParticipantInteractorR),COLLECT(featuresRangeParticipantInteractorN),COLLECT(featuresRangeStartPositionR),COLLECT(featuresRangeStartPositionN),COLLECT(featuresRangeEndPositionR),COLLECT(featuresRangeEndPositionN),COLLECT(featuresRangeStartPositionStatusR),COLLECT(featuresRangeStartPositionStatusN),COLLECT(featuresRangeEndPositionStatusR),COLLECT(featuresRangeEndPositionStatusN),COLLECT(preferredIdentifierR),
+                COLLECT(preferredIdentifierN),COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN),COLLECT(stoichiometryR),COLLECT(stoichiometryN)
+
     **/
     public static final String GET_INTERACTION_DETAILS_FOR_MIJSON=
             "MATCH (experimentN:GraphExperiment)-[experimentR:"+RelationshipTypes.EXPERIMENT+"]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) -" +
@@ -195,8 +209,8 @@ public class CypherQueries {
             " OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(interactionIdentifiersN:GraphXref)" +
             " OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-" +
                              "(interactionIdentifiersDatabaseN:GraphCvTerm) " +
-            " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:xrefs]-(interactionXrefsN:GraphXref)" +
-            " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:database]-(interactionXrefsDatabaseN:GraphCvTerm) " +
+            " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:"+RelationshipTypes.XREFS+"]-(interactionXrefsN:GraphXref)" +
+            " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(interactionXrefsDatabaseN:GraphCvTerm)" +
             " OPTIONAL MATCH (binaryIEN)-[interactionTypeR:"+RelationshipTypes.INTERACTION_TYPE+"]-(interactionTypeN:GraphCvTerm)" +
             " OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:"+RelationshipTypes.INTERACTION_DETECTION_METHOD+"]-" +
                              "(interactionDetectionMethodN:GraphCvTerm)" +
@@ -207,7 +221,17 @@ public class CypherQueries {
             " OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:"+RelationshipTypes.BIOLOGICAL_ROLE+"]-(bioRoleN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:"+RelationshipTypes.IDENTIFICATION_METHOD+"]-" +
                              "(identificationMethodN:GraphCvTerm)" +
-            " OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.FEATURES+"]-(featuresN:GraphFeature)" +
+            " OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresN:GraphFeatureEvidence)" +
+            " OPTIONAL MATCH (featuresN)-[featuresTypeR:"+RelationshipTypes.TYPE+"]-(featuresTypeN:GraphCvTerm)" +
+            " OPTIONAL MATCH (featuresN)-[featuresRangeR:"+RelationshipTypes.RANGES+"]-(featuresRangeN:GraphRange)" +
+            " OPTIONAL MATCH (featuresN)-[featuresParticipantR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresParticipantN:GraphExperimentalEntity)" +
+            " OPTIONAL MATCH (featuresParticipantN)-[featuresParticipantInteractorR:"+RelationshipTypes.INTERACTOR+"]-(featuresParticipantInteractorN:GraphInteractor)" +
+            " OPTIONAL MATCH (featuresRangeN)-[featuresRangeStartPositionR:"+RelationshipTypes.START+"]-(featuresRangeStartPositionN:GraphPosition)" +
+            " OPTIONAL MATCH (featuresRangeN)-[featuresRangeEndPositionR:"+RelationshipTypes.END+"]-(featuresRangeEndPositionN:GraphPosition)" +
+            " OPTIONAL MATCH (featuresRangeN)-[featuresRangeParticipantR:"+RelationshipTypes.PARTICIPANT+"]-(featuresRangeParticipantN:GraphEntity)" +
+            " OPTIONAL MATCH (featuresRangeParticipantN)-[featuresRangeParticipantInteractorR:"+RelationshipTypes.INTERACTOR+"]-(featuresRangeParticipantInteractorN:GraphInteractor)" +
+            " OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeStartPositionStatusN:GraphCvTerm)" +
+            " OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeEndPositionStatusN:GraphCvTerm) " +
             " OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:"+RelationshipTypes.STOICHIOMETRY+"]-(stoichiometryN:GraphStoichiometry)" +
             " OPTIONAL MATCH (interactorN)-[organismR:"+RelationshipTypes.ORGANISM+"]-(organismN:GraphOrganism)" +
             " OPTIONAL MATCH (interactorN)-[interactorTypeR:"+RelationshipTypes.INTERACTOR_TYPE+"]-(interactorTypeN:GraphCvTerm)" +
@@ -223,7 +247,13 @@ public class CypherQueries {
                     "COLLECT(participantEvidenceN),COLLECT(expRoleR),COLLECT(expRoleN),COLLECT(bioRoleR),COLLECT(bioRoleN)," +
                     "COLLECT(interactorR),COLLECT(interactorN),COLLECT(organismR),COLLECT(organismN),COLLECT(interactorTypeR),COLLECT(interactorTypeN)," +
                     "COLLECT(identificationMethodR),COLLECT(identificationMethodN),COLLECT(featuresR)," +
-                    "COLLECT(featuresN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN)," +
+                    "COLLECT(featuresN),COLLECT(featuresParticipantR),COLLECT(featuresParticipantN)," +
+                    "COLLECT(featuresParticipantInteractorR),COLLECT(featuresParticipantInteractorN),COLLECT(featuresTypeR),COLLECT(featuresTypeN),COLLECT(featuresRangeR)," +
+                    "COLLECT(featuresRangeN),COLLECT(featuresRangeParticipantR),COLLECT(featuresRangeParticipantN)," +
+                    "COLLECT(featuresRangeParticipantInteractorR),COLLECT(featuresRangeParticipantInteractorN),COLLECT(featuresRangeStartPositionR),COLLECT(featuresRangeStartPositionN)," +
+                    "COLLECT(featuresRangeEndPositionR),COLLECT(featuresRangeEndPositionN),COLLECT(featuresRangeStartPositionStatusR)," +
+                    "COLLECT(featuresRangeStartPositionStatusN),COLLECT(featuresRangeEndPositionStatusR),COLLECT(featuresRangeEndPositionStatusN),COLLECT(preferredIdentifierR)," +
+                    "COLLECT(preferredIdentifierN)," +
                     "COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN),COLLECT(stoichiometryR)," +
                     "COLLECT(stoichiometryN)";
 

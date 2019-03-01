@@ -1,11 +1,9 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
-import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -22,7 +20,7 @@ import java.util.*;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphParticipantEvidence implements ParticipantEvidence {
+public class GraphParticipantEvidence extends GraphExperimentalEntity implements ParticipantEvidence {
 
     @GraphId
     private Long graphId;
@@ -41,13 +39,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Relationship(type = RelationshipTypes.EXPRESSED_IN)
     private GraphOrganism expressedIn;
 
-    @Relationship(type = RelationshipTypes.STOICHIOMETRY)
-    private GraphStoichiometry stoichiometry;
-
-    @Relationship(type = RelationshipTypes.INTERACTOR)
-    @JsonManagedReference
-    private GraphInteractor interactor;
-
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
     @JsonBackReference
     private GraphInteractionEvidence interaction;
@@ -59,13 +50,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.INCOMING)
     @JsonBackReference
     private GraphBinaryInteractionEvidence binaryInteractionEvidenceB;
-
-    @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
-    private EntityInteractorChangeListener changeListener;
-
-    @Relationship(type = RelationshipTypes.FEATURES, direction = Relationship.OUTGOING)
-    @JsonBackReference
-    private Collection<GraphFeatureEvidence> features;
 
     @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphConfidence> confidences;
@@ -88,9 +72,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
 
-    @Relationship(type = RelationshipTypes.CAUSAL_RELATIONSHIP)
-    private Collection<GraphCausalRelationship> causalRelationships;
-
     @Transient
     private boolean forceHashCodeGeneration;
 
@@ -101,13 +82,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public GraphParticipantEvidence(ParticipantEvidence participantEvidence) {
+        super(participantEvidence, true);
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
         setForceHashCodeGeneration(true);
         setExperimentalRole(participantEvidence.getExperimentalRole());
         setBiologicalRole(participantEvidence.getBiologicalRole());
         setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
-        setStoichiometry(participantEvidence.getStoichiometry());
-        setInteractor(participantEvidence.getInteractor());
 
         if (!callingClasses.contains("GraphInteractionEvidence") && !callingClasses.contains("GraphBinaryInteractionEvidence")) {
             setInteraction(participantEvidence.getInteraction());
@@ -115,7 +95,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         /*if (!callingClasses.contains("GraphBinaryInteractionEvidence")) {
             setBinaryInteractionEvidence(participantEvidence.getInteraction());
         }*/
-        setChangeListener(participantEvidence.getChangeListener());
         setAc(CommonUtility.extractAc(participantEvidence));
         setUniqueKey(createUniqueKey(participantEvidence));
 
@@ -123,7 +102,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             createNodeNatively();
         }
 
-        setFeatures(participantEvidence.getFeatures());
         setConfidences(participantEvidence.getConfidences());
         setParameters(participantEvidence.getParameters());
         setIdentificationMethods(participantEvidence.getIdentificationMethods());
@@ -131,7 +109,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         setXrefs(participantEvidence.getXrefs());
         setAnnotations(participantEvidence.getAnnotations());
         setAliases(participantEvidence.getAliases());
-        setCausalRelationships(participantEvidence.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated()) {
@@ -158,15 +135,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(experimentalRole, this.graphId, RelationshipTypes.EXPERIMENTAL_ROLE);
         CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
         CommonUtility.createRelationShip(expressedIn, this.graphId, RelationshipTypes.EXPRESSED_IN);
-        CommonUtility.createRelationShip(stoichiometry, this.graphId, RelationshipTypes.STOICHIOMETRY);
-        CommonUtility.createRelationShip(interactor, this.graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
         //CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createRelationShip(changeListener, this.graphId, RelationshipTypes.CHANGE_LISTENER);
-        CommonUtility.createFeatureEvidenceRelationShips(features, this.graphId, RelationshipTypes.FEATURES);
         CommonUtility.createConfidenceRelationShips(confidences, this.graphId);
         CommonUtility.createParameterRelationShips(parameters, this.graphId);
         CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.graphId);
@@ -174,8 +148,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         CommonUtility.createXrefRelationShips(xrefs, this.graphId);
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
         CommonUtility.createAliasRelationShips(aliases, this.graphId);
-        CommonUtility.createCausalRelationshipRelationShips(causalRelationships, this.graphId);
-
     }
 
     public String getUniqueKey() {
@@ -243,56 +215,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     }
 
     @Override
-    public Stoichiometry getStoichiometry() {
-        return this.stoichiometry;
-    }
-
-    @Override
-    public void setStoichiometry(Stoichiometry stoichiometry) {
-        if (stoichiometry != null) {
-            if (stoichiometry instanceof GraphStoichiometry) {
-                this.stoichiometry = (GraphStoichiometry) stoichiometry;
-            } else {
-                this.stoichiometry = new GraphStoichiometry(stoichiometry);
-            }
-        } else {
-            this.stoichiometry = null;
-        }
-        //TODO login it
-    }
-
-    @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
-    }
-
-    @Override
-    public Interactor getInteractor() {
-        return this.interactor;
-    }
-
-    @Override
-    public void setInteractor(Interactor interactor) {
-        if (interactor == null) {
-            throw new IllegalArgumentException("The interactor cannot be null.");
-        }
-        Interactor oldInteractor = this.interactor;
-        if (interactor instanceof GraphInteractor) {
-            this.interactor = (GraphInteractor) interactor;
-        } else {
-            this.interactor = CommonUtility.initializeInteractor(interactor);
-        }
-        if (this.changeListener != null) {
-            this.changeListener.onInteractorUpdate(this, oldInteractor);
-        }
-    }
-
-    @Override
     public void setInteractionAndAddParticipant(InteractionEvidence interaction) {
 
         if (this.interaction != null) {
@@ -356,23 +278,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
             }
         } else {
             this.binaryInteractionEvidenceB = null;
-        }
-    }
-
-
-    @Override
-    public Collection<GraphFeatureEvidence> getFeatures() {
-        if (features == null) {
-            features = new ArrayList<GraphFeatureEvidence>();
-        }
-        return this.features;
-    }
-
-    public void setFeatures(Collection<FeatureEvidence> features) {
-        if (features != null) {
-            addAllFeatures(features);
-        } else {
-            this.features = new ArrayList<GraphFeatureEvidence>();
         }
     }
 
@@ -545,38 +450,12 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         }
     }
 
-    @Override
-    public Collection<GraphCausalRelationship> getCausalRelationships() {
-        if (this.causalRelationships == null) {
-            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
-        }
-        return this.causalRelationships;
-    }
-
-    public void setCausalRelationships(Collection<CausalRelationship> causalRelationships) {
-        if (causalRelationships != null) {
-            this.causalRelationships = CollectionAdaptor.convertCausalRelationshipIntoGraphModel(causalRelationships);
-        } else {
-            this.causalRelationships = new ArrayList<GraphCausalRelationship>();
-        }
-    }
-
     public String getAc() {
         return ac;
     }
 
     public void setAc(String ac) {
         this.ac = ac;
-    }
-
-    @Override
-    public EntityInteractorChangeListener getChangeListener() {
-        return changeListener;
-    }
-
-    @Override
-    public void setChangeListener(EntityInteractorChangeListener changeListener) {
-        this.changeListener = changeListener;
     }
 
     public Long getGraphId() {

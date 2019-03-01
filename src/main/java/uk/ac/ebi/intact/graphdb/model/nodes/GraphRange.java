@@ -2,10 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
-import psidev.psi.mi.jami.model.Entity;
-import psidev.psi.mi.jami.model.Position;
-import psidev.psi.mi.jami.model.Range;
-import psidev.psi.mi.jami.model.ResultingSequence;
+import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -188,8 +185,10 @@ public class GraphRange implements Range {
 
     public void setParticipant(Entity participant) {
         if (participant != null) {
-            if (participant instanceof GraphPosition) {
+            if (participant instanceof GraphEntity) {
                 this.participant = (GraphEntity) participant;
+            } else if (participant instanceof ParticipantEvidence) {
+                this.participant = new GraphParticipantEvidence((ParticipantEvidence) participant);
             } else {
                 this.participant = new GraphEntity(participant, false);
             }
@@ -239,7 +238,7 @@ public class GraphRange implements Range {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -255,13 +254,13 @@ public class GraphRange implements Range {
 
     @Override
     public String toString() {
-        return (this.start!=null?this.start.toString():"") + (this.end!=null?this.end.toString():"") + (isLink() ? "(linked)" : "");
+        return (this.start != null ? this.start.toString() : "") + (this.end != null ? this.end.toString() : "") + (isLink() ? "(linked)" : "");
     }
 
     public String createUniqueKey(Range range) {
         //return range != null ? UnambiguousRangeComparator.hashCode(range) + "" : "";
-        String uniqueKey=null;
-        if(this.getAc()!=null) uniqueKey=this.getAc().hashCode()+"";
+        String uniqueKey = null;
+        if (this.getAc() != null) uniqueKey = this.getAc().hashCode() + "";
         return uniqueKey;
     }
 
