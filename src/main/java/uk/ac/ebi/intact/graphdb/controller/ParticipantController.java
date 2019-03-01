@@ -27,12 +27,8 @@ public class ParticipantController {
     }
 
     @RequestMapping(value = "/detailsOld/{ac}",
-            params = {
-                    "page",
-                    "pageSize"
-            },
             method = RequestMethod.GET)
-    public Page<GraphParticipantEvidence> getParticipants(
+    public Page<GraphParticipantEvidence> getParticipantsOld(
             @PathVariable String ac,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
@@ -40,10 +36,6 @@ public class ParticipantController {
     }
 
     @RequestMapping(value = "/details/{ac}",
-            params = {
-                    "page",
-                    "pageSize"
-            },
             method = RequestMethod.GET)
     public Page<ParticipantDetails> getParticipantsNew(
             @PathVariable String ac,
