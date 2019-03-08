@@ -157,7 +157,7 @@ public class CypherQueries {
 
     /*
     * Equivalent Query String :
-         MATCH (experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10052707' }) -
+         MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10052707' }) -
          [participantEvidenceR:IE_PARTICIPANT]-(participantEvidenceN:GraphParticipantEvidence)-
          [interactorR:interactor]-(interactorN:GraphInteractor)
          OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:identifiers]-(interactionIdentifiersN:GraphXref)
@@ -169,6 +169,9 @@ public class CypherQueries {
          OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)
          OPTIONAL MATCH (experimentN)-[expXrefsR:xrefs]-(expXrefsN:GraphXref)
          OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:database]-(expXrefsDatabaseN:GraphCvTerm)
+         OPTIONAL MATCH (publicationN)-[pubIdentifiersR:identifiers]-(pubIdentifiersN:GraphXref)
+         OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:database]-(pubIdentifiersDatabaseN:GraphCvTerm)
+         OPTIONAL MATCH (publicationN)-[pubSourceR:source]-(pubSourceN:GraphSource)
          OPTIONAL MATCH (participantEvidenceN)-[expRoleR:experimentalRole]-(expRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:biologicalRole]-(bioRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:identificationMethods]-(identificationMethodN:GraphCvTerm)
@@ -188,9 +191,9 @@ public class CypherQueries {
          OPTIONAL MATCH (interactorN)-[interactorTypeR:interactorType]-(interactorTypeN:GraphCvTerm)
          OPTIONAL MATCH (interactorN)-[preferredIdentifierR:preferredIdentifier]-(preferredIdentifierN:GraphXref)
          OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:database]-(preferredIdentifierDatabaseN:GraphCvTerm)
-         RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,
-                hostOrganismN,COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR),COLLECT(expXrefsDatabaseN),
-                COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR),COLLECT(interactionIdentifiersN),
+         RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,publicationN,publicationR,interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,
+                hostOrganismN,pubSourceR,pubSourceN,COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR),COLLECT(expXrefsDatabaseN),COLLECT(pubIdentifiersR),COLLECT(pubIdentifiersN),
+                COLLECT(pubIdentifiersDatabaseR),COLLECT(pubIdentifiersDatabaseN),COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR),COLLECT(interactionIdentifiersN),
                 COLLECT(interactionIdentifiersDatabaseR),COLLECT(interactionIdentifiersDatabaseN), COLLECT(interactionXrefsR),COLLECT(interactionXrefsN),
                 COLLECT(interactionXrefsDatabaseR),COLLECT(interactionXrefsDatabaseN), COLLECT(participantEvidenceN),
                 COLLECT(expRoleR),COLLECT(expRoleN),COLLECT(bioRoleR),COLLECT(bioRoleN),COLLECT(interactorR),COLLECT(interactorN),
@@ -203,7 +206,7 @@ public class CypherQueries {
 
     **/
     public static final String GET_INTERACTION_DETAILS_FOR_MIJSON=
-            "MATCH (experimentN:GraphExperiment)-[experimentR:"+RelationshipTypes.EXPERIMENT+"]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) -" +
+            "MATCH (publicationN)-[publicationR:"+RelationshipTypes.PUB_EXP+"]-(experimentN:GraphExperiment)-[experimentR:"+RelationshipTypes.EXPERIMENT+"]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) -" +
                    "[participantEvidenceR:"+RelationshipTypes.IE_PARTICIPANT+"]-(participantEvidenceN:GraphParticipantEvidence)-" +
                    "[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
             " OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(interactionIdentifiersN:GraphXref)" +
@@ -216,7 +219,10 @@ public class CypherQueries {
                              "(interactionDetectionMethodN:GraphCvTerm)" +
             " OPTIONAL MATCH (experimentN)-[hostOrganismR:"+RelationshipTypes.HOST_ORGANISM+"]-(hostOrganismN:GraphOrganism)" +
             " OPTIONAL MATCH (experimentN)-[expXrefsR:"+RelationshipTypes.XREFS+"]-(expXrefsN:GraphXref)" +
-            " OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(expXrefsDatabaseN:GraphCvTerm)" +
+            " OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(expXrefsDatabaseN:GraphCvTerm) " +
+            " OPTIONAL MATCH (publicationN)-[pubIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(pubIdentifiersN:GraphXref)\n" +
+            " OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubIdentifiersDatabaseN:GraphCvTerm)\n" +
+            " OPTIONAL MATCH (publicationN)-[pubSourceR:"+RelationshipTypes.SOURCE+"]-(pubSourceN:GraphSource)" +
             " OPTIONAL MATCH (participantEvidenceN)-[expRoleR:"+RelationshipTypes.EXPERIMENTAL_ROLE+"]-(expRoleN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:"+RelationshipTypes.BIOLOGICAL_ROLE+"]-(bioRoleN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:"+RelationshipTypes.IDENTIFICATION_METHOD+"]-" +
@@ -238,9 +244,9 @@ public class CypherQueries {
             " OPTIONAL MATCH (interactorN)-[preferredIdentifierR:"+RelationshipTypes.PREFERRED_IDENTIFIER+"]-(preferredIdentifierN:GraphXref)" +
             " OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:"+RelationshipTypes.DATABASE+"]-" +
                              "(preferredIdentifierDatabaseN:GraphCvTerm)" +
-            " RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,interactionDetectionMethodN,interactionDetectionMethodR," +
-                    "hostOrganismR,hostOrganismN,COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR)," +
-                    "COLLECT(expXrefsDatabaseN),COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR)," +
+            " RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,publicationN,publicationR,interactionDetectionMethodN,interactionDetectionMethodR," +
+                    "hostOrganismR,hostOrganismN,pubSourceR,pubSourceN,COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR)," +
+                    "COLLECT(expXrefsDatabaseN),COLLECT(pubIdentifiersR),COLLECT(pubIdentifiersN),COLLECT(pubIdentifiersDatabaseR),COLLECT(pubIdentifiersDatabaseN),COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR)," +
                     "COLLECT(interactionIdentifiersN),COLLECT(interactionIdentifiersDatabaseR)," +
                     "COLLECT(interactionXrefsR),COLLECT(interactionXrefsN),COLLECT(interactionXrefsDatabaseR)," +
                     "COLLECT(interactionXrefsDatabaseN),COLLECT(interactionIdentifiersDatabaseN)," +
