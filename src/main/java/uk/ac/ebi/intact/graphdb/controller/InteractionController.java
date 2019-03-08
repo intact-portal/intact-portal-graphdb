@@ -6,12 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
+import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
 import psidev.psi.mi.jami.datasource.InteractionWriter;
 import psidev.psi.mi.jami.factory.InteractionWriterFactory;
 import psidev.psi.mi.jami.json.InteractionViewerJson;
 import psidev.psi.mi.jami.json.MIJsonOptionFactory;
 import psidev.psi.mi.jami.json.MIJsonType;
-import psidev.psi.mi.jami.model.Interaction;
 import psidev.psi.mi.jami.model.InteractionCategory;
 import psidev.psi.mi.jami.model.InteractionEvidence;
 import uk.ac.ebi.intact.graphdb.controller.enums.InteractionExportFormat;
@@ -103,7 +104,7 @@ public class InteractionController {
         List<TermType> parameters = new ArrayList<>();
         graphInteractionEvidence.getParameters().forEach(param -> {
             CvTerm cvTerm = new CvTerm(param.getType().getShortName(), param.getType().getMIIdentifier());
-                parameters.add(new TermType(cvTerm, param.getValue().toString()));
+            parameters.add(new TermType(cvTerm, param.getValue().toString()));
         });
 
         List<TermType> confidences = new ArrayList<>();
@@ -125,8 +126,8 @@ public class InteractionController {
 
         List<Xref> experimentXrefs = new ArrayList<>();
         graphExperiment.getXrefs().forEach(xref -> {
-                CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
-                experimentXrefs.add(new Xref(term, xref.getId()));
+            CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+            experimentXrefs.add(new Xref(term, xref.getId()));
         });
 
         List<Annotation> experimentAnnotations = new ArrayList<>();
@@ -168,15 +169,15 @@ public class InteractionController {
                     "ac"
             },
             method = RequestMethod.GET)
-    public ResponseEntity<String> exportInteraction(@RequestParam(value = "ac",required = false) String ac,
-                                                    @RequestParam(value = "format", defaultValue = "json",required = false) String format,
+    public ResponseEntity<String> exportInteraction(@RequestParam(value = "ac", required = false) String ac,
+                                                    @RequestParam(value = "format", defaultValue = "json", required = false) String format,
                                                     HttpServletResponse response) throws Exception {
         Boolean exportAsFile = false;
 
-        InteractionEvidence interactionEvidence=graphInteractionService.findByInteractionAcForMiJson(ac);
+        InteractionEvidence interactionEvidence = graphInteractionService.findByInteractionAcForMiJson(ac);
 
         ResponseEntity<String> responseEntity = null;
-        if (interactionEvidence!=null) {
+        if (interactionEvidence != null) {
             InteractionWriterFactory writerFactory = InteractionWriterFactory.getInstance();
             switch (InteractionExportFormat.formatOf(format)) {
                 case JSON:
@@ -195,17 +196,24 @@ public class InteractionController {
         InteractionViewerJson.initialiseAllMIJsonWriters();
         MIJsonOptionFactory optionFactory = MIJsonOptionFactory.getInstance();
         StringWriter answer = new StringWriter();
+        InteractionWriter writer = null;
+        Map<String, Object> options = null;
+        try {
+            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
+                    MIJsonType.n_ary_only, new CachedOlsOntologyTermFetcher(), null);
+            writer = writerFactory.getInteractionWriterWith(options);
+        } catch (BridgeFailedException e) {
+            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
+                    MIJsonType.n_ary_only, null, null);
 
-        Map<String, Object> options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
-                MIJsonType.n_ary_only, null, null);
-        InteractionWriter writer = writerFactory.getInteractionWriterWith(options);
+        }
+        writer = writerFactory.getInteractionWriterWith(options);
 
         try {
             writer.start();
             writer.write(interactionEvidence);
             writer.end();
-        }
-        finally {
+        } finally {
             writer.close();
         }
         HttpHeaders httpHeaders = new HttpHeaders();

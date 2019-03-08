@@ -91,7 +91,11 @@
             <version>${psi.jami.version}</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>psidev.psi.mi.jami.bridges</groupId>
+            <artifactId>jami-ols</artifactId>
+            <version>${psi.jami.version}</version>
+        </dependency>
 
         <!--Jami-->
 
