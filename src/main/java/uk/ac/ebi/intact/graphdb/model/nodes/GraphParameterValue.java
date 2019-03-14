@@ -24,6 +24,10 @@ public class GraphParameterValue extends ParameterValue {
     @Index(unique = true,primary = true)
     private String uniqueKey;
 
+    private short base;
+    private BigDecimal factor;
+    private short exponent=0;
+
     @Transient
     private boolean isAlreadyCreated;
 
@@ -49,6 +53,9 @@ public class GraphParameterValue extends ParameterValue {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getFactor() != null) nodeProperties.put("factor", this.getFactor().toString());
+            nodeProperties.put("base", this.getBase());
+            nodeProperties.put("exponent", this.getExponent());
             Label[] labels = CommonUtility.getLabels(GraphParameterValue.class);
 
             NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
@@ -106,5 +113,33 @@ public class GraphParameterValue extends ParameterValue {
 
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
+    }
+
+    public short getBase() {
+        return base;
+    }
+
+    public void setBase(short base) {
+        this.base = base;
+    }
+
+    public BigDecimal getFactor() {
+        return factor;
+    }
+
+    public void setFactor(BigDecimal factor) {
+        this.factor = factor;
+    }
+
+    public short getExponent() {
+        return exponent;
+    }
+
+    public void setExponent(short exponent) {
+        this.exponent = exponent;
+    }
+
+    public String toString(){
+        return (base != 0 && factor.doubleValue() != 0 ? factor.toString()+(exponent != 0 ? "x"+base+"^("+exponent+")" : "") : "0");
     }
 }

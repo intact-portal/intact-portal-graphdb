@@ -157,27 +157,183 @@ public class CypherQueries {
 
     /*
     * Equivalent Query String :
-         MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10052707' }) -
-         [participantEvidenceR:IE_PARTICIPANT]-(participantEvidenceN:GraphParticipantEvidence)-
-         [interactorR:interactor]-(interactorN:GraphInteractor)
+         MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10048599' })
          OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:identifiers]-(interactionIdentifiersN:GraphXref)
          OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:database]-(interactionIdentifiersDatabaseN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR ,COLLECT(interactionIdentifiersN) as interactionIdentifiersNCollection,
+              COLLECT(interactionIdentifiersR) as interactionIdentifiersRCollection,
+              COLLECT(interactionIdentifiersDatabaseR) as interactionIdentifiersDatabaseRCollection,
+              COLLECT(interactionIdentifiersDatabaseN) as interactionIdentifiersDatabaseNCollection
+
          OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:xrefs]-(interactionXrefsN:GraphXref)
          OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:database]-(interactionXrefsDatabaseN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection,
+              interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,
+              COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection,
+              COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)
+              as interactionXrefsDatabaseNCollection
+
          OPTIONAL MATCH (binaryIEN)-[interactionAnnotationR:annotations]-(interactionAnnotationN:GraphAnnotation)
          OPTIONAL MATCH (interactionAnnotationN)-[interactionAnnotationTopicR:topic]-(interactionAnnotationTopicN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection,
+              interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as
+              interactionAnnotationNCollection,COLLECT(interactionAnnotationTopicR) as interactionAnnotationTopicRCollection
+              ,COLLECT(interactionAnnotationTopicN) as interactionAnnotationTopicNCollection
+
+         OPTIONAL MATCH (binaryIEN)-[interactionConfidencesR:confidences]-(interactionConfidencesN:GraphConfidence)
+         OPTIONAL MATCH (interactionConfidencesN)-[interactionConfidencesTypeR:type]-(interactionConfidencesTypeN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,COLLECT(interactionConfidencesR) as interactionConfidencesRCollection,
+              COLLECT(interactionConfidencesN) as interactionConfidencesNCollection,COLLECT(interactionConfidencesTypeR) as
+              interactionConfidencesTypeRCollection,COLLECT(interactionConfidencesTypeN) as interactionConfidencesTypeNCollection
+
+         OPTIONAL MATCH (binaryIEN)-[interactionParametersR:parameters]-(interactionParametersN:GraphParameter)
+         OPTIONAL MATCH (interactionParametersN)-[interactionParametersTypeR:type]-(interactionParametersTypeN:GraphCvTerm)
+         OPTIONAL MATCH (interactionParametersN)-[interactionParametersUnitR:unit]-(interactionParametersUnitN:GraphCvTerm)
+         OPTIONAL MATCH (interactionParametersN)-[interactionParametersValueR:value]-(interactionParametersValueN:GraphParameterValue)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,COLLECT(interactionParametersR) as
+              interactionParametersRCollection ,COLLECT(interactionParametersN) as interactionParametersNCollection,
+              COLLECT(interactionParametersTypeR) as interactionParametersTypeRCollection,COLLECT(interactionParametersTypeN)
+              as interactionParametersTypeNCollection,COLLECT(interactionParametersUnitR) as interactionParametersUnitRCollection,
+              COLLECT(interactionParametersUnitN) as interactionParametersUnitNCollection,COLLECT(interactionParametersValueR)
+              as interactionParametersValueRCollection,COLLECT(interactionParametersValueN) as interactionParametersValueNCollection
+
          OPTIONAL MATCH (binaryIEN)-[interactionTypeR:interactionType]-(interactionTypeN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ,
+              interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN
+
          OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ,
+              interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR
+
          OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,
+              interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection,
+              interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection,
+              interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection,
+              interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,
+              interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection,
+              interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection,
+              interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN,
+              interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN
+
          OPTIONAL MATCH (experimentN)-[expXrefsR:xrefs]-(expXrefsN:GraphXref)
          OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:database]-(expXrefsDatabaseN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ,
+              interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,
+              interactionDetectionMethodR,hostOrganismR,hostOrganismN,COLLECT(expXrefsR) as expXrefsRCollection,
+              COLLECT(expXrefsN) as expXrefsNCollection,COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection,
+              COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection
+
          OPTIONAL MATCH (publicationN)-[pubIdentifiersR:identifiers]-(pubIdentifiersN:GraphXref)
          OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:database]-(pubIdentifiersDatabaseN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,
+              interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection,
+              interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection,
+              interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection,
+              interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,
+              interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection,
+              interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection,
+              interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN,
+              interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,
+              expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,COLLECT(pubIdentifiersR) as
+              pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection,COLLECT(pubIdentifiersDatabaseR)
+              as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN) as pubIdentifiersDatabaseNCollection
+
          OPTIONAL MATCH (publicationN)-[pubXrefsR:xrefs]-(pubXrefsN:GraphXref)
          OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:database]-(pubXrefsDatabaseN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection
+              ,interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
+              hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
+              pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
+              COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection,COLLECT(pubXrefsDatabaseR) as
+              pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection
+
          OPTIONAL MATCH (publicationN)-[pubImexIdR:imexId]-(pubImexIdN:GraphXref)
          OPTIONAL MATCH (pubImexIdN)-[pubImexIdDatabaseR:database]-(pubImexIdDatabaseN:GraphCvTerm)
-         OPTIONAL MATCH (publicationN)-[pubSourceR:source]-(pubSourceN:GraphSource)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,interactionIdentifiersNCollection,interactionIdentifiersRCollection,
+              interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection,
+              interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
+              hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
+              pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
+              pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN
+
+          OPTIONAL MATCH (publicationN)-[pubSourceR:source]-(pubSourceN:GraphSource)
+
+          WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,
+               interactionIdentifiersNCollection,interactionIdentifiersRCollection
+               ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+               interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+               interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+               interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+               interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection,
+               interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+               interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+               interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,
+               interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,
+               expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,
+               pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,
+               pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN
+
+         OPTIONAL MATCH (binaryIEN)-[participantEvidenceR:IE_PARTICIPANT]-(participantEvidenceN:GraphParticipantEvidence)
          OPTIONAL MATCH (participantEvidenceN)-[expRoleR:experimentalRole]-(expRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:biologicalRole]-(bioRoleN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:identificationMethods]-(identificationMethodN:GraphCvTerm)
@@ -193,53 +349,276 @@ public class CypherQueries {
          OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:status]-(featuresRangeStartPositionStatusN:GraphCvTerm)
          OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:status]-(featuresRangeEndPositionStatusN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:stoichiometry]-(stoichiometryN:GraphStoichiometry)
+         OPTIONAL MATCH (participantEvidenceN)-[interactorR:interactor]-(interactorN:GraphInteractor)
          OPTIONAL MATCH (interactorN)-[organismR:organism]-(organismN:GraphOrganism)
          OPTIONAL MATCH (interactorN)-[interactorTypeR:interactorType]-(interactorTypeN:GraphCvTerm)
          OPTIONAL MATCH (interactorN)-[preferredIdentifierR:preferredIdentifier]-(preferredIdentifierN:GraphXref)
          OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:database]-(preferredIdentifierDatabaseN:GraphCvTerm)
-         RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,publicationN,publicationR,interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,
-                hostOrganismN,pubSourceR,pubSourceN,pubImexIdR,pubImexIdN,pubImexIdDatabaseR,pubImexIdDatabaseN, COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR),COLLECT(expXrefsDatabaseN),COLLECT(pubIdentifiersR),COLLECT(pubIdentifiersN),
-                COLLECT(pubIdentifiersDatabaseR),COLLECT(pubIdentifiersDatabaseN),COLLECT(pubXrefsR),COLLECT(pubXrefsN),COLLECT(pubXrefsDatabaseR),COLLECT(pubXrefsDatabaseN),COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR),COLLECT(interactionIdentifiersN),
-                COLLECT(interactionIdentifiersDatabaseR),COLLECT(interactionIdentifiersDatabaseN), COLLECT(interactionXrefsR),COLLECT(interactionXrefsN),
-                COLLECT(interactionXrefsDatabaseR),COLLECT(interactionXrefsDatabaseN),COLLECT(interactionAnnotationR),COLLECT(interactionAnnotationN),
-                COLLECT(interactionAnnotationTopicR),COLLECT(interactionAnnotationTopicN),COLLECT(participantEvidenceN),
-                COLLECT(expRoleR),COLLECT(expRoleN),COLLECT(bioRoleR),COLLECT(bioRoleN),COLLECT(interactorR),COLLECT(interactorN),
-                COLLECT(organismR),COLLECT(organismN),COLLECT(interactorTypeR),COLLECT(interactorTypeN),COLLECT(identificationMethodR),
-                COLLECT(identificationMethodN),COLLECT(featuresR),COLLECT(featuresN),COLLECT(featuresParticipantR),COLLECT(featuresParticipantN),
-                COLLECT(featuresParticipantInteractorR),COLLECT(featuresParticipantInteractorN),COLLECT(featuresTypeR),COLLECT(featuresTypeN),COLLECT(featuresRangeR),
-                COLLECT(featuresRangeN),COLLECT(featuresRangeParticipantR),COLLECT(featuresRangeParticipantN),
-                COLLECT(featuresRangeParticipantInteractorR),COLLECT(featuresRangeParticipantInteractorN),COLLECT(featuresRangeStartPositionR),COLLECT(featuresRangeStartPositionN),COLLECT(featuresRangeEndPositionR),COLLECT(featuresRangeEndPositionN),COLLECT(featuresRangeStartPositionStatusR),COLLECT(featuresRangeStartPositionStatusN),COLLECT(featuresRangeEndPositionStatusR),COLLECT(featuresRangeEndPositionStatusN),COLLECT(preferredIdentifierR),
-                COLLECT(preferredIdentifierN),COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN),COLLECT(stoichiometryR),COLLECT(stoichiometryN)
+
+
+          WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,
+               interactionIdentifiersNCollection,interactionIdentifiersRCollection
+               ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+               interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+               interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+               interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+               interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection,
+               interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+               interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+               interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
+               hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
+               pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
+               pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,
+               pubImexIdDatabaseN,pubSourceR,pubSourceN,COLLECT(expRoleR) as expRoleRCollection,COLLECT(expRoleN) as expRoleNCollection,
+               COLLECT(bioRoleR) as bioRoleRCollection,COLLECT(bioRoleN) as bioRoleNCollection,
+               COLLECT(identificationMethodR) as identificationMethodRCollection,COLLECT(identificationMethodN) as identificationMethodNCollection,
+               COLLECT(featuresR) as featuresRCollection,COLLECT(featuresN) as featuresNCollection,
+               COLLECT(featuresParticipantR) as featuresParticipantRCollection,
+               COLLECT(featuresParticipantN) as featuresParticipantNCollection,COLLECT(featuresParticipantInteractorR) as
+               featuresParticipantInteractorRCollection,COLLECT(featuresParticipantInteractorN) as featuresParticipantInteractorNCollection,
+               COLLECT(featuresTypeR) as featuresTypeRCollection,COLLECT(featuresTypeN) as featuresTypeNCollection,
+               COLLECT(featuresRangeR) as featuresRangeRCollection,COLLECT(featuresRangeN) as featuresRangeNCollection,
+               COLLECT(featuresRangeParticipantR) as featuresRangeParticipantRCollection,COLLECT(featuresRangeParticipantN) as
+               featuresRangeParticipantNCollection,COLLECT(featuresRangeParticipantInteractorR) as featuresRangeParticipantInteractorRCollection,
+               COLLECT(featuresRangeParticipantInteractorN) as featuresRangeParticipantInteractorNCollection,COLLECT(featuresRangeStartPositionR)
+               as featuresRangeStartPositionRCollection,COLLECT(featuresRangeStartPositionN) as featuresRangeStartPositionNCollection,
+               COLLECT(featuresRangeEndPositionR) as featuresRangeEndPositionRCollection,COLLECT(featuresRangeEndPositionN) as
+               featuresRangeEndPositionNCollection,COLLECT(featuresRangeStartPositionStatusR) as featuresRangeStartPositionStatusRCollection,
+               COLLECT(featuresRangeStartPositionStatusN) as featuresRangeStartPositionStatusNCollection,COLLECT(featuresRangeEndPositionStatusR) as
+               featuresRangeEndPositionStatusRCollection,COLLECT(featuresRangeEndPositionStatusN) as featuresRangeEndPositionStatusNCollection,
+               COLLECT(stoichiometryR) as stoichiometryRCollection,COLLECT(stoichiometryN) as stoichiometryNCollection,
+               COLLECT(organismR) as organismRCollection,COLLECT(organismN) as organismNCollection,COLLECT(interactorTypeR)
+               as interactorTypeRCollection,COLLECT(interactorTypeN) as interactorTypeNCollection,COLLECT(preferredIdentifierR) as
+               preferredIdentifierRCollection,COLLECT(preferredIdentifierN) as preferredIdentifierNCollection,
+               COLLECT(preferredIdentifierDatabaseR) as preferredIdentifierDatabaseRCollection,
+               COLLECT(preferredIdentifierDatabaseN) as preferredIdentifierDatabaseNCollection,
+               COLLECT(participantEvidenceR) as participantEvidenceRCollection,
+               COLLECT(participantEvidenceN) as participantEvidenceNCollection,
+               COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection
+
+
+
+
+          RETURN publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,interactionIdentifiersNCollection,interactionIdentifiersRCollection,interactionIdentifiersDatabaseRCollection,
+                 interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection,
+                 interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection,
+                 interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection,
+                 interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,
+                 interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection,
+                 interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection,
+                 interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN,
+                 interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,
+                 expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,
+                 pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,
+                 pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN,expRoleRCollection,
+                 expRoleNCollection,bioRoleRCollection,bioRoleNCollection,identificationMethodRCollection,identificationMethodNCollection,
+                 featuresRCollection ,featuresNCollection,featuresParticipantRCollection,featuresParticipantNCollection,
+                 featuresParticipantInteractorRCollection,featuresParticipantInteractorNCollection,featuresTypeRCollection,featuresTypeNCollection,featuresRangeRCollection,
+                 featuresRangeNCollection,featuresRangeParticipantRCollection,featuresRangeParticipantNCollection,
+                 featuresRangeParticipantInteractorRCollection,featuresRangeParticipantInteractorNCollection,
+                 featuresRangeStartPositionRCollection,featuresRangeStartPositionNCollection,featuresRangeEndPositionRCollection,
+                 featuresRangeEndPositionNCollection,featuresRangeStartPositionStatusRCollection,featuresRangeStartPositionStatusNCollection,
+                 featuresRangeEndPositionStatusRCollection,featuresRangeEndPositionStatusNCollection, stoichiometryRCollection,
+                 stoichiometryNCollection,organismRCollection,organismNCollection,interactorTypeRCollection,interactorTypeNCollection,
+                 preferredIdentifierRCollection,preferredIdentifierNCollection, preferredIdentifierDatabaseRCollection,
+                 preferredIdentifierDatabaseNCollection,participantEvidenceRCollection,participantEvidenceNCollection,
+                 interactorRCollection,interactorNCollection,binaryIEN limit 1
 
     **/
     public static final String GET_INTERACTION_DETAILS_FOR_MIJSON=
-            "MATCH (publicationN)-[publicationR:"+RelationshipTypes.PUB_EXP+"]-(experimentN:GraphExperiment)-[experimentR:"+RelationshipTypes.EXPERIMENT+"]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) -" +
-                   "[participantEvidenceR:"+RelationshipTypes.IE_PARTICIPANT+"]-(participantEvidenceN:GraphParticipantEvidence)-" +
-                   "[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
+            "MATCH (publicationN)-[publicationR:"+RelationshipTypes.PUB_EXP+"]-(experimentN:GraphExperiment)-[experimentR:"+RelationshipTypes.EXPERIMENT+"]-" +
+                   " (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })" +
             " OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(interactionIdentifiersN:GraphXref)" +
-            " OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-" +
-                             "(interactionIdentifiersDatabaseN:GraphCvTerm) " +
+            " OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-(interactionIdentifiersDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " COLLECT(interactionIdentifiersN) as interactionIdentifiersNCollection," +
+                   " COLLECT(interactionIdentifiersR) as interactionIdentifiersRCollection," +
+                   " COLLECT(interactionIdentifiersDatabaseR) as interactionIdentifiersDatabaseRCollection," +
+                   " COLLECT(interactionIdentifiersDatabaseN) as interactionIdentifiersDatabaseNCollection" +
+                   
             " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:"+RelationshipTypes.XREFS+"]-(interactionXrefsN:GraphXref)" +
             " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(interactionXrefsDatabaseN:GraphCvTerm)" +
+                   
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
+                   " interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection," +
+                   " COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection," +
+                   " COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)" +
+                   " as interactionXrefsDatabaseNCollection" +
+
             " OPTIONAL MATCH (binaryIEN)-[interactionAnnotationR:"+RelationshipTypes.ANNOTATIONS+"]-(interactionAnnotationN:GraphAnnotation)" +
             " OPTIONAL MATCH (interactionAnnotationN)-[interactionAnnotationTopicR:"+RelationshipTypes.TOPIC+"]-(interactionAnnotationTopicN:GraphCvTerm)" +
+            
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
+                   " interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as" +
+                   " interactionAnnotationNCollection,COLLECT(interactionAnnotationTopicR) as interactionAnnotationTopicRCollection" +
+                   " ,COLLECT(interactionAnnotationTopicN) as interactionAnnotationTopicNCollection" +
+
+            " OPTIONAL MATCH (binaryIEN)-[interactionConfidencesR:"+RelationshipTypes.CONFIDENCE+"]-(interactionConfidencesN:GraphConfidence)" +
+            " OPTIONAL MATCH (interactionConfidencesN)-[interactionConfidencesTypeR:"+RelationshipTypes.TYPE+"]-(interactionConfidencesTypeN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,COLLECT(interactionConfidencesR) as interactionConfidencesRCollection," +
+                   " COLLECT(interactionConfidencesN) as interactionConfidencesNCollection,COLLECT(interactionConfidencesTypeR) as" +
+                   " interactionConfidencesTypeRCollection,COLLECT(interactionConfidencesTypeN) as interactionConfidencesTypeNCollection" +
+
+            " OPTIONAL MATCH (binaryIEN)-[interactionParametersR:"+RelationshipTypes.PARAMETERS+"]-(interactionParametersN:GraphParameter)" +
+            " OPTIONAL MATCH (interactionParametersN)-[interactionParametersTypeR:"+RelationshipTypes.TYPE+"]-(interactionParametersTypeN:GraphCvTerm)" +
+            " OPTIONAL MATCH (interactionParametersN)-[interactionParametersUnitR:"+RelationshipTypes.UNIT+"]-(interactionParametersUnitN:GraphCvTerm)" +
+            " OPTIONAL MATCH (interactionParametersN)-[interactionParametersValueR:"+RelationshipTypes.VALUE+"]-(interactionParametersValueN:GraphParameterValue)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,COLLECT(interactionParametersR) as" +
+                   " interactionParametersRCollection ,COLLECT(interactionParametersN) as interactionParametersNCollection," +
+                   " COLLECT(interactionParametersTypeR) as interactionParametersTypeRCollection,COLLECT(interactionParametersTypeN)" +
+                   " as interactionParametersTypeNCollection,COLLECT(interactionParametersUnitR) as interactionParametersUnitRCollection," +
+                   " COLLECT(interactionParametersUnitN) as interactionParametersUnitNCollection,COLLECT(interactionParametersValueR)" +
+                   " as interactionParametersValueRCollection,COLLECT(interactionParametersValueN) as interactionParametersValueNCollection" +
+
             " OPTIONAL MATCH (binaryIEN)-[interactionTypeR:"+RelationshipTypes.INTERACTION_TYPE+"]-(interactionTypeN:GraphCvTerm)" +
-            " OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:"+RelationshipTypes.INTERACTION_DETECTION_METHOD+"]-" +
-                             "(interactionDetectionMethodN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN" +
+
+            " OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:"+RelationshipTypes.INTERACTION_DETECTION_METHOD+"]-(interactionDetectionMethodN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR" +
+
             " OPTIONAL MATCH (experimentN)-[hostOrganismR:"+RelationshipTypes.HOST_ORGANISM+"]-(hostOrganismN:GraphOrganism)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection," +
+                   " interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection," +
+                   " interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection," +
+                   " interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection," +
+                   " interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection," +
+                   " interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection," +
+                   " interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection," +
+                   " interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN," +
+                   " interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN" +
+
             " OPTIONAL MATCH (experimentN)-[expXrefsR:"+RelationshipTypes.XREFS+"]-(expXrefsN:GraphXref)" +
-            " OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(expXrefsDatabaseN:GraphCvTerm) " +
+            " OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(expXrefsDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN," +
+                   " interactionDetectionMethodR,hostOrganismR,hostOrganismN,COLLECT(expXrefsR) as expXrefsRCollection," +
+                   " COLLECT(expXrefsN) as expXrefsNCollection,COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection," +
+                   " COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection" +
+
             " OPTIONAL MATCH (publicationN)-[pubIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(pubIdentifiersN:GraphXref)" +
-            " OPTIONAL MATCH (publicationN)-[pubImexIdR:"+RelationshipTypes.IMEX_ID+"]-(pubImexIdN:GraphXref)" +
-            " OPTIONAL MATCH (pubImexIdN)-[pubImexIdDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubImexIdDatabaseN:GraphCvTerm)" +
             " OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubIdentifiersDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection," +
+                   " interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection," +
+                   " interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection," +
+                   " interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection," +
+                   " interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection," +
+                   " interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection," +
+                   " interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection," +
+                   " interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN," +
+                   " interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection," +
+                   " expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,COLLECT(pubIdentifiersR) as" +
+                   " pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection,COLLECT(pubIdentifiersDatabaseR)" +
+                   " as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN) as pubIdentifiersDatabaseNCollection" +
+
             " OPTIONAL MATCH (publicationN)-[pubXrefsR:"+RelationshipTypes.XREFS+"]-(pubXrefsN:GraphXref)" +
             " OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubXrefsDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection" +
+                   " ,interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
+                   " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
+                   " COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection,COLLECT(pubXrefsDatabaseR) as" +
+                   " pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection" +
+
+            " OPTIONAL MATCH (publicationN)-[pubImexIdR:"+RelationshipTypes.IMEX_ID+"]-(pubImexIdN:GraphXref)" +
+            " OPTIONAL MATCH (pubImexIdN)-[pubImexIdDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubImexIdDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
+                   " interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
+                   " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
+                   " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN" +
+
             " OPTIONAL MATCH (publicationN)-[pubSourceR:"+RelationshipTypes.SOURCE+"]-(pubSourceN:GraphSource)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection" +
+                   " ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN," +
+                   " interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection," +
+                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection," +
+                   " pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection," +
+                   " pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN " +
+
+            " OPTIONAL MATCH (binaryIEN)-[participantEvidenceR:"+RelationshipTypes.IE_PARTICIPANT+"]-(participantEvidenceN:GraphParticipantEvidence)" +
             " OPTIONAL MATCH (participantEvidenceN)-[expRoleR:"+RelationshipTypes.EXPERIMENTAL_ROLE+"]-(expRoleN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:"+RelationshipTypes.BIOLOGICAL_ROLE+"]-(bioRoleN:GraphCvTerm)" +
-            " OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:"+RelationshipTypes.IDENTIFICATION_METHOD+"]-" +
-                             "(identificationMethodN:GraphCvTerm)" +
+            " OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:"+RelationshipTypes.IDENTIFICATION_METHOD+"]-(identificationMethodN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresN:GraphFeatureEvidence)" +
             " OPTIONAL MATCH (featuresN)-[featuresTypeR:"+RelationshipTypes.TYPE+"]-(featuresTypeN:GraphCvTerm)" +
             " OPTIONAL MATCH (featuresN)-[featuresRangeR:"+RelationshipTypes.RANGES+"]-(featuresRangeN:GraphRange)" +
@@ -250,31 +629,80 @@ public class CypherQueries {
             " OPTIONAL MATCH (featuresRangeN)-[featuresRangeParticipantR:"+RelationshipTypes.PARTICIPANT+"]-(featuresRangeParticipantN:GraphEntity)" +
             " OPTIONAL MATCH (featuresRangeParticipantN)-[featuresRangeParticipantInteractorR:"+RelationshipTypes.INTERACTOR+"]-(featuresRangeParticipantInteractorN:GraphInteractor)" +
             " OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeStartPositionStatusN:GraphCvTerm)" +
-            " OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeEndPositionStatusN:GraphCvTerm) " +
+            " OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeEndPositionStatusN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:"+RelationshipTypes.STOICHIOMETRY+"]-(stoichiometryN:GraphStoichiometry)" +
+            " OPTIONAL MATCH (participantEvidenceN)-[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
             " OPTIONAL MATCH (interactorN)-[organismR:"+RelationshipTypes.ORGANISM+"]-(organismN:GraphOrganism)" +
             " OPTIONAL MATCH (interactorN)-[interactorTypeR:"+RelationshipTypes.INTERACTOR_TYPE+"]-(interactorTypeN:GraphCvTerm)" +
             " OPTIONAL MATCH (interactorN)-[preferredIdentifierR:"+RelationshipTypes.PREFERRED_IDENTIFIER+"]-(preferredIdentifierN:GraphXref)" +
-            " OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:"+RelationshipTypes.DATABASE+"]-" +
-                             "(preferredIdentifierDatabaseN:GraphCvTerm)" +
-            " RETURN binaryIEN,interactionTypeR,interactionTypeN,experimentN,experimentR,publicationN,publicationR,interactionDetectionMethodN,interactionDetectionMethodR," +
-                    "hostOrganismR,hostOrganismN,pubSourceR,pubSourceN,pubImexIdR,pubImexIdN,pubImexIdDatabaseR,pubImexIdDatabaseN,COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expXrefsDatabaseR)," +
-                    "COLLECT(expXrefsDatabaseN),COLLECT(pubIdentifiersR),COLLECT(pubIdentifiersN),COLLECT(pubIdentifiersDatabaseR),COLLECT(pubIdentifiersDatabaseN),COLLECT(pubXrefsR),COLLECT(pubXrefsN),COLLECT(pubXrefsDatabaseR),COLLECT(pubXrefsDatabaseN),COLLECT(participantEvidenceR),COLLECT(interactionIdentifiersR)," +
-                    "COLLECT(interactionIdentifiersN),COLLECT(interactionIdentifiersDatabaseR)," +
-                    "COLLECT(interactionXrefsR),COLLECT(interactionXrefsN),COLLECT(interactionXrefsDatabaseR),COLLECT(interactionAnnotationR),COLLECT(interactionAnnotationN)," +
-                    "COLLECT(interactionAnnotationTopicR),COLLECT(interactionAnnotationTopicN)," +
-                    "COLLECT(interactionXrefsDatabaseN),COLLECT(interactionIdentifiersDatabaseN)," +
-                    "COLLECT(participantEvidenceN),COLLECT(expRoleR),COLLECT(expRoleN),COLLECT(bioRoleR),COLLECT(bioRoleN)," +
-                    "COLLECT(interactorR),COLLECT(interactorN),COLLECT(organismR),COLLECT(organismN),COLLECT(interactorTypeR),COLLECT(interactorTypeN)," +
-                    "COLLECT(identificationMethodR),COLLECT(identificationMethodN),COLLECT(featuresR)," +
-                    "COLLECT(featuresN),COLLECT(featuresParticipantR),COLLECT(featuresParticipantN)," +
-                    "COLLECT(featuresParticipantInteractorR),COLLECT(featuresParticipantInteractorN),COLLECT(featuresTypeR),COLLECT(featuresTypeN),COLLECT(featuresRangeR)," +
-                    "COLLECT(featuresRangeN),COLLECT(featuresRangeParticipantR),COLLECT(featuresRangeParticipantN)," +
-                    "COLLECT(featuresRangeParticipantInteractorR),COLLECT(featuresRangeParticipantInteractorN),COLLECT(featuresRangeStartPositionR),COLLECT(featuresRangeStartPositionN)," +
-                    "COLLECT(featuresRangeEndPositionR),COLLECT(featuresRangeEndPositionN),COLLECT(featuresRangeStartPositionStatusR)," +
-                    "COLLECT(featuresRangeStartPositionStatusN),COLLECT(featuresRangeEndPositionStatusR),COLLECT(featuresRangeEndPositionStatusN),COLLECT(preferredIdentifierR)," +
-                    "COLLECT(preferredIdentifierN)," +
-                    "COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN),COLLECT(stoichiometryR)," +
-                    "COLLECT(stoichiometryN)";
+            " OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:"+RelationshipTypes.DATABASE+"]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN," +
+                   " interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
+                   " interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+                   " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                   " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                   " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+                   " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection," +
+                   " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+                   " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+                   " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
+                   " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
+                   " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR," +
+                   " pubImexIdDatabaseN,pubSourceR,pubSourceN,COLLECT(expRoleR) as expRoleRCollection,COLLECT(expRoleN) as expRoleNCollection," +
+                   " COLLECT(bioRoleR) as bioRoleRCollection,COLLECT(bioRoleN) as bioRoleNCollection," +
+                   " COLLECT(identificationMethodR) as identificationMethodRCollection,COLLECT(identificationMethodN) as identificationMethodNCollection," +
+                   " COLLECT(featuresR) as featuresRCollection,COLLECT(featuresN) as featuresNCollection," +
+                   " COLLECT(featuresParticipantR) as featuresParticipantRCollection," +
+                   " COLLECT(featuresParticipantN) as featuresParticipantNCollection,COLLECT(featuresParticipantInteractorR) as" +
+                   " featuresParticipantInteractorRCollection,COLLECT(featuresParticipantInteractorN) as featuresParticipantInteractorNCollection," +
+                   " COLLECT(featuresTypeR) as featuresTypeRCollection,COLLECT(featuresTypeN) as featuresTypeNCollection," +
+                   " COLLECT(featuresRangeR) as featuresRangeRCollection,COLLECT(featuresRangeN) as featuresRangeNCollection," +
+                   " COLLECT(featuresRangeParticipantR) as featuresRangeParticipantRCollection,COLLECT(featuresRangeParticipantN) as" +
+                   " featuresRangeParticipantNCollection,COLLECT(featuresRangeParticipantInteractorR) as featuresRangeParticipantInteractorRCollection," +
+                   " COLLECT(featuresRangeParticipantInteractorN) as featuresRangeParticipantInteractorNCollection,COLLECT(featuresRangeStartPositionR)" +
+                   " as featuresRangeStartPositionRCollection,COLLECT(featuresRangeStartPositionN) as featuresRangeStartPositionNCollection," +
+                   " COLLECT(featuresRangeEndPositionR) as featuresRangeEndPositionRCollection,COLLECT(featuresRangeEndPositionN) as" +
+                   " featuresRangeEndPositionNCollection,COLLECT(featuresRangeStartPositionStatusR) as featuresRangeStartPositionStatusRCollection," +
+                   " COLLECT(featuresRangeStartPositionStatusN) as featuresRangeStartPositionStatusNCollection,COLLECT(featuresRangeEndPositionStatusR) as" +
+                   " featuresRangeEndPositionStatusRCollection,COLLECT(featuresRangeEndPositionStatusN) as featuresRangeEndPositionStatusNCollection," +
+                   " COLLECT(stoichiometryR) as stoichiometryRCollection,COLLECT(stoichiometryN) as stoichiometryNCollection," +
+                   " COLLECT(organismR) as organismRCollection," +
+                   " COLLECT(organismN) as organismNCollection," +
+                   " COLLECT(interactorTypeR) as interactorTypeRCollection,COLLECT(interactorTypeN) as interactorTypeNCollection," +
+                   " COLLECT(preferredIdentifierR) as preferredIdentifierRCollection,COLLECT(preferredIdentifierN) as" +
+                   " preferredIdentifierNCollection,COLLECT(preferredIdentifierDatabaseR) as preferredIdentifierDatabaseRCollection," +
+                   " COLLECT(preferredIdentifierDatabaseN) as preferredIdentifierDatabaseNCollection," +
+                   " COLLECT(participantEvidenceR) as participantEvidenceRCollection," +
+                   " COLLECT(participantEvidenceN) as participantEvidenceNCollection," +
+                   " COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection" +
+
+            " RETURN publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,interactionIdentifiersNCollection,interactionIdentifiersRCollection,interactionIdentifiersDatabaseRCollection," +
+                   " interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection," +
+                   " interactionXrefsDatabaseNCollection,interactionAnnotationRCollection,interactionAnnotationNCollection," +
+                   " interactionAnnotationTopicRCollection,interactionAnnotationTopicNCollection,interactionConfidencesRCollection," +
+                   " interactionConfidencesNCollection,interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection," +
+                   " interactionParametersRCollection ,interactionParametersNCollection,interactionParametersTypeRCollection," +
+                   " interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection," +
+                   " interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN," +
+                   " interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection," +
+                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection," +
+                   " pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection," +
+                   " pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN,expRoleRCollection," +
+                   " expRoleNCollection,bioRoleRCollection,bioRoleNCollection,identificationMethodRCollection,identificationMethodNCollection," +
+                   " featuresRCollection ,featuresNCollection,featuresParticipantRCollection,featuresParticipantNCollection," +
+                   " featuresParticipantInteractorRCollection,featuresParticipantInteractorNCollection,featuresTypeRCollection,featuresTypeNCollection,featuresRangeRCollection," +
+                   " featuresRangeNCollection,featuresRangeParticipantRCollection,featuresRangeParticipantNCollection," +
+                   " featuresRangeParticipantInteractorRCollection,featuresRangeParticipantInteractorNCollection," +
+                   " featuresRangeStartPositionRCollection,featuresRangeStartPositionNCollection,featuresRangeEndPositionRCollection," +
+                   " featuresRangeEndPositionNCollection,featuresRangeStartPositionStatusRCollection,featuresRangeStartPositionStatusNCollection," +
+                   " featuresRangeEndPositionStatusRCollection,featuresRangeEndPositionStatusNCollection, stoichiometryRCollection," +
+                   " stoichiometryNCollection,organismRCollection,organismNCollection,interactorTypeRCollection,interactorTypeNCollection," +
+                   " preferredIdentifierRCollection,preferredIdentifierNCollection, preferredIdentifierDatabaseRCollection," +
+                   " preferredIdentifierDatabaseNCollection,participantEvidenceRCollection,participantEvidenceNCollection," +
+                   " interactorRCollection,interactorNCollection,binaryIEN limit 1";
+
+
 
 }
