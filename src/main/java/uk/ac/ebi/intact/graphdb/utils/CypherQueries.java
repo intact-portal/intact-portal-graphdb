@@ -157,7 +157,7 @@ public class CypherQueries {
 
     /*
     * Equivalent Query String :
-         MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10048599' })
+MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10048599' })
          OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:identifiers]-(interactionIdentifiersN:GraphXref)
          OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:database]-(interactionIdentifiersDatabaseN:GraphCvTerm)
 
@@ -266,6 +266,25 @@ public class CypherQueries {
               COLLECT(expXrefsN) as expXrefsNCollection,COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection,
               COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection
 
+         OPTIONAL MATCH (experimentN)-[experimentAnnotationR:annotations]-(experimentAnnotationN:GraphAnnotation)
+         OPTIONAL MATCH (experimentAnnotationN)-[experimentAnnotationTopicR:topic]-(experimentAnnotationTopicN:GraphCvTerm)
+
+         WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection
+              ,interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,
+              interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection,
+              interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection,
+              interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection,
+              interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ,
+              interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection,
+              interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
+              interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,
+              interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,
+              expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
+              COLLECT(experimentAnnotationR) as experimentAnnotationRCollection,COLLECT(experimentAnnotationN) as
+              experimentAnnotationNCollection,COLLECT(experimentAnnotationTopicR) as experimentAnnotationTopicRCollection,
+              COLLECT(experimentAnnotationTopicN) as experimentAnnotationTopicNCollection
+
+
          OPTIONAL MATCH (publicationN)-[pubIdentifiersR:identifiers]-(pubIdentifiersN:GraphXref)
          OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:database]-(pubIdentifiersDatabaseN:GraphCvTerm)
 
@@ -279,9 +298,11 @@ public class CypherQueries {
               interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection,
               interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN,
               interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,
-              expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,COLLECT(pubIdentifiersR) as
-              pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection,COLLECT(pubIdentifiersDatabaseR)
-              as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN) as pubIdentifiersDatabaseNCollection
+              expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection,
+              experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,
+              COLLECT(pubIdentifiersR) as pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection,
+              COLLECT(pubIdentifiersDatabaseR) as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN)
+              as pubIdentifiersDatabaseNCollection
 
          OPTIONAL MATCH (publicationN)-[pubXrefsR:xrefs]-(pubXrefsN:GraphXref)
          OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:database]-(pubXrefsDatabaseN:GraphCvTerm)
@@ -296,9 +317,11 @@ public class CypherQueries {
               interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
               interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
               hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
-              pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
-              COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection,COLLECT(pubXrefsDatabaseR) as
-              pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection
+              pubIdentifiersRCollection,pubIdentifiersNCollection,experimentAnnotationRCollection,
+              experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,
+              pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,COLLECT(pubXrefsR) as pubXrefsRCollection,
+              COLLECT(pubXrefsN) as pubXrefsNCollection,COLLECT(pubXrefsDatabaseR) as pubXrefsDatabaseRCollection,
+              COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection
 
          OPTIONAL MATCH (publicationN)-[pubImexIdR:imexId]-(pubImexIdN:GraphXref)
          OPTIONAL MATCH (pubImexIdN)-[pubImexIdDatabaseR:database]-(pubImexIdDatabaseN:GraphCvTerm)
@@ -313,8 +336,10 @@ public class CypherQueries {
               interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
               interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
               hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
-              pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
-              pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN
+              pubIdentifiersRCollection,pubIdentifiersNCollection,experimentAnnotationRCollection,
+              experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,
+              pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,
+              pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN
 
           OPTIONAL MATCH (publicationN)-[pubSourceR:source]-(pubSourceN:GraphSource)
 
@@ -329,7 +354,9 @@ public class CypherQueries {
                interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
                interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,
                interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,
-               expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,
+               expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection,
+               experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,
+               pubIdentifiersRCollection,pubIdentifiersNCollection,
                pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,
                pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN
 
@@ -367,6 +394,7 @@ public class CypherQueries {
                interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection,
                interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR,
                hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,
+               experimentAnnotationRCollection,experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,
                pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,
                pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,
                pubImexIdDatabaseN,pubSourceR,pubSourceN,COLLECT(expRoleR) as expRoleRCollection,COLLECT(expRoleN) as expRoleNCollection,
@@ -408,7 +436,9 @@ public class CypherQueries {
                  interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection,
                  interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN,
                  interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,
-                 expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,
+                 expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection,experimentAnnotationNCollection,
+                 experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,pubIdentifiersRCollection,
+                 pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,
                  pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,
                  pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN,expRoleRCollection,
                  expRoleNCollection,bioRoleRCollection,bioRoleNCollection,identificationMethodRCollection,identificationMethodNCollection,
@@ -545,6 +575,24 @@ public class CypherQueries {
                    " COLLECT(expXrefsN) as expXrefsNCollection,COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection," +
                    " COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection" +
 
+            " OPTIONAL MATCH (experimentN)-[experimentAnnotationR:annotations]-(experimentAnnotationN:GraphAnnotation)" +
+            " OPTIONAL MATCH (experimentAnnotationN)-[experimentAnnotationTopicR:topic]-(experimentAnnotationTopicN:GraphCvTerm)"+
+
+            " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
+            " interactionIdentifiersDatabaseRCollection,interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection," +
+            " interactionXrefsNCollection,interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+            " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+            " interactionAnnotationTopicNCollection,interactionConfidencesRCollection,interactionConfidencesNCollection," +
+            " interactionConfidencesTypeRCollection,interactionConfidencesTypeNCollection,interactionParametersRCollection ," +
+            " interactionParametersNCollection,interactionParametersTypeRCollection,interactionParametersTypeNCollection," +
+            " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
+            " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN," +
+            " interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection," +
+            " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+            " COLLECT(experimentAnnotationR) as experimentAnnotationRCollection,COLLECT(experimentAnnotationN) as" +
+            " experimentAnnotationNCollection,COLLECT(experimentAnnotationTopicR) as experimentAnnotationTopicRCollection," +
+            " COLLECT(experimentAnnotationTopicN) as experimentAnnotationTopicNCollection"+
+
             " OPTIONAL MATCH (publicationN)-[pubIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]-(pubIdentifiersN:GraphXref)" +
             " OPTIONAL MATCH (pubIdentifiersN)-[pubIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubIdentifiersDatabaseN:GraphCvTerm)" +
 
@@ -559,9 +607,11 @@ public class CypherQueries {
                    " interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection," +
                    " interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN," +
                    " interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection," +
-                   " expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,COLLECT(pubIdentifiersR) as" +
-                   " pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection,COLLECT(pubIdentifiersDatabaseR)" +
-                   " as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN) as pubIdentifiersDatabaseNCollection" +
+                   " expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection," +
+                   " experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection," +
+                   " COLLECT(pubIdentifiersR) as pubIdentifiersRCollection,COLLECT(pubIdentifiersN) as pubIdentifiersNCollection," +
+                   " COLLECT(pubIdentifiersDatabaseR) as pubIdentifiersDatabaseRCollection,COLLECT(pubIdentifiersDatabaseN)" +
+                   " as pubIdentifiersDatabaseNCollection" +
 
             " OPTIONAL MATCH (publicationN)-[pubXrefsR:"+RelationshipTypes.XREFS+"]-(pubXrefsN:GraphXref)" +
             " OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:"+RelationshipTypes.DATABASE+"]-(pubXrefsDatabaseN:GraphCvTerm)" +
@@ -577,6 +627,7 @@ public class CypherQueries {
                    " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
                    " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
                    " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " experimentAnnotationRCollection,experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,"+
                    " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
                    " COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection,COLLECT(pubXrefsDatabaseR) as" +
                    " pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection" +
@@ -595,6 +646,7 @@ public class CypherQueries {
                    " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
                    " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
                    " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " experimentAnnotationRCollection,experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,"+
                    " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
                    " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN" +
 
@@ -611,7 +663,8 @@ public class CypherQueries {
                    " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
                    " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN," +
                    " interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection," +
-                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection," +
+                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection,experimentAnnotationNCollection," +
+                   " experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection," +
                    " pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection," +
                    " pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN " +
 
@@ -648,6 +701,7 @@ public class CypherQueries {
                    " interactionParametersUnitRCollection,interactionParametersUnitNCollection,interactionParametersValueRCollection," +
                    " interactionParametersValueNCollection,interactionTypeR,interactionTypeN,interactionDetectionMethodN,interactionDetectionMethodR," +
                    " hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection,expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                   " experimentAnnotationRCollection,experimentAnnotationNCollection,experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,"+
                    " pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection," +
                    " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection,pubImexIdDatabaseR," +
                    " pubImexIdDatabaseN,pubSourceR,pubSourceN,COLLECT(expRoleR) as expRoleRCollection,COLLECT(expRoleN) as expRoleNCollection," +
@@ -687,8 +741,9 @@ public class CypherQueries {
                    " interactionParametersTypeNCollection, interactionParametersUnitRCollection,interactionParametersUnitNCollection," +
                    " interactionParametersValueRCollection,interactionParametersValueNCollection,interactionTypeR,interactionTypeN," +
                    " interactionDetectionMethodN,interactionDetectionMethodR,hostOrganismR,hostOrganismN,expXrefsRCollection,expXrefsNCollection," +
-                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection,pubIdentifiersDatabaseRCollection," +
-                   " pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection," +
+                   " expXrefsDatabaseRCollection,expXrefsDatabaseNCollection,experimentAnnotationRCollection,experimentAnnotationNCollection," +
+                   " experimentAnnotationTopicRCollection,experimentAnnotationTopicNCollection,pubIdentifiersRCollection,pubIdentifiersNCollection," +
+                   " pubIdentifiersDatabaseRCollection,pubIdentifiersDatabaseNCollection,pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection," +
                    " pubXrefsDatabaseNCollection,pubImexIdDatabaseR,pubImexIdDatabaseN,pubSourceR,pubSourceN,expRoleRCollection," +
                    " expRoleNCollection,bioRoleRCollection,bioRoleNCollection,identificationMethodRCollection,identificationMethodNCollection," +
                    " featuresRCollection ,featuresNCollection,featuresParticipantRCollection,featuresParticipantNCollection," +
