@@ -366,6 +366,9 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
          OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:identificationMethods]-(identificationMethodN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[featuresR:PARTICIPANT_FEATURE]-(featuresN:GraphFeatureEvidence)
          OPTIONAL MATCH (featuresN)-[featuresTypeR:type]-(featuresTypeN:GraphCvTerm)
+		 OPTIONAL MATCH (featuresN)-[featuresRoleR:role]-(featuresRoleN:GraphCvTerm)
+		 OPTIONAL MATCH (featuresN)-[featureLinkedFeaturesR:linkedFeatures]-(featureLinkedFeaturesN:GraphFeatureEvidence)
+		 OPTIONAL MATCH (featureLinkedFeaturesN)-[featureLinkedFeaturesLFR:linkedFeatures]-(featureLinkedFeaturesLFN:GraphFeatureEvidence)
          OPTIONAL MATCH (featuresN)-[featuresRangeR:ranges]-(featuresRangeN:GraphRange)
 	     OPTIONAL MATCH (featuresN)-[featuresParticipantR:PARTICIPANT_FEATURE]-(featuresParticipantN:GraphExperimentalEntity)
 	     OPTIONAL MATCH (featuresParticipantN)-[featuresParticipantInteractorR:interactor]-(featuresParticipantInteractorN:GraphInteractor)
@@ -376,8 +379,19 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
          OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:status]-(featuresRangeStartPositionStatusN:GraphCvTerm)
          OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:status]-(featuresRangeEndPositionStatusN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:stoichiometry]-(stoichiometryN:GraphStoichiometry)
+         OPTIONAL MATCH (participantEvidenceN)-[participantExpressedInR:expressedIn]-(participantExpressedInN:GraphOrganism)
+         OPTIONAL MATCH (participantExpressedInN)-[participantExpressedInCellTypeR:cellType]-(participantExpressedInCellTypeN:GraphCvTerm)
+         OPTIONAL MATCH (participantExpressedInCellTypeN)-[participantExpressedInCellTypeIdentifiersR:identifiers]-(participantExpressedInCellTypeIdentifiersN:GraphXref)
+         OPTIONAL MATCH (participantExpressedInCellTypeIdentifiersN)-[participantExpressedInCellTypeIdentifiersDatabaseR:database]
+                        -(participantExpressedInCellTypeIdentifiersDatabaseN:GraphCvTerm)
+		 OPTIONAL MATCH (participantEvidenceN)-[participantParametersR:parameters]-(participantParametersN:GraphParameter)
+		 OPTIONAL MATCH (participantParametersN)-[participantParametersTypeR:type]-(participantParametersTypeN:GraphCvTerm)
+		 OPTIONAL MATCH (participantParametersN)-[participantParametersUnitR:unit]-(participantParametersUnitN:GraphCvTerm)
+		 OPTIONAL MATCH (participantParametersN)-[participantParametersValueR:value]-(participantParametersValueN:GraphParameterValue)
+	     OPTIONAL MATCH (participantEvidenceN)-[participantConfidencesR:confidences]-(participantConfidencesN:GraphConfidence)
+		 OPTIONAL MATCH (participantConfidencesN)-[participantConfidencesTypeR:type]-(participantConfidencesTypeN:GraphCvTerm)
          OPTIONAL MATCH (participantEvidenceN)-[interactorR:interactor]-(interactorN:GraphInteractor)
-         OPTIONAL MATCH (interactorN)-[organismR:organism]-(organismN:GraphOrganism)
+		 OPTIONAL MATCH (interactorN)-[organismR:organism]-(organismN:GraphOrganism)
          OPTIONAL MATCH (interactorN)-[interactorTypeR:interactorType]-(interactorTypeN:GraphCvTerm)
          OPTIONAL MATCH (interactorN)-[preferredIdentifierR:preferredIdentifier]-(preferredIdentifierN:GraphXref)
          OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:database]-(preferredIdentifierDatabaseN:GraphCvTerm)
@@ -422,7 +436,25 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                COLLECT(preferredIdentifierDatabaseN) as preferredIdentifierDatabaseNCollection,
                COLLECT(participantEvidenceR) as participantEvidenceRCollection,
                COLLECT(participantEvidenceN) as participantEvidenceNCollection,
-               COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection
+               COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection,
+               COLLECT(featuresRoleR) as featuresRoleRCollection,COLLECT(featuresRoleN) as featuresRoleNCollection,
+               COLLECT(featureLinkedFeaturesR) as featureLinkedFeaturesRCollection,COLLECT(featureLinkedFeaturesN) as
+               featureLinkedFeaturesNCollection,COLLECT(participantExpressedInR) as participantExpressedInRCollection,
+               COLLECT(participantExpressedInN) as participantExpressedInNCollection,COLLECT(participantParametersR) as
+               participantParametersRCollection,COLLECT(participantParametersN) as participantParametersNCollection,
+               COLLECT(participantParametersTypeR) as participantParametersTypeRCollection,COLLECT(participantParametersTypeN)
+               as participantParametersTypeNCollection,COLLECT(participantParametersUnitR) as participantParametersUnitRCollection,
+               COLLECT(participantParametersUnitN) as participantParametersUnitNCollection,COLLECT(participantParametersValueR)
+               as participantParametersValueRCollection,COLLECT(participantParametersValueN) as participantParametersValueNCollection,
+               COLLECT(participantConfidencesR) as participantConfidencesRCollection,COLLECT(participantConfidencesN) as
+               participantConfidencesNCollection,COLLECT(participantConfidencesTypeR) as participantConfidencesTypeRCollection,
+               COLLECT(participantConfidencesTypeN) as participantConfidencesTypeNCollection,COLLECT(participantExpressedInCellTypeR)
+               as participantExpressedInCellTypeRCollection,COLLECT(participantExpressedInCellTypeN) as participantExpressedInCellTypeNCollection,
+               COLLECT(participantExpressedInCellTypeIdentifiersR) as participantExpressedInCellTypeIdentifiersRCollection,
+               COLLECT(participantExpressedInCellTypeIdentifiersN) as participantExpressedInCellTypeIdentifiersNCollection,
+               COLLECT(participantExpressedInCellTypeIdentifiersDatabaseR) as participantExpressedInCellTypeIdentifiersDatabaseRCollection,
+               COLLECT(participantExpressedInCellTypeIdentifiersDatabaseN) as participantExpressedInCellTypeIdentifiersDatabaseNCollection,
+               COLLECT(featureLinkedFeaturesLFR) as featureLinkedFeaturesLFR,COLLECT(featureLinkedFeaturesLFN) as featureLinkedFeaturesLFN
 
 
 
@@ -452,7 +484,17 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                  stoichiometryNCollection,organismRCollection,organismNCollection,interactorTypeRCollection,interactorTypeNCollection,
                  preferredIdentifierRCollection,preferredIdentifierNCollection, preferredIdentifierDatabaseRCollection,
                  preferredIdentifierDatabaseNCollection,participantEvidenceRCollection,participantEvidenceNCollection,
-                 interactorRCollection,interactorNCollection,binaryIEN limit 1
+                 interactorRCollection,interactorNCollection,featuresRoleRCollection,featuresRoleNCollection,featureLinkedFeaturesRCollection,
+                 featureLinkedFeaturesNCollection,participantExpressedInRCollection,participantExpressedInNCollection,
+                 participantParametersRCollection,participantParametersNCollection,participantParametersTypeRCollection,
+                 participantParametersTypeNCollection,participantParametersUnitRCollection,participantParametersUnitNCollection,
+                 participantParametersValueRCollection,participantParametersValueNCollection,participantConfidencesRCollection,
+                 participantConfidencesNCollection,participantConfidencesTypeRCollection,participantConfidencesTypeNCollection,
+                 participantExpressedInCellTypeRCollection,participantExpressedInCellTypeNCollection,participantExpressedInCellTypeIdentifiersRCollection,
+                 participantExpressedInCellTypeIdentifiersNCollection,participantExpressedInCellTypeIdentifiersDatabaseRCollection,
+                 participantExpressedInCellTypeIdentifiersDatabaseNCollection,featureLinkedFeaturesLFR,featureLinkedFeaturesLFN,binaryIEN limit 1
+
+
 
     **/
     public static final String GET_INTERACTION_DETAILS_FOR_MIJSON=
@@ -674,6 +716,9 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
             " OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:"+RelationshipTypes.IDENTIFICATION_METHOD+"]-(identificationMethodN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[featuresR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresN:GraphFeatureEvidence)" +
             " OPTIONAL MATCH (featuresN)-[featuresTypeR:"+RelationshipTypes.TYPE+"]-(featuresTypeN:GraphCvTerm)" +
+            " OPTIONAL MATCH (featuresN)-[featuresRoleR:"+RelationshipTypes.ROLE+"]-(featuresRoleN:GraphCvTerm)" +
+            " OPTIONAL MATCH (featuresN)-[featureLinkedFeaturesR:"+RelationshipTypes.LINKED_FEATURES+"]-(featureLinkedFeaturesN:GraphFeatureEvidence)" +
+            " OPTIONAL MATCH (featureLinkedFeaturesN)-[featureLinkedFeaturesLFR:"+RelationshipTypes.LINKED_FEATURES+"]-(featureLinkedFeaturesLFN:GraphFeatureEvidence)"+
             " OPTIONAL MATCH (featuresN)-[featuresRangeR:"+RelationshipTypes.RANGES+"]-(featuresRangeN:GraphRange)" +
             " OPTIONAL MATCH (featuresN)-[featuresParticipantR:"+RelationshipTypes.PARTICIPANT_FEATURE+"]-(featuresParticipantN:GraphExperimentalEntity)" +
             " OPTIONAL MATCH (featuresParticipantN)-[featuresParticipantInteractorR:"+RelationshipTypes.INTERACTOR+"]-(featuresParticipantInteractorN:GraphInteractor)" +
@@ -684,6 +729,18 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
             " OPTIONAL MATCH (featuresRangeStartPositionN)-[featuresRangeStartPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeStartPositionStatusN:GraphCvTerm)" +
             " OPTIONAL MATCH (featuresRangeEndPositionN)-[featuresRangeEndPositionStatusR:"+RelationshipTypes.STATUS+"]-(featuresRangeEndPositionStatusN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[stoichiometryR:"+RelationshipTypes.STOICHIOMETRY+"]-(stoichiometryN:GraphStoichiometry)" +
+            " OPTIONAL MATCH (participantEvidenceN)-[participantExpressedInR:"+RelationshipTypes.EXPRESSED_IN+"]-(participantExpressedInN:GraphOrganism)" +
+            " OPTIONAL MATCH (participantExpressedInN)-[participantExpressedInCellTypeR:"+RelationshipTypes.CELL_TYPE+"]-(participantExpressedInCellTypeN:GraphCvTerm)"+
+            " OPTIONAL MATCH (participantExpressedInCellTypeN)-[participantExpressedInCellTypeIdentifiersR:"+RelationshipTypes.IDENTIFIERS+"]" +
+                             "-(participantExpressedInCellTypeIdentifiersN:GraphXref)" +
+            " OPTIONAL MATCH (participantExpressedInCellTypeIdentifiersN)-[participantExpressedInCellTypeIdentifiersDatabaseR:"+RelationshipTypes.DATABASE+"]" +
+                             "-(participantExpressedInCellTypeIdentifiersDatabaseN:GraphCvTerm)"+
+            " OPTIONAL MATCH (participantEvidenceN)-[participantParametersR:"+RelationshipTypes.PARAMETERS+"]-(participantParametersN:GraphParameter)" +
+            " OPTIONAL MATCH (participantParametersN)-[participantParametersTypeR:"+RelationshipTypes.TYPE+"]-(participantParametersTypeN:GraphCvTerm)" +
+            " OPTIONAL MATCH (participantParametersN)-[participantParametersUnitR:"+RelationshipTypes.UNIT+"]-(participantParametersUnitN:GraphCvTerm)" +
+            " OPTIONAL MATCH (participantParametersN)-[participantParametersValueR:"+RelationshipTypes.VALUE+"]-(participantParametersValueN:GraphParameterValue)" +
+            " OPTIONAL MATCH (participantEvidenceN)-[participantConfidencesR:"+RelationshipTypes.CONFIDENCE+"]-(participantConfidencesN:GraphConfidence)" +
+            " OPTIONAL MATCH (participantConfidencesN)-[participantConfidencesTypeR:"+RelationshipTypes.TYPE+"]-(participantConfidencesTypeN:GraphCvTerm)" +
             " OPTIONAL MATCH (participantEvidenceN)-[interactorR:"+RelationshipTypes.INTERACTOR+"]-(interactorN:GraphInteractor)" +
             " OPTIONAL MATCH (interactorN)-[organismR:"+RelationshipTypes.ORGANISM+"]-(organismN:GraphOrganism)" +
             " OPTIONAL MATCH (interactorN)-[interactorTypeR:"+RelationshipTypes.INTERACTOR_TYPE+"]-(interactorTypeN:GraphCvTerm)" +
@@ -730,7 +787,25 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                    " COLLECT(preferredIdentifierDatabaseN) as preferredIdentifierDatabaseNCollection," +
                    " COLLECT(participantEvidenceR) as participantEvidenceRCollection," +
                    " COLLECT(participantEvidenceN) as participantEvidenceNCollection," +
-                   " COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection" +
+                   " COLLECT(interactorR) as interactorRCollection ,COLLECT(interactorN) as interactorNCollection," +
+                   " COLLECT(featuresRoleR) as featuresRoleRCollection,COLLECT(featuresRoleN) as featuresRoleNCollection," +
+                   " COLLECT(featureLinkedFeaturesR) as featureLinkedFeaturesRCollection,COLLECT(featureLinkedFeaturesN) as" +
+                   " featureLinkedFeaturesNCollection,COLLECT(participantExpressedInR) as participantExpressedInRCollection," +
+                   " COLLECT(participantExpressedInN) as participantExpressedInNCollection,COLLECT(participantParametersR) as" +
+                   " participantParametersRCollection,COLLECT(participantParametersN) as participantParametersNCollection," +
+                   " COLLECT(participantParametersTypeR) as participantParametersTypeRCollection,COLLECT(participantParametersTypeN)" +
+                   " as participantParametersTypeNCollection,COLLECT(participantParametersUnitR) as participantParametersUnitRCollection," +
+                   " COLLECT(participantParametersUnitN) as participantParametersUnitNCollection,COLLECT(participantParametersValueR)" +
+                   " as participantParametersValueRCollection,COLLECT(participantParametersValueN) as participantParametersValueNCollection," +
+                   " COLLECT(participantConfidencesR) as participantConfidencesRCollection,COLLECT(participantConfidencesN) as" +
+                   " participantConfidencesNCollection,COLLECT(participantConfidencesTypeR) as participantConfidencesTypeRCollection," +
+                   " COLLECT(participantConfidencesTypeN) as participantConfidencesTypeNCollection,COLLECT(participantExpressedInCellTypeR)" +
+                   " as participantExpressedInCellTypeRCollection,COLLECT(participantExpressedInCellTypeN) as participantExpressedInCellTypeNCollection," +
+                   " COLLECT(participantExpressedInCellTypeIdentifiersR) as participantExpressedInCellTypeIdentifiersRCollection," +
+                   " COLLECT(participantExpressedInCellTypeIdentifiersN) as participantExpressedInCellTypeIdentifiersNCollection," +
+                   " COLLECT(participantExpressedInCellTypeIdentifiersDatabaseR) as participantExpressedInCellTypeIdentifiersDatabaseRCollection," +
+                   " COLLECT(participantExpressedInCellTypeIdentifiersDatabaseN) as participantExpressedInCellTypeIdentifiersDatabaseNCollection," +
+                   " COLLECT(featureLinkedFeaturesLFR) as featureLinkedFeaturesLFR,COLLECT(featureLinkedFeaturesLFN) as featureLinkedFeaturesLFN" +
 
             " RETURN publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,interactionIdentifiersNCollection,interactionIdentifiersRCollection,interactionIdentifiersDatabaseRCollection," +
                    " interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection," +
@@ -756,7 +831,15 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                    " stoichiometryNCollection,organismRCollection,organismNCollection,interactorTypeRCollection,interactorTypeNCollection," +
                    " preferredIdentifierRCollection,preferredIdentifierNCollection, preferredIdentifierDatabaseRCollection," +
                    " preferredIdentifierDatabaseNCollection,participantEvidenceRCollection,participantEvidenceNCollection," +
-                   " interactorRCollection,interactorNCollection,binaryIEN limit 1";
+                   " interactorRCollection,interactorNCollection,featuresRoleRCollection,featuresRoleNCollection,featureLinkedFeaturesRCollection," +
+                   " featureLinkedFeaturesNCollection,participantExpressedInRCollection,participantExpressedInNCollection," +
+                   " participantParametersRCollection,participantParametersNCollection,participantParametersTypeRCollection," +
+                   " participantParametersTypeNCollection,participantParametersUnitRCollection,participantParametersUnitNCollection," +
+                   " participantParametersValueRCollection,participantParametersValueNCollection,participantConfidencesRCollection," +
+                   " participantConfidencesNCollection,participantConfidencesTypeRCollection,participantConfidencesTypeNCollection," +
+                   " participantExpressedInCellTypeRCollection,participantExpressedInCellTypeNCollection,participantExpressedInCellTypeIdentifiersRCollection," +
+                   " participantExpressedInCellTypeIdentifiersNCollection,participantExpressedInCellTypeIdentifiersDatabaseRCollection," +
+                   " participantExpressedInCellTypeIdentifiersDatabaseNCollection,featureLinkedFeaturesLFR,featureLinkedFeaturesLFN,binaryIEN limit 1";
 
 
 

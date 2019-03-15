@@ -61,7 +61,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
 
-    @Relationship(type = RelationshipTypes.LINKED_FEATURES)
+    @Relationship(type = RelationshipTypes.LINKED_FEATURES,direction = Relationship.UNDIRECTED)
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
     @Transient
