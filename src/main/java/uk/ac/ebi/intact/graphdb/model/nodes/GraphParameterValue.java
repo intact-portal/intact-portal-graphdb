@@ -38,8 +38,8 @@ public class GraphParameterValue extends ParameterValue {
        super(new BigDecimal(0));
     }
 
-    public GraphParameterValue(BigDecimal factor, short base, short exponent) {
-        super(factor, base, exponent);
+    public GraphParameterValue(BigDecimal factorC, short baseC, short exponentC) {
+        super(factorC, baseC, exponentC);
         setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
@@ -98,7 +98,7 @@ public class GraphParameterValue extends ParameterValue {
         }
 
         int hashcode = 31;
-        hashcode = 31*hashcode + (this.getFactor().multiply(BigDecimal.valueOf(Math.pow(this.getBase(), this.getExponent())))).hashCode();
+        hashcode = 31*hashcode + (getBase() != 0 && getFactor().doubleValue() != 0 ? getFactor().toString()+(getExponent() != 0 ? "x"+getBase()+"^("+getExponent()+")" : "") : "0").hashCode();
 
         return hashcode;
     }
@@ -113,30 +113,6 @@ public class GraphParameterValue extends ParameterValue {
 
     public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
-
-    public short getBase() {
-        return base;
-    }
-
-    public void setBase(short base) {
-        this.base = base;
-    }
-
-    public BigDecimal getFactor() {
-        return factor;
-    }
-
-    public void setFactor(BigDecimal factor) {
-        this.factor = factor;
-    }
-
-    public short getExponent() {
-        return exponent;
-    }
-
-    public void setExponent(short exponent) {
-        this.exponent = exponent;
     }
 
     public String toString(){
