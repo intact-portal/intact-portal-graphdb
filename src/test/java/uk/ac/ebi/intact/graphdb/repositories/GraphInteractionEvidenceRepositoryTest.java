@@ -19,6 +19,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -56,7 +57,7 @@ public class GraphInteractionEvidenceRepositoryTest {
 
     @Test
     public void findByInteractionAcForMiJson() {
-        GraphInteractionEvidence graphInteractionEvidence = null;
+        GraphInteractionEvidence graphInteractionEvidence;
         String ac1 = "EBI-10052707";
         Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional1 = graphInteractionEvidenceRepository.
                 findByInteractionAcForMiJson(ac1);
@@ -76,11 +77,13 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         String imexIdOfInteraction = "IM-23527-10";
         String intactIdOfInteraction = "EBI-10052707";
-        Collection<Xref> ieImexIdXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(graphInteractionEvidence.getXrefs(), Xref.IMEX_MI, "imex", "IM-23527-10");
+        Collection<Xref> ieImexIdXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(graphInteractionEvidence.getXrefs(),
+                Xref.IMEX_MI, "imex", "IM-23527-10");
         Assert.assertNotNull("Interaction Imex Id :" + imexIdOfInteraction + " Identifier not present", ieImexIdXrefs);
         Assert.assertEquals("Interaction Imex Id count is wrong", 1, ieImexIdXrefs.size());
 
-        Collection<Xref> ieIntactXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(graphInteractionEvidence.getIdentifiers(), "MI:0469", Constants.INTACT_DB, "EBI-10052707");
+        Collection<Xref> ieIntactXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(graphInteractionEvidence.getIdentifiers(),
+                "MI:0469", Constants.INTACT_DB, "EBI-10052707");
         Assert.assertNotNull("Interaction Intact Id :" + intactIdOfInteraction + " Identifier not present", ieIntactXrefs);
         Assert.assertEquals("Interaction Intact Id count is wrong", 1, ieIntactXrefs.size());
         Assert.assertNotNull("Interaction Annotations is null", graphInteractionEvidence.getAnnotations());
@@ -179,16 +182,19 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Publication Identifiers is null", publication.getIdentifiers());
         Assert.assertEquals("Publication Identifiers count is wrong", 2, publication.getIdentifiers().size());
 
-        Collection<Xref> pubmedXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(publication.getIdentifiers(), Xref.PUBMED_MI, Constants.PUBMED_DB, "24872509");
+        Collection<Xref> pubmedXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(publication.getIdentifiers(),
+                Xref.PUBMED_MI, Constants.PUBMED_DB, "24872509");
         Assert.assertNotNull("Publication pubmed identifier is null", pubmedXrefs);
         Assert.assertEquals("Publication pubmed identifier count is wrong", 1, pubmedXrefs.size());
 
-        Collection<Xref> intactXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(publication.getIdentifiers(), "MI:0469", Constants.INTACT_DB, "EBI-9836453");
+        Collection<Xref> intactXrefs = XrefUtils.collectAllXrefsHavingDatabaseAndId(publication.getIdentifiers(),
+                "MI:0469", Constants.INTACT_DB, "EBI-9836453");
         Assert.assertNotNull("Publication intact identifier is null", intactXrefs);
         Assert.assertEquals("Publication intact identifier count is wrong", 1, intactXrefs.size());
         Assert.assertEquals("Publication Imex id is wrong", "IM-23527", publication.getImexId());
         Assert.assertNotNull("Publication Source is null", publication.getSource());
-        Assert.assertEquals("Publication Source is wrong", "MINT, Dpt of Biology, University of Rome Tor Vergata", publication.getSource().getFullName());
+        Assert.assertEquals("Publication Source is wrong", "MINT, Dpt of Biology, University of Rome Tor Vergata",
+                publication.getSource().getFullName());
         Assert.assertEquals("Publication Source Mi Identifier is wrong", "MI:0471", publication.getSource().getMIIdentifier());
 
         // for interaction parameters checking
@@ -196,10 +202,10 @@ public class GraphInteractionEvidenceRepositoryTest {
         Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional2 = graphInteractionEvidenceRepository.
                 findByInteractionAcForMiJson(ac2);
 
-        Assert.assertTrue("GraphInteractionEvidence is not present ", graphInteractionEvidenceOptional2.isPresent());
+        Assert.assertTrue("GraphInteractionEvidence 2 is not present ", graphInteractionEvidenceOptional2.isPresent());
 
         GraphInteractionEvidence graphInteractionEvidence2 = graphInteractionEvidenceOptional2.get();
-        Assert.assertEquals("GraphInteractionEvidence is not correct", ac2, graphInteractionEvidence2.getAc());
+        Assert.assertEquals("GraphInteractionEvidence 2 is not correct", ac2, graphInteractionEvidence2.getAc());
         Assert.assertNotNull("Interaction Evidence Parameters is null", graphInteractionEvidence2.getParameters());
         Assert.assertEquals("Interaction Evidence Parameters count is wrong", 2, graphInteractionEvidence2.getParameters().size());
 
@@ -220,6 +226,96 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Interaction Evidence Parameter Value is null", ieParameterValue);
         Assert.assertEquals("Interaction Evidence Parameter Value - Net Value - is wrong", "521x10^(-9)", ieParameterValue.toString());
 
+        //for experimentalModifications Checking and expressed In
+        String ac3 = "EBI-1004945";
+        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional3 = graphInteractionEvidenceRepository.
+                findByInteractionAcForMiJson(ac3);
+
+
+        Assert.assertTrue("GraphInteractionEvidence 3 is not present ", graphInteractionEvidenceOptional3.isPresent());
+
+        GraphInteractionEvidence graphInteractionEvidence3 = graphInteractionEvidenceOptional3.get();
+        Assert.assertEquals("GraphInteractionEvidence 3 is not correct", ac3, graphInteractionEvidence3.getAc());
+        Assert.assertNotNull("GraphInteractionEvidence 3 Experiment is null", graphInteractionEvidence3.getExperiment());
+        Assert.assertNotNull("GraphInteractionEvidence 3 Experiment Annotations is null", graphInteractionEvidence3.getExperiment());
+
+        Collection<Annotation> expModifications = AnnotationUtils.collectAllAnnotationsHavingTopic(
+                graphInteractionEvidence3.getExperiment().getAnnotations(),
+                Annotation.EXP_MODIFICATION_MI, Annotation.EXP_MODIFICATION);
+        Assert.assertNotNull("GraphInteractionEvidence 3 Experiment Experimental Modifications is null", expModifications);
+        Assert.assertEquals("GraphInteractionEvidence 3 Experiment Experimental Modifications count is wrong", 1, expModifications.size());
+
+        // expressed in ...
+        Assert.assertNotNull("GraphInteractionEvidence 3 Participants is null", graphInteractionEvidence3.getParticipants());
+        Assert.assertEquals("GraphInteractionEvidence 3 Participants count is wrong", 1, graphInteractionEvidence3.getParticipants().size());
+
+        GraphParticipantEvidence graphParticipantEvidence3 = graphInteractionEvidence3.getParticipants().iterator().next();
+        Assert.assertNotNull("GraphParticipantEvidence 3 expressedIn is null ", graphParticipantEvidence3.getExpressedInOrganism());
+        Assert.assertEquals("Host Organism tax id is wrong", 83333, graphParticipantEvidence3.getExpressedInOrganism().getTaxId());
+        Assert.assertEquals("Organism Scientific name is wrong", "Escherichia coli (strain K12)",
+                graphParticipantEvidence3.getExpressedInOrganism().getScientificName());
+
+        // for interpro
+        String ac4 = "EBI-1005174";
+        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional4 = graphInteractionEvidenceRepository.
+                findByInteractionAcForMiJson(ac4);
+
+
+        Assert.assertTrue("GraphInteractionEvidence 4 is not present ", graphInteractionEvidenceOptional4.isPresent());
+
+        GraphInteractionEvidence graphInteractionEvidence4 = graphInteractionEvidenceOptional4.get();
+        Assert.assertEquals("GraphInteractionEvidence 4 is not correct", ac4, graphInteractionEvidence4.getAc());
+        Assert.assertNotNull("GraphInteractionEvidence 4 participants is null", graphInteractionEvidence4.getParticipants());
+
+        GraphFeatureEvidence graphFeatureEvidenceWithInterpro = null;
+        String interproId = "IPR001012";
+
+        try {
+            for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence4.getParticipants()) {
+                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                    if (graphFeatureEvidence1.getInterpro() != null && graphFeatureEvidence1.getInterpro().equals(interproId)) {
+                        graphFeatureEvidenceWithInterpro = graphFeatureEvidence1;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        Assert.assertNotNull("GraphParticipantEvidence does not contain feature with Interpro Id : " + interproId,
+                graphFeatureEvidenceWithInterpro);
+
+        // for linked features
+        String ac5 = "EBI-10054743";
+        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional5 = graphInteractionEvidenceRepository.
+                findByInteractionAcForMiJson(ac5);
+
+
+        Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional5.isPresent());
+
+        GraphInteractionEvidence graphInteractionEvidence5 = graphInteractionEvidenceOptional5.get();
+        HashMap<String, Collection<GraphFeatureEvidence>> linkedFeatures = new HashMap<>();
+        String featureAc1_withLinkedFeature = "EBI-10055168";
+        String featureAc2_withLinkedFeature = "EBI-10055163";
+        try {
+            for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence5.getParticipants()) {
+                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                    if (graphFeatureEvidence1.getLinkedFeatures() != null) {
+                        linkedFeatures.put(graphFeatureEvidence1.getAc(), graphFeatureEvidence1.getLinkedFeatures());
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        Assert.assertEquals("GraphInteractionEvidence 5 Participant Feature :" + featureAc1_withLinkedFeature +
+                " has wrong number of linked features", 1, linkedFeatures.get(featureAc1_withLinkedFeature).size());
+        Assert.assertEquals("GraphInteractionEvidence 5 Participant Feature :" + featureAc1_withLinkedFeature +
+                        " has wrong linked feature", featureAc2_withLinkedFeature,
+                linkedFeatures.get(featureAc1_withLinkedFeature).iterator().next().getAc());
+        Assert.assertEquals("GraphInteractionEvidence 5 Participant Feature :" + featureAc2_withLinkedFeature +
+                " has wrong number of linked features", 1, linkedFeatures.get(featureAc2_withLinkedFeature).size());
+        Assert.assertEquals("GraphInteractionEvidence 5 Participant Feature :" + featureAc2_withLinkedFeature +
+                        " has wrong linked feature", featureAc1_withLinkedFeature,
+                linkedFeatures.get(featureAc2_withLinkedFeature).iterator().next().getAc());
 
     }
 }
