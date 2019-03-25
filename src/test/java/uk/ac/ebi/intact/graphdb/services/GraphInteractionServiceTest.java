@@ -29,4 +29,13 @@ public class GraphInteractionServiceTest {
 
         Assert.assertEquals("Interaction not present", ac,graphInteractionEvidence.getAc());
     }
+
+    @Test
+    public void findByInteractionAcForMiJson(){
+        String interactionAc="EBI-10052707";
+        GraphInteractionEvidence graphInteractionEvidence=graphInteractionService.findByInteractionAcForMiJson(interactionAc);
+
+        Assert.assertNotNull("GraphInteractionEvidence not present",graphInteractionEvidence);
+        Assert.assertEquals("GraphInteractionEvidence is incorrect",interactionAc,graphInteractionEvidence.getAc());
+    }
 }
