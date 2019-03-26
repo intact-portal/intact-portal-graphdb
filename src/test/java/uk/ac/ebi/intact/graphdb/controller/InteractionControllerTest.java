@@ -69,12 +69,12 @@ public class InteractionControllerTest {
     public void exportInteraction() {
 
         List<String> interactionAcsToTest = new ArrayList<>();
-        interactionAcsToTest.add("EBI-10052707");
-        interactionAcsToTest.add("EBI-10048599");
-        interactionAcsToTest.add("EBI-10049314");
-        interactionAcsToTest.add("EBI-10054743");
-        interactionAcsToTest.add("EBI-1005174");
-        interactionAcsToTest.add("EBI-1004945");
+        interactionAcsToTest.add("EBI-10052707"); // generic checking
+        interactionAcsToTest.add("EBI-10048599");// for checking Interaction Parameters
+        interactionAcsToTest.add("EBI-10049314");// for checking expressedIn
+        interactionAcsToTest.add("EBI-10054743");// for checking linkedFeatures
+        interactionAcsToTest.add("EBI-1005174");// for checking interpro
+        interactionAcsToTest.add("EBI-1004945");// for checking experiment Modifications
         for (String interactionAc : interactionAcsToTest) {
             try {
                 String jsonMimeType = "application/json";
