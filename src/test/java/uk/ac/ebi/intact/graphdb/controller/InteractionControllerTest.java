@@ -77,6 +77,7 @@ public class InteractionControllerTest {
         interactionAcsToTest.add("EBI-1004945");// for checking experiment Modifications
         for (String interactionAc : interactionAcsToTest) {
             try {
+                System.out.println("Unit Test for Interaction with ac: "+interactionAc);
                 String jsonMimeType = "application/json";
                 HttpUriRequest request = new HttpGet(graphDBServerUrl + "/graph/interaction/export?ac=" + interactionAc);
                 HttpResponse response = HttpClientBuilder.create().build().execute(request);
