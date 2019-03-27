@@ -190,6 +190,7 @@ public class GraphFeatureEvidence extends GraphFeature {
 
     public int hashCode() {
 
+        //TODO... Check and use the super one if possible
         if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
@@ -228,6 +229,7 @@ public class GraphFeatureEvidence extends GraphFeature {
 
 
     public String createUniqueKey(FeatureEvidence featureEvidence){
+        // TODO... Check and use the super one if possible
         int hashcode = HashCode.featureHashCode(featureEvidence);
 
         return hashcode + "";

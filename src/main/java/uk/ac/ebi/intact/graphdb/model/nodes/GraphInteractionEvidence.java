@@ -617,6 +617,8 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     public int hashCode() {
 
+        /*TODO...Revisit this when you wish to make this class independent from GraphBinaryInteractionEvidence
+          also this only handles intact use case.*/
         if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
             return Integer.parseInt(this.getUniqueKey());
         }
