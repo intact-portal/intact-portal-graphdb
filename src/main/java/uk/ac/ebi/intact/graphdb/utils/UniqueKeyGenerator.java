@@ -7,15 +7,21 @@ import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.PositionUtils;
 import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
+import psidev.psi.mi.jami.utils.comparator.experiment.VariableParameterValueComparator;
+import psidev.psi.mi.jami.utils.comparator.interaction.UnambiguousInteractionEvidenceComparator;
 import psidev.psi.mi.jami.utils.comparator.interactor.UnambiguousInteractorComparator;
 import psidev.psi.mi.jami.utils.comparator.organism.UnambiguousOrganismComparator;
 import psidev.psi.mi.jami.utils.comparator.parameter.ParameterValueComparator;
 import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
+import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousEntityBaseComparator;
+import psidev.psi.mi.jami.utils.comparator.publication.UnambiguousPublicationComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousExternalIdentifierComparator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -423,13 +429,14 @@ public class UniqueKeyGenerator {
             hashcode = 31 * hashcode +
                     UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());// call cvTerm
         }
-        (!binaryInteractionEvidence.getIdentifiers().isEmpty()){
-            UnambiguousExternalIdentifierComparator unambiguousInteractorComparator=new UnambiguousExternalIdentifierComparator();
+        (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
+            UnambiguousExternalIdentifierComparator unambiguousInteractorComparator = new UnambiguousExternalIdentifierComparator();
             List<Xref> list1 = new ArrayList<Xref>(binaryInteractionEvidence.getIdentifiers());
             Collections.sort(list1, unambiguousInteractorComparator);
-            for (Xref ref : list1){
-                hashcode = 31*hashcode + UnambiguousExternalIdentifierComparator.hashCode(ref);// ***calls xref unique key generation
+            for (Xref ref : list1) {
+                hashcode = 31 * hashcode + UnambiguousExternalIdentifierComparator.hashCode(ref);// ***calls xref unique key generation
             }
+        }
 
         return hashcode + "";
     }
@@ -440,9 +447,12 @@ public class UniqueKeyGenerator {
                 return Integer.parseInt(this.getUniqueKey());
             }
 
-            int hashcode = 31;
-            if (this.getAc() != null) {
-                hashcode = 31 * hashcode + this.getAc().hashCode();
+            if (!cv1.getIdentifiers().isEmpty()) {
+                List<Xref> list1 = new ArrayList<Xref>(cv1.getIdentifiers());
+                Collections.sort(list1, unambiguousCvTermComparator.getIdentifierComparator());
+                for (Xref ref : list1) {
+                    hashcode = 31 * hashcode + UnambiguousExternalIdentifierComparator.hashCode(ref);// ***calls xref unique key generation
+                }
             }
             return hashcode;
         }
@@ -525,5 +535,193 @@ public class UniqueKeyGenerator {
         }
         return hashcode;
     }
+
+    public static int variableParameter(VariableParameter param){
+        if (unambiguousVariableParameterComparator == null){
+            unambiguousVariableParameterComparator = new UnambiguousVariableParameterComparator();
+        }
+
+        if (param == null){
+            return 0;
+        }
+
+        int hashcode = 31;
+        String description = param.getDescription();
+        hashcode = 31*hashcode + (description != null ? description.toLowerCase().trim().hashCode() : 0);
+
+        experiment // call experiment
+
+        CvTerm unit = param.getUnit();
+        hashcode = 31*hashcode + UnambiguousCvTermComparator.hashCode(unit);
+
+        List<VariableParameterValue> list1 = new ArrayList<VariableParameterValue>(param.getVariableValues());
+        Collections.sort(list1, unambiguousVariableParameterComparator.getVariableParameterValueCollectionComparator().getObjectComparator());
+        for (VariableParameterValue value : list1){
+            hashcode = 31*hashcode + VariableParameterValueComparator.hashCode(value);
+        }
+
+        return hashcode;
+    }
+
+    public static int variableParameterValue(VariableParameterValue value){
+        if (variableParameterValueComparator == null){
+            variableParameterValueComparator = new VariableParameterValueComparator();
+        }
+
+        if (value == null){
+            return 0;
+        }
+
+        // call variableParameter
+
+        int hashcode = 31;
+        hashcode = 31*hashcode + (value.getValue() != null ? value.getValue().trim().toLowerCase().hashCode() : 0);
+        hashcode = 31*hashcode + (value.getOrder() != null ? value.getOrder() : 0);
+
+        return hashcode;
+    }
+
+    public static int variableParametersValueSet(Collection<VariableParameterValue> variableParameterValues) {
+        int hashcode = 0;
+
+        Collections.sort(variableParameterValues, unambiguousVariableParameterComparator.getVariableParameterValueCollectionComparator().getObjectComparator());
+        for (VariableParameterValue value : list1){
+            hashcode = 31*hashcode + VariableParameterValueComparator.hashCode(value); // call variableParameterValue
+        }
+        return hashcode;
+    }
+
+    public static int experiment(Experiment exp){
+
+            UnambiguousInteractionEvidenceComparator unambiguousExperimentComparator = new UnambiguousInteractionEvidenceComparator();
+
+
+        if (exp == null){
+            return 0;
+        }
+
+        int hashcode = 31;
+        Publication pub = exp.getPublication();
+        hashcode = 31*hashcode + UnambiguousPublicationComparator.hashCode(pub);
+
+        CvTerm detMethod = exp.getInteractionDetectionMethod();
+        hashcode = 31*hashcode + UnambiguousCvTermComparator.hashCode(detMethod);
+
+        Organism organism = exp.getHostOrganism();
+        hashcode = 31*hashcode + UnambiguousOrganismComparator.hashCode(organism);
+
+        List<InteractionEvidence> list1 = new ArrayList<InteractionEvidence>(exp.getInteractionEvidences());
+        Collections.sort(list1, unambiguousExperimentComparator);
+        for (VariableParameter param : list1){
+            hashcode = 31*hashcode + UnambiguousVariableParameterComparator.hashCode(param);// call interaction Evidence
+        }
+
+        return hashcode;
+    }
+
+    public int publication() {
+
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Publication".hashCode();
+        if (this.getPubmedId() != null) {
+            hashcode = 31 * hashcode + this.getPubmedId().hashCode();
+        }
+        return hashcode;
+    }
+
+    public int curationDepth() {
+
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
+        int hashcode = 31;
+        if (this.getCurationDepth() != null) {
+            hashcode = 31 * hashcode + this.getCurationDepth().toLowerCase().hashCode();
+        }
+
+        return hashcode;
+    }
+
+    public static int confidence(Confidence conf){
+        if (unambiguousConfidenceComparator == null){
+            unambiguousConfidenceComparator = new UnambiguousConfidenceComparator();
+        }
+
+        if (conf == null){
+            return 0;
+        }
+
+        int hashcode = 31;
+        CvTerm type = conf.getType();
+        hashcode = 31*hashcode + UnambiguousCvTermComparator.hashCode(type);// call cvTerm
+
+        String value = conf.getValue();
+        hashcode = 31*hashcode + value.hashCode();
+
+        return hashcode;
+    }
+
+    public static int checksum(Checksum checksum){
+        if (unambiguousChecksumComparator == null){
+            unambiguousChecksumComparator = new UnambiguousChecksumComparator();
+        }
+
+        if (checksum == null){
+            return 0;
+        }
+
+        int hashcode = 31;
+        CvTerm method = checksum.getMethod();
+        hashcode = 31*hashcode + UnambiguousCvTermComparator.hashCode(method);// call CvTerm
+
+        String value = checksum.getValue();
+        hashcode = 31*hashcode + value.hashCode();
+
+        return hashcode;
+    }
+
+    public static int causalRelationship(CausalRelationship rel){
+        if (unambiguousCausalRelationshipComparator == null){
+            unambiguousCausalRelationshipComparator = new UnambiguousCausalRelationshipComparator();
+        }
+
+        if (rel == null){
+            return 0;
+        }
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(rel.getRelationType());// call cvTerm
+        hashcode = 31*hashcode + UnambiguousEntityBaseComparator.hashCode(rel.getTarget());// call entity
+
+        return hashcode;
+    }
+
+    public int cluster() {
+
+        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Cluster".hashCode();
+
+        // we don't need to sort it because it is already sorted in graph
+        if (this.getInteractorPA() != null) {
+            hashcode = 31 * hashcode + this.getInteractorPA().hashCode();// call interactor
+        }
+
+        if (this.getinteractorPB() != null) {
+            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();// call interactor
+        }
+
+
+        return hashcode;
+    }
+
 
 }
