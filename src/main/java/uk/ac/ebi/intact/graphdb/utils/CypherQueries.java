@@ -10,25 +10,25 @@ public class CypherQueries {
     /*Common BinaryInteractionEvidences of any two interactors*/
 
     /*
-    * Equivalent Query String : MATCH (interactorA:GraphInteractor)<-[:interactorA]-(binaryIE:GraphInteractionEvidence)-[:interactorB]->(interactorB:GraphInteractor)
+    * Equivalent Query String : MATCH (interactorA:GraphInteractor)<-[:interactors]-(binaryIE:GraphInteractionEvidence)-[:interactors]->(interactorB:GraphInteractor)
                                 WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB
                                 UNWIND interactions as interaction
                                 MATCH (interaction:GraphInteractionEvidence) -[experiment:experiment] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:interactionDetectionMethod]->(dm_cvterm:GraphCvTerm),
                                 (interaction:GraphInteractionEvidence) - [interactionType:interactionType] -> (it_cvterm:GraphCvTerm),
                                 (graphExperiment:GraphExperiment)<-[publication:PUB_EXP]-(graphpublication:GraphPublication)
-                                WHERE  NOT (interactorA) = (interactorB)
+                                WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))
                                 RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments,
                                          COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms,
                                          COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac;
     * */
     public static final String COMM_NEIGH_OF_INTOR=
-             "MATCH (interactorA:GraphInteractor)<-[:"+RelationshipTypes.INTERACTOR_A+"]-(binaryIE:GraphInteractionEvidence)-[:"+RelationshipTypes.INTERACTOR_B+"]->(interactorB:GraphInteractor)" +
+             "MATCH (interactorA:GraphInteractor)<-[:"+RelationshipTypes.INTERACTORS+"]-(binaryIE:GraphInteractionEvidence)-[:"+RelationshipTypes.INTERACTORS+"]->(interactorB:GraphInteractor)" +
              " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
              " UNWIND interactions as interaction" +
              " MATCH (interaction:GraphInteractionEvidence) -[experiment:"+RelationshipTypes.EXPERIMENT+"] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:"+RelationshipTypes.INTERACTION_DETECTION_METHOD+"]->(dm_cvterm:GraphCvTerm)," +
              " (interaction:GraphInteractionEvidence) - [interactionType:"+RelationshipTypes.INTERACTION_TYPE+"] -> (it_cvterm:GraphCvTerm)," +
              " (graphExperiment:GraphExperiment)<-[publication:"+RelationshipTypes.PUB_EXP+"]-(graphpublication:GraphPublication)" +
-             " WHERE  NOT (interactorA) = (interactorB)" +
+             " WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))" +
              " RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                      "COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
                      "COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
@@ -36,12 +36,12 @@ public class CypherQueries {
     /*
     * Equivalent Query String : MATCH (interactorA:GraphInteractor)<-[:interactorA]-(binaryIE:GraphInteractionEvidence)-[:interactorB]->(interactorB:GraphInteractor)
                                 WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB
-                                WHERE  NOT (interactorA) = (interactorB) RETURN COUNT(*)
+                                WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB)) RETURN COUNT(*)
     * */
     public static final String INTERACTOR_PAIR_COUNT=
-            "MATCH (interactorA:GraphInteractor)<-[:"+RelationshipTypes.INTERACTOR_A+"]-(binaryIE:GraphInteractionEvidence)-[:"+RelationshipTypes.INTERACTOR_B+"]->(interactorB:GraphInteractor)" +
+            "MATCH (interactorA:GraphInteractor)<-[:"+RelationshipTypes.INTERACTORS+"]-(binaryIE:GraphInteractionEvidence)-[:"+RelationshipTypes.INTERACTORS+"]->(interactorB:GraphInteractor)" +
             " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
-            " WHERE  NOT (interactorA) = (interactorB)" +
+            " WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))" +
             " RETURN COUNT(*)";
 
     public static final String GET_CLUSTERED_INTERACTION="MATCH (n:GraphClusteredInteraction)-->(m:GraphBinaryInteractionEvidence{ uniqueKey: {0}}) RETURN (n)";

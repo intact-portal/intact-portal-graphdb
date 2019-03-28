@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.*;
@@ -373,17 +374,9 @@ public class GraphCvTerm implements CvTerm {
     public int hashCode() {
 
         if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousCvTermComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return this.hashCode();
     }
 
     @Override
@@ -478,7 +471,7 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public String createUniqueKey(CvTerm cvTerm) {
-        return cvTerm != null ? UnambiguousCvTermComparator.hashCode(cvTerm) + "" : "";
+        return  UniqueKeyGenerator.createKeyForCvTerm(cvTerm);
     }
 
     public boolean isForceHashCodeGeneration() {

@@ -25,4 +25,8 @@ public class Constants {
     public static final HashMap<String, Long> createdNodeIdMap = new HashMap<String, Long>();
     public static final HashSet<String> createdRelationShipList = new HashSet<String>();
 
+    //for unique key generation
+    public static final String FIELD_SEPARATOR = "_";
+    public static final String LIST_SEPARATOR = ",";
+    public static final String NOT_GENERATED_UNIQUE_KEY = "";
 }

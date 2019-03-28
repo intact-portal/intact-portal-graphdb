@@ -8,10 +8,7 @@ import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.*;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.HashMap;
@@ -224,17 +221,9 @@ public class GraphXref implements Xref {
     public int hashCode() {
 
         if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousXrefComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return this.hashCode();
     }
 
     @Override
@@ -267,7 +256,7 @@ public class GraphXref implements Xref {
     }
 
     public String createUniqueKey(Xref xref) {
-        return xref != null ? UnambiguousXrefComparator.hashCode(xref) + "" : "";
+        return UniqueKeyGenerator.createKeyForXref(xref);
     }
 
     public String getAc() {
