@@ -8,10 +8,7 @@ import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.utils.comparator.annotation.UnambiguousAnnotationComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.EntityCache;
+import uk.ac.ebi.intact.graphdb.utils.*;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.HashMap;
@@ -36,15 +33,11 @@ public class GraphAnnotation implements Annotation {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphAnnotation() {
     }
 
     public GraphAnnotation(Annotation annotation) {
 
-        setForceHashCodeGeneration(true);
         if (annotation.getTopic() != null) {
             if (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()) != null) {
                 topic = (GraphEntityCache.cvTermCacheMap.get(annotation.getTopic().getShortName()));
@@ -161,18 +154,10 @@ public class GraphAnnotation implements Annotation {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousAnnotationComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     @Override
@@ -194,14 +179,7 @@ public class GraphAnnotation implements Annotation {
     }
 
     public String createUniqueKey(Annotation annotation) {
-        return annotation != null ? UnambiguousAnnotationComparator.hashCode(annotation) + "" : "";
+        return UniqueKeyGenerator.createKeyForAnnotation(annotation);
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

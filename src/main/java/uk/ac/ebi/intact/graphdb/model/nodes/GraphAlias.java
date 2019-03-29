@@ -10,6 +10,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.HashMap;
@@ -34,14 +35,11 @@ public class GraphAlias implements Alias {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphAlias() {
     }
 
     public GraphAlias(Alias alias) {
-        setForceHashCodeGeneration(true);
+
         if (GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()) != null) {
             type = (GraphEntityCache.cvTermCacheMap.get(alias.getType().getShortName()));
         } else {
@@ -158,18 +156,10 @@ public class GraphAlias implements Alias {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousAliasComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     @Override
@@ -178,7 +168,7 @@ public class GraphAlias implements Alias {
     }
 
     public String createUniqueKey(Alias alias) {
-        return alias != null ? UnambiguousAliasComparator.hashCode(alias) + "" : "";
+        return UniqueKeyGenerator.createKeyForAlias(alias);
     }
 
 
@@ -190,11 +180,4 @@ public class GraphAlias implements Alias {
         isAlreadyCreated = alreadyCreated;
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

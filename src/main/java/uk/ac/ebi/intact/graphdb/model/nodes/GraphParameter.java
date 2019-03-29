@@ -1,11 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.exception.IllegalParameterException;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -17,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -46,14 +43,10 @@ public class GraphParameter implements Parameter {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphParameter() {
     }
 
     public GraphParameter(Parameter parameter) {
-        setForceHashCodeGeneration(true);
         setType(parameter.getType());
         setUncertainty(parameter.getUncertainty());
         setUnit(parameter.getUnit());
@@ -91,7 +84,7 @@ public class GraphParameter implements Parameter {
 
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(unit, this.graphId,  RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
         CommonUtility.createRelationShip(value, this.graphId, RelationshipTypes.VALUE);
     }
 
@@ -244,18 +237,10 @@ public class GraphParameter implements Parameter {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousParameterComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String getUniqueKey() {
@@ -267,14 +252,7 @@ public class GraphParameter implements Parameter {
     }
 
     public String createUniqueKey(Parameter parameter) {
-        return parameter != null ? UnambiguousParameterComparator.hashCode(parameter) + "" : "";
+        return UniqueKeyGenerator.createKeyForParameter(parameter);
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

@@ -9,7 +9,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
@@ -77,7 +77,6 @@ public class GraphFeature implements Feature {
 
     public GraphFeature(Feature featureEvidence, boolean childAlreadyCreated) {
 
-        setForceHashCodeGeneration(true);
         boolean wasInitializedBefore = false;
 
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
@@ -499,46 +498,15 @@ public class GraphFeature implements Feature {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Feature:".hashCode();
-
-        if (this.getShortName() != null) {
-            hashcode = 31 * hashcode + this.getShortName().hashCode();
-        }
-
-        if (this.getType() != null) {
-            hashcode = 31 * hashcode + this.getType().hashCode();
-        }
-
-        if (this.getRole() != null) {
-            hashcode = 31 * hashcode + this.getRole().hashCode();
-        }
-
-        if (this.getInterpro() != null) {
-            hashcode = 31 * hashcode + this.getInterpro().hashCode();
-        }
-
-        if (this.getIdentifiers() != null) {
-            hashcode = 31 * hashcode + HashCode.identifiersGraphHashCode(this.getIdentifiers());
-        }
-
-        if (this.getRanges() != null) {
-            hashcode = 31 * hashcode + HashCode.rangesGraphHashCode(this.getRanges());
-        }
-
-
-        return hashcode;
+        return super.hashCode();
     }
 
 
     public String createUniqueKey(Feature featureEvidence) {
-        int hashcode = HashCode.featureHashCode(featureEvidence);
-
-        return hashcode + "";
+        return UniqueKeyGenerator.createKeyForFeature(featureEvidence);
     }
 
     public Map<String, Object> getNodeProperties() {
@@ -549,11 +517,4 @@ public class GraphFeature implements Feature {
         this.nodeProperties = nodeProperties;
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

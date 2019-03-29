@@ -37,15 +37,11 @@ public class GraphXref implements Xref {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphXref() {
     }
 
     public GraphXref(Xref xref) {
 
-        setForceHashCodeGeneration(true);
         setId(xref.getId());
         setVersion(xref.getVersion());
         setAc(CommonUtility.extractAc(xref));
@@ -58,14 +54,14 @@ public class GraphXref implements Xref {
         if (GraphEntityCache.xrefCacheMap.get(xref.getId()) == null) {
             GraphEntityCache.xrefCacheMap.put(xref.getId(), this);
         }
-        if(xref.getDatabase()!=null) {
+        if (xref.getDatabase() != null) {
             if (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()) != null) {
                 database = (GraphEntityCache.cvTermCacheMap.get(xref.getDatabase().getShortName()));
             } else {
                 setDatabase(xref.getDatabase());
             }
         }
-        if(xref.getQualifier()!=null) {
+        if (xref.getQualifier() != null) {
             if (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()) != null) {
                 qualifier = (GraphEntityCache.cvTermCacheMap.get(xref.getQualifier().getShortName()));
             } else {
@@ -74,7 +70,7 @@ public class GraphXref implements Xref {
         }
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -87,14 +83,13 @@ public class GraphXref implements Xref {
             nodeProperties.put("identifier", this.getId());
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if(this.getVersion()!=null) nodeProperties.put("version", this.getVersion());
+            if (this.getVersion() != null) nodeProperties.put("version", this.getVersion());
 
-            Label[] labels=CommonUtility.getLabels(GraphXref.class);
+            Label[] labels = CommonUtility.getLabels(GraphXref.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
 
 
         } catch (Exception e) {
@@ -102,9 +97,9 @@ public class GraphXref implements Xref {
         }
     }
 
-    private void createRelationShipNatively(){
-        CommonUtility.createRelationShip(database, this.getGraphId(),RelationshipTypes.DATABASE);
-        CommonUtility.createRelationShip(qualifier, this.getGraphId(),RelationshipTypes.QUALIFIER);
+    private void createRelationShipNatively() {
+        CommonUtility.createRelationShip(database, this.getGraphId(), RelationshipTypes.DATABASE);
+        CommonUtility.createRelationShip(qualifier, this.getGraphId(), RelationshipTypes.QUALIFIER);
     }
 
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
@@ -157,7 +152,7 @@ public class GraphXref implements Xref {
             } else if (database != null && EntityCache.INTACT != null && Constants.INTACT_DB.equals(database.getShortName())) {
                 this.database = EntityCache.INTACT;
             } else {
-                this.database = new GraphCvTerm(database,false);
+                this.database = new GraphCvTerm(database, false);
             }
         } else {
             this.database = null;
@@ -195,14 +190,13 @@ public class GraphXref implements Xref {
             } else if (qualifier != null && EntityCache.PRIMARY_REFERENCE != null && Constants.PRIMARY_REFERENCE_QUALIFIER.equals(qualifier.getShortName())) {
                 setQualifier(EntityCache.PRIMARY_REFERENCE);
             } else {
-                this.qualifier = new GraphCvTerm(qualifier,false);
+                this.qualifier = new GraphCvTerm(qualifier, false);
             }
         } else {
             this.qualifier = null;
         }
         //TODO login it
     }
-
 
 
     @Override
@@ -220,10 +214,10 @@ public class GraphXref implements Xref {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return this.getUniqueKey().hashCode();
         }
-        return this.hashCode();
+        return super.hashCode();
     }
 
     @Override
@@ -267,11 +261,4 @@ public class GraphXref implements Xref {
         this.ac = ac;
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

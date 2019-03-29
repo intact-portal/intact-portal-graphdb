@@ -10,6 +10,7 @@ import psidev.psi.mi.jami.model.ParameterValue;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -21,22 +22,18 @@ public class GraphParameterValue extends ParameterValue {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
-    public GraphParameterValue(){
-       super(new BigDecimal(0));
+    public GraphParameterValue() {
+        super(new BigDecimal(0));
     }
 
     public GraphParameterValue(BigDecimal factor, short base, short exponent) {
         super(factor, base, exponent);
-        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -51,7 +48,7 @@ public class GraphParameterValue extends ParameterValue {
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphParameterValue.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -84,27 +81,16 @@ public class GraphParameterValue extends ParameterValue {
         this.uniqueKey = uniqueKey;
     }
 
-    public int hashCode(){
+    public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31*hashcode + (this.getFactor().multiply(BigDecimal.valueOf(Math.pow(this.getBase(), this.getExponent())))).hashCode();
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey() {
-        return hashCode() + "";
+        return UniqueKeyGenerator.createKeyForParameterValue(this);
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

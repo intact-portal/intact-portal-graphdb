@@ -5,10 +5,8 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import uk.ac.ebi.intact.graphdb.utils.objectpool.CommonUtilityFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by anjali on 29/11/17.
@@ -28,5 +26,6 @@ public class Constants {
     //for unique key generation
     public static final String FIELD_SEPARATOR = "_";
     public static final String LIST_SEPARATOR = ",";
-    public static final String NOT_GENERATED_UNIQUE_KEY = "";
+    public static final String NOT_GENERATED_UNIQUE_KEY = "KNC";
+    public static final String UNIQUE_KEY_NA = "UNIQUE_KEY_NA";
 }

@@ -53,9 +53,6 @@ public class GraphCvTerm implements CvTerm {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     @Labels
     private List<String> typeLabels = new ArrayList<>();
 
@@ -63,8 +60,6 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public GraphCvTerm(CvTerm cvTerm, boolean childAlreadyCreated) {
-
-        setForceHashCodeGeneration(true);
 
         if (GraphEntityCache.cvTermCacheMap.get(cvTerm.getShortName()) == null) {
             GraphEntityCache.cvTermCacheMap.put(cvTerm.getShortName(), this);
@@ -373,10 +368,10 @@ public class GraphCvTerm implements CvTerm {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return this.getUniqueKey().hashCode();
         }
-        return this.hashCode();
+        return super.hashCode();
     }
 
     @Override
@@ -471,14 +466,7 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public String createUniqueKey(CvTerm cvTerm) {
-        return  UniqueKeyGenerator.createKeyForCvTerm(cvTerm);
+        return UniqueKeyGenerator.createKeyForCvTerm(cvTerm);
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

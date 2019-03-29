@@ -8,6 +8,7 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +29,11 @@ public class GraphAuthor {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphAuthor() {
 
     }
 
     public GraphAuthor(String authorName) {
-        setForceHashCodeGeneration(true);
         this.setAuthorName(authorName);
         setUniqueKey(createUniqueKey());
 
@@ -96,27 +93,14 @@ public class GraphAuthor {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getAuthorName() != null) {
-            hashcode = 31 * hashcode + this.getAuthorName().toLowerCase().hashCode();
-        }
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey() {
-        return hashCode() + "";
+        return UniqueKeyGenerator.createKeyForAuthor(getAuthorName());
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

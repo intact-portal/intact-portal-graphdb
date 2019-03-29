@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.Feature;
+import psidev.psi.mi.jami.model.FeatureEvidence;
+import psidev.psi.mi.jami.model.Parameter;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
@@ -36,27 +39,23 @@ public class GraphFeatureEvidence extends GraphFeature {
     @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
 
-    @Relationship(type = RelationshipTypes.FEATURES,direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.FEATURES, direction = Relationship.INCOMING)
     @JsonManagedReference
     private GraphParticipantEvidence participantEvidence;
 
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphFeatureEvidence() {
 
     }
 
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
-        super(featureEvidence,true);
-        setForceHashCodeGeneration(true);
+        super(featureEvidence, true);
         boolean wasInitializedBefore = false;
         if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
-              GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
-        }else {
+            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
+        } else {
             wasInitializedBefore = true;
         }
 
@@ -87,7 +86,7 @@ public class GraphFeatureEvidence extends GraphFeature {
 
             Label[] labels = CommonUtility.getLabels(GraphFeatureEvidence.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -191,58 +190,18 @@ public class GraphFeatureEvidence extends GraphFeature {
     public int hashCode() {
 
         //TODO... Check and use the super one if possible
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        // Ans: super won't exist later
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Feature:".hashCode();
-
-        if (this.getShortName() != null) {
-            hashcode = 31 * hashcode + this.getShortName().hashCode();
-        }
-
-        if (this.getType() != null) {
-            hashcode = 31 * hashcode + this.getType().hashCode();
-        }
-
-        if (this.getRole() != null) {
-            hashcode = 31 * hashcode + this.getRole().hashCode();
-        }
-
-        if (this.getInterpro() != null) {
-            hashcode = 31 * hashcode + this.getInterpro().hashCode();
-        }
-
-        if (this.getIdentifiers() != null) {
-            hashcode = 31 * hashcode + HashCode.identifiersGraphHashCode(this.getIdentifiers());
-        }
-
-        if (this.getRanges() != null) {
-            hashcode = 31 * hashcode + HashCode.rangesGraphHashCode(this.getRanges());
-        }
-
-
-
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey(FeatureEvidence featureEvidence){
+    public String createUniqueKey(FeatureEvidence featureEvidence) {
         // TODO... Check and use the super one if possible
-        int hashcode = HashCode.featureHashCode(featureEvidence);
-
-        return hashcode + "";
-    }
-
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        // Ans: super won't exist later
+        return UniqueKeyGenerator.createKeyForFeature(featureEvidence);
     }
 
     public GraphParticipantEvidence getParticipantEvidence() {

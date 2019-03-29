@@ -9,6 +9,7 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.HashMap;
@@ -36,15 +37,11 @@ public class GraphPosition implements Position {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphPosition() {
     }
 
     public GraphPosition(Position position) {
 
-        setForceHashCodeGeneration(true);
         setStatus(position.getStatus());
         setStart(position.getStart());
         setEnd(position.getEnd());
@@ -178,30 +175,11 @@ public class GraphPosition implements Position {
 
     @Override
     public int hashCode() {
-
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
-        }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousPositionComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(Position position) {
-        return position != null ? UnambiguousPositionComparator.hashCode(position) + "" : "";
+        return Constants.UNIQUE_KEY_NA;
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

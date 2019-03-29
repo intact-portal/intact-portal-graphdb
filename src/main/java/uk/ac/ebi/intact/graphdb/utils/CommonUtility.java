@@ -328,7 +328,9 @@ public class CommonUtility {
         } else {
             id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
             if (uniqueKey != null && !uniqueKey.trim().equals("")) {
-                Constants.createdNodeIdMap.put(uniqueKey, id);
+                if(!Constants.UNIQUE_KEY_NA.equals(uniqueKey)) {
+                    Constants.createdNodeIdMap.put(uniqueKey, id);
+                }
             }
         }
         return new NodeDataFeed(id, isAlreadyCreated);

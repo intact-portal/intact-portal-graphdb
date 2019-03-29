@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,14 +47,10 @@ public class GraphOrganism implements Organism {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphOrganism() {
     }
 
     public GraphOrganism(Organism organism) {
-        setForceHashCodeGeneration(true);
         setCommonName(organism.getCommonName());
         setScientificName(organism.getScientificName());
         setTaxId(organism.getTaxId());
@@ -280,18 +277,10 @@ public class GraphOrganism implements Organism {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousOrganismComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     @Override
@@ -315,15 +304,7 @@ public class GraphOrganism implements Organism {
 
 
     public String createUniqueKey(Organism organism) {
-        return organism != null ? UnambiguousOrganismComparator.hashCode(organism) + "" : "";
+        return UniqueKeyGenerator.createKeyForOrganism(organism);
     }
 
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

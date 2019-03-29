@@ -11,6 +11,7 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.HashMap;
@@ -50,14 +51,10 @@ public class GraphRange implements Range {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphRange() {
     }
 
     public GraphRange(Range range) {
-        setForceHashCodeGeneration(true);
         setPositions(range.getStart(), range.getEnd());
         setLink(range.isLink());
         setResultingSequence(range.getResultingSequence());
@@ -238,39 +235,16 @@ public class GraphRange implements Range {
 
     @Override
     public int hashCode() {
-
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
-        }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousRangeComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     @Override
     public String toString() {
-        return (this.start!=null?this.start.toString():"") + (this.end!=null?this.end.toString():"") + (isLink() ? "(linked)" : "");
+        return (this.start != null ? this.start.toString() : "") + (this.end != null ? this.end.toString() : "") + (isLink() ? "(linked)" : "");
     }
 
     public String createUniqueKey(Range range) {
-        //return range != null ? UnambiguousRangeComparator.hashCode(range) + "" : "";
-        String uniqueKey=null;
-        if(this.getAc()!=null) uniqueKey=this.getAc().hashCode()+"";
-        return uniqueKey;
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return Constants.UNIQUE_KEY_NA;// we decided to let it duplicate per feature
     }
 
     public String getRangeString() {
