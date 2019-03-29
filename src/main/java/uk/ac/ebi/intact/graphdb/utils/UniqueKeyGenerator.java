@@ -263,6 +263,7 @@ public class UniqueKeyGenerator {
 
             if (featureEvidence.getIdentifiers() != null) {
                 uniqueKeyStringBuilder.append(createXrefListUniqueKey(featureEvidence.getIdentifiers()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
 
             if (featureEvidence.getRanges() != null) {
@@ -279,6 +280,12 @@ public class UniqueKeyGenerator {
                         counter++;
                     }
                 }
+            }
+
+            // delete any trailing underscore
+            int lastUnderscoreIndex = uniqueKeyStringBuilder.lastIndexOf("_");
+            if (lastUnderscoreIndex == (uniqueKeyStringBuilder.length() - 1)) {
+                uniqueKeyStringBuilder.deleteCharAt(lastUnderscoreIndex);
             }
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
