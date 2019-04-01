@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
@@ -49,18 +50,14 @@ public class GraphEntity implements Entity<Feature> {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphEntity() {
     }
 
     public GraphEntity(Entity entity, boolean childAlreadyCreated) {
-        setForceHashCodeGeneration(true);
         setInteractor(entity.getInteractor());
         setStoichiometry(entity.getStoichiometry());
         setChangeListener(entity.getChangeListener());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(entity));
 
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
@@ -215,16 +212,6 @@ public class GraphEntity implements Entity<Feature> {
     }
 
     @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
-    }
-
-    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -236,6 +223,16 @@ public class GraphEntity implements Entity<Feature> {
             this.stoichiometry = null;
         }
         //TODO login it
+    }
+
+    @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
     }
 
     public Map<String, Object> getNodeProperties() {
@@ -301,31 +298,15 @@ public class GraphEntity implements Entity<Feature> {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Entity".hashCode();
-        if (this.getInteractor() != null) {
-            hashcode = 31 * hashcode + this.getInteractor().hashCode();
-        }
-        if (this.getStoichiometry() != null) {
-            hashcode = 31 * hashcode + this.getStoichiometry().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey() {
-        return hashCode() + "";
+    public String createUniqueKey(Entity entity) {
+        return UniqueKeyGenerator.createEntityKey(entity);
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

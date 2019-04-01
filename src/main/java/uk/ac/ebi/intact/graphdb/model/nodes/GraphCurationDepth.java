@@ -110,7 +110,7 @@ public class GraphCurationDepth {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 
@@ -123,7 +123,7 @@ public class GraphCurationDepth {
     }
 
     public String createUniqueKey(CurationDepth curationDepth) {
-        return hashCode()+"";
+        return hashCode() + "";
     }
 
     public boolean isForceHashCodeGeneration() {

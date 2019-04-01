@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,24 +34,20 @@ public class GraphSource extends GraphCvTerm implements Source {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphSource() {
     }
 
     public GraphSource(Source source) {
-        super(source,true);
-        setForceHashCodeGeneration(true);
+        super(source, true);
         setUrl(source.getUrl());
         setPostalAddress(source.getPostalAddress());
         setPublication(source.getPublication());
         setAc(CommonUtility.extractAc(source));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(source));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -68,7 +65,7 @@ public class GraphSource extends GraphCvTerm implements Source {
 
             Label[] labels = CommonUtility.getLabels(GraphSource.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -302,30 +299,15 @@ public class GraphSource extends GraphCvTerm implements Source {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Source".hashCode();
-        if (this.getShortName() != null) {
-            hashcode = 31 * hashcode + this.getShortName().toLowerCase().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey(){
-        return hashCode() + "";
+    public String createUniqueKey(Source source) {
+        return UniqueKeyGenerator.createSourceKey(source);
     }
 
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

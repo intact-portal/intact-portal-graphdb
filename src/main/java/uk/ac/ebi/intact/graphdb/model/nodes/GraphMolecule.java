@@ -12,6 +12,7 @@ import psidev.psi.mi.jami.model.Xref;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,17 +28,13 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphMolecule() {
         super();
     }
 
     public GraphMolecule(Molecule molecule, boolean childAlreadyCreated) {
         super(molecule, true);
-        setForceHashCodeGeneration(true);
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(molecule));
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
                 this.createNodeNatively();
@@ -46,28 +43,6 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
                 this.createRelationShipNatively();
             }
         }
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.putAll(super.getNodeProperties());
-            Label[] labels = CommonUtility.getLabels(GraphMolecule.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        super.createRelationShipNatively(this.getGraphId());
     }
 
     public GraphMolecule(String name, CvTerm type) {
@@ -134,6 +109,28 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
         super(name, fullName, organism, uniqueId);
     }
 
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.putAll(super.getNodeProperties());
+            Label[] labels = CommonUtility.getLabels(GraphMolecule.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+    }
+
     public boolean isAlreadyCreated() {
         return isAlreadyCreated;
     }
@@ -165,31 +162,15 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Molecule".hashCode();
-
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey() {
-        return hashCode() + "";
+    public String createUniqueKey(Molecule molecule) {
+        return UniqueKeyGenerator.createInteractorKey(molecule);
     }
 
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

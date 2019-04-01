@@ -506,7 +506,7 @@ public class GraphFeature implements Feature {
 
 
     public String createUniqueKey(Feature featureEvidence) {
-        return UniqueKeyGenerator.createKeyForFeature(featureEvidence);
+        return UniqueKeyGenerator.createFeatureKey(featureEvidence);
     }
 
     public Map<String, Object> getNodeProperties() {

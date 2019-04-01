@@ -7,14 +7,16 @@ import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
-import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
@@ -50,16 +52,12 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphBinaryInteractionEvidence() {
         super();
     }
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         super(binaryInteractionEvidence, true);
-        setForceHashCodeGeneration(true);
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
@@ -103,7 +101,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         CommonUtility.createRelationShip(interactorA, this.getGraphId(), RelationshipTypes.INTERACTOR_A);
         CommonUtility.createRelationShip(interactorB, this.getGraphId(), RelationshipTypes.INTERACTOR_B);
         CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), RelationshipTypes.COMPLEX_EXPANSION);
-        CommonUtility.createInteractorRelationShips(interactors,this.graphId);
+        CommonUtility.createInteractorRelationShips(interactors, this.graphId);
     }
 
     public String getUniqueKey() {
@@ -204,13 +202,13 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         this.interactors = interactors;
     }
 
-    public void initializeInteractors(){
-        if(interactors==null){
-            interactors=new ArrayList<GraphInteractor>();
-            if(this.getInteractorA()!=null) {
+    public void initializeInteractors() {
+        if (interactors == null) {
+            interactors = new ArrayList<GraphInteractor>();
+            if (this.getInteractorA() != null) {
                 interactors.add(this.getInteractorA());
             }
-            if(this.getInteractorB()!=null) {
+            if (this.getInteractorB() != null) {
                 interactors.add(this.getInteractorB());
             }
         }
@@ -248,61 +246,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-        int hashcode = 31;
-        if (this.getParticipantA() != null) {
-            hashcode = 31 * hashcode + this.getParticipantA().hashCode();
-        }
-        if (this.getParticipantB() != null) {
-            hashcode = 31 * hashcode + this.getParticipantB().hashCode();
-        }
-        if (this.getComplexExpansion() != null) {
-            hashcode = 31 * hashcode + this.getComplexExpansion().hashCode();
-        }
-        if (!this.getIdentifiers().isEmpty()) {
-            hashcode = hashcode + HashCode.identifiersGraphHashCode(this.getIdentifiers());
-        }
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(BinaryInteractionEvidence binaryInteractionEvidence) {
-        // since there was not hashcode implemented in jami, we had to come up with this
-        int hashcode = 31;
-
-        int hashcodeParticpantA=0;
-        int hashcodeParticpantB=0;
-        if (binaryInteractionEvidence.getParticipantA() != null) {
-            hashcodeParticpantA = HashCode.participantHashCode(binaryInteractionEvidence.getParticipantA());
-            hashcode = 31 * hashcode + hashcodeParticpantA;
-        }
-        if (binaryInteractionEvidence.getParticipantB() != null) {
-            hashcodeParticpantB=HashCode.participantHashCode(binaryInteractionEvidence.getParticipantB());
-            hashcode = 31 * hashcode + hashcodeParticpantB;
-        }
-
-        String uniqueSumValue = "" + hashcodeParticpantA + "-" +hashcodeParticpantB;
-        hashcode = 31 * hashcode + uniqueSumValue.hashCode();
-
-        if (binaryInteractionEvidence.getComplexExpansion() != null) {
-            hashcode = 31 * hashcode +
-                    UnambiguousCvTermComparator.hashCode(binaryInteractionEvidence.getComplexExpansion());
-        }
-        if (!binaryInteractionEvidence.getIdentifiers().isEmpty()) {
-            hashcode = hashcode + HashCode.identifiersHashCode(binaryInteractionEvidence.getIdentifiers());
-        }
-
-        return hashcode + "";
+        return UniqueKeyGenerator.createBinaryInteractionEvidenceKey(binaryInteractionEvidence);
     }
 
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

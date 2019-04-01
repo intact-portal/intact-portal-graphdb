@@ -50,6 +50,17 @@ public class GraphChecksum implements Checksum {
         }
     }
 
+    public GraphChecksum(CvTerm method, String value) {
+        if (method == null) {
+            throw new IllegalArgumentException("The method is required and cannot be null");
+        }
+        setMethod(method);
+        if (value == null) {
+            throw new IllegalArgumentException("The checksum value is required and cannot be null");
+        }
+        setValue(value);
+    }
+
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
@@ -70,17 +81,6 @@ public class GraphChecksum implements Checksum {
 
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(method, this.getGraphId(), RelationshipTypes.METHOD);
-    }
-
-    public GraphChecksum(CvTerm method, String value) {
-        if (method == null) {
-            throw new IllegalArgumentException("The method is required and cannot be null");
-        }
-        setMethod(method);
-        if (value == null) {
-            throw new IllegalArgumentException("The checksum value is required and cannot be null");
-        }
-        setValue(value);
     }
 
     public String getUniqueKey() {
@@ -147,7 +147,7 @@ public class GraphChecksum implements Checksum {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 

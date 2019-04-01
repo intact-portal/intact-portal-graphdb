@@ -12,6 +12,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,18 +73,13 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
-
     public GraphInteractionEvidence() {
 
     }
 
-    public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence,boolean childAlreadyCreated) {
+    public GraphInteractionEvidence(InteractionEvidence binaryInteractionEvidence, boolean childAlreadyCreated) {
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
 
-        setForceHashCodeGeneration(true);
         setImexId(binaryInteractionEvidence.getImexId());
         setExperiment(binaryInteractionEvidence.getExperiment());
         setAvailability(binaryInteractionEvidence.getAvailability());
@@ -95,11 +91,11 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setCreatedDate(binaryInteractionEvidence.getCreatedDate());
         setInteractionType(binaryInteractionEvidence.getInteractionType());
         setAc(CommonUtility.extractAc(binaryInteractionEvidence));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(binaryInteractionEvidence));
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();
-            if(!childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 createNodeNatively();
             }
         }
@@ -120,14 +116,14 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         }*/
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()&&!childAlreadyCreated) {
+            if (!isAlreadyCreated() && !childAlreadyCreated) {
                 createRelationShipNatively(this.getGraphId());
             }
         }
     }
 
-    public void initialzeNodeProperties(){
-        if(this.getAc()!=null)getNodeProperties().put("ac", this.getAc());
+    public void initialzeNodeProperties() {
+        if (this.getAc() != null) getNodeProperties().put("ac", this.getAc());
         if (this.getImexId() != null) getNodeProperties().put("imexId", this.getImexId());
         if (this.getAvailability() != null) getNodeProperties().put("availability", this.getAvailability());
         getNodeProperties().put("isInferred", this.isInferred());
@@ -136,8 +132,10 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         if (this.getRigid() != null) getNodeProperties().put("rigid", this.getRigid());
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
         //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (this.getUpdatedDate() != null) getNodeProperties().put("updatedDate", dateFormat.format(this.getUpdatedDate()));
-        if (this.getCreatedDate() != null) getNodeProperties().put("createdDate", dateFormat.format(this.getCreatedDate()));
+        if (this.getUpdatedDate() != null)
+            getNodeProperties().put("updatedDate", dateFormat.format(this.getUpdatedDate()));
+        if (this.getCreatedDate() != null)
+            getNodeProperties().put("createdDate", dateFormat.format(this.getCreatedDate()));
     }
 
     public void createNodeNatively() {
@@ -147,7 +145,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             Label[] labels = CommonUtility.getLabels(GraphInteractionEvidence.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -163,7 +161,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         CommonUtility.createConfidenceRelationShips(confidences, graphId);
         CommonUtility.createVariableParameterValueSetRelationShips(variableParameterValueSets, graphId);
         CommonUtility.createChecksumRelationShips(checksums, graphId);
-        CommonUtility.createIdentifierRelationShips(identifiers,graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);
         CommonUtility.createAnnotationRelationShips(annotations, graphId);
     }
@@ -389,7 +387,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             if (interactionType instanceof GraphCvTerm) {
                 this.interactionType = (GraphCvTerm) interactionType;
             } else {
-                this.interactionType = new GraphCvTerm(interactionType,false);
+                this.interactionType = new GraphCvTerm(interactionType, false);
             }
         } else {
             this.interactionType = null;
@@ -576,8 +574,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             clearPropertiesLinkedToXrefs();
         }
     }*/
-
-
     public Map<String, Object> getNodeProperties() {
         return nodeProperties;
     }
@@ -619,27 +615,13 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
         /*TODO...Revisit this when you wish to make this class independent from GraphBinaryInteractionEvidence
           also this only handles intact use case.*/
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getAc() != null) {
-            hashcode = 31 * hashcode + this.getAc().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
-    public String createUniqueKey(){
-         return hashCode() + "";
-    }
-
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    public String createUniqueKey(InteractionEvidence interactionEvidence) {
+        return UniqueKeyGenerator.createInteractionEvidenceKey(interactionEvidence);
     }
 }

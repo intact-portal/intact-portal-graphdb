@@ -13,7 +13,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.*;
 
@@ -60,7 +60,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     @Relationship(type = RelationshipTypes.CHANGE_LISTENER)
     private EntityInteractorChangeListener changeListener;
 
-    @Relationship(type = RelationshipTypes.FEATURES,direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.FEATURES, direction = Relationship.OUTGOING)
     @JsonBackReference
     private Collection<GraphFeatureEvidence> features;
 
@@ -89,9 +89,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
     private Collection<GraphCausalRelationship> causalRelationships;
 
     @Transient
-    private boolean forceHashCodeGeneration;
-
-    @Transient
     private boolean isAlreadyCreated;
 
     public GraphParticipantEvidence() {
@@ -99,7 +96,6 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public GraphParticipantEvidence(ParticipantEvidence participantEvidence) {
         String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
-        setForceHashCodeGeneration(true);
         setExperimentalRole(participantEvidence.getExperimentalRole());
         setBiologicalRole(participantEvidence.getBiologicalRole());
         setExpressedInOrganism(participantEvidence.getExpressedInOrganism());
@@ -282,7 +278,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (interactor instanceof GraphInteractor) {
             this.interactor = (GraphInteractor) interactor;
         } else {
-            this.interactor=CommonUtility.initializeInteractor(interactor);
+            this.interactor = CommonUtility.initializeInteractor(interactor);
         }
         if (this.changeListener != null) {
             this.changeListener.onInteractorUpdate(this, oldInteractor);
@@ -378,7 +374,7 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
         if (feature == null) {
             return false;
         }
-        GraphFeatureEvidence graphFeatureEvidence=new GraphFeatureEvidence(feature);
+        GraphFeatureEvidence graphFeatureEvidence = new GraphFeatureEvidence(feature);
         if (getFeatures().add(graphFeatureEvidence)) {
             graphFeatureEvidence.setParticipant(this);
             return true;
@@ -598,51 +594,14 @@ public class GraphParticipantEvidence implements ParticipantEvidence {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getInteractor() != null) {
-            hashcode = 31 * hashcode + this.getInteractor().hashCode();
-        }
-        if (this.getBiologicalRole() != null) {
-            hashcode = 31 * hashcode + this.getBiologicalRole().hashCode();
-        }
-        if (this.getExperimentalRole() != null) {
-            hashcode = 31 * hashcode + this.getExperimentalRole().hashCode();
-        }
-        if (!this.getIdentificationMethods().isEmpty()) {
-            hashcode = hashcode + HashCode.cvTermsGraphHashCode(this.getIdentificationMethods());
-        }
-        if (this.getExperimentalPreparations() != null) {
-            hashcode = 31 * hashcode + HashCode.cvTermsGraphHashCode(this.getExperimentalPreparations());
-        }
-        if (this.getExpressedInOrganism() != null) {
-            hashcode = 31 * hashcode + this.getExpressedInOrganism().hashCode();
-        }
-        if (this.getParameters() != null) {
-            hashcode = 31 * hashcode + HashCode.parametersGraphHashCode(this.getParameters());
-        }
-        if (!this.getFeatures().isEmpty()) {
-            hashcode = hashcode + HashCode.featuresGraphHashCode(this.getFeatures());
-        }
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(ParticipantEvidence participantEvidence) {
-        // since there was not hashcode implemented in jami, we had to come up with this
-        int hashcode = HashCode.participantHashCode(participantEvidence);
-        return hashcode + "";
+        return UniqueKeyGenerator.createParticipantEvidenceKey(participantEvidence);
     }
 
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

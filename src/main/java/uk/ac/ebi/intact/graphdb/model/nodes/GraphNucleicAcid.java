@@ -17,6 +17,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,19 +40,15 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphNucleicAcid() {
         super();
     }
 
     public GraphNucleicAcid(NucleicAcid nucleicAcid) {
         super(nucleicAcid, true);
-        setForceHashCodeGeneration(true);
         setDdbjEmblGenbank(nucleicAcid.getDdbjEmblGenbank());
         setRefseq(nucleicAcid.getRefseq());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(nucleicAcid));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -59,30 +56,6 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             createRelationShipNatively();
             //}
         }
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.putAll(super.getNodeProperties());
-            Label[] labels = CommonUtility.getLabels(GraphNucleicAcid.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, RelationshipTypes.DDBJ_EMBL_GENBANK);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     public GraphNucleicAcid(String name, CvTerm type) {
@@ -147,6 +120,30 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public GraphNucleicAcid(String name, String fullName, Organism organism, Xref uniqueId) {
         super(name, fullName, CvTermUtils.createNucleicAcidInteractorType(), organism, uniqueId);
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.putAll(super.getNodeProperties());
+            Label[] labels = CommonUtility.getLabels(GraphNucleicAcid.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, RelationshipTypes.DDBJ_EMBL_GENBANK);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     public String getUniqueKey() {
@@ -320,37 +317,15 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Nucleic acid".hashCode();
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        } else {
-            if (this.getDdbjEmblGenbank() != null) {
-                hashcode = 31 * hashcode + this.getDdbjEmblGenbank().hashCode();
-            } else if (this.getRefseq() != null) {
-                hashcode = 31 * hashcode + this.getRefseq().hashCode();
-            }
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey() {
-        return hashCode() + "";
-    }
-
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    public String createUniqueKey(NucleicAcid nucleicAcid) {
+        return UniqueKeyGenerator.createInteractorKey(nucleicAcid);
     }
 
     @Transient

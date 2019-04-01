@@ -11,6 +11,7 @@ import psidev.psi.mi.jami.utils.comparator.participant.StoichiometryComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,39 +31,15 @@ public class GraphStoichiometry implements Stoichiometry {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphStoichiometry() {
     }
 
     public GraphStoichiometry(Stoichiometry stoichiometry) {
         this(stoichiometry.getMinValue(), stoichiometry.getMaxValue());
-        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(stoichiometry));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-        }
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.put("minValue", this.getMinValue());
-            nodeProperties.put("maxValue", this.getMaxValue());
-
-            Label[] labels = CommonUtility.getLabels(GraphStoichiometry.class);
-
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -77,6 +54,26 @@ public class GraphStoichiometry implements Stoichiometry {
         setMinValue(minValue);
         setMaxValue(maxValue);
         setUniqueKey(this.toString());
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.put("minValue", this.getMinValue());
+            nodeProperties.put("maxValue", this.getMaxValue());
+
+            Label[] labels = CommonUtility.getLabels(GraphStoichiometry.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUniqueKey() {
@@ -136,11 +133,10 @@ public class GraphStoichiometry implements Stoichiometry {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        return StoichiometryComparator.hashCode(this);
+        return super.hashCode();
     }
 
     @Override
@@ -149,14 +145,6 @@ public class GraphStoichiometry implements Stoichiometry {
     }
 
     public String createUniqueKey(Stoichiometry stoichiometry) {
-        return stoichiometry != null ? StoichiometryComparator.hashCode(stoichiometry) + "" : "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createStoichiometryKey(stoichiometry);
     }
 }

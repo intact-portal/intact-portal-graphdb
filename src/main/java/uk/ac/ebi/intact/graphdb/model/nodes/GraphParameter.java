@@ -62,32 +62,6 @@ public class GraphParameter implements Parameter {
         }
     }
 
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty().toString());
-
-            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
-        CommonUtility.createRelationShip(value, this.graphId, RelationshipTypes.VALUE);
-    }
-
     public GraphParameter(CvTerm type, ParameterValue value) {
         if (type == null) {
             throw new IllegalArgumentException("The parameter type is required and cannot be null");
@@ -128,6 +102,32 @@ public class GraphParameter implements Parameter {
     public GraphParameter(CvTerm type, String value, CvTerm unit) throws IllegalParameterException {
         this(type, value);
         setUnit(unit);
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty().toString());
+
+            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(value, this.graphId, RelationshipTypes.VALUE);
     }
 
     public CvTerm getType() {
@@ -252,7 +252,7 @@ public class GraphParameter implements Parameter {
     }
 
     public String createUniqueKey(Parameter parameter) {
-        return UniqueKeyGenerator.createKeyForParameter(parameter);
+        return UniqueKeyGenerator.createParameterKey(parameter);
     }
 
 }

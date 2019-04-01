@@ -17,6 +17,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,21 +61,17 @@ public class GraphGene extends GraphMolecule implements Gene {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphGene() {
         super();
     }
 
     public GraphGene(Gene gene) {
         super(gene, true);
-        setForceHashCodeGeneration(true);
         setEnsembl(gene.getEnsembl());
         setEnsemblGenome(gene.getEnsemblGenome());
         setEntrezGeneId(gene.getEntrezGeneId());
         setRefseq(gene.getRefseq());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(gene));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -82,32 +79,6 @@ public class GraphGene extends GraphMolecule implements Gene {
             createRelationShipNatively();
             // }
         }
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            nodeProperties.putAll(super.getNodeProperties());
-            Label[] labels = CommonUtility.getLabels(GraphGene.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ensembl, this.graphId, RelationshipTypes.ENSEMBL);
-        CommonUtility.createRelationShip(ensemblGenome, this.graphId, RelationshipTypes.ENSEMBL_GENOME);
-        CommonUtility.createRelationShip(entrezGeneId, this.graphId, RelationshipTypes.ENTREZ_GENE_ID);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     public GraphGene(String name) {
@@ -218,6 +189,32 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public GraphGene(String name, String fullName, CvTerm type, Organism organism) {
         super(name, fullName, type != null ? type : CvTermUtils.createGeneInteractorType(), organism);
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.putAll(super.getNodeProperties());
+            Label[] labels = CommonUtility.getLabels(GraphGene.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+        CommonUtility.createRelationShip(ensembl, this.graphId, RelationshipTypes.ENSEMBL);
+        CommonUtility.createRelationShip(ensemblGenome, this.graphId, RelationshipTypes.ENSEMBL_GENOME);
+        CommonUtility.createRelationShip(entrezGeneId, this.graphId, RelationshipTypes.ENTREZ_GENE_ID);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
     }
 
     /**
@@ -470,38 +467,15 @@ public class GraphGene extends GraphMolecule implements Gene {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Gene".hashCode();
-
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        } else if (this.getEnsembl() != null) {
-            hashcode = 31 * hashcode + this.getEnsembl().hashCode();
-        } else if (this.getEnsemblGenome() != null) {
-            hashcode = 31 * hashcode + this.getEnsemblGenome().hashCode();
-        } else if (this.getEntrezGeneId() != null) {
-            hashcode = 31 * hashcode + this.getEntrezGeneId().hashCode();
-        } else if (this.getRefseq() != null) {
-            hashcode = 31 * hashcode + this.getRefseq().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey() {
-        return hashCode() + "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    public String createUniqueKey(Gene gene) {
+        return UniqueKeyGenerator.createInteractorKey(gene);
     }
 
     @Transient

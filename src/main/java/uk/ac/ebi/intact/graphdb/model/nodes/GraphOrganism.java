@@ -73,32 +73,6 @@ public class GraphOrganism implements Organism {
         }
     }
 
-    public void createNodeNatively() {
-        try {
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getScientificName() != null) nodeProperties.put("scientificName", this.getScientificName());
-            if (this.getCommonName() != null) nodeProperties.put("commonName", this.getCommonName());
-            nodeProperties.put("taxId", this.getTaxId());
-
-            Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(cellType, this.graphId, RelationshipTypes.CELL_TYPE);
-        CommonUtility.createRelationShip(compartment, this.graphId, RelationshipTypes.COMPARTMENT);
-        CommonUtility.createRelationShip(tissue, this.graphId, RelationshipTypes.TISSUE);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
-    }
-
     public GraphOrganism(int taxId) {
         if (taxId == -1 || taxId == -2 || taxId == -3 || taxId == -4 || taxId == -5 || taxId > 0) {
             this.taxId = taxId;
@@ -136,6 +110,32 @@ public class GraphOrganism implements Organism {
         setCellType(cellType);
         setCompartment(compartment);
         setTissue(tissue);
+    }
+
+    public void createNodeNatively() {
+        try {
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getScientificName() != null) nodeProperties.put("scientificName", this.getScientificName());
+            if (this.getCommonName() != null) nodeProperties.put("commonName", this.getCommonName());
+            nodeProperties.put("taxId", this.getTaxId());
+
+            Label[] labels = CommonUtility.getLabels(GraphOrganism.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(cellType, this.graphId, RelationshipTypes.CELL_TYPE);
+        CommonUtility.createRelationShip(compartment, this.graphId, RelationshipTypes.COMPARTMENT);
+        CommonUtility.createRelationShip(tissue, this.graphId, RelationshipTypes.TISSUE);
+        CommonUtility.createAliasRelationShips(aliases, this.graphId);
     }
 
     public String getCommonName() {
@@ -304,7 +304,7 @@ public class GraphOrganism implements Organism {
 
 
     public String createUniqueKey(Organism organism) {
-        return UniqueKeyGenerator.createKeyForOrganism(organism);
+        return UniqueKeyGenerator.createOrganismKey(organism);
     }
 
 }

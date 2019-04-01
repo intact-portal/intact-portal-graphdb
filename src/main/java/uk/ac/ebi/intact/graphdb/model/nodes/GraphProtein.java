@@ -16,6 +16,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,22 +52,18 @@ public class GraphProtein extends GraphPolymer implements Protein {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphProtein() {
         super();
     }
 
     public GraphProtein(Protein protein) {
         super(protein, true);
-        setForceHashCodeGeneration(true);
         setUniprotkb(protein.getUniprotkb());
         setUniprotName(protein.getUniprotkb());
         setRefseq(protein.getRefseq());
         setChecksums(protein.getChecksums());
         setGeneName(protein.getGeneName());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(protein));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -74,33 +71,6 @@ public class GraphProtein extends GraphPolymer implements Protein {
             createRelationShipNatively();
             //}
         }
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getUniprotName() != null) nodeProperties.put("uniprotName", this.getUniprotName());
-            nodeProperties.putAll(super.getNodeProperties());
-            Label[] labels = CommonUtility.getLabels(GraphProtein.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(uniprotkb, this.graphId, RelationshipTypes.UNIPROTKB);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
-        CommonUtility.createRelationShip(geneName, this.graphId, RelationshipTypes.GENE_NAME);
-        CommonUtility.createRelationShip(rogid, this.graphId, RelationshipTypes.ROGID);
     }
 
     public GraphProtein(String name, CvTerm type) {
@@ -165,6 +135,33 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public GraphProtein(String name, String fullName, Organism organism, Xref uniqueId) {
         super(name, fullName, CvTermUtils.createProteinInteractorType(), organism, uniqueId);
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getUniprotName() != null) nodeProperties.put("uniprotName", this.getUniprotName());
+            nodeProperties.putAll(super.getNodeProperties());
+            Label[] labels = CommonUtility.getLabels(GraphProtein.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+        CommonUtility.createRelationShip(uniprotkb, this.graphId, RelationshipTypes.UNIPROTKB);
+        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(geneName, this.graphId, RelationshipTypes.GENE_NAME);
+        CommonUtility.createRelationShip(rogid, this.graphId, RelationshipTypes.ROGID);
     }
 
     /**
@@ -446,13 +443,16 @@ public class GraphProtein extends GraphPolymer implements Protein {
     }
 
     @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
+    public int hashCode() {
+
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
+        return super.hashCode();
     }
 
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+    public String createUniqueKey(Protein protein) {
+        return UniqueKeyGenerator.createInteractorKey(protein);
     }
 
     @Transient
@@ -519,35 +519,6 @@ public class GraphProtein extends GraphPolymer implements Protein {
         protected void clearProperties() {
             clearPropertiesLinkedToAliases();
         }
-    }
-
-    @Override
-    public int hashCode() {
-
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
-        }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Protein".hashCode();
-
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        } else if (this.getUniprotkb() != null) {
-            hashcode = 31 * hashcode + this.getUniprotkb().hashCode();
-        } else if (this.getRefseq() != null) {
-            hashcode = 31 * hashcode + this.getRefseq().hashCode();
-        } else if (this.getRogid() != null) {
-            hashcode = 31 * hashcode + this.getRogid().hashCode();
-        } else if (this.getGeneName() != null) {
-            hashcode = 31 * hashcode + this.getGeneName().hashCode();
-        }
-        return hashcode;
-    }
-
-
-    public String createUniqueKey() {
-        return hashCode() + "";
     }
 
 }

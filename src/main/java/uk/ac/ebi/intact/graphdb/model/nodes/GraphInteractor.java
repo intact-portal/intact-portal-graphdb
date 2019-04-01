@@ -105,41 +105,6 @@ public class GraphInteractor implements Interactor {
         }
     }
 
-    public void initializeNodeProperties() {
-
-        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-        if (this.getPreferredName() != null) nodeProperties.put("preferredName", this.getPreferredName());
-        if (this.getPreferredIdentifierStr() != null) nodeProperties.put("preferredIdentifierStr", this.getPreferredIdentifierStr());
-        if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
-        if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively(Long graphId) {
-        CommonUtility.createRelationShip(organism, graphId, RelationshipTypes.ORGANISM);
-        CommonUtility.createRelationShip(interactorType, graphId, RelationshipTypes.INTERACTOR_TYPE);
-        CommonUtility.createRelationShip(preferredIdentifier, graphId, RelationshipTypes.PREFERRED_IDENTIFIER);
-        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
-        CommonUtility.createChecksumRelationShips(checksums, graphId);
-        CommonUtility.createXrefRelationShips(xrefs, graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, graphId);
-        CommonUtility.createAliasRelationShips(aliases, graphId);
-    }
-
     public GraphInteractor(String name, CvTerm type) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("The short name cannot be null or empty.");
@@ -230,6 +195,42 @@ public class GraphInteractor implements Interactor {
         this(name, fullName, organism);
         getIdentifiers().add(new GraphXref(uniqueId));
         initialiseDefaultInteractorType();
+    }
+
+    public void initializeNodeProperties() {
+
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+        if (this.getPreferredName() != null) nodeProperties.put("preferredName", this.getPreferredName());
+        if (this.getPreferredIdentifierStr() != null)
+            nodeProperties.put("preferredIdentifierStr", this.getPreferredIdentifierStr());
+        if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+        if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Label[] labels = CommonUtility.getLabels(GraphInteractor.class);
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(organism, graphId, RelationshipTypes.ORGANISM);
+        CommonUtility.createRelationShip(interactorType, graphId, RelationshipTypes.INTERACTOR_TYPE);
+        CommonUtility.createRelationShip(preferredIdentifier, graphId, RelationshipTypes.PREFERRED_IDENTIFIER);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
+        CommonUtility.createChecksumRelationShips(checksums, graphId);
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
+        CommonUtility.createAliasRelationShips(aliases, graphId);
     }
 
     public void initializeAc(Collection<Xref> identifiers) {
@@ -353,7 +354,6 @@ public class GraphInteractor implements Interactor {
     public void setAc(String ac) {
         this.ac = ac;
     }
-
 
 
     public Collection<GraphChecksum> getChecksums() {
@@ -502,7 +502,7 @@ public class GraphInteractor implements Interactor {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 

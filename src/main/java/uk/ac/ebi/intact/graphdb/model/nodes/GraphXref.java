@@ -76,32 +76,6 @@ public class GraphXref implements Xref {
         }
     }
 
-    private void createNodesNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            nodeProperties.put("identifier", this.getId());
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getVersion() != null) nodeProperties.put("version", this.getVersion());
-
-            Label[] labels = CommonUtility.getLabels(GraphXref.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createRelationShipNatively() {
-        CommonUtility.createRelationShip(database, this.getGraphId(), RelationshipTypes.DATABASE);
-        CommonUtility.createRelationShip(qualifier, this.getGraphId(), RelationshipTypes.QUALIFIER);
-    }
-
     public GraphXref(CvTerm database, String identifier, CvTerm qualifier) {
         this(database, identifier);
         setQualifier(qualifier);
@@ -134,6 +108,32 @@ public class GraphXref implements Xref {
             throw new IllegalArgumentException("The id is required and cannot be null or empty");
         }
         setId(identifier);
+    }
+
+    private void createNodesNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("identifier", this.getId());
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getVersion() != null) nodeProperties.put("version", this.getVersion());
+
+            Label[] labels = CommonUtility.getLabels(GraphXref.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createRelationShipNatively() {
+        CommonUtility.createRelationShip(database, this.getGraphId(), RelationshipTypes.DATABASE);
+        CommonUtility.createRelationShip(qualifier, this.getGraphId(), RelationshipTypes.QUALIFIER);
     }
 
     public CvTerm getDatabase() {
@@ -250,7 +250,7 @@ public class GraphXref implements Xref {
     }
 
     public String createUniqueKey(Xref xref) {
-        return UniqueKeyGenerator.createKeyForXref(xref);
+        return UniqueKeyGenerator.createXrefKey(xref);
     }
 
     public String getAc() {

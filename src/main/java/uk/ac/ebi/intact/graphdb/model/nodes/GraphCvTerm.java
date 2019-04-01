@@ -93,42 +93,6 @@ public class GraphCvTerm implements CvTerm {
     }
 
 
-    public void initialzeNodeProperties() {
-
-        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-        if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
-        if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
-        if (this.getMIIdentifier() != null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
-        if (this.getMODIdentifier() != null) nodeProperties.put("mODIdentifier", this.getMODIdentifier());
-        if (this.getPARIdentifier() != null) nodeProperties.put("pARIdentifier", this.getPARIdentifier());
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            Label[] labels = CommonUtility.getLabels(GraphCvTerm.class);
-
-            //create node
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-            //create relationships
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively(Long graphId) {
-        CommonUtility.createXrefRelationShips(xrefs, graphId);
-        CommonUtility.createSynonymRelationShips(synonyms, graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, graphId);
-        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
-    }
-
     public GraphCvTerm(String shortName) {
         if (shortName == null) {
             throw new IllegalArgumentException("The short name is required and cannot be null");
@@ -175,6 +139,41 @@ public class GraphCvTerm implements CvTerm {
         this.getTypeLabels().add(label);
     }
 
+    public void initialzeNodeProperties() {
+
+        if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+        if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+        if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
+        if (this.getMIIdentifier() != null) nodeProperties.put("mIIdentifier", this.getMIIdentifier());
+        if (this.getMODIdentifier() != null) nodeProperties.put("mODIdentifier", this.getMODIdentifier());
+        if (this.getPARIdentifier() != null) nodeProperties.put("pARIdentifier", this.getPARIdentifier());
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            Label[] labels = CommonUtility.getLabels(GraphCvTerm.class);
+
+            //create node
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+            //create relationships
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createSynonymRelationShips(synonyms, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
+    }
 
     public String getShortName() {
         return shortName;
@@ -466,7 +465,7 @@ public class GraphCvTerm implements CvTerm {
     }
 
     public String createUniqueKey(CvTerm cvTerm) {
-        return UniqueKeyGenerator.createKeyForCvTerm(cvTerm);
+        return UniqueKeyGenerator.createCvTermKey(cvTerm);
     }
 
 }

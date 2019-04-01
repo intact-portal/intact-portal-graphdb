@@ -59,6 +59,18 @@ public class GraphAnnotation implements Annotation {
 
     }
 
+    public GraphAnnotation(CvTerm topic) {
+        if (topic == null) {
+            throw new IllegalArgumentException("The annotation topic is required and cannot be null");
+        }
+        setTopic(topic);
+    }
+
+    public GraphAnnotation(CvTerm topic, String value) {
+        this(topic);
+        setValue(value);
+    }
+
     public void createNodeNatively() {
 
         BatchInserter batchInserter = CreationConfig.batchInserter;
@@ -78,19 +90,6 @@ public class GraphAnnotation implements Annotation {
 
     private void createRelationShipNatively() {
         CommonUtility.createRelationShip(topic, this.getGraphId(), RelationshipTypes.TOPIC);
-    }
-
-
-    public GraphAnnotation(CvTerm topic) {
-        if (topic == null) {
-            throw new IllegalArgumentException("The annotation topic is required and cannot be null");
-        }
-        setTopic(topic);
-    }
-
-    public GraphAnnotation(CvTerm topic, String value) {
-        this(topic);
-        setValue(value);
     }
 
     public String getUniqueKey() {
@@ -179,7 +178,7 @@ public class GraphAnnotation implements Annotation {
     }
 
     public String createUniqueKey(Annotation annotation) {
-        return UniqueKeyGenerator.createKeyForAnnotation(annotation);
+        return UniqueKeyGenerator.createAnnotationKey(annotation);
     }
 
 }

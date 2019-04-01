@@ -25,7 +25,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String value;
@@ -54,7 +54,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -66,12 +66,12 @@ public class GraphVariableParameterValue implements VariableParameterValue {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if(this.getValue()!=null)nodeProperties.put("value", this.getValue());
-            if(this.getOrder()!=null)nodeProperties.put("order", this.getOrder());
+            if (this.getValue() != null) nodeProperties.put("value", this.getValue());
+            if (this.getOrder() != null) nodeProperties.put("order", this.getOrder());
 
             Label[] labels = CommonUtility.getLabels(GraphVariableParameterValue.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -173,7 +173,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 

@@ -10,7 +10,7 @@ import psidev.psi.mi.jami.model.ExperimentalEntity;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,14 +21,11 @@ public class GraphExperimentalEntity extends GraphEntity {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     @Transient
     private boolean isAlreadyCreated;
-
-    @Transient
-    private boolean forceHashCodeGeneration;
 
     public GraphExperimentalEntity() {
         super();
@@ -36,13 +33,12 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
         //TODO...
-        super(experimentalEntity,true);
-        setForceHashCodeGeneration(true);
-        setUniqueKey(createUniqueKey());
+        super(experimentalEntity, true);
+        setUniqueKey(createUniqueKey(experimentalEntity));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -56,7 +52,7 @@ public class GraphExperimentalEntity extends GraphEntity {
             nodeProperties.putAll(super.getNodeProperties());
             Label[] labels = CommonUtility.getLabels(GraphExperimentalEntity.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -100,31 +96,15 @@ public class GraphExperimentalEntity extends GraphEntity {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "ExperimentalEntity".hashCode();
-        hashcode = 31 * hashcode + super.hashCode();
-        if (this.getFeatures() != null) {
-            hashcode = 31 * hashcode + HashCode.featuresGraphHashCode(super.getFeatures());
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
 
-    public String createUniqueKey(){
-        return hashCode() + "";
+    public String createUniqueKey(ExperimentalEntity experimentalEntity) {
+        return UniqueKeyGenerator.createEntityKey(experimentalEntity);
     }
 
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

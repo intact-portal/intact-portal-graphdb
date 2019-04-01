@@ -29,7 +29,7 @@ public class GraphVariableParameter implements VariableParameter {
     @GraphId
     private Long graphId;
 
-    @Index(unique = true,primary = true)
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     private String ac;
@@ -65,18 +65,18 @@ public class GraphVariableParameter implements VariableParameter {
         if (CreationConfig.createNatively) {
             createNodeNatively();
         }
-        boolean wasInitializedBefore=false;
+        boolean wasInitializedBefore = false;
         if (GraphEntityCache.parameterValueCacheMap.get(this.getUniqueKey()) == null) {
             GraphEntityCache.parameterValueCacheMap.put(this.getUniqueKey(), this);
-        }else{
-            wasInitializedBefore=true;
+        } else {
+            wasInitializedBefore = true;
         }
         if (!wasInitializedBefore) {
             setVariableValues(variableParameter.getVariableValues());
         }
 
         if (CreationConfig.createNatively) {
-            if(!isAlreadyCreated()) {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively();
             }
         }
@@ -89,11 +89,11 @@ public class GraphVariableParameter implements VariableParameter {
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if(this.getDescription()!=null)nodeProperties.put("description", this.getDescription());
+            if (this.getDescription() != null) nodeProperties.put("description", this.getDescription());
 
             Label[] labels = CommonUtility.getLabels(GraphVariableParameter.class);
 
-            NodeDataFeed nodeDataFeed=CommonUtility.createNode(nodeProperties, labels);
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
 
@@ -173,7 +173,7 @@ public class GraphVariableParameter implements VariableParameter {
             if (unit instanceof GraphCvTerm) {
                 this.unit = (GraphCvTerm) unit;
             } else {
-                this.unit = new GraphCvTerm(unit,false);
+                this.unit = new GraphCvTerm(unit, false);
             }
         } else {
             this.unit = null;
@@ -252,7 +252,7 @@ public class GraphVariableParameter implements VariableParameter {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 

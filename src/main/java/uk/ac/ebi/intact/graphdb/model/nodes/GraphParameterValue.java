@@ -90,7 +90,7 @@ public class GraphParameterValue extends ParameterValue {
     }
 
     public String createUniqueKey() {
-        return UniqueKeyGenerator.createKeyForParameterValue(this);
+        return UniqueKeyGenerator.createParameterValueKey(this);
     }
 
 }

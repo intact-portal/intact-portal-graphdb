@@ -100,7 +100,7 @@ public class GraphAuthor {
     }
 
     public String createUniqueKey() {
-        return UniqueKeyGenerator.createKeyForAuthor(getAuthorName());
+        return UniqueKeyGenerator.createAuthorKey(getAuthorName());
     }
 
 }

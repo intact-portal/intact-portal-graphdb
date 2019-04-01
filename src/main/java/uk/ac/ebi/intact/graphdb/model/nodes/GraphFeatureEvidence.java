@@ -201,7 +201,7 @@ public class GraphFeatureEvidence extends GraphFeature {
     public String createUniqueKey(FeatureEvidence featureEvidence) {
         // TODO... Check and use the super one if possible
         // Ans: super won't exist later
-        return UniqueKeyGenerator.createKeyForFeature(featureEvidence);
+        return UniqueKeyGenerator.createFeatureKey(featureEvidence);
     }
 
     public GraphParticipantEvidence getParticipantEvidence() {

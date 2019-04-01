@@ -54,6 +54,18 @@ public class GraphCausalRelationship implements CausalRelationship {
         }
     }
 
+    public GraphCausalRelationship(CvTerm relationType, Participant target) {
+        if (relationType == null) {
+            throw new IllegalArgumentException("The relationType in a CausalRelationship cannot be null");
+        }
+        setRelationType(relationType);
+
+        if (target == null) {
+            throw new IllegalArgumentException("The participat target in a CausalRelationship cannot be null");
+        }
+        setTarget(target);
+    }
+
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
@@ -74,18 +86,6 @@ public class GraphCausalRelationship implements CausalRelationship {
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(relationType, this.getGraphId(), RelationshipTypes.RELATION_TYPE);
         CommonUtility.createRelationShip(target, this.getGraphId(), RelationshipTypes.TARGET);
-    }
-
-    public GraphCausalRelationship(CvTerm relationType, Participant target) {
-        if (relationType == null) {
-            throw new IllegalArgumentException("The relationType in a CausalRelationship cannot be null");
-        }
-        setRelationType(relationType);
-
-        if (target == null) {
-            throw new IllegalArgumentException("The participat target in a CausalRelationship cannot be null");
-        }
-        setTarget(target);
     }
 
     public String getUniqueKey() {
@@ -163,7 +163,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     @Override
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return Integer.parseInt(this.getUniqueKey());
         }
 

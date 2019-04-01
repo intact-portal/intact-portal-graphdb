@@ -14,7 +14,7 @@ import psidev.psi.mi.jami.utils.CvTermUtils;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +38,6 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
     private boolean isAlreadyCreated;
 
     @Transient
-    private boolean forceHashCodeGeneration;
-
-    @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     public GraphPolymer() {
@@ -49,7 +46,6 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public GraphPolymer(Polymer polymer, boolean childAlreadyCreated) {
         super(polymer, true);
-        setForceHashCodeGeneration(true);
         setSequence(polymer.getSequence());
         setUniqueKey(createUniqueKey(polymer));
 
@@ -64,31 +60,6 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
             if (!childAlreadyCreated) {
                 this.createRelationShipNatively();
             }
-        }
-    }
-
-    public void initialzeNodeProperties() {
-        if (this.getSequence() != null) getNodeProperties().put("sequence", this.getSequence());
-        this.getNodeProperties().putAll(super.getNodeProperties());
-    }
-
-    public void createRelationShipNatively() {
-        super.createRelationShipNatively(this.getGraphId());
-    }
-
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Label[] labels = CommonUtility.getLabels(GraphPolymer.class);
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -156,6 +127,31 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         super(name, fullName, CvTermUtils.createPolymerInteractorType(), organism, uniqueId);
     }
 
+    public void initialzeNodeProperties() {
+        if (this.getSequence() != null) getNodeProperties().put("sequence", this.getSequence());
+        this.getNodeProperties().putAll(super.getNodeProperties());
+    }
+
+    public void createRelationShipNatively() {
+        super.createRelationShipNatively(this.getGraphId());
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Label[] labels = CommonUtility.getLabels(GraphPolymer.class);
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getSequence() {
         return this.sequence;
     }
@@ -207,28 +203,14 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public int hashCode() {
 
-        if(!isForceHashCodeGeneration() &&this.getUniqueKey()!=null&&!this.getUniqueKey().isEmpty()){
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        }
-        if (this.getOrganism() != null) {
-            hashcode = 31 * hashcode + this.getOrganism().hashCode();
-        }
-        if (this.getSequence() != null) {
-            hashcode = 31 * hashcode + this.getSequence().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(Polymer polymer) {
-        // since there was not hashcode implemented in jami, we had to come up with this
-        int hashcode = HashCode.polymerHashCode(polymer);
-
-        return hashcode + "";
+        return UniqueKeyGenerator.createInteractorKey(polymer);
     }
 
     @Override
@@ -241,13 +223,4 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
         this.graphId = graphId;
     }
 
-    @Override
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    @Override
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
 }

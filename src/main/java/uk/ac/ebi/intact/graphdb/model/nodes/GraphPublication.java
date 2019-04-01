@@ -115,54 +115,6 @@ public class GraphPublication implements Publication {
         }
     }
 
-    public void createNodeNatively() {
-        try {
-            BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
-            if (this.getPubmedIdStr() != null) nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
-            nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
-            if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
-            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            if (this.getPublicationDate() != null)
-                nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
-            if (this.getReleasedDate() != null)
-                nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
-
-            if (this.getAuthors() != null) {
-                String[] authorArray = new String[this.getAuthors().size()];
-                authorArray = this.getAuthors().toArray(authorArray);
-                nodeProperties.put("authors", authorArray);
-            }
-
-
-            Label[] labels = CommonUtility.getLabels(GraphPublication.class);
-
-            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
-            setGraphId(nodeDataFeed.getGraphId());
-            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, RelationshipTypes.GRAPH_CURATION_DEPTH);
-        CommonUtility.createRelationShip(imexId, this.graphId, RelationshipTypes.IMEX_ID);
-        CommonUtility.createRelationShip(source, this.graphId, RelationshipTypes.SOURCE);
-        CommonUtility.createRelationShip(pubmedId, this.graphId, RelationshipTypes.PMID);
-        CommonUtility.createRelationShip(doi, this.graphId, RelationshipTypes.DOI);
-        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createExperimentRelationShips(experiments, this.graphId);
-        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(), this.getGraphId());
-    }
-
     public GraphPublication(Xref identifier) {
         this();
 
@@ -223,6 +175,54 @@ public class GraphPublication implements Publication {
     public GraphPublication(String title, String journal, Date publicationDate, String imexId, Source source) {
         this(title, journal, publicationDate, CurationDepth.IMEx, source);
         assignImexId(imexId);
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            if (this.getPubmedIdStr() != null) nodeProperties.put("pubmedIdStr", this.getPubmedIdStr());
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getTitle() != null) nodeProperties.put("title", this.getTitle());
+            if (this.getJournal() != null) nodeProperties.put("journal", this.getJournal());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (this.getPublicationDate() != null)
+                nodeProperties.put("publicationDate", dateFormat.format(this.getPublicationDate()));
+            if (this.getReleasedDate() != null)
+                nodeProperties.put("releasedDate", dateFormat.format(this.getReleasedDate()));
+
+            if (this.getAuthors() != null) {
+                String[] authorArray = new String[this.getAuthors().size()];
+                authorArray = this.getAuthors().toArray(authorArray);
+                nodeProperties.put("authors", authorArray);
+            }
+
+
+            Label[] labels = CommonUtility.getLabels(GraphPublication.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, RelationshipTypes.GRAPH_CURATION_DEPTH);
+        CommonUtility.createRelationShip(imexId, this.graphId, RelationshipTypes.IMEX_ID);
+        CommonUtility.createRelationShip(source, this.graphId, RelationshipTypes.SOURCE);
+        CommonUtility.createRelationShip(pubmedId, this.graphId, RelationshipTypes.PMID);
+        CommonUtility.createRelationShip(doi, this.graphId, RelationshipTypes.DOI);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createExperimentRelationShips(experiments, this.graphId);
+        CommonUtility.createAuthorRelationShips(this.getGraphAuthors(), this.getGraphId());
     }
 
     public void initializeAc() {
@@ -679,6 +679,24 @@ public class GraphPublication implements Publication {
         this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 
+    public int hashCode() {
+
+        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return Integer.parseInt(this.getUniqueKey());
+        }
+
+        int hashcode = 31;
+        hashcode = 31 * hashcode + "Publication".hashCode();
+        if (this.getPubmedIdStr() != null) {
+            hashcode = 31 * hashcode + this.getPubmedIdStr().hashCode();
+        }
+        return hashcode;
+    }
+
+    public String createUniqueKey() {
+        return hashCode() + "";
+    }
+
     @Transient
     private class PublicationIdentifierList extends AbstractListHavingProperties<GraphXref> {
         public PublicationIdentifierList() {
@@ -721,24 +739,6 @@ public class GraphPublication implements Publication {
         protected void clearProperties() {
             clearPropertiesLinkedToXrefs();
         }
-    }
-
-    public int hashCode() {
-
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
-        }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Publication".hashCode();
-        if (this.getPubmedIdStr() != null) {
-            hashcode = 31 * hashcode + this.getPubmedIdStr().hashCode();
-        }
-        return hashcode;
-    }
-
-    public String createUniqueKey() {
-        return hashCode() + "";
     }
 
 }

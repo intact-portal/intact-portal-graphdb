@@ -59,6 +59,18 @@ public class GraphAlias implements Alias {
 
     }
 
+    public GraphAlias(CvTerm type, String name) {
+        this(name);
+        setType(type);
+    }
+
+    public GraphAlias(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("The alias name is required and cannot be null");
+        }
+        setName(name);
+    }
+
     public void createNodeNatively() {
 
         BatchInserter batchInserter = CreationConfig.batchInserter;
@@ -77,18 +89,6 @@ public class GraphAlias implements Alias {
 
     private void createRelationShipNatively() {
         CommonUtility.createRelationShip(type, this.getGraphId(), RelationshipTypes.TYPE);
-    }
-
-    public GraphAlias(CvTerm type, String name) {
-        this(name);
-        setType(type);
-    }
-
-    public GraphAlias(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("The alias name is required and cannot be null");
-        }
-        setName(name);
     }
 
     public String getUniqueKey() {
@@ -168,7 +168,7 @@ public class GraphAlias implements Alias {
     }
 
     public String createUniqueKey(Alias alias) {
-        return UniqueKeyGenerator.createKeyForAlias(alias);
+        return UniqueKeyGenerator.createAliasKey(alias);
     }
 
 
