@@ -10,6 +10,7 @@ import psidev.psi.mi.jami.model.CurationDepth;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +32,11 @@ public class GraphCurationDepth {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphCurationDepth() {
 
     }
 
     public GraphCurationDepth(CurationDepth curationDepth) {
-        setForceHashCodeGeneration(true);
         setCurationDepth(curationDepth.name());
         setAc(CommonUtility.extractAc(curationDepth));
         setUniqueKey(createUniqueKey(curationDepth));
@@ -110,27 +107,13 @@ public class GraphCurationDepth {
 
     public int hashCode() {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getCurationDepth() != null) {
-            hashcode = 31 * hashcode + this.getCurationDepth().toLowerCase().hashCode();
-        }
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(CurationDepth curationDepth) {
-        return hashCode() + "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createCurationDepthKey(curationDepth);
     }
 }

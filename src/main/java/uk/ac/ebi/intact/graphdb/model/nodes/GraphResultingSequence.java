@@ -12,6 +12,7 @@ import psidev.psi.mi.jami.utils.comparator.range.ResultingSequenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 
 import java.util.ArrayList;
@@ -35,15 +36,11 @@ public class GraphResultingSequence implements ResultingSequence {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphResultingSequence() {
 
     }
 
     public GraphResultingSequence(ResultingSequence resultingSequence) {
-        setForceHashCodeGeneration(true);
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
@@ -165,19 +162,7 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public int hashCode() {
-
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
-        }
-
-        int hashcode;
-        try {
-            hashcode = ResultingSequenceComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String toString() {
@@ -185,14 +170,6 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public String createUniqueKey(ResultingSequence resultingSequence) {
-        return resultingSequence != null ? ResultingSequenceComparator.hashCode(resultingSequence) + "" : "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return Constants.UNIQUE_KEY_NA;
     }
 }

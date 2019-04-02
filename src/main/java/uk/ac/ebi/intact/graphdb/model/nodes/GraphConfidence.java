@@ -10,6 +10,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +32,10 @@ public class GraphConfidence implements Confidence {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphConfidence() {
     }
 
     public GraphConfidence(Confidence confidence) {
-        setForceHashCodeGeneration(true);
         setType(confidence.getType());
         setValue(confidence.getValue());
         setUniqueKey(createUniqueKey(confidence));
@@ -153,30 +150,13 @@ public class GraphConfidence implements Confidence {
 
     @Override
     public int hashCode() {
-
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousConfidenceComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(Confidence confidence) {
-        return confidence != null ? UnambiguousConfidenceComparator.hashCode(confidence) + "" : "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createConfidenceKey(confidence);
     }
 }

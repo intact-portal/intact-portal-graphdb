@@ -9,6 +9,7 @@ import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,15 +40,11 @@ public class GraphClusteredInteraction {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphClusteredInteraction() {
 
     }
 
     public GraphClusteredInteraction(ClusterDataFeed clusterDataFeed) {
-        setForceHashCodeGeneration(true);
         setInteractions(clusterDataFeed.getInteractions());
         setInteractorPA(clusterDataFeed.getInteractorA());
         setInteractorPB(clusterDataFeed.getInteractorB());
@@ -163,35 +160,13 @@ public class GraphClusteredInteraction {
     }
 
     public int hashCode() {
-
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Cluster".hashCode();
-
-        if (this.getInteractorPA() != null) {
-            hashcode = 31 * hashcode + this.getInteractorPA().hashCode();
-        }
-
-        if (this.getinteractorPB() != null) {
-            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();
-        }
-
-
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey() {
-        return hashCode() + "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createClusteredInteractionKey(this);
     }
 }

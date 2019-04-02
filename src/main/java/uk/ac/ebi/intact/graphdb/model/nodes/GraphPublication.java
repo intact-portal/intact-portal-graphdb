@@ -10,10 +10,7 @@ import psidev.psi.mi.jami.utils.XrefUtils;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,15 +72,11 @@ public class GraphPublication implements Publication {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphPublication() {
         this.curationDepth = CurationDepth.undefined;
     }
 
     public GraphPublication(Publication publication) {
-        setForceHashCodeGeneration(true);
         setTitle(publication.getTitle());
         setJournal(publication.getJournal());
         setPublicationDate(publication.getPublicationDate());
@@ -95,7 +88,7 @@ public class GraphPublication implements Publication {
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
         setAc(CommonUtility.extractAc(publication));
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(publication));
         setAuthors(publication.getAuthors());
 
         if (CreationConfig.createNatively) {
@@ -671,30 +664,16 @@ public class GraphPublication implements Publication {
         this.ac = ac;
     }
 
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
-    }
-
     public int hashCode() {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Publication".hashCode();
-        if (this.getPubmedIdStr() != null) {
-            hashcode = 31 * hashcode + this.getPubmedIdStr().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
-    public String createUniqueKey() {
-        return hashCode() + "";
+    public String createUniqueKey(Publication publication) {
+        return UniqueKeyGenerator.createPublicationKey(publication);
     }
 
     @Transient

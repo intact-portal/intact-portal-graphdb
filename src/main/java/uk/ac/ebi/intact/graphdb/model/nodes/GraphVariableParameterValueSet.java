@@ -13,7 +13,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
-import uk.ac.ebi.intact.graphdb.utils.HashCode;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.*;
 
@@ -31,16 +31,12 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphVariableParameterValueSet() {
 
     }
 
     //TODO Review it
     public GraphVariableParameterValueSet(VariableParameterValueSet variableParameterValueSet) {
-        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(variableParameterValueSet));
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -117,32 +113,13 @@ public class GraphVariableParameterValueSet extends DefaultVariableParameterValu
 
     public int hashCode() {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getVariableParameterValues() != null) {
-            hashcode = 31 * hashcode + HashCode.variableParametersValuesGraphHashCode(this.getVariableParameterValues());
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     public String createUniqueKey(VariableParameterValueSet variableParameterValueSet) {
-        // since there was not hashcode implemented in jami, we had to come up with this
-        int hashcode = 31;
-        if (this.getVariableParameterValues() != null) {
-            hashcode = 31 * hashcode + HashCode.variableParametersValuesHashCode(variableParameterValueSet);
-        }
-
-        return hashcode + "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createVariableParametersValueSetKey(variableParameterValueSet);
     }
 }

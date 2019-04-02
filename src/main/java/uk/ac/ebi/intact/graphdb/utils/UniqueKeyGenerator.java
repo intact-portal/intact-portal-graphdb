@@ -6,11 +6,13 @@ import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
+import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
 import psidev.psi.mi.jami.utils.comparator.feature.UnambiguousFeatureEvidenceComparator;
 import psidev.psi.mi.jami.utils.comparator.interaction.UnambiguousInteractionEvidenceComparator;
 import psidev.psi.mi.jami.utils.comparator.parameter.UnambiguousParameterComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import psidev.psi.mi.jami.utils.comparator.xref.UnambiguousXrefComparator;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphClusteredInteraction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class UniqueKeyGenerator {
                 }
             }
         } catch (Exception e) {
-            return Constants.NOT_GENERATED_UNIQUE_KEY;
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
 
         return uniqueKeyStringBuilder.toString().toLowerCase();
@@ -101,7 +103,7 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(cvTerm.getShortName());
             }
         } catch (Exception e) {
-            return Constants.NOT_GENERATED_UNIQUE_KEY;
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
@@ -301,114 +303,6 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static String createXrefListKey(Collection<Xref> xrefs) {
-        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "xref list::";
-        uniqueKeyStringBuilder.append(prefix);
-
-        UnambiguousXrefComparator unambiguousXrefComparator = new UnambiguousXrefComparator();
-        if (!xrefs.isEmpty()) {
-            List<Xref> list1 = new ArrayList<Xref>(xrefs);
-            Collections.sort(list1, unambiguousXrefComparator);
-            int counter = 1;
-            for (Xref xref : list1) {
-                uniqueKeyStringBuilder.append(createXrefKey(xref));
-                if (counter != list1.size()) {
-                    uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
-                }
-                counter++;
-            }
-
-        }
-
-        return uniqueKeyStringBuilder.toString().toLowerCase();
-    }
-
-    public static String createCvTermListKey(Collection<CvTerm> cvTerms) {
-        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "cv list::";
-        uniqueKeyStringBuilder.append(prefix);
-
-        UnambiguousCvTermComparator unambiguousCvTermComparator = new UnambiguousCvTermComparator();
-        if (!cvTerms.isEmpty()) {
-            List<CvTerm> list1 = new ArrayList<CvTerm>(cvTerms);
-            Collections.sort(list1, unambiguousCvTermComparator);
-            int counter = 1;
-            for (CvTerm cvTerm : list1) {
-                uniqueKeyStringBuilder.append(createCvTermKey(cvTerm));
-                if (counter != list1.size()) {
-                    uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
-                }
-                counter++;
-            }
-        }
-        return uniqueKeyStringBuilder.toString().toLowerCase();
-    }
-
-    public static String createParameterListKey(Collection<Parameter> parameters) {
-        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "parameter list::";
-        uniqueKeyStringBuilder.append(prefix);
-
-        UnambiguousParameterComparator unambiguousParameterComparator = new UnambiguousParameterComparator();
-        if (!parameters.isEmpty()) {
-            List<Parameter> list1 = new ArrayList<Parameter>(parameters);
-            Collections.sort(list1, unambiguousParameterComparator);
-            int counter = 1;
-            for (Parameter parameter : list1) {
-                uniqueKeyStringBuilder.append(createParameterKey(parameter));
-                if (counter != list1.size()) {
-                    uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
-                }
-                counter++;
-            }
-        }
-        return uniqueKeyStringBuilder.toString().toLowerCase();
-    }
-
-    public static String createInteractionEvidenceListKey(Collection<InteractionEvidence> interactionEvidences) {
-        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "interaction evidence list::";
-        uniqueKeyStringBuilder.append(prefix);
-
-        UnambiguousInteractionEvidenceComparator unambiguousParameterComparator = new UnambiguousInteractionEvidenceComparator();
-        if (!interactionEvidences.isEmpty()) {
-            List<InteractionEvidence> list1 = new ArrayList<InteractionEvidence>(interactionEvidences);
-            Collections.sort(list1, unambiguousParameterComparator);
-            int counter = 1;
-            for (InteractionEvidence interactionEvidence : list1) {
-                uniqueKeyStringBuilder.append(createInteractionEvidenceKey(interactionEvidence));
-                if (counter != list1.size()) {
-                    uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
-                }
-                counter++;
-            }
-        }
-        return uniqueKeyStringBuilder.toString().toLowerCase();
-    }
-
-    public static String createFeatureListKey(Collection<FeatureEvidence> features) {
-        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "feature list::";
-        uniqueKeyStringBuilder.append(prefix);
-
-        UnambiguousFeatureEvidenceComparator unambiguousFeatureEvidenceComparator = new UnambiguousFeatureEvidenceComparator();
-        if (!features.isEmpty()) {
-            List<FeatureEvidence> list1 = new ArrayList<FeatureEvidence>(features);
-            Collections.sort(list1, unambiguousFeatureEvidenceComparator);
-            int counter = 1;
-            for (FeatureEvidence featureEvidence : list1) {
-                uniqueKeyStringBuilder.append(createFeatureKey(featureEvidence));
-                if (counter != list1.size()) {
-                    uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
-                }
-                counter++;
-            }
-        }
-        return uniqueKeyStringBuilder.toString().toLowerCase();
-    }
-
-
     public static String createPolymerKey(Polymer polymer) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
@@ -521,38 +415,41 @@ public class UniqueKeyGenerator {
         String prefix = "participant::";
         uniqueKeyStringBuilder.append(prefix);
 
-        if (participantEvidence.getInteractor() != null) {
-            uniqueKeyStringBuilder.append(createInteractorKey(participantEvidence.getInteractor()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+        try {
+            if (participantEvidence.getInteractor() != null) {
+                uniqueKeyStringBuilder.append(createInteractorKey(participantEvidence.getInteractor()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getBiologicalRole() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(participantEvidence.getBiologicalRole()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getExperimentalRole() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(participantEvidence.getExperimentalRole()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getIdentificationMethods() != null && !participantEvidence.getIdentificationMethods().isEmpty()) {
+                UniqueKeyGenerator.createCvTermListKey(participantEvidence.getIdentificationMethods());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getExperimentalPreparations() != null) {
+                UniqueKeyGenerator.createCvTermListKey(participantEvidence.getExperimentalPreparations());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getExpressedInOrganism() != null) {
+                uniqueKeyStringBuilder.append(UniqueKeyGenerator.createOrganismKey(participantEvidence.getExpressedInOrganism()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (participantEvidence.getParameters() != null) {
+                uniqueKeyStringBuilder.append(createParameterListKey(participantEvidence.getParameters()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (!participantEvidence.getFeatures().isEmpty()) {
+                uniqueKeyStringBuilder.append(createFeatureListKey(participantEvidence.getFeatures()));
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-        if (participantEvidence.getBiologicalRole() != null) {
-            uniqueKeyStringBuilder.append(createCvTermKey(participantEvidence.getBiologicalRole()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (participantEvidence.getExperimentalRole() != null) {
-            uniqueKeyStringBuilder.append(createCvTermKey(participantEvidence.getExperimentalRole()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (participantEvidence.getIdentificationMethods() != null && !participantEvidence.getIdentificationMethods().isEmpty()) {
-            UniqueKeyGenerator.createCvTermListKey(participantEvidence.getIdentificationMethods());
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (participantEvidence.getExperimentalPreparations() != null) {
-            UniqueKeyGenerator.createCvTermListKey(participantEvidence.getExperimentalPreparations());
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (participantEvidence.getExpressedInOrganism() != null) {
-            uniqueKeyStringBuilder.append(UniqueKeyGenerator.createOrganismKey(participantEvidence.getExpressedInOrganism()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (participantEvidence.getParameters() != null) {
-            uniqueKeyStringBuilder.append(createParameterListKey(participantEvidence.getParameters()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (!participantEvidence.getFeatures().isEmpty()) {
-            uniqueKeyStringBuilder.append(createFeatureListKey(participantEvidence.getFeatures()));
-        }
-
         // delete any trailing underscore
         uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
 
@@ -563,25 +460,28 @@ public class UniqueKeyGenerator {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "binary interaction evidence::";
         uniqueKeyStringBuilder.append(prefix);
-
-        if (binaryInteractionEvidence.getParticipantA() != null) {
-            uniqueKeyStringBuilder.append(createParticipantEvidenceKey(binaryInteractionEvidence.getParticipantA()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (binaryInteractionEvidence.getParticipantB() != null) {
-            uniqueKeyStringBuilder.append(createParticipantEvidenceKey(binaryInteractionEvidence.getParticipantB()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (binaryInteractionEvidence.getInteractionType() != null) {
-            uniqueKeyStringBuilder.append(createCvTermKey(binaryInteractionEvidence.getInteractionType()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (binaryInteractionEvidence.getComplexExpansion() != null) {
-            uniqueKeyStringBuilder.append(createCvTermKey(binaryInteractionEvidence.getComplexExpansion()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (binaryInteractionEvidence.getIdentifiers() != null && !binaryInteractionEvidence.getIdentifiers().isEmpty()) {
-            uniqueKeyStringBuilder.append(createXrefListKey(binaryInteractionEvidence.getIdentifiers()));
+        try {
+            if (binaryInteractionEvidence.getParticipantA() != null) {
+                uniqueKeyStringBuilder.append(createParticipantEvidenceKey(binaryInteractionEvidence.getParticipantA()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (binaryInteractionEvidence.getParticipantB() != null) {
+                uniqueKeyStringBuilder.append(createParticipantEvidenceKey(binaryInteractionEvidence.getParticipantB()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (binaryInteractionEvidence.getInteractionType() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(binaryInteractionEvidence.getInteractionType()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (binaryInteractionEvidence.getComplexExpansion() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(binaryInteractionEvidence.getComplexExpansion()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (binaryInteractionEvidence.getIdentifiers() != null && !binaryInteractionEvidence.getIdentifiers().isEmpty()) {
+                uniqueKeyStringBuilder.append(createXrefListKey(binaryInteractionEvidence.getIdentifiers()));
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
@@ -605,11 +505,13 @@ public class UniqueKeyGenerator {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "stoichiometry::";
         uniqueKeyStringBuilder.append(prefix);
-
-        uniqueKeyStringBuilder.append(stc.getMinValue());
-        uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        uniqueKeyStringBuilder.append(stc.getMaxValue());
-
+        try {
+            uniqueKeyStringBuilder.append(stc.getMinValue());
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(stc.getMaxValue());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
@@ -630,13 +532,16 @@ public class UniqueKeyGenerator {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "entity::";
         uniqueKeyStringBuilder.append(prefix);
-
-        if (entity.getInteractor() != null) {
-            uniqueKeyStringBuilder.append(createInteractorKey(entity.getInteractor()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        }
-        if (entity.getStoichiometry() != null) {
-            uniqueKeyStringBuilder.append(createStoichiometryKey(entity.getStoichiometry()));
+        try {
+            if (entity.getInteractor() != null) {
+                uniqueKeyStringBuilder.append(createInteractorKey(entity.getInteractor()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (entity.getStoichiometry() != null) {
+                uniqueKeyStringBuilder.append(createStoichiometryKey(entity.getStoichiometry()));
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
         // delete any trailing underscore
         uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
@@ -658,65 +563,61 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static String variableParameter(VariableParameter param) {
-        if (unambiguousVariableParameterComparator == null) {
-            unambiguousVariableParameterComparator = new UnambiguousVariableParameterComparator();
+    public static String createVariableParameterKey(VariableParameter variableParameter) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "variable parameter::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createExperimentKey(variableParameter.getExperiment()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(variableParameter.getDescription());
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(createCvTermKey(variableParameter.getUnit()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(createVariableParameterValueListKey(variableParameter.getVariableValues()));
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        if (param == null) {
-            return 0;
-        }
-
-        int hashcode = 31;
-        String description = param.getDescription();
-        hashcode = 31 * hashcode + (description != null ? description.toLowerCase().trim().hashCode() : 0);
-
-        experiment // call experiment
-
-        CvTerm unit = param.getUnit();
-        hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(unit);
-
-        List<VariableParameterValue> list1 = new ArrayList<VariableParameterValue>(param.getVariableValues());
-        Collections.sort(list1, unambiguousVariableParameterComparator.getVariableParameterValueCollectionComparator().getObjectComparator());
-        for (VariableParameterValue value : list1) {
-            hashcode = 31 * hashcode + VariableParameterValueComparator.hashCode(value);
-        }
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static int variableParameterValue(VariableParameterValue value) {
-        if (variableParameterValueComparator == null) {
-            variableParameterValueComparator = new VariableParameterValueComparator();
+    public static String createVariableParameterValueKey(VariableParameterValue value) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "variable parameter value::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createVariableParameterKey(value.getVariableParameter()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            if (value.getValue() != null) {
+                uniqueKeyStringBuilder.append(value.getValue());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (value.getOrder() != null) {
+                uniqueKeyStringBuilder.append(value.getOrder());
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        if (value == null) {
-            return 0;
-        }
-
-        // call variableParameter
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + (value.getValue() != null ? value.getValue().trim().toLowerCase().hashCode() : 0);
-        hashcode = 31 * hashcode + (value.getOrder() != null ? value.getOrder() : 0);
-
-        return hashcode;
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static int variableParametersValueSet(Collection<VariableParameterValue> variableParameterValues) {
-        int hashcode = 0;
+    public static String createVariableParametersValueSetKey(Collection<VariableParameterValue> variableParameterValues) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "variable parameter value set::";
+        uniqueKeyStringBuilder.append(prefix);
 
-        Collections.sort(variableParameterValues, unambiguousVariableParameterComparator.getVariableParameterValueCollectionComparator().getObjectComparator());
-        for (VariableParameterValue value : list1) {
-            hashcode = 31 * hashcode + VariableParameterValueComparator.hashCode(value); // call variableParameterValue
-        }
-        return hashcode;
+        uniqueKeyStringBuilder.append(createVariableParameterValueListKey(variableParameterValues));
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static String experiment(Experiment experiment) {
+    public static String createExperimentKey(Experiment experiment) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
-        String prefix = "experimental entity::";
+        String prefix = "experiment::";
         uniqueKeyStringBuilder.append(prefix);
 
         try {
@@ -752,97 +653,81 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public int curationDepth() {
+    public static String createCurationDepthKey(CurationDepth curationDepth) {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "curation depth::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            uniqueKeyStringBuilder.append(curationDepth.name());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        int hashcode = 31;
-        if (this.getCurationDepth() != null) {
-            hashcode = 31 * hashcode + this.getCurationDepth().toLowerCase().hashCode();
-        }
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static int confidence(Confidence conf) {
-        if (unambiguousConfidenceComparator == null) {
-            unambiguousConfidenceComparator = new UnambiguousConfidenceComparator();
+    public static String createConfidenceKey(Confidence confidence) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "confidence::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createCvTermKey(confidence.getType()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(confidence.getValue());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        if (conf == null) {
-            return 0;
-        }
-
-        int hashcode = 31;
-        CvTerm type = conf.getType();
-        hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(type);// call cvTerm
-
-        String value = conf.getValue();
-        hashcode = 31 * hashcode + value.hashCode();
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static int checksum(Checksum checksum) {
-        if (unambiguousChecksumComparator == null) {
-            unambiguousChecksumComparator = new UnambiguousChecksumComparator();
+    public static String createChecksumKey(Checksum checksum) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "checksum::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createCvTermKey(checksum.getMethod()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(checksum.getValue());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        if (checksum == null) {
-            return 0;
-        }
-
-        int hashcode = 31;
-        CvTerm method = checksum.getMethod();
-        hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(method);// call CvTerm
-
-        String value = checksum.getValue();
-        hashcode = 31 * hashcode + value.hashCode();
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static int causalRelationship(CausalRelationship rel) {
-        if (unambiguousCausalRelationshipComparator == null) {
-            unambiguousCausalRelationshipComparator = new UnambiguousCausalRelationshipComparator();
+    public static String createCausalRelationshipKey(CausalRelationship causalRelationship) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "causal relationship::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createCvTermKey(causalRelationship.getRelationType()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(createEntityKey(causalRelationship.getTarget()));
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        if (rel == null) {
-            return 0;
-        }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + UnambiguousCvTermComparator.hashCode(rel.getRelationType());// call cvTerm
-        hashcode = 31 * hashcode + UnambiguousEntityBaseComparator.hashCode(rel.getTarget());// call entity
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public int cluster() {
+    public static String createClusteredInteractionKey(GraphClusteredInteraction clusteredInteraction) {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "clustered interaction::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            // we don't need to sort it because it is already sorted in graph (i.e one pair will always be counted once)
+            uniqueKeyStringBuilder.append(createInteractorKey(clusteredInteraction.getInteractorPA()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(createInteractorKey(clusteredInteraction.getinteractorPB()));
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
-
-        int hashcode = 31;
-        hashcode = 31 * hashcode + "Cluster".hashCode();
-
-        // we don't need to sort it because it is already sorted in graph
-        if (this.getInteractorPA() != null) {
-            hashcode = 31 * hashcode + this.getInteractorPA().hashCode();// call interactor
-        }
-
-        if (this.getinteractorPB() != null) {
-            hashcode = 31 * hashcode + this.getinteractorPB().hashCode();// call interactor
-        }
-
-
-        return hashcode;
+        return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    */
 
     private static StringBuilder deleteTrailingUnderScore(StringBuilder stringBuilder) {
         // delete any trailing underscore
@@ -853,5 +738,155 @@ public class UniqueKeyGenerator {
         return stringBuilder;
 
     }
+
+    public static String createXrefListKey(Collection<Xref> xrefs) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "xref list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousXrefComparator unambiguousXrefComparator = new UnambiguousXrefComparator();
+            if (!xrefs.isEmpty()) {
+                List<Xref> list1 = new ArrayList<Xref>(xrefs);
+                Collections.sort(list1, unambiguousXrefComparator);
+                int counter = 1;
+                for (Xref xref : list1) {
+                    uniqueKeyStringBuilder.append(createXrefKey(xref));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createCvTermListKey(Collection<CvTerm> cvTerms) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "cv list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousCvTermComparator unambiguousCvTermComparator = new UnambiguousCvTermComparator();
+            if (!cvTerms.isEmpty()) {
+                List<CvTerm> list1 = new ArrayList<CvTerm>(cvTerms);
+                Collections.sort(list1, unambiguousCvTermComparator);
+                int counter = 1;
+                for (CvTerm cvTerm : list1) {
+                    uniqueKeyStringBuilder.append(createCvTermKey(cvTerm));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+
+    public static String createParameterListKey(Collection<Parameter> parameters) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "parameter list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousParameterComparator unambiguousParameterComparator = new UnambiguousParameterComparator();
+            if (!parameters.isEmpty()) {
+                List<Parameter> list1 = new ArrayList<Parameter>(parameters);
+                Collections.sort(list1, unambiguousParameterComparator);
+                int counter = 1;
+                for (Parameter parameter : list1) {
+                    uniqueKeyStringBuilder.append(createParameterKey(parameter));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createInteractionEvidenceListKey(Collection<InteractionEvidence> interactionEvidences) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "interaction evidence list::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            UnambiguousInteractionEvidenceComparator unambiguousParameterComparator = new UnambiguousInteractionEvidenceComparator();
+            if (!interactionEvidences.isEmpty()) {
+                List<InteractionEvidence> list1 = new ArrayList<InteractionEvidence>(interactionEvidences);
+                Collections.sort(list1, unambiguousParameterComparator);
+                int counter = 1;
+                for (InteractionEvidence interactionEvidence : list1) {
+                    uniqueKeyStringBuilder.append(createInteractionEvidenceKey(interactionEvidence));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createFeatureListKey(Collection<FeatureEvidence> features) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "feature list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousFeatureEvidenceComparator unambiguousFeatureEvidenceComparator = new UnambiguousFeatureEvidenceComparator();
+            if (!features.isEmpty()) {
+                List<FeatureEvidence> list1 = new ArrayList<FeatureEvidence>(features);
+                Collections.sort(list1, unambiguousFeatureEvidenceComparator);
+                int counter = 1;
+                for (FeatureEvidence featureEvidence : list1) {
+                    uniqueKeyStringBuilder.append(createFeatureKey(featureEvidence));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createVariableParameterValueListKey(Collection<VariableParameterValue> variableParameterValues) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "variable parameter value list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousVariableParameterComparator unambiguousVariableParameterComparator = new UnambiguousVariableParameterComparator();
+            if (!variableParameterValues.isEmpty()) {
+                List<VariableParameterValue> list1 = new ArrayList<VariableParameterValue>(variableParameterValues);
+                Collections.sort(list1, unambiguousVariableParameterComparator.getVariableParameterValueCollectionComparator().getObjectComparator());
+                int counter = 1;
+                for (VariableParameterValue variableParameterValue : list1) {
+                    uniqueKeyStringBuilder.append(createVariableParameterValueKey(variableParameterValue));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
 
 }

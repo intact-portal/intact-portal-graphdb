@@ -13,6 +13,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.ArrayList;
@@ -47,15 +48,11 @@ public class GraphVariableParameter implements VariableParameter {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphVariableParameter() {
 
     }
 
     public GraphVariableParameter(VariableParameter variableParameter) {
-        setForceHashCodeGeneration(true);
         setDescription(variableParameter.getDescription());
         setUnit(variableParameter.getUnit());
         setExperiment(variableParameter.getExperiment());
@@ -252,11 +249,10 @@ public class GraphVariableParameter implements VariableParameter {
 
     public int hashCode() {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        return UnambiguousVariableParameterComparator.hashCode(this);
+        return super.hashCode();
     }
 
     public String toString() {
@@ -264,14 +260,6 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public String createUniqueKey(VariableParameter variableParameter) {
-        return variableParameter != null ? UnambiguousVariableParameterComparator.hashCode(variableParameter) + "" : "";
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createVariableParameterKey(variableParameter);
     }
 }

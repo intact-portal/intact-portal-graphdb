@@ -10,6 +10,7 @@ import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +32,11 @@ public class GraphChecksum implements Checksum {
     @Transient
     private boolean isAlreadyCreated;
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphChecksum() {
     }
 
     public GraphChecksum(Checksum checksum) {
         this(checksum.getMethod(), checksum.getValue());
-        setForceHashCodeGeneration(true);
         setUniqueKey(createUniqueKey(checksum));
 
         if (CreationConfig.createNatively) {
@@ -146,19 +143,10 @@ public class GraphChecksum implements Checksum {
 
     @Override
     public int hashCode() {
-
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode;
-        try {
-            hashcode = UnambiguousChecksumComparator.hashCode(this);
-        } catch (Exception e) {
-            //Hash Code Could not be created, creating default ; this was needed for the cases where all values are not initialized by neo4j
-            hashcode = super.hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
     @Override
@@ -167,15 +155,6 @@ public class GraphChecksum implements Checksum {
     }
 
     public String createUniqueKey(Checksum checksum) {
-        return checksum != null ? UnambiguousChecksumComparator.hashCode(checksum) + "" : "";
-    }
-
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
+        return UniqueKeyGenerator.createChecksumKey(checksum);
     }
 }
