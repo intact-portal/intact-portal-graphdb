@@ -432,7 +432,7 @@ public class UniqueKeyGenerator {
                 UniqueKeyGenerator.createCvTermListKey(participantEvidence.getIdentificationMethods());
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (participantEvidence.getExperimentalPreparations() != null) {
+            if (participantEvidence.getExperimentalPreparations() != null&&!participantEvidence.getExperimentalPreparations().isEmpty()) {
                 UniqueKeyGenerator.createCvTermListKey(participantEvidence.getExperimentalPreparations());
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
@@ -440,11 +440,11 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(UniqueKeyGenerator.createOrganismKey(participantEvidence.getExpressedInOrganism()));
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (participantEvidence.getParameters() != null) {
+            if (participantEvidence.getParameters() != null&&!participantEvidence.getParameters().isEmpty()) {
                 uniqueKeyStringBuilder.append(createParameterListKey(participantEvidence.getParameters()));
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (!participantEvidence.getFeatures().isEmpty()) {
+            if (participantEvidence.getFeatures()!=null&&!participantEvidence.getFeatures().isEmpty()) {
                 uniqueKeyStringBuilder.append(createFeatureListKey(participantEvidence.getFeatures()));
             }
         } catch (Exception e) {

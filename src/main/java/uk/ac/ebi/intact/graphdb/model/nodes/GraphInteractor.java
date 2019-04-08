@@ -67,14 +67,10 @@ public class GraphInteractor implements Interactor {
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
-    @Transient
-    private boolean forceHashCodeGeneration;
-
     public GraphInteractor() {
     }
 
     public GraphInteractor(Interactor interactor, boolean childAlreadyCreated) {
-        setForceHashCodeGeneration(true);
         setShortName(interactor.getShortName());
         setFullName(interactor.getFullName());
         setOrganism(interactor.getOrganism());
@@ -83,7 +79,7 @@ public class GraphInteractor implements Interactor {
         setPreferredName(interactor.getPreferredName());
         setPreferredIdentifierStr(interactor.getPreferredIdentifier().getId());
         setPreferredIdentifier(interactor.getPreferredIdentifier());
-        setUniqueKey(createUniqueKey());
+        setUniqueKey(createUniqueKey(interactor));
 
         if (CreationConfig.createNatively) {
             initializeNodeProperties();
@@ -502,19 +498,14 @@ public class GraphInteractor implements Interactor {
 
     public int hashCode() {
 
-        if (!isForceHashCodeGeneration() && this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return Integer.parseInt(this.getUniqueKey());
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
         }
-
-        int hashcode = 31;
-        if (this.getPreferredIdentifierStr() != null) {
-            hashcode = 31 * hashcode + this.getPreferredIdentifierStr().hashCode();
-        }
-        return hashcode;
+        return super.hashCode();
     }
 
-    public String createUniqueKey() {
-        return hashCode() + "";
+    public String createUniqueKey(Interactor interactor) {
+        return UniqueKeyGenerator.createInteractorKey(interactor);
     }
 
 
@@ -541,14 +532,6 @@ public class GraphInteractor implements Interactor {
 
     public void setPreferredIdentifierStr(String preferredIdentifierStr) {
         this.preferredIdentifierStr = preferredIdentifierStr;
-    }
-
-    public boolean isForceHashCodeGeneration() {
-        return forceHashCodeGeneration;
-    }
-
-    public void setForceHashCodeGeneration(boolean forceHashCodeGeneration) {
-        this.forceHashCodeGeneration = forceHashCodeGeneration;
     }
 
     @Override
