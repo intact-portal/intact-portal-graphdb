@@ -483,6 +483,9 @@ public class UniqueKeyGenerator {
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
+
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 

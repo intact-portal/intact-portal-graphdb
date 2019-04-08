@@ -40,7 +40,7 @@ public class CreationConfig {
         CommonUtility.createSchemaConstraint(GraphProtein.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphPublication.class, "uniqueKey");
         //CommonUtility.createSchemaConstraint(GraphRange.class, "uniqueKey");
-        CommonUtility.createSchemaConstraint(GraphResultingSequence.class, "uniqueKey");
+        //CommonUtility.createSchemaConstraint(GraphResultingSequence.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphSource.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphStoichiometry.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphVariableParameter.class, "uniqueKey");
