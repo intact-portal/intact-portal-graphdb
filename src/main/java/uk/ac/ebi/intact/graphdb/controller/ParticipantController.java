@@ -41,7 +41,7 @@ public class ParticipantController {
 
     @RequestMapping(value = "/detailsOld/{ac}",
             method = RequestMethod.GET)
-    public Page<GraphParticipantEvidence> getParticipantsOld(
+    public Page<GraphParticipantEvidence> getParticipants(
             @PathVariable String ac,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
@@ -50,7 +50,7 @@ public class ParticipantController {
 
     @RequestMapping(value = "/details/{ac}",
             method = RequestMethod.GET)
-    public Page<ParticipantDetails> getParticipantsNew(
+    public Page<ParticipantDetails> getParticipantsNWithPagination(
             @PathVariable String ac,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {

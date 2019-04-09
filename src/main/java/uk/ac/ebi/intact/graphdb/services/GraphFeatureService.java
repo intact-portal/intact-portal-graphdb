@@ -42,7 +42,8 @@ public class GraphFeatureService {
         return graphFeatureRepository.findByUniqueKeyIn(uniqueKeys,depth);
     }
 
-    public Page<GraphFeatureEvidence> findByInteractionAc(String ac,int pageNumber,int pageSize) {
-        return graphFeatureRepository.findByInteractionAc(ac,PageRequest.of(pageNumber,pageSize));
+    public Page<GraphFeatureEvidence> findByInteractionAc(String ac, int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        return graphFeatureRepository.findByInteractionAc(ac, pageRequest);
     }
 }
