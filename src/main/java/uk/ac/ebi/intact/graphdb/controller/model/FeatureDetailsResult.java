@@ -115,26 +115,81 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
 
         featureEvidences.forEach(feature -> {
 
+            String featureAc = feature.getAc();
+            String shortname = feature.getShortName();
+            CvTerm type = new CvTerm(feature.getType().getShortName(), feature.getType().getMIIdentifier());
+
+            CvTerm role = null;
+            if (feature.getRole() != null) {
+                role = new CvTerm(feature.getRole().getShortName(), feature.getRole().getMIIdentifier());
+            }
+
+            Collection<String> ranges = new ArrayList<>();
+            feature.getRanges().forEach(graphRange -> ranges.add(graphRange.getRangeString()));
+
+            Collection<GraphFeatureEvidence> linkedFeatures = new ArrayList<>();
+            feature.getLinkedFeatures().forEach(linkfeature -> {
+                if (linkfeature != null) {
+                    linkedFeatures.add(linkfeature);
+                }
+            });
+
+            String participantName = null;
+            if (feature.getParticipant() != null && feature.getParticipant().getInteractor() != null ) {
+                participantName = feature.getParticipant().getInteractor().getShortName();
+            }
+
+            CvTerm database = new CvTerm(feature.getParticipant().getInteractor().getPreferredName(),
+                    feature.getParticipant().getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
+            Xref participantIdentifier = new Xref(database, feature.getParticipant().getInteractor().getPreferredIdentifier().getId());
+
             GraphParticipantEvidence participantEvidence = (GraphParticipantEvidence) feature.getParticipant();
             String participantAc = participantEvidence.getAc();
 
-            String shortname = feature.getShortName();
 
-            CvTerm database = new CvTerm(feature.getParticipant().getInteractor().getPreferredName(), feature.getParticipant().getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
-            Xref interactorIdentifier = new Xref(database, feature.getParticipant().getInteractor().getPreferredIdentifier().getId());
+            Collection<CvTerm> detectionMethods = new ArrayList<>();
+            feature.getDetectionMethods().forEach(detectionMethod -> {
+                if (detectionMethod != null) {
+                    detectionMethods.add(new CvTerm(detectionMethod.getShortName(), detectionMethod.getMIIdentifier()));
+                }
+            });
 
-            String interactorName = null;
-            if (feature.getParticipant() != null && feature.getParticipant().getInteractor() != null ) {
-                interactorName = feature.getParticipant().getInteractor().getShortName();
-            }
+            Collection<TermType> parameters = new ArrayList<>();
+            feature.getParameters().forEach(parameter -> {
+                if (parameter.getType() != null) {
+                    CvTerm cvTerm = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+                    parameters.add(new TermType(cvTerm, parameter.getValue().toString()));
+                }
+            });
 
-            CvTerm regionType = new CvTerm(feature.getType().getShortName(), feature.getType().getMIIdentifier());
+            Collection<Xref> identifiers = new ArrayList<>();
+            feature.getIdentifiers().forEach(identifier -> {
+                if (identifier != null) {
+                    CvTerm cvTerm = new CvTerm(identifier.getDatabase().getShortName(), identifier.getDatabase().getMIIdentifier());
+                    identifiers.add(new Xref(cvTerm, identifier.getId()));
+                }
+            });
 
-            Collection<String> range = new ArrayList<>();
-            feature.getRanges().forEach(graphRange -> range.add(graphRange.getRangeString()));
+            Collection<Xref> xrefs = new ArrayList<>();
+            feature.getXrefs().forEach(xref -> {
+                if (xref != null) {
+                    CvTerm cvTerm = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                    xrefs.add(new Xref(cvTerm, xref.getId()));
+                }
+            });
 
-            FeatureDetails featureDetails = new FeatureDetails(participantAc, shortname, regionType, interactorIdentifier,
-                    interactorName, range);
+
+            Collection<Annotation> annotations = new ArrayList<>();
+            feature.getAnnotations().forEach(graphAnnotation -> {
+                if (graphAnnotation != null) {
+                    CvTerm cvTerm = new CvTerm(graphAnnotation.getTopic().getShortName(), graphAnnotation.getTopic().getMIIdentifier());
+                    annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
+                }
+            });
+
+            FeatureDetails featureDetails = new FeatureDetails(featureAc, shortname, type, role, ranges, linkedFeatures,
+                    participantName, participantIdentifier, participantAc, detectionMethods, parameters, identifiers,
+                    xrefs, annotations);
 
             featureDetailsList.add(featureDetails);
         });

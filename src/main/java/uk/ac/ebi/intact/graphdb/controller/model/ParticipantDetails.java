@@ -16,7 +16,7 @@ public class ParticipantDetails {
     private Collection<CvTerm> detectionMethod;
     private CvTerm experimentalRole;
     private CvTerm biologicalRole;
-//    private Integer featureCount;
+//    private Integer featureCount; //TODO: add features count
     private Collection<CvTerm> experimentalPreparations;
     private Collection<TermType> parameters;
     private Collection<TermType> confidences;

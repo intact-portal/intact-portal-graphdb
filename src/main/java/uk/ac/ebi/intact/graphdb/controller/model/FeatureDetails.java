@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.controller.model;
 
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
+
 import java.util.Collection;
 
 /**
@@ -7,29 +9,47 @@ import java.util.Collection;
  */
 public class FeatureDetails {
 
-    private String participantAc; //participant.ac
+    private String featureAc;
     private String name; //Shortname
-    private CvTerm regionType;
-    private Xref interactor; // participant.interactor.preferredIdentifierStr
-    private String interactorName; // participant.interactor.shortName
-    private Collection<String> range; //ranges.rangeString
+    private CvTerm type;
+    private CvTerm role;
+    private Collection<String> ranges; //ranges.rangeString
+    private Collection<GraphFeatureEvidence> linkedFeatures; //linkedFetures.shortName
+    private String participantName; // participant.participant.shortName
+    private Xref participant; // participant.participant.preferredIdentifierStr
+    private String participantAc; //participant.ac
+    private Collection<CvTerm> detectionMethods;
+    private Collection<TermType> parameters;
+    private Collection<Xref> identifiers;
+    private Collection<Xref> xrefs;
+    private Collection<Annotation> annotations;
 
-    public FeatureDetails(String participantAc, String name, CvTerm regionType, Xref interactorId, String interactorName,
-                          Collection<String> range) {
-        this.participantAc = participantAc;
+    public FeatureDetails(String featureAc, String name, CvTerm type, CvTerm role, Collection<String> ranges,
+                          Collection<GraphFeatureEvidence> linkedFeatures, String participantName, Xref participant,
+                          String participantAc, Collection<CvTerm> detectionMethods, Collection<TermType> parameters,
+                          Collection<Xref> identifiers, Collection<Xref> xrefs, Collection<Annotation> annotations) {
+        this.featureAc = featureAc;
         this.name = name;
-        this.regionType = regionType;
-        this.interactor = interactorId;
-        this.interactorName = interactorName;
-        this.range = range;
-    }
-
-    public String getParticipantAc() {
-        return participantAc;
-    }
-
-    public void setParticipantAc(String participantAc) {
+        this.type = type;
+        this.role = role;
+        this.ranges = ranges;
+        this.linkedFeatures = linkedFeatures;
+        this.participantName = participantName;
+        this.participant = participant;
         this.participantAc = participantAc;
+        this.detectionMethods = detectionMethods;
+        this.parameters = parameters;
+        this.identifiers = identifiers;
+        this.xrefs = xrefs;
+        this.annotations = annotations;
+    }
+
+    public String getFeatureAc() {
+        return featureAc;
+    }
+
+    public void setFeatureAc(String featureAc) {
+        this.featureAc = featureAc;
     }
 
     public String getName() {
@@ -40,35 +60,99 @@ public class FeatureDetails {
         this.name = name;
     }
 
-    public CvTerm getRegionType() {
-        return regionType;
+    public CvTerm getType() {
+        return type;
     }
 
-    public void setRegionType(CvTerm regionType) {
-        this.regionType = regionType;
+    public void setType(CvTerm type) {
+        this.type = type;
     }
 
-    public Xref getInteractor() {
-        return interactor;
+    public CvTerm getRole() {
+        return role;
     }
 
-    public void setInteractor(Xref interactor) {
-        this.interactor = interactor;
+    public void setRole(CvTerm role) {
+        this.role = role;
     }
 
-    public String getInteractorName() {
-        return interactorName;
+    public Collection<String> getRanges() {
+        return ranges;
     }
 
-    public void setInteractorName(String interactorName) {
-        this.interactorName = interactorName;
+    public void setRanges(Collection<String> ranges) {
+        this.ranges = ranges;
     }
 
-    public Collection<String> getRange() {
-        return range;
+    public Collection<GraphFeatureEvidence> getLinkedFeatures() {
+        return linkedFeatures;
     }
 
-    public void setRange(Collection<String> range) {
-        this.range = range;
+    public void setLinkedFeatures(Collection<GraphFeatureEvidence> linkedFeatures) {
+        this.linkedFeatures = linkedFeatures;
+    }
+
+    public String getParticipantName() {
+        return participantName;
+    }
+
+    public void setParticipantName(String participantName) {
+        this.participantName = participantName;
+    }
+
+    public Xref getParticipant() {
+        return participant;
+    }
+
+    public void setParticipant(Xref participant) {
+        this.participant = participant;
+    }
+
+    public String getParticipantAc() {
+        return participantAc;
+    }
+
+    public void setParticipantAc(String participantAc) {
+        this.participantAc = participantAc;
+    }
+
+    public Collection<CvTerm> getDetectionMethods() {
+        return detectionMethods;
+    }
+
+    public void setDetectionMethods(Collection<CvTerm> detectionMethods) {
+        this.detectionMethods = detectionMethods;
+    }
+
+    public Collection<TermType> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Collection<TermType> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Collection<Xref> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Collection<Xref> identifiers) {
+        this.identifiers = identifiers;
+    }
+
+    public Collection<Xref> getXrefs() {
+        return xrefs;
+    }
+
+    public void setXrefs(Collection<Xref> xrefs) {
+        this.xrefs = xrefs;
+    }
+
+    public Collection<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(Collection<Annotation> annotations) {
+        this.annotations = annotations;
     }
 }
