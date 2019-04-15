@@ -391,12 +391,12 @@ public class UniqueKeyGenerator {
         uniqueKeyStringBuilder.append(prefix);
 
         try {
-            if (interactor instanceof Polymer) {
-                uniqueKeyStringBuilder.append(createPolymerKey((Polymer) interactor));
-            } else if (interactor instanceof Protein) {
+            if (interactor instanceof Protein) {
                 uniqueKeyStringBuilder.append(createProteinKey((Protein) interactor));
             } else if (interactor instanceof NucleicAcid) {
                 uniqueKeyStringBuilder.append(createNucleicAcidKey((NucleicAcid) interactor));
+            } else if (interactor instanceof Polymer) {
+                uniqueKeyStringBuilder.append(createPolymerKey((Polymer) interactor));
             } else if (interactor instanceof Gene) {
                 uniqueKeyStringBuilder.append(createGeneKey((Gene) interactor));
             } else if (interactor instanceof Molecule) {
@@ -416,6 +416,10 @@ public class UniqueKeyGenerator {
         uniqueKeyStringBuilder.append(prefix);
 
         try {
+            if (participantEvidence.getInteraction() != null) {
+                uniqueKeyStringBuilder.append(createInteractionEvidenceKey(participantEvidence.getInteraction()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
             if (participantEvidence.getInteractor() != null) {
                 uniqueKeyStringBuilder.append(createInteractorKey(participantEvidence.getInteractor()));
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
@@ -432,7 +436,7 @@ public class UniqueKeyGenerator {
                 UniqueKeyGenerator.createCvTermListKey(participantEvidence.getIdentificationMethods());
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (participantEvidence.getExperimentalPreparations() != null&&!participantEvidence.getExperimentalPreparations().isEmpty()) {
+            if (participantEvidence.getExperimentalPreparations() != null && !participantEvidence.getExperimentalPreparations().isEmpty()) {
                 UniqueKeyGenerator.createCvTermListKey(participantEvidence.getExperimentalPreparations());
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
@@ -440,11 +444,11 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(UniqueKeyGenerator.createOrganismKey(participantEvidence.getExpressedInOrganism()));
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (participantEvidence.getParameters() != null&&!participantEvidence.getParameters().isEmpty()) {
+            if (participantEvidence.getParameters() != null && !participantEvidence.getParameters().isEmpty()) {
                 uniqueKeyStringBuilder.append(createParameterListKey(participantEvidence.getParameters()));
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
-            if (participantEvidence.getFeatures()!=null&&!participantEvidence.getFeatures().isEmpty()) {
+            if (participantEvidence.getFeatures() != null && !participantEvidence.getFeatures().isEmpty()) {
                 uniqueKeyStringBuilder.append(createFeatureListKey(participantEvidence.getFeatures()));
             }
         } catch (Exception e) {

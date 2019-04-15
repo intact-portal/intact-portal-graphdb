@@ -328,7 +328,7 @@ public class CommonUtility {
         } else {
             id = CreationConfig.batchInserter.createNode(nodeProperties, labels);
             if (uniqueKey != null && !uniqueKey.trim().equals("")) {
-                if(!Constants.UNIQUE_KEY_NA.equals(uniqueKey)) {
+                if (!Constants.UNIQUE_KEY_NA.equals(uniqueKey)) {
                     Constants.createdNodeIdMap.put(uniqueKey, id);
                 }
             }
@@ -342,14 +342,14 @@ public class CommonUtility {
 
         if (interactor instanceof Protein) {
             graphInteractor = new GraphProtein((Protein) interactor);
-        } else if (interactor instanceof Gene) {
-            graphInteractor = new GraphGene((Gene) interactor);
-        } else if (interactor instanceof Polymer) {
-            graphInteractor = new GraphPolymer((Polymer) interactor, false);
-        } else if (interactor instanceof Molecule) {
-            graphInteractor = new GraphMolecule((Molecule) interactor, false);
         } else if (interactor instanceof NucleicAcid) {
             graphInteractor = new GraphNucleicAcid((NucleicAcid) interactor);
+        } else if (interactor instanceof Polymer) {
+            graphInteractor = new GraphPolymer((Polymer) interactor, false);
+        } else if (interactor instanceof Gene) {
+            graphInteractor = new GraphGene((Gene) interactor);
+        } else if (interactor instanceof Molecule) {
+            graphInteractor = new GraphMolecule((Molecule) interactor, false);
         } else {
             graphInteractor = new GraphInteractor(interactor, false);
         }

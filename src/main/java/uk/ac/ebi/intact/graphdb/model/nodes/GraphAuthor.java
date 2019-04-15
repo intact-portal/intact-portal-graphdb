@@ -50,7 +50,7 @@ public class GraphAuthor {
         nodeProperties.put("uniqueKey", this.getUniqueKey());
         if (this.getAuthorName() != null) nodeProperties.put("authorName", this.getAuthorName());
 
-        Label[] labels = CommonUtility.getLabels(GraphAlias.class);
+        Label[] labels = CommonUtility.getLabels(GraphAuthor.class);
 
         NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
         setGraphId(nodeDataFeed.getGraphId());

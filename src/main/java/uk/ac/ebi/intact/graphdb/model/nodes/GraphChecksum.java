@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,14 @@ public class GraphChecksum implements Checksum {
         if (method == null) {
             throw new IllegalArgumentException("The method is required and cannot be null");
         }
-        setMethod(method);
+        if (method != null) {
+            if (GraphEntityCache.cvTermCacheMap.get(method.getShortName()) != null) {
+                method = (GraphEntityCache.cvTermCacheMap.get(method.getShortName()));
+            } else {
+                setMethod(method);
+            }
+        }
+
         if (value == null) {
             throw new IllegalArgumentException("The checksum value is required and cannot be null");
         }

@@ -198,7 +198,7 @@ public class GraphVariableParameter implements VariableParameter {
 
     public void setExperiment(Experiment experiment) {
         if (experiment != null) {
-            if (experiment instanceof GraphCvTerm) {
+            if (experiment instanceof GraphExperiment) {
                 this.experiment = (GraphExperiment) experiment;
             } else {
                 this.experiment = new GraphExperiment(experiment);

@@ -109,7 +109,9 @@ public class GraphFeature implements Feature {
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        setRanges(featureEvidence.getRanges());
+        if (!wasInitializedBefore) {
+            setRanges(featureEvidence.getRanges());
+        }
         setAliases(featureEvidence.getAliases());
 
         if (CreationConfig.createNatively) {
