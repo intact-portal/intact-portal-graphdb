@@ -139,9 +139,9 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 participantName = feature.getParticipant().getInteractor().getShortName();
             }
 
-            CvTerm database = new CvTerm(feature.getParticipant().getInteractor().getPreferredName(),
+            CvTerm participantDatabase = new CvTerm(feature.getParticipant().getInteractor().getPreferredName(),
                     feature.getParticipant().getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
-            Xref participantIdentifier = new Xref(database, feature.getParticipant().getInteractor().getPreferredIdentifier().getId());
+            Xref participantIdentifier = new Xref(participantDatabase, feature.getParticipant().getInteractor().getPreferredIdentifier().getId());
 
             GraphParticipantEvidence participantEvidence = (GraphParticipantEvidence) feature.getParticipant();
             String participantAc = participantEvidence.getAc();
@@ -154,13 +154,19 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
-            Collection<TermType> parameters = new ArrayList<>();
+            Collection<Parameter> parameters = new ArrayList<>();
             feature.getParameters().forEach(parameter -> {
                 if (parameter.getType() != null) {
-                    CvTerm cvTerm = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-                    parameters.add(new TermType(cvTerm, parameter.getValue().toString()));
+                    CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+                    CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                    parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
                 }
             });
+
+            //todo: remove this after having real data
+            CvTerm paramType = new CvTerm("kd", "MI:xxxx");
+            CvTerm paramUnit = new CvTerm("molar", "MI:XXXX");
+            parameters.add(new Parameter(paramType, paramUnit, "7.2x10^-9 ~0.78")); // kd:7.2x10^-9 ~0.78(molar)
 
             Collection<Xref> identifiers = new ArrayList<>();
             feature.getIdentifiers().forEach(identifier -> {
@@ -170,13 +176,27 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
+            //todo: remove this after having real data
+            CvTerm identifierDatabase1 = new CvTerm("imex", "MI:0670");
+            identifiers.add(new Xref(identifierDatabase1, "IM-19520-1"));
+
             Collection<Xref> xrefs = new ArrayList<>();
             feature.getXrefs().forEach(xref -> {
                 if (xref != null) {
-                    CvTerm cvTerm = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
-                    xrefs.add(new Xref(cvTerm, xref.getId()));
+                    CvTerm xrefDatabase = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                    CvTerm xrefQualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
+                    xrefs.add(new Xref(xrefDatabase, xref.getId(), xrefQualifier));
                 }
             });
+
+            //todo: remove this after having real data
+            CvTerm xrefDatabase1 = new CvTerm("imex", "MI:0670");
+            CvTerm xrefQualifier1 = new CvTerm("imex-primary", "MI:xxxx");
+            xrefs.add(new Xref(xrefDatabase1, "IM-19520-1", xrefQualifier1));
+
+            CvTerm xrefDatabase2 = new CvTerm("go", "MI:0448");
+            CvTerm xrefQualifier2 = new CvTerm("function", "MI:xxxx");
+            xrefs.add(new Xref(xrefDatabase2, "GO:0005085", xrefQualifier2));
 
 
             Collection<Annotation> annotations = new ArrayList<>();
@@ -186,6 +206,12 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                     annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
                 }
             });
+
+            //todo: remove this after having real data
+            CvTerm cvTerm1 = new CvTerm("curation depth",  "MI:0955");
+            annotations.add(new Annotation(cvTerm1, "imex curation"));
+            CvTerm cvTerm2 = new CvTerm("full coverage",  "MI:0957");
+            annotations.add(new Annotation(cvTerm2, "Only protein-protein interactions"));
 
             FeatureDetails featureDetails = new FeatureDetails(featureAc, shortname, type, role, ranges, linkedFeatures,
                     participantName, participantIdentifier, participantAc, detectionMethods, parameters, identifiers,

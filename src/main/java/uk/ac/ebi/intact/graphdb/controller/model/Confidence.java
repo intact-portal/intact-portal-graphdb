@@ -3,11 +3,11 @@ package uk.ac.ebi.intact.graphdb.controller.model;
 /**
  * @author Elisabet Barrera
  */
-public class TermType {
+public class Confidence {
     private CvTerm type;
     private String value;
 
-    public TermType(CvTerm type, String value) {
+    public Confidence(CvTerm type, String value) {
         this.type = type;
         this.value = value;
     }

@@ -174,24 +174,22 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
                 }
             });
 
-            Collection<TermType> parameters = new ArrayList<>();
+            Collection<Parameter> parameters = new ArrayList<>();
             participant.getParameters().forEach(parameter -> {
                 if (parameter.getType() != null) {
-                    CvTerm cvTerm = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-                    parameters.add(new TermType(cvTerm, parameter.getValue().toString()));
-
-                } else {
-                    parameters.add(new TermType(null, parameter.getValue().toString()));
+                    CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+                    CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                    parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
                 }
             });
 
-            Collection<TermType> confidences = new ArrayList<>();
+            Collection<Confidence> confidences = new ArrayList<>();
             participant.getConfidences().forEach(confidence -> {
                 if (confidence.getType() != null) {
                     CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
-                    confidences.add(new TermType(cvTerm, confidence.getValue()));
+                    confidences.add(new Confidence(cvTerm, confidence.getValue()));
                 } else {
-                    confidences.add(new TermType(null, confidence.getValue()));
+                    confidences.add(new Confidence(null, confidence.getValue()));
 
                 }
             });

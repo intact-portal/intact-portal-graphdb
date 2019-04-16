@@ -18,14 +18,14 @@ public class ParticipantDetails {
     private CvTerm biologicalRole;
 //    private Integer featureCount; //TODO: add features count
     private Collection<CvTerm> experimentalPreparations;
-    private Collection<TermType> parameters;
-    private Collection<TermType> confidences;
+    private Collection<Parameter> parameters;
+    private Collection<Confidence> confidences;
 
     public ParticipantDetails(String participantAc, CvTerm type, Xref participantId,
                               Collection<Alias> aliases, String description, Organism species,
                               Organism expressionSystem, Collection<CvTerm> detectionMethod,
                               CvTerm experimentalRole, CvTerm biologicalRole, Collection<CvTerm> experimentalPreparations,
-                              Collection<TermType> parameters, Collection<TermType> confidences) {
+                              Collection<Parameter> parameters, Collection<Confidence> confidences) {
         this.participantAc = participantAc;
         this.type = type;
         this.participantId = participantId;
@@ -138,19 +138,19 @@ public class ParticipantDetails {
         this.experimentalPreparations = experimentalPreparations;
     }
 
-    public Collection<TermType> getParameters() {
+    public Collection<Parameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Collection<TermType> parameters) {
+    public void setParameters(Collection<Parameter> parameters) {
         this.parameters = parameters;
     }
 
-    public Collection<TermType> getConfidences() {
+    public Collection<Confidence> getConfidences() {
         return confidences;
     }
 
-    public void setConfidences(Collection<TermType> confidences) {
+    public void setConfidences(Collection<Confidence> confidences) {
         this.confidences = confidences;
     }
 }

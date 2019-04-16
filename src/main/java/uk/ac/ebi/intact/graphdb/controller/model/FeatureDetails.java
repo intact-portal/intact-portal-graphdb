@@ -19,14 +19,14 @@ public class FeatureDetails {
     private Xref participant; // participant.participant.preferredIdentifierStr
     private String participantAc; //participant.ac
     private Collection<CvTerm> detectionMethods;
-    private Collection<TermType> parameters;
+    private Collection<Parameter> parameters;
     private Collection<Xref> identifiers;
     private Collection<Xref> xrefs;
     private Collection<Annotation> annotations;
 
     public FeatureDetails(String featureAc, String name, CvTerm type, CvTerm role, Collection<String> ranges,
                           Collection<GraphFeatureEvidence> linkedFeatures, String participantName, Xref participant,
-                          String participantAc, Collection<CvTerm> detectionMethods, Collection<TermType> parameters,
+                          String participantAc, Collection<CvTerm> detectionMethods, Collection<Parameter> parameters,
                           Collection<Xref> identifiers, Collection<Xref> xrefs, Collection<Annotation> annotations) {
         this.featureAc = featureAc;
         this.name = name;
@@ -124,11 +124,11 @@ public class FeatureDetails {
         this.detectionMethods = detectionMethods;
     }
 
-    public Collection<TermType> getParameters() {
+    public Collection<Parameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Collection<TermType> parameters) {
+    public void setParameters(Collection<Parameter> parameters) {
         this.parameters = parameters;
     }
 

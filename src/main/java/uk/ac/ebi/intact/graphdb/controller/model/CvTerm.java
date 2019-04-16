@@ -5,11 +5,11 @@ package uk.ac.ebi.intact.graphdb.controller.model;
  */
 public class CvTerm {
     private String shortName;
-    private String miIdentifier;
+    private String identifier;
 
-    public CvTerm(String shortName, String miIdentifier) {
+    public CvTerm(String shortName, String identifier) {
         this.shortName = shortName;
-        this.miIdentifier = miIdentifier;
+        this.identifier = identifier;
     }
 
     public String getShortName() {
@@ -20,11 +20,11 @@ public class CvTerm {
         this.shortName = shortName;
     }
 
-    public String getMiIdentifier() {
-        return miIdentifier;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setMiIdentifier(String miIdentifier) {
-        this.miIdentifier = miIdentifier;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

@@ -12,14 +12,14 @@ public class InteractionDetails {
     private String shortLabel;
     private Collection<Xref> xrefs;
     private Collection<Annotation> annotations;
-    private Collection<TermType> parameters;
-    private Collection<TermType> confidences;
+    private Collection<Parameter> parameters;
+    private Collection<Confidence> confidences;
     private ExperimentDetails experiment;
     private PublicationDetails publication;
 
     public InteractionDetails(String interactionAc, String interactionType, String shortLabel,
                               Collection<Xref> xrefs, Collection<Annotation> annotations,
-                              Collection<TermType> parameters, Collection<TermType> confidences,
+                              Collection<Parameter> parameters, Collection<Confidence> confidences,
                               ExperimentDetails experiment, PublicationDetails publication) {
         this.interactionAc = interactionAc;
         this.interactionType = interactionType;
@@ -72,19 +72,19 @@ public class InteractionDetails {
         this.annotations = annotations;
     }
 
-    public Collection<TermType> getParameters() {
+    public Collection<Parameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Collection<TermType> parameters) {
+    public void setParameters(Collection<Parameter> parameters) {
         this.parameters = parameters;
     }
 
-    public Collection<TermType> getConfidences() {
+    public Collection<Confidence> getConfidences() {
         return confidences;
     }
 
-    public void setConfidences(Collection<TermType> confidences) {
+    public void setConfidences(Collection<Confidence> confidences) {
         this.confidences = confidences;
     }
 
