@@ -229,13 +229,13 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static String createRangeKey(String featureShortLabel, Range range) {
+    public static String createRangeKey(Range range,String featureUniqueString) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "range::";
         uniqueKeyStringBuilder.append(prefix);
 
-        uniqueKeyStringBuilder.append(featureShortLabel);
+        uniqueKeyStringBuilder.append(featureUniqueString);
         uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
         uniqueKeyStringBuilder.append(RangeUtils.convertRangeToString(range));
 
@@ -286,7 +286,7 @@ public class UniqueKeyGenerator {
                     Collections.sort(list1, unambiguousXrefComparator);
                     int counter = 1;
                     for (Range range : list1) {
-                        uniqueKeyStringBuilder.append(createRangeKey(featureEvidence.getShortName(), range));
+                        uniqueKeyStringBuilder.append(createRangeKey(range,featureEvidence.getShortName()));
                         if (counter != list1.size()) {
                             uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
                         }

@@ -109,9 +109,8 @@ public class GraphFeature implements Feature {
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        if (!wasInitializedBefore) {
-            setRanges(featureEvidence.getRanges());
-        }
+        setRanges(featureEvidence.getRanges(),this.getUniqueKey());
+
         setAliases(featureEvidence.getAliases());
 
         if (CreationConfig.createNatively) {
@@ -386,9 +385,9 @@ public class GraphFeature implements Feature {
         return this.ranges;
     }
 
-    public void setRanges(Collection<Range> ranges) {
+    public void setRanges(Collection<Range> ranges,String featureUniqueKey) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges);
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges,featureUniqueKey);
         } else {
             this.ranges = new ArrayList<GraphRange>();
         }

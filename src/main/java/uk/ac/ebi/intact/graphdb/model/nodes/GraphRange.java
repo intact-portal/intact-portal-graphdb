@@ -2,10 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
-import psidev.psi.mi.jami.model.Entity;
-import psidev.psi.mi.jami.model.Position;
-import psidev.psi.mi.jami.model.Range;
-import psidev.psi.mi.jami.model.ResultingSequence;
+import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -13,6 +10,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,14 +52,14 @@ public class GraphRange implements Range {
     public GraphRange() {
     }
 
-    public GraphRange(Range range) {
+    public GraphRange(Range range,String featureUniqueKey) {
         setPositions(range.getStart(), range.getEnd());
         setLink(range.isLink());
         setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
         setRangeString(RangeUtils.convertRangeToString(range));
-        setUniqueKey(createUniqueKey(range));
+        setUniqueKey(createUniqueKey(range,featureUniqueKey));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -243,8 +241,8 @@ public class GraphRange implements Range {
         return (this.start != null ? this.start.toString() : "") + (this.end != null ? this.end.toString() : "") + (isLink() ? "(linked)" : "");
     }
 
-    public String createUniqueKey(Range range) {
-        return Constants.UNIQUE_KEY_NA;// we decided to let it duplicate per feature
+    public String createUniqueKey(Range range,String featureUniqueKey) {
+        return UniqueKeyGenerator.createRangeKey(range,featureUniqueKey);
     }
 
     public String getRangeString() {
