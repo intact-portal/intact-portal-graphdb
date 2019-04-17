@@ -14,7 +14,7 @@ public class FeatureDetails {
     private CvTerm type;
     private CvTerm role;
     private Collection<String> ranges; //ranges.rangeString
-    private Collection<GraphFeatureEvidence> linkedFeatures; //linkedFetures.shortName
+    private Collection<GraphFeatureEvidence> linkedFeatures; //linkedFeatures.shortName, linkedFeatures.ac
     private String participantName; // participant.participant.shortName
     private Xref participant; // participant.participant.preferredIdentifierStr
     private String participantAc; //participant.ac

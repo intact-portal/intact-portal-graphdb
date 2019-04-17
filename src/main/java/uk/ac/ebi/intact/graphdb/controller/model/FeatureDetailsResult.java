@@ -154,6 +154,7 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
+
             Collection<Parameter> parameters = new ArrayList<>();
             feature.getParameters().forEach(parameter -> {
                 if (parameter.getType() != null) {
@@ -163,11 +164,6 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
-            //todo: remove this after having real data
-            CvTerm paramType = new CvTerm("kd", "MI:xxxx");
-            CvTerm paramUnit = new CvTerm("molar", "MI:XXXX");
-            parameters.add(new Parameter(paramType, paramUnit, "7.2x10^-9 ~0.78")); // kd:7.2x10^-9 ~0.78(molar)
-
             Collection<Xref> identifiers = new ArrayList<>();
             feature.getIdentifiers().forEach(identifier -> {
                 if (identifier != null) {
@@ -176,9 +172,6 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
-            //todo: remove this after having real data
-            CvTerm identifierDatabase1 = new CvTerm("imex", "MI:0670");
-            identifiers.add(new Xref(identifierDatabase1, "IM-19520-1"));
 
             Collection<Xref> xrefs = new ArrayList<>();
             feature.getXrefs().forEach(xref -> {
@@ -189,15 +182,6 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 }
             });
 
-            //todo: remove this after having real data
-            CvTerm xrefDatabase1 = new CvTerm("imex", "MI:0670");
-            CvTerm xrefQualifier1 = new CvTerm("imex-primary", "MI:xxxx");
-            xrefs.add(new Xref(xrefDatabase1, "IM-19520-1", xrefQualifier1));
-
-            CvTerm xrefDatabase2 = new CvTerm("go", "MI:0448");
-            CvTerm xrefQualifier2 = new CvTerm("function", "MI:xxxx");
-            xrefs.add(new Xref(xrefDatabase2, "GO:0005085", xrefQualifier2));
-
 
             Collection<Annotation> annotations = new ArrayList<>();
             feature.getAnnotations().forEach(graphAnnotation -> {
@@ -206,12 +190,6 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                     annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
                 }
             });
-
-            //todo: remove this after having real data
-            CvTerm cvTerm1 = new CvTerm("curation depth",  "MI:0955");
-            annotations.add(new Annotation(cvTerm1, "imex curation"));
-            CvTerm cvTerm2 = new CvTerm("full coverage",  "MI:0957");
-            annotations.add(new Annotation(cvTerm2, "Only protein-protein interactions"));
 
             FeatureDetails featureDetails = new FeatureDetails(featureAc, shortname, type, role, ranges, linkedFeatures,
                     participantName, participantIdentifier, participantAc, detectionMethods, parameters, identifiers,
