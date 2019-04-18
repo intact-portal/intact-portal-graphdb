@@ -125,8 +125,6 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             participant.getAliases().forEach(alias -> {
                 if (alias.getType() != null) {
                     aliases.add(new Alias(alias.getName(), new CvTerm(alias.getType().getShortName(), alias.getType().getMIIdentifier())));
-                } else {
-                    aliases.add(new Alias(alias.getName(), null));
                 }
             });
 
@@ -150,9 +148,6 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
                 if (detectionMethod != null) {
                     detectionMethods.add(new CvTerm(detectionMethod.getShortName(), detectionMethod.getMIIdentifier()));
                 }
-                else {
-                    detectionMethods.add(null);
-                }
             });
 
             CvTerm experimentalRole = null;
@@ -169,8 +164,6 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             participant.getExperimentalPreparations().forEach(experimentalPreparation -> {
                 if (experimentalPreparation != null) {
                     experimentalPreparations.add(new CvTerm(experimentalPreparation.getShortName(), experimentalPreparation.getMIIdentifier()));
-                } else {
-                    experimentalPreparations.add(null);
                 }
             });
 
@@ -188,15 +181,29 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
                 if (confidence.getType() != null) {
                     CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
                     confidences.add(new Confidence(cvTerm, confidence.getValue()));
-                } else {
-                    confidences.add(new Confidence(null, confidence.getValue()));
+                }
+            });
 
+            Collection<Xref> xrefs = new ArrayList<>();
+            participant.getXrefs().forEach(xref -> {
+                if (xref != null) {
+                    CvTerm xrefDatabase = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                    CvTerm xrefQualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
+                    xrefs.add(new Xref(xrefDatabase, xref.getId(), xrefQualifier));
+                }
+            });
+
+            Collection<Annotation> annotations = new ArrayList<>();
+            participant.getAnnotations().forEach(graphAnnotation -> {
+                if (graphAnnotation != null) {
+                    CvTerm cvTerm = new CvTerm(graphAnnotation.getTopic().getShortName(), graphAnnotation.getTopic().getMIIdentifier());
+                    annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
                 }
             });
 
             ParticipantDetails participantDetails = new ParticipantDetails(participantAc, type, participantIdentifier, aliases,
                     description, species, expressionSystem, detectionMethods, experimentalRole, biologicalRole, experimentalPreparations,
-                    parameters, confidences);
+                    parameters, confidences, xrefs, annotations);
 
             participantDetailsList.add(participantDetails);
         });
