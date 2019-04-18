@@ -53,13 +53,13 @@ public class GraphRange implements Range {
     }
 
     public GraphRange(Range range,String featureUniqueKey) {
-        setPositions(range.getStart(), range.getEnd());
+        setRangeString(RangeUtils.convertRangeToString(range));
         setLink(range.isLink());
-        setResultingSequence(range.getResultingSequence());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
-        setRangeString(RangeUtils.convertRangeToString(range));
         setUniqueKey(createUniqueKey(range,featureUniqueKey));
+        setPositions(range.getStart(), range.getEnd());
+        setResultingSequence(range.getResultingSequence());
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -127,7 +127,7 @@ public class GraphRange implements Range {
             if (start instanceof GraphPosition) {
                 this.start = (GraphPosition) start;
             } else {
-                this.start = new GraphPosition(start);
+                this.start = new GraphPosition(start,this.getUniqueKey());
             }
         } else {
             this.start = null;
@@ -144,7 +144,7 @@ public class GraphRange implements Range {
             if (end instanceof GraphPosition) {
                 this.end = (GraphPosition) end;
             } else {
-                this.end = new GraphPosition(end);
+                this.end = new GraphPosition(end,this.getUniqueKey());
             }
         } else {
             this.end = null;
@@ -169,7 +169,7 @@ public class GraphRange implements Range {
             if (resultingSequence instanceof GraphResultingSequence) {
                 this.resultingSequence = (GraphResultingSequence) resultingSequence;
             } else {
-                this.resultingSequence = new GraphResultingSequence(resultingSequence);
+                this.resultingSequence = new GraphResultingSequence(resultingSequence,this.getUniqueKey());
             }
         } else {
             this.resultingSequence = null;
@@ -233,6 +233,9 @@ public class GraphRange implements Range {
 
     @Override
     public int hashCode() {
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
         return super.hashCode();
     }
 

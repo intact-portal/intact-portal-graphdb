@@ -11,6 +11,7 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,13 +41,13 @@ public class GraphPosition implements Position {
     public GraphPosition() {
     }
 
-    public GraphPosition(Position position) {
+    public GraphPosition(Position position,String rangeUniqueKey) {
 
         setStatus(position.getStatus());
         setStart(position.getStart());
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
-        setUniqueKey(createUniqueKey(position));
+        setUniqueKey(createUniqueKey(position,rangeUniqueKey));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -175,11 +176,14 @@ public class GraphPosition implements Position {
 
     @Override
     public int hashCode() {
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
         return super.hashCode();
     }
 
-    public String createUniqueKey(Position position) {
-        return Constants.UNIQUE_KEY_NA;
+    public String createUniqueKey(Position position,String rangeUniqueKey) {
+        return UniqueKeyGenerator.createPositionKey(position,rangeUniqueKey);
     }
 
 }

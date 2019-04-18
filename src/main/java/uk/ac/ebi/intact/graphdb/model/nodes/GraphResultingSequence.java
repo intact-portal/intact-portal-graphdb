@@ -10,10 +10,7 @@ import psidev.psi.mi.jami.model.ResultingSequence;
 import psidev.psi.mi.jami.model.Xref;
 import psidev.psi.mi.jami.utils.comparator.range.ResultingSequenceComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
-import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
-import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
-import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,11 +37,11 @@ public class GraphResultingSequence implements ResultingSequence {
 
     }
 
-    public GraphResultingSequence(ResultingSequence resultingSequence) {
+    public GraphResultingSequence(ResultingSequence resultingSequence,String rangeUniqueKey) {
         setOriginalSequence(resultingSequence.getOriginalSequence());
         setNewSequence(resultingSequence.getNewSequence());
         setXrefs(resultingSequence.getXrefs());
-        setUniqueKey(createUniqueKey(resultingSequence));
+        setUniqueKey(createUniqueKey(resultingSequence,rangeUniqueKey));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -162,6 +159,9 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public int hashCode() {
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
         return super.hashCode();
     }
 
@@ -169,7 +169,7 @@ public class GraphResultingSequence implements ResultingSequence {
         return (this.getOriginalSequence() != null ? "original sequence: " + this.getOriginalSequence() : "") + (this.getNewSequence() != null ? "new sequence: " + this.getNewSequence() : "");
     }
 
-    public String createUniqueKey(ResultingSequence resultingSequence) {
-        return Constants.UNIQUE_KEY_NA;
+    public String createUniqueKey(ResultingSequence resultingSequence,String rangeUniqueKey) {
+        return UniqueKeyGenerator.createResultingSequenceKey(resultingSequence,rangeUniqueKey);
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.*;
+import psidev.psi.mi.jami.utils.PositionUtils;
 import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
@@ -203,7 +204,12 @@ public class UniqueKeyGenerator {
 
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             BigDecimal uncertainty = parameter.getUncertainty();
-            uniqueKeyStringBuilder.append(uncertainty.intValue());
+            if (uncertainty != null) {
+                uniqueKeyStringBuilder.append(uncertainty.intValue());
+            }
+
+            // delete any trailing underscore
+            uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
@@ -229,7 +235,7 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    public static String createRangeKey(Range range,String featureUniqueString) {
+    public static String createRangeKey(Range range, String featureUniqueString) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "range::";
@@ -242,9 +248,38 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
-    /*public void position(Position position){ // not needed now
-        PositionUtils.convertPositionToString(position);
-    }*/
+    public static String createPositionKey(Position position, String rangeUniqueString) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "position::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        uniqueKeyStringBuilder.append(rangeUniqueString);
+        uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+        uniqueKeyStringBuilder.append(PositionUtils.convertPositionToString(position));
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createResultingSequenceKey(ResultingSequence resultingSequence, String rangeUniqueString) {
+
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "resultingSequence::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        uniqueKeyStringBuilder.append(rangeUniqueString);
+        uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+        if(resultingSequence.getOriginalSequence()!=null) {
+            uniqueKeyStringBuilder.append(resultingSequence.getOriginalSequence().hashCode());
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+        }
+        if(resultingSequence.getNewSequence()!=null) {
+            uniqueKeyStringBuilder.append(resultingSequence.getNewSequence().hashCode());
+        }
+
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
 
 
     public static String createFeatureKey(Feature featureEvidence) {
@@ -286,7 +321,7 @@ public class UniqueKeyGenerator {
                     Collections.sort(list1, unambiguousXrefComparator);
                     int counter = 1;
                     for (Range range : list1) {
-                        uniqueKeyStringBuilder.append(createRangeKey(range,featureEvidence.getShortName()));
+                        uniqueKeyStringBuilder.append(createRangeKey(range, featureEvidence.getShortName()));
                         if (counter != list1.size()) {
                             uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
                         }
