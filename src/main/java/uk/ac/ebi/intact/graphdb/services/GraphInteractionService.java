@@ -4,17 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphClusteredInteraction;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractionEvidenceRepository;
-import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,10 +40,18 @@ public class GraphInteractionService {
 
     public GraphInteractionEvidence findByInteractionAc(String ac, int depth) {
         GraphInteractionEvidence graphInteractionEvidence = null;
-        Page<GraphInteractionEvidence> page= graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0,1), depth);
-        if (page != null && page.getContent() != null && !page.getContent().isEmpty()){
+        Page<GraphInteractionEvidence> page = graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0, 1), depth);
+        if (page != null && page.getContent() != null && !page.getContent().isEmpty()) {
             graphInteractionEvidence = page.getContent().get(0);
         }
         return graphInteractionEvidence;
+    }
+
+    public GraphInteractionEvidence findByInteractionAcForMiJson(String ac) {
+        Optional<GraphInteractionEvidence> optionalExp = graphInteractionEvidenceRepository.findByInteractionAcForMiJson(ac);
+        if (optionalExp.isPresent()) {
+            return optionalExp.get();
+        }
+        return null;
     }
 }

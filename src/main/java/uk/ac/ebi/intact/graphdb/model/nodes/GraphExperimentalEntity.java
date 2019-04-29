@@ -31,17 +31,23 @@ public class GraphExperimentalEntity extends GraphEntity {
         super();
     }
 
-    public GraphExperimentalEntity(ExperimentalEntity experimentalEntity) {
+    public GraphExperimentalEntity(ExperimentalEntity experimentalEntity, boolean childAlreadyCreated) {
         //TODO...
         super(experimentalEntity, true);
         setUniqueKey(createUniqueKey(experimentalEntity));
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
-            if (!isAlreadyCreated()) {
-                createRelationShipNatively();
+            if (!childAlreadyCreated) {
+                createNodeNatively();
+                if (!isAlreadyCreated()) {
+                    createRelationShipNatively();
+                }
+
             }
         }
+
+
+
     }
 
     public void createNodeNatively() {
@@ -95,16 +101,15 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     @Override
     public int hashCode() {
-
         if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return this.getUniqueKey().hashCode();
         }
         return super.hashCode();
     }
 
-
     public String createUniqueKey(ExperimentalEntity experimentalEntity) {
         return UniqueKeyGenerator.createEntityKey(experimentalEntity);
+
     }
 
 }

@@ -6,7 +6,8 @@
     <groupId>uk.ac.ebi.intact.graphdb</groupId>
     <artifactId>intact-graphdb</artifactId>
 
-    <version>3.0.11-SNAPSHOT</version>
+    <version>3.0.12-SNAPSHOT</version>
+
     <packaging>jar</packaging>
 
     <name>IntAct :: Graph DB prototype</name>
@@ -85,7 +86,17 @@
             <version>${psi.jami.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>psidev.psi.mi.jami</groupId>
+            <artifactId>jami-interactionviewer-json</artifactId>
+            <version>${psi.jami.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>psidev.psi.mi.jami.bridges</groupId>
+            <artifactId>jami-ols</artifactId>
+            <version>${psi.jami.version}</version>
+        </dependency>
 
         <!--Jami-->
 
@@ -122,6 +133,14 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.4.3</version>
         </dependency>
+
+        <!--For Unit Tests-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
+
 
     </dependencies>
 

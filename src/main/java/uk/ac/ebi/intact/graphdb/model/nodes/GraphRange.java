@@ -183,8 +183,10 @@ public class GraphRange implements Range {
 
     public void setParticipant(Entity participant) {
         if (participant != null) {
-            if (participant instanceof GraphPosition) {
+            if (participant instanceof GraphEntity) {
                 this.participant = (GraphEntity) participant;
+            } else if (participant instanceof ParticipantEvidence) {
+                this.participant = new GraphParticipantEvidence((ParticipantEvidence) participant);
             } else {
                 this.participant = new GraphEntity(participant, false);
             }
@@ -242,6 +244,7 @@ public class GraphRange implements Range {
     @Override
     public String toString() {
         return (this.start != null ? this.start.toString() : "") + (this.end != null ? this.end.toString() : "") + (isLink() ? "(linked)" : "");
+
     }
 
     public String createUniqueKey(Range range,String featureUniqueKey) {

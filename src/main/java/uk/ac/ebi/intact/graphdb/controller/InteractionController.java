@@ -1,7 +1,21 @@
 package uk.ac.ebi.intact.graphdb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
+import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
+import psidev.psi.mi.jami.datasource.InteractionWriter;
+import psidev.psi.mi.jami.factory.InteractionWriterFactory;
+import psidev.psi.mi.jami.json.InteractionViewerJson;
+import psidev.psi.mi.jami.json.MIJsonOptionFactory;
+import psidev.psi.mi.jami.json.MIJsonType;
+import psidev.psi.mi.jami.model.InteractionCategory;
+import psidev.psi.mi.jami.model.InteractionEvidence;
+import uk.ac.ebi.intact.graphdb.controller.enums.InteractionExportFormat;
 import uk.ac.ebi.intact.graphdb.controller.model.*;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
@@ -9,9 +23,12 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 import uk.ac.ebi.intact.graphdb.services.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.services.GraphInteractionService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ntoro on 02/08/2017.
@@ -87,7 +104,7 @@ public class InteractionController {
         List<TermType> parameters = new ArrayList<>();
         graphInteractionEvidence.getParameters().forEach(param -> {
             CvTerm cvTerm = new CvTerm(param.getType().getShortName(), param.getType().getMIIdentifier());
-                parameters.add(new TermType(cvTerm, param.getValue().toString()));
+            parameters.add(new TermType(cvTerm, param.getValue().toString()));
         });
 
         List<TermType> confidences = new ArrayList<>();
@@ -109,8 +126,8 @@ public class InteractionController {
 
         List<Xref> experimentXrefs = new ArrayList<>();
         graphExperiment.getXrefs().forEach(xref -> {
-                CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
-                experimentXrefs.add(new Xref(term, xref.getId()));
+            CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+            experimentXrefs.add(new Xref(term, xref.getId()));
         });
 
         List<Annotation> experimentAnnotations = new ArrayList<>();
@@ -145,6 +162,72 @@ public class InteractionController {
         });
 
         return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
+    }
+
+    @RequestMapping(value = "/export",
+            params = {
+                    "ac"
+            },
+            method = RequestMethod.GET)
+    public ResponseEntity<String> exportInteraction(@RequestParam(value = "ac", required = false) String ac,
+                                                    @RequestParam(value = "format", defaultValue = "json", required = false) String format,
+                                                    HttpServletResponse response) throws Exception {
+        Boolean exportAsFile = false;
+
+        InteractionEvidence interactionEvidence = graphInteractionService.findByInteractionAcForMiJson(ac);
+
+        ResponseEntity<String> responseEntity = null;
+        if (interactionEvidence != null) {
+            InteractionWriterFactory writerFactory = InteractionWriterFactory.getInstance();
+            switch (InteractionExportFormat.formatOf(format)) {
+                case JSON:
+                default:
+                    responseEntity = createJsonResponse(interactionEvidence, writerFactory);
+                    break;
+            }
+            return responseEntity;
+        }
+        throw new Exception("Export failed " + ac + ". No Interaction result");
+    }
+
+    private ResponseEntity<String> createJsonResponse(InteractionEvidence interactionEvidence,
+                                                      InteractionWriterFactory writerFactory) {
+
+        InteractionViewerJson.initialiseAllMIJsonWriters();
+        MIJsonOptionFactory optionFactory = MIJsonOptionFactory.getInstance();
+        StringWriter answer = new StringWriter();
+        InteractionWriter writer = null;
+        Map<String, Object> options = null;
+        try {
+            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
+                    MIJsonType.n_ary_only, new CachedOlsOntologyTermFetcher(), null);
+            writer = writerFactory.getInteractionWriterWith(options);
+        } catch (BridgeFailedException e) {
+            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
+                    MIJsonType.n_ary_only, null, null);
+
+        }
+        writer = writerFactory.getInteractionWriterWith(options);
+
+        try {
+            writer.start();
+            writer.write(interactionEvidence);
+            writer.end();
+        } finally {
+            writer.close();
+        }
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.add("X-Clacks-Overhead", "GNU Terry Pratchett"); //In memory of Sir Terry Pratchett
+        enableCORS(httpHeaders);
+        return new ResponseEntity<String>(answer.toString(), httpHeaders, HttpStatus.OK);
+    }
+
+    protected void enableCORS(HttpHeaders headers) {
+        headers.add("Access-Control-Allow-Origin", "*");
+        headers.add("Access-Control-Allow-Methods", "GET");
+        headers.add("Access-Control-Max-Age", "3600");
+        headers.add("Access-Control-Allow-Headers", "x-requested-with");
     }
 
 }

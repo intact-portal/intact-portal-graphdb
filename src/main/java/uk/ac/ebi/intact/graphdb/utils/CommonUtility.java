@@ -161,6 +161,15 @@ public class CommonUtility {
         }
     }
 
+    public static void createParticipantsRelationShips(Collection<GraphParticipantEvidence> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphParticipantEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, IE_PARTICIPANT);
+
+            }
+        }
+    }
+
     public static void createInteractorRelationShips(Collection<GraphInteractor> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphInteractor obj : relCollection) {
@@ -178,13 +187,13 @@ public class CommonUtility {
         }
     }
 
-    public static void createFeatureRelationShips(Collection<GraphFeature> relCollection, long fromId, String relationName) {
+/*    public static void createFeatureRelationShips(Collection<GraphFeature> relCollection, long fromId, String relationName) {
         if (relCollection != null) {
             for (GraphFeature obj : relCollection) {
                 createRelationShip(obj, fromId, relationName);
             }
         }
-    }
+    }*/
 
     public static void createCausalRelationshipRelationShips(Collection<GraphCausalRelationship> relCollection, long fromId) {
         if (relCollection != null) {

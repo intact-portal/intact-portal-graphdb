@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -65,6 +66,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private Collection<GraphAnnotation> annotations;
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
+    @JsonManagedReference
     private Collection<GraphParticipantEvidence> participants;
 
     @Transient
@@ -108,12 +110,9 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setXrefs(binaryInteractionEvidence.getXrefs());
         setAnnotations(binaryInteractionEvidence.getAnnotations());
 
-        //Enable below if you will create GraphInteractionEvidence as a separate node in future
-        /*if(!childAlreadyCreated) {
-         if (!callingClasses.contains("GraphParticipantEvidence")) {
+        if (!callingClasses.contains("GraphParticipantEvidence")) {
             setParticipants(binaryInteractionEvidence.getParticipants());
         }
-        }*/
 
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated() && !childAlreadyCreated) {
@@ -163,6 +162,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         CommonUtility.createChecksumRelationShips(checksums, graphId);
         CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createParticipantsRelationShips(participants, graphId);
         CommonUtility.createAnnotationRelationShips(annotations, graphId);
     }
 
@@ -619,6 +619,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
             return this.getUniqueKey().hashCode();
         }
         return super.hashCode();
+
     }
 
     public String createUniqueKey(InteractionEvidence interactionEvidence) {

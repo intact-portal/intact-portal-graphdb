@@ -56,10 +56,10 @@ public class HashCode {
         return hashcode;
     }
 
-    public static int featuresGraphHashCode(Collection<? extends GraphFeature> featureEvidences) {
+    public static int featuresGraphHashCode(Collection<GraphFeatureEvidence> featureEvidences) {
         int hashcode = 0;
 
-        for (GraphFeature featureEvidence : featureEvidences) {
+        for (GraphFeatureEvidence featureEvidence : featureEvidences) {
             hashcode = 31 * hashcode + featureEvidence.hashCode();
         }
 
@@ -136,8 +136,18 @@ public class HashCode {
         return hashcode;
     }
 
+    public static int interactionEvidencesHashCode(Collection<InteractionEvidence> interactionEvidences) {
+        int hashcode = 0;
+
+        for (InteractionEvidence interactionEvidence : interactionEvidences) {
+            hashcode = 31 * hashcode + HashCode.identifiersHashCode(interactionEvidence.getIdentifiers());
+        }
+
+        return hashcode;
+    }
+
     /*This had to be included as jami does not have this method yet*/
-    public static int featureHashCode(Feature featureEvidence) {
+    public static int featureHashCode(FeatureEvidence featureEvidence) {
         int hashcode = 31;
         hashcode = 31 * hashcode + "Feature:".hashCode();
 

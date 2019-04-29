@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -22,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphEntity implements Entity<Feature> {
+public class GraphEntity implements ExperimentalEntity {
 
     @GraphId
     private Long graphId;
@@ -31,10 +33,12 @@ public class GraphEntity implements Entity<Feature> {
     private String uniqueKey;
 
     @Relationship(type = RelationshipTypes.INTERACTOR)
+    @JsonManagedReference
     private GraphInteractor interactor;
 
-    @Relationship(type = RelationshipTypes.FEATURES)
-    private Collection<GraphFeature> features;
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.OUTGOING)
+    @JsonBackReference
+    private Collection<GraphFeatureEvidence> features;
 
     @Relationship(type = RelationshipTypes.STOICHIOMETRY)
     private GraphStoichiometry stoichiometry;
@@ -98,7 +102,7 @@ public class GraphEntity implements Entity<Feature> {
         CommonUtility.createRelationShip(interactor, graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
         CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
-        CommonUtility.createFeatureRelationShips(features, graphId, RelationshipTypes.FEATURES);
+        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 
@@ -124,38 +128,37 @@ public class GraphEntity implements Entity<Feature> {
     }
 
     @Override
-    public Collection<GraphFeature> getFeatures() {
+    public Collection<GraphFeatureEvidence> getFeatures() {
         if (features == null) {
-            features = new ArrayList<GraphFeature>();
+            features = new ArrayList<GraphFeatureEvidence>();
         }
         return this.features;
     }
 
-    public void setFeatures(Collection<Feature> features) {
+    public void setFeatures(Collection<FeatureEvidence> features) {
         if (features != null) {
             addAllFeatures(features);
         } else {
-            this.features = new ArrayList<GraphFeature>();
+            this.features = new ArrayList<GraphFeatureEvidence>();
         }
     }
 
 
     @Override
-    public boolean addFeature(Feature feature) {
+    public boolean addFeature(FeatureEvidence feature) {
         if (feature == null) {
             return false;
         }
 
-        GraphFeature graphFeature = null;
+        GraphFeatureEvidence graphFeatureEvidence = null;
         if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
-            graphFeature = GraphEntityCache.featureCacheMap.get(feature.getShortName());
-        } else if (feature instanceof FeatureEvidence) {
-            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+            graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(feature.getShortName());
+
         } else {
-            graphFeature = new GraphFeature(feature, false);
+            graphFeatureEvidence = new GraphFeatureEvidence(feature);
         }
-        if (getFeatures().add(graphFeature)) {
-            graphFeature.setParticipant(this);
+        if (getFeatures().add(graphFeatureEvidence)) {
+            feature.setParticipant(this);
             return true;
         }
 
@@ -164,7 +167,7 @@ public class GraphEntity implements Entity<Feature> {
 
     //Todo review
     @Override
-    public boolean removeFeature(Feature feature) {
+    public boolean removeFeature(FeatureEvidence feature) {
         if (feature == null) {
             return false;
         }
@@ -177,13 +180,13 @@ public class GraphEntity implements Entity<Feature> {
     }
 
     @Override
-    public boolean addAllFeatures(Collection<? extends Feature> features) {
+    public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
         if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (Feature feature : features) {
+        for (FeatureEvidence feature : features) {
             if (addFeature(feature)) {
                 added = true;
             }
@@ -192,13 +195,13 @@ public class GraphEntity implements Entity<Feature> {
     }
 
     @Override
-    public boolean removeAllFeatures(Collection<? extends Feature> features) {
+    public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
         if (features == null) {
             return false;
         }
 
         boolean added = false;
-        for (Feature feature : features) {
+        for (FeatureEvidence feature : features) {
             if (removeFeature(feature)) {
                 added = true;
             }

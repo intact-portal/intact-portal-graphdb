@@ -39,7 +39,7 @@ public class GraphExperimentRepositoryTest {
         Assert.assertEquals("Host Organism is incorrect", "in vitro", graphExperiment.getHostOrganism().getCommonName());
         Assert.assertNotNull("Interaction Detection method is null", graphExperiment.getInteractionDetectionMethod());
         Assert.assertEquals("Interaction Detection Method is incorect", "pull down",
-                           graphExperiment.getInteractionDetectionMethod().getShortName());
+                graphExperiment.getInteractionDetectionMethod().getShortName());
         Assert.assertNotNull("Experiment Xrefs is null", graphExperiment.getXrefs());
         Assert.assertEquals("Experiment Xrefs count is wrong", 2, graphExperiment.getXrefs().size());
 
@@ -53,7 +53,7 @@ public class GraphExperimentRepositoryTest {
         Assert.assertNotNull("Experiment Imex Id :" + imexIdOfExp + " Xref not present", experimentXref);
 
         Assert.assertNotNull("Experiment Annotations is null", graphExperiment.getAnnotations());
-        Assert.assertEquals("Experiment Annotations count is wrong", 8, graphExperiment.getAnnotations().size());
+        Assert.assertEquals("Experiment Annotations count is wrong", 7, graphExperiment.getAnnotations().size());
 
         GraphPublication graphPublication = (GraphPublication) graphExperiment.getPublication();
 
@@ -61,11 +61,11 @@ public class GraphExperimentRepositoryTest {
         Assert.assertEquals("GraphPublication is not correct", "EBI-9836453", graphPublication.getAc());
         Assert.assertEquals("pubmedid is not correct", "24872509", graphPublication.getPubmedIdStr());
         Assert.assertEquals("Publication Title is wrong", "Structural basis for Pan3 binding to Pan2 and its function" +
-                           " in mRNA recruitment and deadenylation.", graphPublication.getTitle());
+                " in mRNA recruitment and deadenylation.", graphPublication.getTitle());
         Assert.assertEquals("Journal is wrong", "EMBO J. (0261-4189)", graphPublication.getJournal());
         try {
             Assert.assertEquals("Publication Date is wrong", new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2014"),
-                                graphPublication.getPublicationDate());
+                    graphPublication.getPublicationDate());
         } catch (Exception parseException) {
             parseException.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class GraphExperimentRepositoryTest {
         Assert.assertNotNull("Publication Imex Id :" + imexIdOfPub + " Xref not present", publicationXref);
 
         Assert.assertNotNull("Publication Annotations is null", graphPublication.getAnnotations());
-        Assert.assertEquals("Publication Annotations count is wrong", 4, graphPublication.getAnnotations().size());
+        Assert.assertEquals("Publication Annotations count is wrong", 3, graphPublication.getAnnotations().size());
 
     }
 }
