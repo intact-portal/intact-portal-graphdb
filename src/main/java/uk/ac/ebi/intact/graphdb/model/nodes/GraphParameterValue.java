@@ -27,7 +27,7 @@ public class GraphParameterValue extends ParameterValue {
 
     private short base;
     private BigDecimal factor;
-    private short exponent=0;
+    private short exponent = 0;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -101,8 +101,8 @@ public class GraphParameterValue extends ParameterValue {
         return UniqueKeyGenerator.createParameterValueKey(this);
     }
 
-    public String toString(){
-        return (base != 0 && factor.doubleValue() != 0 ? factor.toString()+(exponent != 0 ? "x"+base+"^("+exponent+")" : "") : "0");
+    public String toString() {
+        return (base != 0 && factor.doubleValue() != 0 ? factor.toString() + (exponent != 0 ? "x" + base + "^(" + exponent + ")" : "") : "0");
     }
 
 }

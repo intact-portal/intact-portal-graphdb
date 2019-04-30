@@ -11,11 +11,12 @@ import java.util.TreeMap;
  */
 public class GraphEntityCache {
 
-    public static Map<String,GraphCvTerm> cvTermCacheMap =new TreeMap<String,GraphCvTerm>(String.CASE_INSENSITIVE_ORDER);
-    public static HashMap<String,GraphXref> xrefCacheMap = new HashMap<String,GraphXref>();
-    public static HashMap<String,GraphFeatureEvidence> featureCacheMap = new HashMap<String,GraphFeatureEvidence>();
-    public static HashMap<String,GraphExperiment> experimentCacheMap = new HashMap<String,GraphExperiment>();
-    public static HashMap<String,GraphVariableParameter> parameterValueCacheMap = new HashMap<String,GraphVariableParameter>();
+    public static Map<String, GraphCvTerm> cvTermCacheMap = new TreeMap<String, GraphCvTerm>(String.CASE_INSENSITIVE_ORDER);
+    public static HashMap<String, GraphXref> xrefCacheMap = new HashMap<String, GraphXref>();
+    public static HashMap<String, GraphFeatureEvidence> featureCacheMap = new HashMap<String, GraphFeatureEvidence>();
+    public static HashMap<String, GraphModelledFeature> modelledFeatureCacheMap = new HashMap<String, GraphModelledFeature>();
+    public static HashMap<String, GraphExperiment> experimentCacheMap = new HashMap<String, GraphExperiment>();
+    public static HashMap<String, GraphVariableParameter> parameterValueCacheMap = new HashMap<String, GraphVariableParameter>();
 
 
 }

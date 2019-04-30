@@ -48,7 +48,7 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
     private GraphBinaryInteractionEvidence binaryInteractionEvidenceA;
 
     @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.INCOMING)
-   @JsonBackReference
+    @JsonBackReference
     private GraphBinaryInteractionEvidence binaryInteractionEvidenceB;
 
     @Relationship(type = RelationshipTypes.CONFIDENCE)

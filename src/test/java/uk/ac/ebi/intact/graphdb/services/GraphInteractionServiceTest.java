@@ -21,21 +21,21 @@ public class GraphInteractionServiceTest {
     private GraphInteractionService graphInteractionService;
 
     @Test
-    public void getInteractionEvidenceByAc(){
-        GraphInteractionEvidence graphInteractionEvidence=null;
-        String ac="EBI-10000974";
-        int depth=2;
-        graphInteractionEvidence=graphInteractionService.findByInteractionAc(ac,depth);
+    public void getInteractionEvidenceByAc() {
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        String ac = "EBI-10000974";
+        int depth = 2;
+        graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac, depth);
 
-        Assert.assertEquals("Interaction not present", ac,graphInteractionEvidence.getAc());
+        Assert.assertEquals("Interaction not present", ac, graphInteractionEvidence.getAc());
     }
 
     @Test
-    public void findByInteractionAcForMiJson(){
-        String interactionAc="EBI-10052707";
-        GraphInteractionEvidence graphInteractionEvidence=graphInteractionService.findByInteractionAcForMiJson(interactionAc);
+    public void findByInteractionAcForMiJson() {
+        String interactionAc = "EBI-10052707";
+        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAcForMiJson(interactionAc);
 
-        Assert.assertNotNull("GraphInteractionEvidence not present",graphInteractionEvidence);
-        Assert.assertEquals("GraphInteractionEvidence is incorrect",interactionAc,graphInteractionEvidence.getAc());
+        Assert.assertNotNull("GraphInteractionEvidence not present", graphInteractionEvidence);
+        Assert.assertEquals("GraphInteractionEvidence is incorrect", interactionAc, graphInteractionEvidence.getAc());
     }
 }

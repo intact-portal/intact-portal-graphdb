@@ -12,7 +12,7 @@ public class RelationshipTypes {
     public static final String INFERS = "INFERS";
     public static final String BIE_PARTICIPANT_A = "BIE_PARTICIPANTA";
     public static final String BIE_PARTICIPANT_B = "BIE_PARTICIPANTB";
-    public static final String IE_PARTICIPANT="IE_PARTICIPANT";
+    public static final String IE_PARTICIPANT = "IE_PARTICIPANT";
 
     //Alias
     public static final String ALIASES = "aliases";
@@ -64,6 +64,7 @@ public class RelationshipTypes {
     public static final String ROLE = "role";
     public static final String PARTICIPANT = "participant";
     public static final String PARTICIPANT_FEATURE = "PARTICIPANT_FEATURE";
+    public static final String INTERPRO = "interpro";
 
     //Gene
     public static final String ENSEMBL = "ensembl";
@@ -88,7 +89,7 @@ public class RelationshipTypes {
     //Organism
     public static final String CELL_TYPE = "cellType";
     public static final String COMPARTMENT = "compartment";
-    public static final String TISSUE =  "tissue";
+    public static final String TISSUE = "tissue";
 
     //Parameter
     public static final String VALUE = "value";
@@ -150,4 +151,5 @@ public class RelationshipTypes {
     public static final String INTERACTOR_PB = "interactorPB";
 
     public static final String PREFERRED_IDENTIFIER = "preferredIdentifier";
+    public static final String BIOLOGICAL_EFFECT = "biologicalEffect";
 }

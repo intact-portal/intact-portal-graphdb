@@ -8,7 +8,6 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
@@ -52,12 +51,12 @@ public class GraphRange implements Range {
     public GraphRange() {
     }
 
-    public GraphRange(Range range,String featureUniqueKey) {
+    public GraphRange(Range range, String featureUniqueKey) {
         setRangeString(RangeUtils.convertRangeToString(range));
         setLink(range.isLink());
         setParticipant(range.getParticipant());
         setAc(CommonUtility.extractAc(range));
-        setUniqueKey(createUniqueKey(range,featureUniqueKey));
+        setUniqueKey(createUniqueKey(range, featureUniqueKey));
         setPositions(range.getStart(), range.getEnd());
         setResultingSequence(range.getResultingSequence());
 
@@ -127,7 +126,7 @@ public class GraphRange implements Range {
             if (start instanceof GraphPosition) {
                 this.start = (GraphPosition) start;
             } else {
-                this.start = new GraphPosition(start,this.getUniqueKey());
+                this.start = new GraphPosition(start, this.getUniqueKey());
             }
         } else {
             this.start = null;
@@ -144,7 +143,7 @@ public class GraphRange implements Range {
             if (end instanceof GraphPosition) {
                 this.end = (GraphPosition) end;
             } else {
-                this.end = new GraphPosition(end,this.getUniqueKey());
+                this.end = new GraphPosition(end, this.getUniqueKey());
             }
         } else {
             this.end = null;
@@ -169,7 +168,7 @@ public class GraphRange implements Range {
             if (resultingSequence instanceof GraphResultingSequence) {
                 this.resultingSequence = (GraphResultingSequence) resultingSequence;
             } else {
-                this.resultingSequence = new GraphResultingSequence(resultingSequence,this.getUniqueKey());
+                this.resultingSequence = new GraphResultingSequence(resultingSequence, this.getUniqueKey());
             }
         } else {
             this.resultingSequence = null;
@@ -247,8 +246,8 @@ public class GraphRange implements Range {
 
     }
 
-    public String createUniqueKey(Range range,String featureUniqueKey) {
-        return UniqueKeyGenerator.createRangeKey(range,featureUniqueKey);
+    public String createUniqueKey(Range range, String featureUniqueKey) {
+        return UniqueKeyGenerator.createRangeKey(range, featureUniqueKey);
     }
 
     public String getRangeString() {
