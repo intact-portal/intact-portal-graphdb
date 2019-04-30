@@ -1,8 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import psidev.psi.mi.jami.model.InteractionEvidence;
+import psidev.psi.mi.jami.model.ModelledConfidence;
 import psidev.psi.mi.jami.model.ModelledInteraction;
+import psidev.psi.mi.jami.model.Source;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -19,28 +23,49 @@ public class GraphModelledInteraction implements ModelledInteraction {
 
 
     public Collection<GraphInteractionEvidence> getInteractionEvidences() {
-        return interactionEvidences;
+        if (interactionEvidences == null) {
+            this.interactionEvidences = new ArrayList<GraphInteractionEvidence>();
+        }
+        return this.interactionEvidences;
     }
 
     public void setInteractionEvidences(Collection<InteractionEvidence> interactionEvidences) {
-        this.interactionEvidences = interactionEvidences;
+        if (interactionEvidences != null) {
+            this.interactionEvidences = CollectionAdaptor.convertInteractionEvidenceIntoGraphModel(interactionEvidences);
+        } else {
+            this.interactionEvidences = new ArrayList<GraphInteractionEvidence>();
+        }
     }
 
-    @Override
-    public GraphSource getSource() {
-        return source;
+    public Source getSource() {
+        return this.source;
     }
 
-    public void setSource(GraphSource source) {
-        this.source = source;
+    public void setSource(Source source) {
+        if (source != null) {
+            if (source instanceof GraphSource) {
+                this.source = (GraphSource) source;
+            } else {
+                this.source = new GraphSource(source);
+            }
+        } else {
+            this.source = null;
+        }
     }
 
     public Collection<GraphModelledConfidence> getModelledConfidences() {
-        return modelledConfidences;
+        if (modelledConfidences == null) {
+            this.modelledConfidences = new ArrayList<GraphModelledConfidence>();
+        }
+        return this.modelledConfidences;
     }
 
-    public void setModelledConfidences(Collection<GraphModelledConfidence> modelledConfidences) {
-        this.modelledConfidences = modelledConfidences;
+    public void setModelledConfidences(Collection<ModelledConfidence> modelledConfidences) {
+        if (modelledConfidences != null) {
+            this.modelledConfidences = CollectionAdaptor.convertModelledConfidenceIntoGraphModel(modelledConfidences);
+        } else {
+            this.modelledConfidences = new ArrayList<GraphModelledConfidence>();
+        }
     }
 
     public Collection<GraphModelledParameter> getModelledParameters() {
