@@ -1,25 +1,45 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.graphdb.Label;
+import org.neo4j.ogm.annotation.*;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
 import psidev.psi.mi.jami.utils.XrefUtils;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
+import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Created by anjali on 30/04/19.
  */
+@NodeEntity
 public class GraphModelledFeature implements ModelledFeature {
 
+    @GraphId
+    private Long graphId;
+
+    @Index(unique = true, primary = true)
+    private String uniqueKey;
+
+    private String ac;
     private String shortName;
     private String fullName;
 
     @Relationship(type = RelationshipTypes.INTERPRO)
     private GraphXref interpro;
+
+    @Relationship(type = RelationshipTypes.TYPE)
+    private GraphCvTerm type;
+
+    @Relationship(type = RelationshipTypes.ROLE)
+    private GraphCvTerm role;
 
     @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
@@ -30,17 +50,11 @@ public class GraphModelledFeature implements ModelledFeature {
     @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
 
-    @Relationship(type = RelationshipTypes.TYPE)
-    private GraphCvTerm type;
-
     @Relationship(type = RelationshipTypes.RANGES)
     private Collection<GraphRange> ranges;
 
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
-
-    @Relationship(type = RelationshipTypes.ROLE)
-    private GraphCvTerm role;
 
     @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.INCOMING)
     private GraphModelledEntity participant;
@@ -48,6 +62,88 @@ public class GraphModelledFeature implements ModelledFeature {
     @Relationship(type = RelationshipTypes.LINKED_FEATURES, direction = Relationship.UNDIRECTED)
     private Collection<GraphModelledFeature> linkedFeatures;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
+    public GraphModelledFeature() {
+
+    }
+
+    public GraphModelledFeature(ModelledFeature modelledFeature) {
+        boolean wasInitializedBefore = false;
+        String callingClass = Arrays.toString(Thread.currentThread().getStackTrace());
+        if (GraphEntityCache.modelledFeatureCacheMap.get(modelledFeature.getShortName()) == null) {
+            GraphEntityCache.modelledFeatureCacheMap.put(modelledFeature.getShortName(), this);
+        } else {
+            wasInitializedBefore = true;
+        }
+        setShortName(modelledFeature.getShortName());
+        setFullName(modelledFeature.getFullName());
+        setInterpro(modelledFeature.getInterpro());
+        setType(modelledFeature.getType());
+        setRole(modelledFeature.getRole());
+        setAc(CommonUtility.extractAc(modelledFeature));
+        setUniqueKey(createUniqueKey(modelledFeature));
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        if (!callingClass.contains("GraphModelledEntity")) {
+            setParticipant(modelledFeature.getParticipant());
+        }
+
+        setIdentifiers(modelledFeature.getIdentifiers());
+        setXrefs(modelledFeature.getXrefs());
+        setAnnotations(modelledFeature.getAnnotations());
+        setRanges(modelledFeature.getRanges());
+        setAliases(modelledFeature.getAliases());
+
+        if (!wasInitializedBefore) {
+            setLinkedFeatures(modelledFeature.getLinkedFeatures());
+        }
+
+        if (CreationConfig.createNatively) {
+            if (!isAlreadyCreated()) {
+                createRelationShipNatively();
+            }
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+            if (this.getFullName() != null) nodeProperties.put("fullName", this.getFullName());
+            if (this.getInterpro() != null) nodeProperties.put("interpro", this.getInterpro());
+
+            Label[] labels = CommonUtility.getLabels(GraphModelledFeature.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively() {
+        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(interpro, this.graphId, RelationshipTypes.INTERPRO);
+        CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
+        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT_FEATURE);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
+        CommonUtility.createRangeRelationShips(ranges, this.graphId);
+        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createModelledFeatureRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
+    }
 
     @Override
     public String getShortName() {
@@ -249,4 +345,48 @@ public class GraphModelledFeature implements ModelledFeature {
         }
     }
 
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
+    }
+
+    public int hashCode() {
+
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
+        return super.hashCode();
+    }
+
+
+    public String createUniqueKey(ModelledFeature modelledFeature) {
+        return UniqueKeyGenerator.createModelledFeatureKey(modelledFeature);
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
 }

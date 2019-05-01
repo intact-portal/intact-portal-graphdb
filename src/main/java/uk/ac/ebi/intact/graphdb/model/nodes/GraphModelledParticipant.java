@@ -47,6 +47,9 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
     @Transient
     private EntityInteractorChangeListener changeListener;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
     public GraphModelledParticipant() {
 
     }
@@ -249,5 +252,15 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
 
     public String createUniqueKey(ModelledParticipant modelledParticipant) {
         return UniqueKeyGenerator.createModelledParticipantKey(modelledParticipant);
+    }
+
+    @Override
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    @Override
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 }

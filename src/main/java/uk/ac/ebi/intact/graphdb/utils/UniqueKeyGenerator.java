@@ -373,6 +373,62 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createModelledFeatureKey(ModelledFeature modelledFeature) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "modelled feature::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+
+            if (modelledFeature.getShortName() != null) {
+                uniqueKeyStringBuilder.append(modelledFeature.getShortName());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+
+            if (modelledFeature.getType() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(modelledFeature.getType()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+
+            if (modelledFeature.getRole() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(modelledFeature.getRole()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+
+            if (modelledFeature.getInterpro() != null) {
+                uniqueKeyStringBuilder.append(modelledFeature.getInterpro());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+
+            if (modelledFeature.getIdentifiers() != null) {
+                uniqueKeyStringBuilder.append(createXrefListKey(modelledFeature.getIdentifiers()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+
+            if (modelledFeature.getRanges() != null) {
+                UnambiguousRangeComparator unambiguousXrefComparator = new UnambiguousRangeComparator();
+                if (!modelledFeature.getRanges().isEmpty()) {
+                    List<Range> list1 = new ArrayList<Range>(modelledFeature.getRanges());
+                    Collections.sort(list1, unambiguousXrefComparator);
+                    int counter = 1;
+                    for (Range range : list1) {
+                        uniqueKeyStringBuilder.append(createRangeKey(range, modelledFeature.getShortName()));
+                        if (counter != list1.size()) {
+                            uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                        }
+                        counter++;
+                    }
+                }
+            }
+
+            // delete any trailing underscore
+            uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createPolymerKey(Polymer polymer) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();

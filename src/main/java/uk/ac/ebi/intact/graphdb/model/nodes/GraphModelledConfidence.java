@@ -2,10 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.ModelledConfidence;
 import psidev.psi.mi.jami.model.Publication;
@@ -33,6 +30,9 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
     @Relationship(type = RelationshipTypes.PUBLICATION, direction = Relationship.OUTGOING)
     @JsonManagedReference
     private GraphPublication publication;
+
+    @Transient
+    private boolean isAlreadyCreated;
 
     public GraphModelledConfidence() {
     }
@@ -121,5 +121,15 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
     @Override
     public void setGraphId(Long graphId) {
         this.graphId = graphId;
+    }
+
+    @Override
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    @Override
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
     }
 }
