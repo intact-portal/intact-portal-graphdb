@@ -758,6 +758,23 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createModelledConfidenceKey(ModelledConfidence modelledConfidence) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "modelled confidence::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(modelledConfidence.getPublication().getPubmedId());
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(createCvTermKey(modelledConfidence.getType()));
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            uniqueKeyStringBuilder.append(modelledConfidence.getValue());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createChecksumKey(Checksum checksum) {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "checksum::";

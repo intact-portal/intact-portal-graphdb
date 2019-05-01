@@ -57,11 +57,13 @@ public class GraphParameter implements Parameter {
         setAc(CommonUtility.extractAc(parameter));
         setUniqueKey(createUniqueKey(parameter));
 
-        if (CreationConfig.createNatively && !childAlreadyCreated) {
-            initialzeNodeProperties();
-            createNodeNatively();
-            if (!isAlreadyCreated()) {
-                createRelationShipNatively();
+        if (CreationConfig.createNatively) {
+            initializeNodeProperties();
+            if (!childAlreadyCreated) {
+                createNodeNatively();
+                if (!isAlreadyCreated()) {
+                    createRelationShipNatively();
+                }
             }
         }
     }
@@ -108,7 +110,7 @@ public class GraphParameter implements Parameter {
         setUnit(unit);
     }
 
-    public void initialzeNodeProperties() {
+    public void initializeNodeProperties() {
         if (this.getAc() != null) getNodeProperties().put("ac", this.getAc());
         if (this.getUncertainty() != null) getNodeProperties().put("uncertainty", this.getUncertainty().toString());
     }

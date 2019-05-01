@@ -58,7 +58,7 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.putAll(super.getNodeProperties());
 
-            Label[] labels = CommonUtility.getLabels(GraphParameter.class);
+            Label[] labels = CommonUtility.getLabels(GraphModelledParameter.class);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());

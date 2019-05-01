@@ -32,20 +32,30 @@ public class GraphConfidence implements Confidence {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
+
     public GraphConfidence() {
     }
 
-    public GraphConfidence(Confidence confidence) {
+    public GraphConfidence(Confidence confidence, boolean childAlreadyCreated) {
         setType(confidence.getType());
         setValue(confidence.getValue());
         setUniqueKey(createUniqueKey(confidence));
 
         if (CreationConfig.createNatively) {
-            createNodeNatively();
-            if (!isAlreadyCreated()) {
-                createRelationShipNatively();
+            initializeNodeProperties();
+            if (!childAlreadyCreated) {
+                createNodeNatively();
+                if (!isAlreadyCreated()) {
+                    createRelationShipNatively();
+                }
             }
         }
+    }
+
+    public void initializeNodeProperties() {
+        if (this.getValue() != null) getNodeProperties().put("value", this.getValue());
     }
 
     public void createNodeNatively() {
@@ -54,7 +64,6 @@ public class GraphConfidence implements Confidence {
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getValue() != null) nodeProperties.put("value", this.getValue());
 
             Label[] labels = CommonUtility.getLabels(GraphConfidence.class);
 
@@ -158,5 +167,13 @@ public class GraphConfidence implements Confidence {
 
     public String createUniqueKey(Confidence confidence) {
         return UniqueKeyGenerator.createConfidenceKey(confidence);
+    }
+
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
     }
 }
