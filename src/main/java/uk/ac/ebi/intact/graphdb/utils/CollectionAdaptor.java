@@ -51,6 +51,14 @@ public class CollectionAdaptor {
         return parameters.stream().map(GraphModelledConfidence::new).collect(Collectors.toList());
     }
 
+    public static Collection<GraphModelledParameter> convertModelledParameterIntoGraphModel(Collection<ModelledParameter> parameters) {
+        return parameters.stream().map(GraphModelledParameter::new).collect(Collectors.toList());
+    }
+
+    public static Collection<GraphCooperativeEffect> convertCooperativeEffectIntoGraphModel(Collection<CooperativeEffect> parameters) {
+        return parameters.stream().map(GraphCooperativeEffect::new).collect(Collectors.toList());
+    }
+
     public static Collection<GraphConfidence> convertConfidenceIntoGraphModel(Collection<Confidence> confidences) {
         return confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
     }
@@ -69,6 +77,10 @@ public class CollectionAdaptor {
 
     public static Collection<GraphParticipantEvidence> convertParticipantEvidenceIntoGraphModel(Collection<ParticipantEvidence> participantEvidences) {
         return participantEvidences.stream().map(GraphParticipantEvidence::new).collect(Collectors.toList());
+    }
+
+    public static Collection<GraphModelledParticipant> convertModelledParticipantIntoGraphModel(Collection<ModelledParticipant> participantEvidences) {
+        return participantEvidences.stream().map(GraphModelledParticipant::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphCausalRelationship> convertCausalRelationshipIntoGraphModel(Collection<CausalRelationship> causalRelationships) {

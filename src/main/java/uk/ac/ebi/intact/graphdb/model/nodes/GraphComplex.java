@@ -7,6 +7,7 @@ import psidev.psi.mi.jami.model.impl.DefaultChecksum;
 import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.*;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,368 +19,57 @@ import java.util.Date;
  */
 public class GraphComplex extends GraphInteractor implements Complex {
 
-    private Collection<GraphInteractionEvidence> interactionEvidences;
-    private Collection<ModelledParticipant> components;
-    private Annotation physicalProperties;
-    private Collection<ModelledConfidence> confidences;
-    private Collection<ModelledParameter> parameters;
 
-    private Source source;
-    private Collection<CooperativeEffect> cooperativeEffects;
-    private Checksum rigid;
     private Date updatedDate;
     private Date createdDate;
-    private CvTerm interactionType;
+    private GraphAnnotation physicalProperties;
+    private GraphSource source;
+    private GraphChecksum rigid;
+    private GraphCvTerm interactionType;
+    private GraphAlias recommendedName;
+    private GraphAlias systematicName;
+    private GraphCvTerm evidenceType;
+    private GraphXref complexAcXref;
+    private Collection<GraphModelledConfidence> confidences;
+    private Collection<GraphModelledParameter> parameters;
+    private Collection<GraphInteractionEvidence> interactionEvidences;
+    private Collection<GraphModelledParticipant> components;
+    private Collection<GraphCooperativeEffect> cooperativeEffects;
 
-    private Alias recommendedName;
-    private Alias systematicName;
 
-    private CvTerm evidenceType;
-
-    private Xref complexAcXref;
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     */
-    public DefaultComplex(String name, CvTerm interactorType) {
-        super(name, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType());
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param fullName       a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     */
-    public DefaultComplex(String name, String fullName, CvTerm interactorType) {
-        super(name, fullName, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType());
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param organism       a {@link psidev.psi.mi.jami.model.Organism} object.
-     */
-    public DefaultComplex(String name, CvTerm interactorType, Organism organism) {
-        super(name, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), organism);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param fullName       a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param organism       a {@link psidev.psi.mi.jami.model.Organism} object.
-     */
-    public DefaultComplex(String name, String fullName, CvTerm interactorType, Organism organism) {
-        super(name, fullName, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), organism);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param uniqueId       a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, CvTerm interactorType, Xref uniqueId) {
-        super(name, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param fullName       a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param uniqueId       a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, String fullName, CvTerm interactorType, Xref uniqueId) {
-        super(name, fullName, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param organism       a {@link psidev.psi.mi.jami.model.Organism} object.
-     * @param uniqueId       a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, CvTerm interactorType, Organism organism, Xref uniqueId) {
-        super(name, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), organism, uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name           a {@link java.lang.String} object.
-     * @param fullName       a {@link java.lang.String} object.
-     * @param interactorType a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     * @param organism       a {@link psidev.psi.mi.jami.model.Organism} object.
-     * @param uniqueId       a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, String fullName, CvTerm interactorType, Organism organism, Xref uniqueId) {
-        super(name, fullName, interactorType != null ? interactorType : CvTermUtils.createComplexInteractorType(), organism, uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    public DefaultComplex(String name) {
-        super(name, CvTermUtils.createComplexInteractorType());
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param fullName a {@link java.lang.String} object.
-     */
-    public DefaultComplex(String name, String fullName) {
-        super(name, fullName, CvTermUtils.createComplexInteractorType());
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param organism a {@link psidev.psi.mi.jami.model.Organism} object.
-     */
-    public DefaultComplex(String name, Organism organism) {
-        super(name, CvTermUtils.createComplexInteractorType(), organism);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param fullName a {@link java.lang.String} object.
-     * @param organism a {@link psidev.psi.mi.jami.model.Organism} object.
-     */
-    public DefaultComplex(String name, String fullName, Organism organism) {
-        super(name, fullName, CvTermUtils.createComplexInteractorType(), organism);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param uniqueId a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, Xref uniqueId) {
-        super(name, CvTermUtils.createComplexInteractorType(), uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param fullName a {@link java.lang.String} object.
-     * @param uniqueId a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, String fullName, Xref uniqueId) {
-        super(name, fullName, CvTermUtils.createComplexInteractorType(), uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param organism a {@link psidev.psi.mi.jami.model.Organism} object.
-     * @param uniqueId a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, Organism organism, Xref uniqueId) {
-        super(name, CvTermUtils.createComplexInteractorType(), organism, uniqueId);
-    }
-
-    /**
-     * <p>Constructor for DefaultComplex.</p>
-     *
-     * @param name     a {@link java.lang.String} object.
-     * @param fullName a {@link java.lang.String} object.
-     * @param organism a {@link psidev.psi.mi.jami.model.Organism} object.
-     * @param uniqueId a {@link psidev.psi.mi.jami.model.Xref} object.
-     */
-    public DefaultComplex(String name, String fullName, Organism organism, Xref uniqueId) {
-        super(name, fullName, CvTermUtils.createComplexInteractorType(), organism, uniqueId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialiseAnnotations() {
-        initialiseAnnotationsWith(new ComplexAnnotationList());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialiseChecksums() {
-        initialiseChecksumsWith(new ComplexChecksumList());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialiseAliases() {
-        initialiseAliasesWith(new ComplexAliasList());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialiseXrefs() {
-        initialiseXrefsWith(new ComplexXrefList());
-    }
-
-    /**
-     * <p>initialiseInteractionEvidences</p>
-     */
-    protected void initialiseInteractionEvidences() {
-        this.interactionEvidences = new ArrayList<InteractionEvidence>();
-    }
-
-    /**
-     * <p>initialiseInteractionEvidencesWith</p>
-     *
-     * @param interactionEvidences a {@link java.util.Collection} object.
-     */
-    protected void initialiseInteractionEvidencesWith(Collection<InteractionEvidence> interactionEvidences) {
-        if (interactionEvidences == null) {
-            this.interactionEvidences = Collections.EMPTY_LIST;
-        } else {
-            this.interactionEvidences = interactionEvidences;
-        }
-    }
-
-    /**
-     * <p>initialiseCooperativeEffects</p>
-     */
-    protected void initialiseCooperativeEffects() {
-        this.cooperativeEffects = new ArrayList<CooperativeEffect>();
-    }
-
-    /**
-     * <p>initialiseCooperativeEffectsWith</p>
-     *
-     * @param cooperativeEffects a {@link java.util.Collection} object.
-     */
-    protected void initialiseCooperativeEffectsWith(Collection<CooperativeEffect> cooperativeEffects) {
-        if (cooperativeEffects == null) {
-            this.cooperativeEffects = Collections.EMPTY_LIST;
-        } else {
-            this.cooperativeEffects = cooperativeEffects;
-        }
-    }
-
-    /**
-     * <p>initialiseConfidences</p>
-     */
-    protected void initialiseConfidences() {
-        this.confidences = new ArrayList<ModelledConfidence>();
-    }
-
-    /**
-     * <p>initialiseConfidencesWith</p>
-     *
-     * @param confidences a {@link java.util.Collection} object.
-     */
-    protected void initialiseConfidencesWith(Collection<ModelledConfidence> confidences) {
-        if (confidences == null) {
-            this.confidences = Collections.EMPTY_LIST;
-        } else {
-            this.confidences = confidences;
-        }
-    }
-
-    /**
-     * <p>initialiseParameters</p>
-     */
-    protected void initialiseParameters() {
-        this.parameters = new ArrayList<ModelledParameter>();
-    }
-
-    /**
-     * <p>initialiseParametersWith</p>
-     *
-     * @param parameters a {@link java.util.Collection} object.
-     */
-    protected void initialiseParametersWith(Collection<ModelledParameter> parameters) {
-        if (parameters == null) {
-            this.parameters = Collections.EMPTY_LIST;
-        } else {
-            this.parameters = parameters;
-        }
-    }
-
-    /**
-     * <p>initialiseComponents</p>
-     */
-    protected void initialiseComponents() {
-        this.components = new ArrayList<ModelledParticipant>();
-    }
-
-    /**
-     * <p>initialiseComponentsWith</p>
-     *
-     * @param components a {@link java.util.Collection} object.
-     */
-    protected void initialiseComponentsWith(Collection<ModelledParticipant> components) {
-        if (components == null) {
-            this.components = Collections.EMPTY_LIST;
-        } else {
-            this.components = components;
-        }
-    }
-
-    /**
-     * <p>Getter for the field <code>source</code>.</p>
-     *
-     * @return a {@link psidev.psi.mi.jami.model.Source} object.
-     */
     public Source getSource() {
         return this.source;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setSource(Source source) {
-        this.source = source;
-    }
-
-    /**
-     * <p>getParticipants</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<ModelledParticipant> getParticipants() {
-        if (components == null) {
-            initialiseComponents();
+        if (source != null) {
+            if (source instanceof GraphSource) {
+                this.source = (GraphSource) source;
+            } else {
+                this.source = new GraphSource(source);
+            }
+        } else {
+            this.source = null;
         }
-        return this.components;
     }
 
-    /**
-     * <p>addParticipant</p>
-     *
-     * @param part a {@link psidev.psi.mi.jami.model.ModelledParticipant} object.
-     * @return a boolean.
-     */
+
+    public Collection<GraphModelledParticipant> getParticipants() {
+        if (this.components == null) {
+            this.components = new ArrayList<GraphModelledParticipant>();
+        }
+        return components;
+    }
+
+    public void setParticipants(Collection<ModelledParticipant> components) {
+        if (components != null) {
+            this.components = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
+        } else {
+            this.components = new ArrayList<GraphModelledParticipant>();
+        }
+    }
+
+
     public boolean addParticipant(ModelledParticipant part) {
         if (part == null) {
             return false;
@@ -388,15 +78,10 @@ public class GraphComplex extends GraphInteractor implements Complex {
             initialiseComponents();
         }
         part.setInteraction(this);
-        return components.add(part);
+        return components.add(new GraphModelledParticipant(part));
     }
 
-    /**
-     * <p>removeParticipant</p>
-     *
-     * @param part a {@link psidev.psi.mi.jami.model.ModelledParticipant} object.
-     * @return a boolean.
-     */
+
     public boolean removeParticipant(ModelledParticipant part) {
         if (part == null) {
             return false;
@@ -411,9 +96,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public boolean addAllParticipants(Collection<? extends ModelledParticipant> participants) {
         if (participants == null) {
             return false;
@@ -428,9 +111,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         return added;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public boolean removeAllParticipants(Collection<? extends ModelledParticipant> participants) {
         if (participants == null) {
             return false;
@@ -445,71 +126,80 @@ public class GraphComplex extends GraphInteractor implements Complex {
         return removed;
     }
 
-    /**
-     * <p>Getter for the field <code>interactionEvidences</code>.</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<InteractionEvidence> getInteractionEvidences() {
+
+    public Collection<GraphInteractionEvidence> getInteractionEvidences() {
         if (interactionEvidences == null) {
-            initialiseInteractionEvidences();
+            this.interactionEvidences = new ArrayList<GraphInteractionEvidence>();
         }
         return this.interactionEvidences;
     }
 
-    /**
-     * <p>getModelledConfidences</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<ModelledConfidence> getModelledConfidences() {
+    public void setInteractionEvidences(Collection<InteractionEvidence> interactionEvidences) {
+        if (interactionEvidences != null) {
+            this.interactionEvidences = CollectionAdaptor.convertInteractionEvidenceIntoGraphModel(interactionEvidences);
+        } else {
+            this.interactionEvidences = new ArrayList<GraphInteractionEvidence>();
+        }
+    }
+
+
+    public Collection<GraphModelledConfidence> getModelledConfidences() {
         if (confidences == null) {
-            initialiseConfidences();
+            this.confidences = new ArrayList<GraphModelledConfidence>();
         }
         return this.confidences;
     }
 
-    /**
-     * <p>getModelledParameters</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<ModelledParameter> getModelledParameters() {
+    public void setModelledConfidences(Collection<ModelledConfidence> confidences) {
+        if (confidences != null) {
+            this.confidences = CollectionAdaptor.convertModelledConfidenceIntoGraphModel(confidences);
+        } else {
+            this.confidences = new ArrayList<GraphModelledConfidence>();
+        }
+    }
+
+
+    public Collection<GraphModelledParameter> getModelledParameters() {
         if (parameters == null) {
-            initialiseParameters();
+            this.parameters = new ArrayList<GraphModelledParameter>();
         }
         return this.parameters;
     }
 
-    /**
-     * <p>Getter for the field <code>cooperativeEffects</code>.</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<CooperativeEffect> getCooperativeEffects() {
+    public void setModelledParameters(Collection<ModelledParameter> modelledParameters) {
+        if (parameters != null) {
+            this.parameters = CollectionAdaptor.convertModelledParameterIntoGraphModel(modelledParameters);
+        } else {
+            this.parameters = new ArrayList<GraphModelledParameter>();
+        }
+    }
+
+
+    public Collection<GraphCooperativeEffect> getCooperativeEffects() {
         if (cooperativeEffects == null) {
-            initialiseCooperativeEffects();
+            this.cooperativeEffects = new ArrayList<GraphCooperativeEffect>();
         }
         return this.cooperativeEffects;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public void setCooperativeEffects(Collection<CooperativeEffect> cooperativeEffects) {
+        if (cooperativeEffects != null) {
+            this.cooperativeEffects = CollectionAdaptor.convertCooperativeEffectIntoGraphModel(cooperativeEffects);
+        } else {
+            this.cooperativeEffects = new ArrayList<GraphCooperativeEffect>();
+        }
+    }
+
     public String getComplexAc() {
         return this.complexAcXref != null ? this.complexAcXref.getId() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public String getComplexVersion() {
         return this.complexAcXref != null ? this.complexAcXref.getVersion() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void assignComplexAc(String accession, String version) {
         // add new complex ac if not null
         if (accession != null) {
@@ -522,11 +212,11 @@ public class GraphComplex extends GraphInteractor implements Complex {
                 if (!accession.equals(complexAcXref.getId())) {
                     // first remove old complexAcXref and creates the new one;
                     complexXrefList.remove(this.complexAcXref);
-                    this.complexAcXref = new DefaultXref(complexPortalDatabase, accession, version, complexPortalPrimaryQualifier);
+                    this.complexAcXref = new GraphXref(new GraphXref(complexPortalDatabase, accession, version, complexPortalPrimaryQualifier));
                     complexXrefList.add(this.complexAcXref);
                 }
             } else {
-                this.complexAcXref = new DefaultXref(complexPortalDatabase, accession, version, complexPortalPrimaryQualifier);
+                this.complexAcXref = new GraphXref(new GraphXref(complexPortalDatabase, accession, version, complexPortalPrimaryQualifier));
                 complexXrefList.add(this.complexAcXref);
             }
         } else {
@@ -534,9 +224,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void assignComplexAc(String accession) {
 
         // add new complex ac if not null
@@ -564,18 +252,12 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>physicalProperties</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
+
     public String getPhysicalProperties() {
         return this.physicalProperties != null ? this.physicalProperties.getValue() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void setPhysicalProperties(String properties) {
         ComplexAnnotationList complexAnnotationList = (ComplexAnnotationList) getAnnotations();
 
@@ -587,7 +269,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
             if (this.physicalProperties != null) {
                 complexAnnotationList.removeOnly(this.physicalProperties);
             }
-            this.physicalProperties = new DefaultAnnotation(complexPhysicalProperties, properties);
+            this.physicalProperties = new GraphAnnotation(new GraphAnnotation(complexPhysicalProperties, properties));
             complexAnnotationList.addOnly(this.physicalProperties);
         }
         // remove all physical properties if the collection is not empty
@@ -597,18 +279,11 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>recommendedName</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
+
     public String getRecommendedName() {
         return this.recommendedName != null ? this.recommendedName.getName() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setRecommendedName(String name) {
         ComplexAliasList complexAliasList = (ComplexAliasList) getAliases();
 
@@ -620,7 +295,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
             if (this.recommendedName != null) {
                 complexAliasList.removeOnly(this.recommendedName);
             }
-            this.recommendedName = new DefaultAlias(recommendedName, name);
+            this.recommendedName = new GraphAlias(new GraphAlias(recommendedName, name));
             complexAliasList.addOnly(this.recommendedName);
         }
         // remove all recommended name if the collection is not empty
@@ -630,18 +305,12 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>systematicName</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
+
     public String getSystematicName() {
         return this.systematicName != null ? this.systematicName.getName() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void setSystematicName(String name) {
         ComplexAliasList complexAliasList = (ComplexAliasList) getAliases();
 
@@ -653,7 +322,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
             if (this.systematicName != null) {
                 complexAliasList.removeOnly(this.systematicName);
             }
-            this.systematicName = new DefaultAlias(systematicName, name);
+            this.systematicName = new GraphAlias(new GraphAlias(systematicName, name));
             complexAliasList.addOnly(this.systematicName);
         }
         // remove all systematic name  if the collection is not empty
@@ -663,28 +332,25 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>evidenceType</code>.</p>
-     *
-     * @return a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     */
+
     public CvTerm getEvidenceType() {
         return this.evidenceType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setEvidenceType(CvTerm eco) {
-        this.evidenceType = eco;
+
+    public void setEvidenceType(CvTerm evidenceType) {
+        if (evidenceType != null) {
+            if (evidenceType instanceof GraphCvTerm) {
+                this.evidenceType = (GraphCvTerm) evidenceType;
+            } else {
+                this.evidenceType = new GraphCvTerm(evidenceType,false);
+            }
+        } else {
+            this.evidenceType = null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Sets the interactor type for this complex.
-     * If the given interactorType is null, it will set the interactor type to 'complex' (MI:0314)
-     */
+
     @Override
     public void setInteractorType(CvTerm interactorType) {
         if (interactorType == null) {
@@ -694,27 +360,21 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>rigid</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
+
     public String getRigid() {
         return this.rigid != null ? this.rigid.getValue() : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void setRigid(String rigid) {
-        Collection<Checksum> checksums = getChecksums();
+        Collection<GraphChecksum> checksums = getChecksums();
         if (rigid != null) {
             CvTerm rigidMethod = CvTermUtils.createRigid();
             // first remove old rigid
             if (this.rigid != null) {
                 checksums.remove(this.rigid);
             }
-            this.rigid = new DefaultChecksum(rigidMethod, rigid);
+            this.rigid = new GraphChecksum(new GraphChecksum(rigidMethod, rigid));
             checksums.add(this.rigid);
         }
         // remove all smiles if the collection is not empty
@@ -724,165 +384,198 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
-    /**
-     * <p>Getter for the field <code>updatedDate</code>.</p>
-     *
-     * @return a {@link java.util.Date} object.
-     */
+
     public Date getUpdatedDate() {
         return this.updatedDate;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void setUpdatedDate(Date updated) {
         this.updatedDate = updated;
     }
 
-    /**
-     * <p>Getter for the field <code>createdDate</code>.</p>
-     *
-     * @return a {@link java.util.Date} object.
-     */
+
     public Date getCreatedDate() {
         return this.createdDate;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void setCreatedDate(Date created) {
         this.createdDate = created;
     }
 
-    /**
-     * <p>Getter for the field <code>interactionType</code>.</p>
-     *
-     * @return a {@link psidev.psi.mi.jami.model.CvTerm} object.
-     */
+
     public CvTerm getInteractionType() {
         return this.interactionType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setInteractionType(CvTerm term) {
-        this.interactionType = term;
+
+    public void setInteractionType(CvTerm interactionType) {
+        if (interactionType != null) {
+            if (interactionType instanceof GraphCvTerm) {
+                this.interactionType = (GraphCvTerm) interactionType;
+            } else {
+                this.interactionType = new GraphCvTerm(interactionType, false);
+            }
+        } else {
+            this.interactionType = null;
+        }
     }
 
-    /**
-     * <p>getAnnotations</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<Annotation> getAnnotations() {
+
+    public Collection<GraphAnnotation> getAnnotations() {
         return super.getAnnotations();
     }
 
-    /**
-     * <p>getChecksums</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<Checksum> getChecksums() {
+
+    public Collection<GraphChecksum> getChecksums() {
         return super.getChecksums();
     }
 
-    /**
-     * <p>getXrefs</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<Xref> getXrefs() {
+
+    public Collection<GraphXref> getXrefs() {
         return super.getXrefs();
     }
 
-    /**
-     * <p>getIdentifiers</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
+
     public Collection<Xref> getIdentifiers() {
         return super.getIdentifiers();
     }
 
-    /**
-     * <p>getAliases</p>
-     *
-     * @return a {@link java.util.Collection} object.
-     */
-    public Collection<Alias> getAliases() {
+
+    public Collection<GraphAlias> getAliases() {
         return super.getAliases();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public String toString() {
         return "Complex: " + super.toString();
     }
 
-    /**
-     * <p>processAddedAnnotationEvent</p>
-     *
-     * @param added a {@link psidev.psi.mi.jami.model.Annotation} object.
-     */
+
     protected void processAddedAnnotationEvent(Annotation added) {
         if (physicalProperties == null && AnnotationUtils.doesAnnotationHaveTopic(added, Annotation.COMPLEX_PROPERTIES_MI, Annotation.COMPLEX_PROPERTIES)) {
-            physicalProperties = added;
+            physicalProperties = new GraphAnnotation(added);
         }
     }
 
-    /**
-     * <p>processRemovedAnnotationEvent</p>
-     *
-     * @param removed a {@link psidev.psi.mi.jami.model.Annotation} object.
-     */
+
     protected void processRemovedAnnotationEvent(Annotation removed) {
         if (physicalProperties != null && physicalProperties.equals(removed)) {
-            physicalProperties = AnnotationUtils.collectFirstAnnotationWithTopic(getAnnotations(), Annotation.COMPLEX_PROPERTIES_MI, Annotation.COMPLEX_PROPERTIES);
+            physicalProperties = new GraphAnnotation(AnnotationUtils.collectFirstAnnotationWithTopic(getAnnotations(), Annotation.COMPLEX_PROPERTIES_MI, Annotation.COMPLEX_PROPERTIES));
         }
     }
 
-    /**
-     * <p>clearPropertiesLinkedToAnnotations</p>
-     */
+
     protected void clearPropertiesLinkedToAnnotations() {
         physicalProperties = null;
     }
 
-    /**
-     * <p>processAddedChecksumEvent</p>
-     *
-     * @param added a {@link psidev.psi.mi.jami.model.Checksum} object.
-     */
+
     protected void processAddedChecksumEvent(Checksum added) {
         if (rigid == null && ChecksumUtils.doesChecksumHaveMethod(added, Checksum.RIGID_MI, Checksum.RIGID)) {
             // the rigid is not set, we can set the rigid
-            rigid = added;
+            rigid = new GraphChecksum(added);
         }
     }
 
-    /**
-     * <p>processRemovedChecksumEvent</p>
-     *
-     * @param removed a {@link psidev.psi.mi.jami.model.Checksum} object.
-     */
+
     protected void processRemovedChecksumEvent(Checksum removed) {
         if (rigid == removed) {
-            rigid = ChecksumUtils.collectFirstChecksumWithMethod(getChecksums(), Checksum.RIGID_MI, Checksum.RIGID);
+            rigid = new GraphChecksum(ChecksumUtils.collectFirstChecksumWithMethod(getChecksums(), Checksum.RIGID_MI, Checksum.RIGID));
         }
     }
 
-    /**
-     * <p>clearPropertiesLinkedToChecksums</p>
-     */
+
     protected void clearPropertiesLinkedToChecksums() {
         rigid = null;
     }
+
+    private class ComplexAnnotationList extends AbstractListHavingProperties<GraphAnnotation> {
+        public ComplexAnnotationList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphAnnotation added) {
+            processAddedAnnotationEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphAnnotation removed) {
+            processRemovedAnnotationEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToAnnotations();
+        }
+    }
+
+    private class ComplexChecksumList extends AbstractListHavingProperties<GraphChecksum> {
+        public ComplexChecksumList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphChecksum added) {
+            processAddedChecksumEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphChecksum removed) {
+            processRemovedChecksumEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToChecksums();
+        }
+    }
+
+    private class ComplexAliasList extends AbstractListHavingProperties<GraphAlias> {
+        public ComplexAliasList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphAlias added) {
+            processAddedAliasEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphAlias removed) {
+            processRemovedAliasEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToAliases();
+        }
+    }
+
+    private class ComplexXrefList extends AbstractListHavingProperties<GraphXref> {
+        public ComplexXrefList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphXref added) {
+            processAddedXrefEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphXref removed) {
+            processRemovedXrefEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToXrefs();
+        }
+    }
+
 
     /**
      * <p>processAddedAliasEvent</p>
@@ -891,9 +584,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
      */
     protected void processAddedAliasEvent(Alias added) {
         if (recommendedName == null && AliasUtils.doesAliasHaveType(added, Alias.COMPLEX_RECOMMENDED_NAME_MI, Alias.COMPLEX_RECOMMENDED_NAME)) {
-            recommendedName = added;
+            recommendedName = new GraphAlias(added);
         } else if (systematicName == null && AliasUtils.doesAliasHaveType(added, Alias.COMPLEX_SYSTEMATIC_NAME_MI, Alias.COMPLEX_SYSTEMATIC_NAME)) {
-            systematicName = added;
+            systematicName = new GraphAlias(added);;
         }
     }
 
@@ -904,9 +597,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
      */
     protected void processRemovedAliasEvent(Alias removed) {
         if (recommendedName != null && recommendedName.equals(removed)) {
-            recommendedName = AliasUtils.collectFirstAliasWithType(getAliases(), Alias.COMPLEX_RECOMMENDED_NAME_MI, Alias.COMPLEX_RECOMMENDED_NAME);
+            recommendedName = new GraphAlias(AliasUtils.collectFirstAliasWithType(getAliases(), Alias.COMPLEX_RECOMMENDED_NAME_MI, Alias.COMPLEX_RECOMMENDED_NAME));
         } else if (systematicName != null && systematicName.equals(removed)) {
-            systematicName = AliasUtils.collectFirstAliasWithType(getAliases(), Alias.COMPLEX_SYSTEMATIC_NAME_MI, Alias.COMPLEX_SYSTEMATIC_NAME);
+            systematicName = new GraphAlias(AliasUtils.collectFirstAliasWithType(getAliases(), Alias.COMPLEX_SYSTEMATIC_NAME_MI, Alias.COMPLEX_SYSTEMATIC_NAME));
         }
     }
 
@@ -928,7 +621,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         if (complexAcXref == null && XrefUtils.isXrefFromDatabase(added, Xref.COMPLEX_PORTAL_MI, Xref.COMPLEX_PORTAL)) {
             // the added xref is complex-primary
             if (XrefUtils.doesXrefHaveQualifier(added, Xref.COMPLEX_PRIMARY_MI, Xref.COMPLEX_PRIMARY)) {
-                complexAcXref = added;
+                complexAcXref = new GraphXref(added);
             }
         }
     }
@@ -943,7 +636,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         if (complexAcXref != null && complexAcXref.equals(removed)) {
             Collection<Xref> existingComplexAc = XrefUtils.collectAllXrefsHavingDatabaseAndQualifier(getXrefs(), Xref.COMPLEX_PORTAL_MI, Xref.COMPLEX_PORTAL, Xref.COMPLEX_PRIMARY_MI, Xref.COMPLEX_PRIMARY);
             if (!existingComplexAc.isEmpty()) {
-                complexAcXref = existingComplexAc.iterator().next();
+                complexAcXref = new GraphXref(existingComplexAc.iterator().next());
             }
         }
     }
@@ -952,88 +645,45 @@ public class GraphComplex extends GraphInteractor implements Complex {
         complexAcXref = null;
     }
 
+    /**
+     * <p>initialiseParameters</p>
+     */
+    protected void initialiseParameters() {
+        this.parameters = new ArrayList<GraphModelledParameter>();
+    }
 
-    private class ComplexAnnotationList extends AbstractListHavingProperties<Annotation> {
-        public ComplexAnnotationList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(Annotation added) {
-            processAddedAnnotationEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(Annotation removed) {
-            processRemovedAnnotationEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToAnnotations();
+    /**
+     * <p>initialiseParametersWith</p>
+     *
+     * @param parameters a {@link java.util.Collection} object.
+     */
+    protected void initialiseParametersWith(Collection<ModelledParameter> parameters) {
+        if (parameters != null) {
+            this.parameters = CollectionAdaptor.convertModelledParameterIntoGraphModel(parameters);
+        } else {
+            this.parameters = new ArrayList<GraphModelledParameter>();
         }
     }
 
-    private class ComplexChecksumList extends AbstractListHavingProperties<Checksum> {
-        public ComplexChecksumList() {
-            super();
-        }
+    /**
+     * <p>initialiseComponents</p>
+     */
+    protected void initialiseComponents() {
+        this.components = new ArrayList<GraphModelledParticipant>();
+    }
 
-        @Override
-        protected void processAddedObjectEvent(Checksum added) {
-            processAddedChecksumEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(Checksum removed) {
-            processRemovedChecksumEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToChecksums();
+    /**
+     * <p>initialiseComponentsWith</p>
+     *
+     * @param components a {@link java.util.Collection} object.
+     */
+    protected void initialiseComponentsWith(Collection<ModelledParticipant> components) {
+        if (components != null) {
+            this.components = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
+        } else {
+            this.components = new ArrayList<GraphModelledParticipant>();
         }
     }
 
-    private class ComplexAliasList extends AbstractListHavingProperties<Alias> {
-        public ComplexAliasList() {
-            super();
-        }
 
-        @Override
-        protected void processAddedObjectEvent(Alias added) {
-            processAddedAliasEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(Alias removed) {
-            processRemovedAliasEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToAliases();
-        }
-    }
-
-    private class ComplexXrefList extends AbstractListHavingProperties<Xref> {
-        public ComplexXrefList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(Xref added) {
-            processAddedXrefEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(Xref removed) {
-            processRemovedXrefEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToXrefs();
-        }
-    }
 }

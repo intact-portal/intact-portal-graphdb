@@ -132,10 +132,10 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
 
     public void setInteraction(ModelledInteraction interaction) {
         if (interaction != null) {
-            if (interaction instanceof GraphComplex) {
-                this.interaction = (GraphComplex) interaction;
+            if (interaction instanceof GraphModelledInteraction) {
+                this.interaction = (GraphModelledInteraction) interaction;
             } else {
-                this.interaction = new GraphComplex(interaction, false);
+                this.interaction = new GraphModelledInteraction(interaction, false);
             }
         } else {
             this.interaction = null;
