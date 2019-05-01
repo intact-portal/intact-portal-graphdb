@@ -1,36 +1,163 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.neo4j.graphdb.Label;
+import org.neo4j.ogm.annotation.*;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.*;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
+import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by anjali on 29/04/19.
  */
+@NodeEntity
 public class GraphComplex extends GraphInteractor implements Complex {
 
+    @GraphId
+    private Long graphId;
 
+    @Index(unique = true, primary = true)
+    private String uniqueKey;
+
+    private String ac;
     private Date updatedDate;
     private Date createdDate;
+
+    @Relationship(type = RelationshipTypes.PHYSICAL_PROPERTIES)
     private GraphAnnotation physicalProperties;
+
+    @Relationship(type = RelationshipTypes.SOURCE)
     private GraphSource source;
+
+    @Relationship(type = RelationshipTypes.RIG_ID)
     private GraphChecksum rigid;
+
+    @Relationship(type = RelationshipTypes.INTERACTION_TYPE)
     private GraphCvTerm interactionType;
+
+    @Relationship(type = RelationshipTypes.RECOMMENDED_NAME)
     private GraphAlias recommendedName;
+
+    @Relationship(type = RelationshipTypes.SYSTEMATIC_NAME)
     private GraphAlias systematicName;
+
+    @Relationship(type = RelationshipTypes.EVIDENCE_TYPE)
     private GraphCvTerm evidenceType;
+
+    @Relationship(type = RelationshipTypes.COMPLEX_AC_XREF)
     private GraphXref complexAcXref;
+
+    @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphModelledConfidence> confidences;
+
+    @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphModelledParameter> parameters;
+
+    @Relationship(type = RelationshipTypes.INTERACTIONS)
     private Collection<GraphInteractionEvidence> interactionEvidences;
+
+    @Relationship(type = RelationshipTypes.COMPONENTS)
     private Collection<GraphModelledParticipant> components;
+
+    @Relationship(type = RelationshipTypes.COOPERATIVE_EFFECT)
     private Collection<GraphCooperativeEffect> cooperativeEffects;
 
+    @Transient
+    private boolean isAlreadyCreated;
+
+    public GraphComplex() {
+
+    }
+
+    public GraphComplex(Complex complex) {
+        super(complex, true);
+        String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
+
+        setPhysicalProperties(complex.getPhysicalProperties());
+        setRecommendedName(complex.getRecommendedName());
+        setSystematicName(complex.getSystematicName());
+        assignComplexAc(complex.getComplexAc(), complex.getComplexVersion());
+        setRigid(complex.getRigid());
+        setUpdatedDate(complex.getUpdatedDate());
+        setCreatedDate(complex.getCreatedDate());
+        setInteractionType(complex.getInteractionType());
+        setEvidenceType(complex.getEvidenceType());
+        setSource(complex.getSource());
+        setAc(CommonUtility.extractAc(complex));
+        setUniqueKey(createUniqueKey(complex));
+
+        if (CreationConfig.createNatively) {
+            createNodeNatively();
+        }
+
+        setModelledConfidences(complex.getModelledConfidences());
+        setParticipants(complex.getParticipants());
+        setCooperativeEffects(complex.getCooperativeEffects());
+        setModelledParameters(complex.getModelledParameters());
+        setInteractionEvidences(complex.getInteractionEvidences());
+
+        if (CreationConfig.createNatively) {
+            if (!isAlreadyCreated()) {
+                createRelationShipNatively(this.getGraphId());
+            }
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            nodeProperties.putAll(super.getNodeProperties());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (this.getUpdatedDate() != null)
+                nodeProperties.put("updatedDate", dateFormat.format(this.getUpdatedDate()));
+            if (this.getCreatedDate() != null)
+                nodeProperties.put("createdDate", dateFormat.format(this.getCreatedDate()));
+
+            Label[] labels = CommonUtility.getLabels(GraphComplex.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(Long graphId) {
+        super.createRelationShipNatively(graphId);
+        CommonUtility.createRelationShip(interactionType, graphId, RelationshipTypes.INTERACTION_TYPE);
+        CommonUtility.createRelationShip(physicalProperties, graphId, RelationshipTypes.PHYSICAL_PROPERTIES);
+        CommonUtility.createRelationShip(evidenceType, graphId, RelationshipTypes.EVIDENCE_TYPE);
+        CommonUtility.createRelationShip(source, graphId, RelationshipTypes.SOURCE);
+        CommonUtility.createRelationShip(rigid, graphId, RelationshipTypes.RIG_ID);
+        CommonUtility.createRelationShip(recommendedName, graphId, RelationshipTypes.RECOMMENDED_NAME);
+        CommonUtility.createRelationShip(systematicName, graphId, RelationshipTypes.SYSTEMATIC_NAME);
+        CommonUtility.createRelationShip(complexAcXref, graphId, RelationshipTypes.COMPLEX_AC_XREF);
+        CommonUtility.createInteractionEvidenceRelationShips(interactionEvidences, graphId);
+        CommonUtility.createModelledConfidenceRelationShips(confidences, graphId);
+        CommonUtility.createModelledParameterRelationShips(parameters, graphId);
+        CommonUtility.createInteractionEvidenceRelationShips(interactionEvidences, graphId);
+        CommonUtility.createModelledParticipantsRelationShips(components, graphId);
+        CommonUtility.createCooperativeEffectRelationShips(cooperativeEffects, graphId);
+
+    }
 
     public Source getSource() {
         return this.source;
@@ -433,7 +560,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     }
 
 
-    public Collection<Xref> getIdentifiers() {
+    public Collection<GraphXref> getIdentifiers() {
         return super.getIdentifiers();
     }
 
@@ -596,6 +723,58 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    @Override
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    @Override
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
+    @Override
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    @Override
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    @Override
+    public String getAc() {
+        return ac;
+    }
+
+    @Override
+    public void setAc(String ac) {
+        this.ac = ac;
+    }
+
+    @Override
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    @Override
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
+
+    public int hashCode() {
+
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
+        return super.hashCode();
+    }
+
+    public String createUniqueKey(Interactor interactor) {
+        return UniqueKeyGenerator.createInteractorKey(interactor);
+    }
+
     private class ComplexAnnotationList extends AbstractListHavingProperties<GraphAnnotation> {
         public ComplexAnnotationList() {
             super();
@@ -679,6 +858,5 @@ public class GraphComplex extends GraphInteractor implements Complex {
             clearPropertiesLinkedToXrefs();
         }
     }
-
 
 }

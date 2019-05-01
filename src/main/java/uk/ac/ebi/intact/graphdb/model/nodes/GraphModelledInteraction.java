@@ -74,7 +74,7 @@ public class GraphModelledInteraction implements ModelledInteraction {
     @Transient
     private boolean isAlreadyCreated;
 
-    public GraphModelledInteraction(){
+    public GraphModelledInteraction() {
 
     }
 
@@ -92,7 +92,7 @@ public class GraphModelledInteraction implements ModelledInteraction {
         setUniqueKey(createUniqueKey(modelledInteraction));
 
         if (CreationConfig.createNatively) {
-             createNodeNatively();
+            createNodeNatively();
         }
 
 
@@ -110,7 +110,7 @@ public class GraphModelledInteraction implements ModelledInteraction {
         }
 
         if (CreationConfig.createNatively) {
-            if (!isAlreadyCreated() {
+            if (!isAlreadyCreated()) {
                 createRelationShipNatively(this.getGraphId());
             }
         }

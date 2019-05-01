@@ -153,11 +153,18 @@ public class RelationshipTypes {
     public static final String PREFERRED_IDENTIFIER = "preferredIdentifier";
     public static final String BIOLOGICAL_EFFECT = "biologicalEffect";
 
-    //ModelledParameter
-    public static final String PUBLICATION = "publication";
 
     //Modelled Interaction
 
     public static final String EVIDENCE_TYPE = "evidenceType";
     public static final String COOPERATIVE_EFFECT = "cooperativeEffects";
+
+    //Complex
+
+    public static final String RECOMMENDED_NAME = "recommendedName";
+    public static final String SYSTEMATIC_NAME = "systematicName";
+    public static final String COMPLEX_AC_XREF = "complexAcXref";
+    public static final String COMPONENTS = "components";
+    public static final String PHYSICAL_PROPERTIES = "physicalProperties";
+    public static final String RIG_ID = "rigid";
 }
