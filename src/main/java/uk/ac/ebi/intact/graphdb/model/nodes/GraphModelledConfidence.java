@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.ModelledConfidence;
@@ -20,6 +21,7 @@ import java.util.Map;
 /**
  * Created by anjali on 30/04/19.
  */
+@NodeEntity
 public class GraphModelledConfidence extends GraphConfidence implements ModelledConfidence {
 
     @GraphId
@@ -69,7 +71,7 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively();
-        CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUBLICATION);
+        CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 
     public Publication getPublication() {
@@ -109,5 +111,15 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
 
     public String createUniqueKey(ModelledConfidence modelledConfidence) {
         return UniqueKeyGenerator.createModelledConfidenceKey(modelledConfidence);
+    }
+
+    @Override
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    @Override
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 }

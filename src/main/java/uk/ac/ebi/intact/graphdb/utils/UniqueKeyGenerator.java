@@ -530,6 +530,36 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createModelledParticipantKey(ModelledParticipant modelledParticipant) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "modelled participant::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            if (modelledParticipant.getInteraction() != null) {
+                uniqueKeyStringBuilder.append(createModelledInteractionKey(modelledParticipant.getInteraction()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (modelledParticipant.getInteractor() != null) {
+                uniqueKeyStringBuilder.append(createInteractorKey(modelledParticipant.getInteractor()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (modelledParticipant.getBiologicalRole() != null) {
+                uniqueKeyStringBuilder.append(createCvTermKey(modelledParticipant.getBiologicalRole()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (modelledParticipant.getFeatures() != null && !modelledParticipant.getFeatures().isEmpty()) {
+                uniqueKeyStringBuilder.append(createModelledFeatureKey(modelledParticipant.getFeatures()));
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createBinaryInteractionEvidenceKey(BinaryInteractionEvidence binaryInteractionEvidence) {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "binary interaction evidence::";
@@ -616,6 +646,28 @@ public class UniqueKeyGenerator {
             }
             if (entity.getStoichiometry() != null) {
                 uniqueKeyStringBuilder.append(createStoichiometryKey(entity.getStoichiometry()));
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createModelledEntityKey(ModelledEntity modelledEntity) {
+
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "modelled entity::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            if (modelledEntity.getInteractor() != null) {
+                uniqueKeyStringBuilder.append(createInteractorKey(modelledEntity.getInteractor()));
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if (modelledEntity.getStoichiometry() != null) {
+                uniqueKeyStringBuilder.append(createStoichiometryKey(modelledEntity.getStoichiometry()));
             }
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;

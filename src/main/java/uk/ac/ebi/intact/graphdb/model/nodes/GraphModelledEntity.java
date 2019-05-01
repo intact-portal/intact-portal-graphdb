@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -25,11 +26,11 @@ import java.util.Map;
 /**
  * Created by anjali on 30/04/19.
  */
+@NodeEntity
 public class GraphModelledEntity implements ModelledEntity {
 
     @GraphId
     private Long graphId;
-
 
     private String uniqueKey;
 
@@ -52,17 +53,18 @@ public class GraphModelledEntity implements ModelledEntity {
 
     @Transient
     private boolean isAlreadyCreated;
+
     @Transient
     private Map<String, Object> nodeProperties = new HashMap<String, Object>();
 
     public GraphModelledEntity() {
     }
 
-    public GraphModelledEntity(Entity entity, boolean childAlreadyCreated) {
-        setInteractor(entity.getInteractor());
-        setStoichiometry(entity.getStoichiometry());
-        setChangeListener(entity.getChangeListener());
-        setUniqueKey(createUniqueKey(entity));
+    public GraphModelledEntity(ModelledEntity modelledEntity, boolean childAlreadyCreated) {
+        setInteractor(modelledEntity.getInteractor());
+        setStoichiometry(modelledEntity.getStoichiometry());
+        setChangeListener(modelledEntity.getChangeListener());
+        setUniqueKey(createUniqueKey(modelledEntity));
 
         if (CreationConfig.createNatively) {
             if (!childAlreadyCreated) {
@@ -70,8 +72,8 @@ public class GraphModelledEntity implements ModelledEntity {
             }
         }
 
-        setFeatures(entity.getFeatures());
-        setCausalRelationships(entity.getCausalRelationships());
+        setFeatures(modelledEntity.getFeatures());
+        setCausalRelationships(modelledEntity.getCausalRelationships());
 
         if (CreationConfig.createNatively) {
             if (!isAlreadyCreated() && !childAlreadyCreated) {
@@ -87,9 +89,9 @@ public class GraphModelledEntity implements ModelledEntity {
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
-
-            Label[] labels = CommonUtility.getLabels(GraphEntity.class);
             nodeProperties.put("uniqueKey", this.getUniqueKey());
+
+            Label[] labels = CommonUtility.getLabels(GraphModelledEntity.class);
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(getNodeProperties(), labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
@@ -103,7 +105,7 @@ public class GraphModelledEntity implements ModelledEntity {
         CommonUtility.createRelationShip(interactor, graphId, RelationshipTypes.INTERACTOR);
         CommonUtility.createRelationShip(stoichiometry, graphId, RelationshipTypes.STOICHIOMETRY);
         CommonUtility.createRelationShip(changeListener, graphId, RelationshipTypes.CHANGE_LISTENER);
-        CommonUtility.createFeatureEvidenceRelationShips(features, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
+        CommonUtility.createModelledFeatureRelationShips(features, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createCausalRelationshipRelationShips(causalRelationships, graphId);
     }
 
@@ -216,16 +218,6 @@ public class GraphModelledEntity implements ModelledEntity {
     }
 
     @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
-    }
-
-    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -237,6 +229,16 @@ public class GraphModelledEntity implements ModelledEntity {
             this.stoichiometry = null;
         }
         //TODO login it
+    }
+
+    @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
     }
 
     public Map<String, Object> getNodeProperties() {
@@ -309,8 +311,8 @@ public class GraphModelledEntity implements ModelledEntity {
     }
 
 
-    public String createUniqueKey(Entity entity) {
-        return UniqueKeyGenerator.createEntityKey(entity);
+    public String createUniqueKey(ModelledEntity modelledEntity) {
+        return UniqueKeyGenerator.createModelledEntityKey(modelledEntity);
     }
 
 }

@@ -71,7 +71,7 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively();
-        CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUBLICATION);
+        CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 
     public Publication getPublication() {
@@ -111,5 +111,15 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
 
     public String createUniqueKey(ModelledParameter modelledParameter) {
         return UniqueKeyGenerator.createModelledParameterKey(modelledParameter);
+    }
+
+    @Override
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    @Override
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
     }
 }

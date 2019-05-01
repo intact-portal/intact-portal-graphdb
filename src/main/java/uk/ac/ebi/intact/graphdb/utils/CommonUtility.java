@@ -187,6 +187,14 @@ public class CommonUtility {
         }
     }
 
+    public static void createModelledFeatureRelationShips(Collection<GraphModelledFeature> relCollection, long fromId, String relationName) {
+        if (relCollection != null) {
+            for (GraphModelledFeature obj : relCollection) {
+                createRelationShip(obj, fromId, relationName);
+            }
+        }
+    }
+
 /*    public static void createFeatureRelationShips(Collection<GraphFeature> relCollection, long fromId, String relationName) {
         if (relCollection != null) {
             for (GraphFeature obj : relCollection) {
