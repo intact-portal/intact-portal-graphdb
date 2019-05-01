@@ -409,6 +409,8 @@ public class CommonUtility {
             graphInteractor = new GraphGene((Gene) interactor);
         } else if (interactor instanceof Molecule) {
             graphInteractor = new GraphMolecule((Molecule) interactor, false);
+        } else if (interactor instanceof Complex) {
+            graphInteractor = new GraphComplex((Complex) interactor);
         } else {
             graphInteractor = new GraphInteractor(interactor, false);
         }

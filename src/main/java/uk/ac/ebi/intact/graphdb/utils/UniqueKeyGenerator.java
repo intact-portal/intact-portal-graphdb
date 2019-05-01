@@ -9,6 +9,7 @@ import psidev.psi.mi.jami.utils.RangeUtils;
 import psidev.psi.mi.jami.utils.comparator.cv.UnambiguousCvTermComparator;
 import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousVariableParameterComparator;
 import psidev.psi.mi.jami.utils.comparator.feature.UnambiguousFeatureEvidenceComparator;
+import psidev.psi.mi.jami.utils.comparator.feature.UnambiguousModelledFeaturecomparator;
 import psidev.psi.mi.jami.utils.comparator.interaction.UnambiguousInteractionEvidenceComparator;
 import psidev.psi.mi.jami.utils.comparator.parameter.UnambiguousParameterComparator;
 import psidev.psi.mi.jami.utils.comparator.range.UnambiguousRangeComparator;
@@ -605,7 +606,7 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
             if (modelledParticipant.getFeatures() != null && !modelledParticipant.getFeatures().isEmpty()) {
-                uniqueKeyStringBuilder.append(createModelledFeatureKey(modelledParticipant.getFeatures()));
+                uniqueKeyStringBuilder.append(createModelledFeatureListKey(modelledParticipant.getFeatures()));
             }
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
@@ -1068,6 +1069,30 @@ public class UniqueKeyGenerator {
                 int counter = 1;
                 for (FeatureEvidence featureEvidence : list1) {
                     uniqueKeyStringBuilder.append(createFeatureKey(featureEvidence));
+                    if (counter != list1.size()) {
+                        uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
+                    }
+                    counter++;
+                }
+            }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createModelledFeatureListKey(Collection<ModelledFeature> features) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "feature list::";
+        uniqueKeyStringBuilder.append(prefix);
+        try {
+            UnambiguousModelledFeaturecomparator unambiguousModelledFeaturecomparator = new UnambiguousModelledFeaturecomparator();
+            if (!features.isEmpty()) {
+                List<ModelledFeature> list1 = new ArrayList<ModelledFeature>(features);
+                Collections.sort(list1, unambiguousModelledFeaturecomparator);
+                int counter = 1;
+                for (ModelledFeature modelledFeature : list1) {
+                    uniqueKeyStringBuilder.append(createModelledFeatureKey(modelledFeature));
                     if (counter != list1.size()) {
                         uniqueKeyStringBuilder.append(Constants.LIST_SEPARATOR);
                     }
