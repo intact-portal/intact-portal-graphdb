@@ -47,7 +47,6 @@ public class GraphModelledInteraction implements ModelledInteraction {
     private Collection<GraphModelledParticipant> participants;
 
 
-
     public Collection<GraphInteractionEvidence> getInteractionEvidences() {
         if (interactionEvidences == null) {
             this.interactionEvidences = new ArrayList<GraphInteractionEvidence>();

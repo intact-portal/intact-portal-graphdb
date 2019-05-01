@@ -32,7 +32,7 @@ public class CollectionAdaptor {
     }
 
     public static Collection<GraphParameter> convertParameterIntoGraphModel(Collection<Parameter> parameters) {
-        return parameters.stream().map(GraphParameter::new).collect(Collectors.toList());
+        return parameters.stream().map(p -> new GraphParameter(p, false)).collect(Collectors.toList());
     }
 
     public static Collection<GraphCooperativityEvidence> convertCooperativityEvidenceIntoGraphModel(Collection<CooperativityEvidence> parameters) {

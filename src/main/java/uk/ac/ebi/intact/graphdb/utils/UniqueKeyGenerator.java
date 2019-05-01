@@ -216,6 +216,41 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createModelledParameterKey(ModelledParameter modelledParameter) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "modelled parameter::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+
+            uniqueKeyStringBuilder.append(modelledParameter.getPublication().getPubmedId());
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+
+            CvTerm type = modelledParameter.getType();
+            uniqueKeyStringBuilder.append(createCvTermKey(type));
+
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            CvTerm unit = modelledParameter.getUnit();
+            uniqueKeyStringBuilder.append(createCvTermKey(unit));
+
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            ParameterValue value = modelledParameter.getValue();
+            uniqueKeyStringBuilder.append(createParameterValueKey(value));
+
+            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            BigDecimal uncertainty = modelledParameter.getUncertainty();
+            if (uncertainty != null) {
+                uniqueKeyStringBuilder.append(uncertainty.intValue());
+            }
+
+            // delete any trailing underscore
+            uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createParameterValueKey(ParameterValue parameterValue) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
@@ -268,11 +303,11 @@ public class UniqueKeyGenerator {
 
         uniqueKeyStringBuilder.append(rangeUniqueString);
         uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-        if(resultingSequence.getOriginalSequence()!=null) {
+        if (resultingSequence.getOriginalSequence() != null) {
             uniqueKeyStringBuilder.append(resultingSequence.getOriginalSequence().hashCode());
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
         }
-        if(resultingSequence.getNewSequence()!=null) {
+        if (resultingSequence.getNewSequence() != null) {
             uniqueKeyStringBuilder.append(resultingSequence.getNewSequence().hashCode());
         }
 

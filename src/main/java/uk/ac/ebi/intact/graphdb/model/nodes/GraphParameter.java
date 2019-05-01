@@ -43,10 +43,13 @@ public class GraphParameter implements Parameter {
     @Transient
     private boolean isAlreadyCreated;
 
+    @Transient
+    private Map<String, Object> nodeProperties = new HashMap<String, Object>();
+
     public GraphParameter() {
     }
 
-    public GraphParameter(Parameter parameter) {
+    public GraphParameter(Parameter parameter, boolean childAlreadyCreated) {
         setType(parameter.getType());
         setUncertainty(parameter.getUncertainty());
         setUnit(parameter.getUnit());
@@ -54,7 +57,8 @@ public class GraphParameter implements Parameter {
         setAc(CommonUtility.extractAc(parameter));
         setUniqueKey(createUniqueKey(parameter));
 
-        if (CreationConfig.createNatively) {
+        if (CreationConfig.createNatively && !childAlreadyCreated) {
+            initialzeNodeProperties();
             createNodeNatively();
             if (!isAlreadyCreated()) {
                 createRelationShipNatively();
@@ -104,14 +108,17 @@ public class GraphParameter implements Parameter {
         setUnit(unit);
     }
 
+    public void initialzeNodeProperties() {
+        if (this.getAc() != null) getNodeProperties().put("ac", this.getAc());
+        if (this.getUncertainty() != null) getNodeProperties().put("uncertainty", this.getUncertainty().toString());
+    }
+
     public void createNodeNatively() {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
-            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
-            if (this.getUncertainty() != null) nodeProperties.put("uncertainty", this.getUncertainty().toString());
 
             Label[] labels = CommonUtility.getLabels(GraphParameter.class);
 
@@ -255,4 +262,11 @@ public class GraphParameter implements Parameter {
         return UniqueKeyGenerator.createParameterKey(parameter);
     }
 
+    public Map<String, Object> getNodeProperties() {
+        return nodeProperties;
+    }
+
+    public void setNodeProperties(Map<String, Object> nodeProperties) {
+        this.nodeProperties = nodeProperties;
+    }
 }

@@ -152,4 +152,7 @@ public class RelationshipTypes {
 
     public static final String PREFERRED_IDENTIFIER = "preferredIdentifier";
     public static final String BIOLOGICAL_EFFECT = "biologicalEffect";
+
+    //ModelledParameter
+    public static final String PUBLICATION = "publication";
 }

@@ -1,17 +1,12 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import psidev.psi.mi.jami.model.*;
-import psidev.psi.mi.jami.model.impl.DefaultAlias;
-import psidev.psi.mi.jami.model.impl.DefaultAnnotation;
-import psidev.psi.mi.jami.model.impl.DefaultChecksum;
-import psidev.psi.mi.jami.model.impl.DefaultXref;
 import psidev.psi.mi.jami.utils.*;
 import psidev.psi.mi.jami.utils.collection.AbstractListHavingProperties;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -343,7 +338,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
             if (evidenceType instanceof GraphCvTerm) {
                 this.evidenceType = (GraphCvTerm) evidenceType;
             } else {
-                this.evidenceType = new GraphCvTerm(evidenceType,false);
+                this.evidenceType = new GraphCvTerm(evidenceType, false);
             }
         } else {
             this.evidenceType = null;
@@ -492,91 +487,6 @@ public class GraphComplex extends GraphInteractor implements Complex {
         rigid = null;
     }
 
-    private class ComplexAnnotationList extends AbstractListHavingProperties<GraphAnnotation> {
-        public ComplexAnnotationList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(GraphAnnotation added) {
-            processAddedAnnotationEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(GraphAnnotation removed) {
-            processRemovedAnnotationEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToAnnotations();
-        }
-    }
-
-    private class ComplexChecksumList extends AbstractListHavingProperties<GraphChecksum> {
-        public ComplexChecksumList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(GraphChecksum added) {
-            processAddedChecksumEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(GraphChecksum removed) {
-            processRemovedChecksumEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToChecksums();
-        }
-    }
-
-    private class ComplexAliasList extends AbstractListHavingProperties<GraphAlias> {
-        public ComplexAliasList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(GraphAlias added) {
-            processAddedAliasEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(GraphAlias removed) {
-            processRemovedAliasEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToAliases();
-        }
-    }
-
-    private class ComplexXrefList extends AbstractListHavingProperties<GraphXref> {
-        public ComplexXrefList() {
-            super();
-        }
-
-        @Override
-        protected void processAddedObjectEvent(GraphXref added) {
-            processAddedXrefEvent(added);
-        }
-
-        @Override
-        protected void processRemovedObjectEvent(GraphXref removed) {
-            processRemovedXrefEvent(removed);
-        }
-
-        @Override
-        protected void clearProperties() {
-            clearPropertiesLinkedToXrefs();
-        }
-    }
-
-
     /**
      * <p>processAddedAliasEvent</p>
      *
@@ -586,7 +496,8 @@ public class GraphComplex extends GraphInteractor implements Complex {
         if (recommendedName == null && AliasUtils.doesAliasHaveType(added, Alias.COMPLEX_RECOMMENDED_NAME_MI, Alias.COMPLEX_RECOMMENDED_NAME)) {
             recommendedName = new GraphAlias(added);
         } else if (systematicName == null && AliasUtils.doesAliasHaveType(added, Alias.COMPLEX_SYSTEMATIC_NAME_MI, Alias.COMPLEX_SYSTEMATIC_NAME)) {
-            systematicName = new GraphAlias(added);;
+            systematicName = new GraphAlias(added);
+            ;
         }
     }
 
@@ -682,6 +593,90 @@ public class GraphComplex extends GraphInteractor implements Complex {
             this.components = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
         } else {
             this.components = new ArrayList<GraphModelledParticipant>();
+        }
+    }
+
+    private class ComplexAnnotationList extends AbstractListHavingProperties<GraphAnnotation> {
+        public ComplexAnnotationList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphAnnotation added) {
+            processAddedAnnotationEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphAnnotation removed) {
+            processRemovedAnnotationEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToAnnotations();
+        }
+    }
+
+    private class ComplexChecksumList extends AbstractListHavingProperties<GraphChecksum> {
+        public ComplexChecksumList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphChecksum added) {
+            processAddedChecksumEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphChecksum removed) {
+            processRemovedChecksumEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToChecksums();
+        }
+    }
+
+    private class ComplexAliasList extends AbstractListHavingProperties<GraphAlias> {
+        public ComplexAliasList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphAlias added) {
+            processAddedAliasEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphAlias removed) {
+            processRemovedAliasEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToAliases();
+        }
+    }
+
+    private class ComplexXrefList extends AbstractListHavingProperties<GraphXref> {
+        public ComplexXrefList() {
+            super();
+        }
+
+        @Override
+        protected void processAddedObjectEvent(GraphXref added) {
+            processAddedXrefEvent(added);
+        }
+
+        @Override
+        protected void processRemovedObjectEvent(GraphXref removed) {
+            processRemovedXrefEvent(removed);
+        }
+
+        @Override
+        protected void clearProperties() {
+            clearPropertiesLinkedToXrefs();
         }
     }
 
