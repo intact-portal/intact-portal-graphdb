@@ -663,6 +663,20 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createModelledInteractionKey(ModelledInteraction modelledInteraction) {
+
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "interaction evidence::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(createXrefListKey(modelledInteraction.getIdentifiers()));
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createStoichiometryKey(Stoichiometry stc) {
 
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();

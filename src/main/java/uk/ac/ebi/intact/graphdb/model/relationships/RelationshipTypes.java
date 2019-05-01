@@ -155,4 +155,9 @@ public class RelationshipTypes {
 
     //ModelledParameter
     public static final String PUBLICATION = "publication";
+
+    //Modelled Interaction
+
+    public static final String EVIDENCE_TYPE = "evidenceType";
+    public static final String COOPERATIVE_EFFECT = "cooperativeEffects";
 }

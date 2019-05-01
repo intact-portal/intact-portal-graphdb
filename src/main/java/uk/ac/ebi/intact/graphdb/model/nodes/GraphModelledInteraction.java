@@ -1,26 +1,44 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.graphdb.Label;
+import org.neo4j.ogm.annotation.*;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
+import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by anjali on 30/04/19.
  */
+@NodeEntity
 public class GraphModelledInteraction implements ModelledInteraction {
 
+    @GraphId
+    private Long graphId;
+
+    @Index(unique = true, primary = true)
+    private String uniqueKey;
+
+    private String ac;
     private Date updatedDate;
     private Date createdDate;
-    private GraphSource source;
-    private GraphCvTerm evidenceType;
     private String rigid;
     private String shortName;
+
+    @Relationship(type = RelationshipTypes.SOURCE)
+    private GraphSource source;
+
+    @Relationship(type = RelationshipTypes.EVIDENCE_TYPE)
+    private GraphCvTerm evidenceType;
 
     @Relationship(type = RelationshipTypes.INTERACTION_TYPE)
     private GraphCvTerm interactionType;
@@ -28,9 +46,16 @@ public class GraphModelledInteraction implements ModelledInteraction {
     @Relationship(type = RelationshipTypes.CHECKSUMS)
     private Collection<GraphChecksum> checksums;
 
+    @Relationship(type = RelationshipTypes.INTERACTIONS)
     private Collection<GraphInteractionEvidence> interactionEvidences;
+
+    @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphModelledConfidence> modelledConfidences;
+
+    @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphModelledParameter> modelledParameters;
+
+    @Relationship(type = RelationshipTypes.COOPERATIVE_EFFECT)
     private Collection<GraphCooperativeEffect> cooperativeEffects;
 
     @Relationship(type = RelationshipTypes.ANNOTATIONS)
@@ -45,6 +70,93 @@ public class GraphModelledInteraction implements ModelledInteraction {
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
     @JsonManagedReference
     private Collection<GraphModelledParticipant> participants;
+
+    @Transient
+    private boolean isAlreadyCreated;
+
+    public GraphModelledInteraction(){
+
+    }
+
+    public GraphModelledInteraction(ModelledInteraction modelledInteraction) {
+        String callingClasses = Arrays.toString(Thread.currentThread().getStackTrace());
+
+        setShortName(modelledInteraction.getShortName());
+        setRigid(modelledInteraction.getRigid());
+        setUpdatedDate(modelledInteraction.getUpdatedDate());
+        setCreatedDate(modelledInteraction.getCreatedDate());
+        setInteractionType(modelledInteraction.getInteractionType());
+        setEvidenceType(modelledInteraction.getEvidenceType());
+        setSource(modelledInteraction.getSource());
+        setAc(CommonUtility.extractAc(modelledInteraction));
+        setUniqueKey(createUniqueKey(modelledInteraction));
+
+        if (CreationConfig.createNatively) {
+             createNodeNatively();
+        }
+
+
+        setChecksums(modelledInteraction.getChecksums());
+        setIdentifiers(modelledInteraction.getIdentifiers());
+        setXrefs(modelledInteraction.getXrefs());
+        setAnnotations(modelledInteraction.getAnnotations());
+        setInteractionEvidences(modelledInteraction.getInteractionEvidences());
+        setModelledConfidences(modelledInteraction.getModelledConfidences());
+        setModelledParameters(modelledInteraction.getModelledParameters());
+        setCooperativeEffects(modelledInteraction.getCooperativeEffects());
+
+        if (!callingClasses.contains("GraphModelledParticipant")) {
+            setParticipants(modelledInteraction.getParticipants());
+        }
+
+        if (CreationConfig.createNatively) {
+            if (!isAlreadyCreated() {
+                createRelationShipNatively(this.getGraphId());
+            }
+        }
+    }
+
+    public void createNodeNatively() {
+        try {
+            BatchInserter batchInserter = CreationConfig.batchInserter;
+
+            Map<String, Object> nodeProperties = new HashMap<String, Object>();
+            nodeProperties.put("uniqueKey", this.getUniqueKey());
+            if (this.getAc() != null) nodeProperties.put("ac", this.getAc());
+            if (this.getShortName() != null) nodeProperties.put("shortName", this.getShortName());
+            if (this.getRigid() != null) nodeProperties.put("rigid", this.getRigid());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (this.getUpdatedDate() != null)
+                nodeProperties.put("updatedDate", dateFormat.format(this.getUpdatedDate()));
+            if (this.getCreatedDate() != null)
+                nodeProperties.put("createdDate", dateFormat.format(this.getCreatedDate()));
+
+            Label[] labels = CommonUtility.getLabels(GraphModelledInteraction.class);
+
+            NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
+            setGraphId(nodeDataFeed.getGraphId());
+            setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(interactionType, graphId, RelationshipTypes.INTERACTION_TYPE);
+        CommonUtility.createRelationShip(evidenceType, graphId, RelationshipTypes.EVIDENCE_TYPE);
+        CommonUtility.createRelationShip(source, graphId, RelationshipTypes.SOURCE);
+        CommonUtility.createInteractionEvidenceRelationShips(interactionEvidences, graphId);
+        CommonUtility.createModelledConfidenceRelationShips(modelledConfidences, graphId);
+        CommonUtility.createModelledParameterRelationShips(modelledParameters, graphId);
+        CommonUtility.createCooperativeEffectRelationShips(cooperativeEffects, graphId);
+        CommonUtility.createChecksumRelationShips(checksums, graphId);
+        CommonUtility.createIdentifierRelationShips(identifiers, graphId);
+        CommonUtility.createXrefRelationShips(xrefs, graphId);
+        CommonUtility.createModelledParticipantsRelationShips(participants, graphId);
+        CommonUtility.createAnnotationRelationShips(annotations, graphId);
+    }
 
 
     public Collection<GraphInteractionEvidence> getInteractionEvidences() {
@@ -316,5 +428,50 @@ public class GraphModelledInteraction implements ModelledInteraction {
             }
         }*/
         return false;
+    }
+
+    public Long getGraphId() {
+        return graphId;
+    }
+
+    public void setGraphId(Long graphId) {
+        this.graphId = graphId;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
+
+    public boolean isAlreadyCreated() {
+        return isAlreadyCreated;
+    }
+
+    public void setAlreadyCreated(boolean alreadyCreated) {
+        isAlreadyCreated = alreadyCreated;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
+    }
+
+    public int hashCode() {
+
+        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
+            return this.getUniqueKey().hashCode();
+        }
+        return super.hashCode();
+
+    }
+
+    public String createUniqueKey(ModelledInteraction modelledInteraction) {
+        return UniqueKeyGenerator.createModelledInteractionKey(modelledInteraction);
     }
 }

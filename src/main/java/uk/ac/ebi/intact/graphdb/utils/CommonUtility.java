@@ -161,9 +161,27 @@ public class CommonUtility {
         }
     }
 
+    public static void createInteractionEvidenceRelationShips(Collection<GraphInteractionEvidence> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphInteractionEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, INTERACTIONS);
+
+            }
+        }
+    }
+
     public static void createParticipantsRelationShips(Collection<GraphParticipantEvidence> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphParticipantEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, IE_PARTICIPANT);
+
+            }
+        }
+    }
+
+    public static void createModelledParticipantsRelationShips(Collection<GraphModelledParticipant> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphModelledParticipant obj : relCollection) {
                 createRelationShip(obj, fromId, IE_PARTICIPANT);
 
             }
@@ -219,6 +237,22 @@ public class CommonUtility {
         }
     }
 
+    public static void createModelledConfidenceRelationShips(Collection<GraphModelledConfidence> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphModelledConfidence obj : relCollection) {
+                createRelationShip(obj, fromId, CONFIDENCE);
+            }
+        }
+    }
+
+    public static void createCooperativeEffectRelationShips(Collection<GraphCooperativeEffect> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphCooperativeEffect obj : relCollection) {
+                createRelationShip(obj, fromId, COOPERATIVE_EFFECT);
+            }
+        }
+    }
+
     public static void createVariableParameterRelationShips(Collection<GraphVariableParameter> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphVariableParameter obj : relCollection) {
@@ -262,6 +296,14 @@ public class CommonUtility {
     public static void createParameterRelationShips(Collection<GraphParameter> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphParameter obj : relCollection) {
+                createRelationShip(obj, fromId, PARAMETERS);
+            }
+        }
+    }
+
+    public static void createModelledParameterRelationShips(Collection<GraphModelledParameter> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphModelledParameter obj : relCollection) {
                 createRelationShip(obj, fromId, PARAMETERS);
             }
         }
