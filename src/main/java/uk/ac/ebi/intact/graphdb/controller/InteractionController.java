@@ -165,12 +165,9 @@ public class InteractionController {
         return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
     }
 
-    @RequestMapping(value = "/export",
-            params = {
-                    "ac"
-            },
+    @RequestMapping(value = "/export/{ac}",
             method = RequestMethod.GET)
-    public ResponseEntity<String> exportInteraction(@RequestParam(value = "ac", required = false) String ac,
+    public ResponseEntity<String> exportInteraction(@PathVariable String ac,
                                                     @RequestParam(value = "format", defaultValue = "json", required = false) String format,
                                                     HttpServletResponse response) throws Exception {
         Boolean exportAsFile = false;
