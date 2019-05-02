@@ -44,7 +44,7 @@ public class CollectionAdaptor {
     }
 
     public static Collection<GraphInteractionEvidence> convertInteractionEvidenceIntoGraphModel(Collection<InteractionEvidence> parameters) {
-        return parameters.stream().map(GraphInteractionEvidence::new).collect(Collectors.toList());
+        return parameters.stream().map(p -> new GraphInteractionEvidence(p, false)).collect(Collectors.toList());
     }
 
     public static Collection<GraphModelledConfidence> convertModelledConfidenceIntoGraphModel(Collection<ModelledConfidence> parameters) {
@@ -60,7 +60,7 @@ public class CollectionAdaptor {
     }
 
     public static Collection<GraphConfidence> convertConfidenceIntoGraphModel(Collection<Confidence> confidences) {
-        return confidences.stream().map(GraphConfidence::new).collect(Collectors.toList());
+        return confidences.stream().map(p -> new GraphConfidence(p, false)).collect(Collectors.toList());
     }
 
     public static Collection<GraphVariableParameterValueSet> convertVariableParameterValueSetIntoGraphModel(Collection<VariableParameterValueSet> variableParameterValueSets) {

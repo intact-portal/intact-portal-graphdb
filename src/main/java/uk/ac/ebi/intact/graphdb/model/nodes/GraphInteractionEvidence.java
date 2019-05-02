@@ -26,7 +26,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     private Long graphId;
 
     private String uniqueKey;
-
     private String ac;
     private String imexId;
 

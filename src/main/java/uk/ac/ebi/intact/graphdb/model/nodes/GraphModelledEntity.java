@@ -3,10 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
-import org.neo4j.ogm.annotation.Transient;
+import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
@@ -32,6 +29,7 @@ public class GraphModelledEntity implements ModelledEntity {
     @GraphId
     private Long graphId;
 
+    @Index(unique = true, primary = true)
     private String uniqueKey;
 
     @Relationship(type = RelationshipTypes.INTERACTOR)
@@ -218,6 +216,16 @@ public class GraphModelledEntity implements ModelledEntity {
     }
 
     @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
+    }
+
+    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -229,16 +237,6 @@ public class GraphModelledEntity implements ModelledEntity {
             this.stoichiometry = null;
         }
         //TODO login it
-    }
-
-    @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
     }
 
     public Map<String, Object> getNodeProperties() {

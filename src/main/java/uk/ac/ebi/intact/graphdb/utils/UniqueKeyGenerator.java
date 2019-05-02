@@ -537,6 +537,19 @@ public class UniqueKeyGenerator {
         return uniqueKeyStringBuilder.toString().toLowerCase();
     }
 
+    public static String createComplexKey(Complex complex) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "complex::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+            uniqueKeyStringBuilder.append(complex.getComplexAc());
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
     public static String createParticipantEvidenceKey(ParticipantEvidence participantEvidence) {
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "participant::";
@@ -608,6 +621,38 @@ public class UniqueKeyGenerator {
             if (modelledParticipant.getFeatures() != null && !modelledParticipant.getFeatures().isEmpty()) {
                 uniqueKeyStringBuilder.append(createModelledFeatureListKey(modelledParticipant.getFeatures()));
             }
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createCooperativeEffectKey(CooperativeEffect cooperativeEffect) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "cooperative effect::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+
+        } catch (Exception e) {
+            return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
+        }
+        // delete any trailing underscore
+        uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
+
+        return uniqueKeyStringBuilder.toString().toLowerCase();
+    }
+
+    public static String createCooperativeEvidenceKey(CooperativityEvidence cooperativityEvidence) {
+        StringBuilder uniqueKeyStringBuilder = new StringBuilder();
+        String prefix = "cooperative evidence::";
+        uniqueKeyStringBuilder.append(prefix);
+
+        try {
+
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }

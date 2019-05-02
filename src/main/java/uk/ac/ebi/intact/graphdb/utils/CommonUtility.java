@@ -170,6 +170,15 @@ public class CommonUtility {
         }
     }
 
+    public static void createAffectedInteractionRelationShips(Collection<GraphModelledInteraction> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphModelledInteraction obj : relCollection) {
+                createRelationShip(obj, fromId, AFFECTED_INTERACTIONS);
+
+            }
+        }
+    }
+
     public static void createParticipantsRelationShips(Collection<GraphParticipantEvidence> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphParticipantEvidence obj : relCollection) {
@@ -249,6 +258,22 @@ public class CommonUtility {
         if (relCollection != null) {
             for (GraphCooperativeEffect obj : relCollection) {
                 createRelationShip(obj, fromId, COOPERATIVE_EFFECT);
+            }
+        }
+    }
+
+    public static void createCooperativeEvidenceRelationShips(Collection<GraphCooperativityEvidence> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphCooperativityEvidence obj : relCollection) {
+                createRelationShip(obj, fromId, COOPERATIVE_EVIDENCES);
+            }
+        }
+    }
+
+    public static void createEvidenceMethodRelationShips(Collection<GraphCvTerm> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphCvTerm obj : relCollection) {
+                createRelationShip(obj, fromId, EVIDENCE_METHODS);
             }
         }
     }

@@ -167,4 +167,13 @@ public class RelationshipTypes {
     public static final String COMPONENTS = "components";
     public static final String PHYSICAL_PROPERTIES = "physicalProperties";
     public static final String RIG_ID = "rigid";
+
+    //Cooperative Effect
+    public static final String COOPERATIVE_EVIDENCES = "cooperativityEvidences";
+    public static final String AFFECTED_INTERACTIONS = "affectedInteractions";
+    public static final String OUTCOME = "outCome";
+    public static final String RESPONSE = "response";
+
+    //Cooperative Evidence
+    public static final String EVIDENCE_METHODS = "evidenceMethods";
 }
