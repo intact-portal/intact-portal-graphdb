@@ -70,7 +70,7 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
     }
 
     public void createRelationShipNatively() {
-        super.createRelationShipNatively();
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 

@@ -325,7 +325,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     public void assignComplexAc(String accession, String version) {
         // add new complex ac if not null
         if (accession != null) {
-            ComplexXrefList complexXrefList = (ComplexXrefList) getXrefs();
+            Collection<GraphXref> complexXrefList =  getXrefs();
 
             CvTerm complexPortalDatabase = CvTermUtils.createComplexPortalDatabase();
             CvTerm complexPortalPrimaryQualifier = CvTermUtils.createComplexPortalPrimaryQualifier();
@@ -381,7 +381,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
 
 
     public void setPhysicalProperties(String properties) {
-        ComplexAnnotationList complexAnnotationList = (ComplexAnnotationList) getAnnotations();
+        Collection<GraphAnnotation> complexAnnotationList =  getAnnotations();
 
         // add new physical properties if not null
         if (properties != null) {
@@ -389,10 +389,10 @@ public class GraphComplex extends GraphInteractor implements Complex {
             CvTerm complexPhysicalProperties = CvTermUtils.createComplexPhysicalProperties();
             // first remove old physical property if not null
             if (this.physicalProperties != null) {
-                complexAnnotationList.removeOnly(this.physicalProperties);
+                complexAnnotationList.remove(this.physicalProperties);
             }
             this.physicalProperties = new GraphAnnotation(new GraphAnnotation(complexPhysicalProperties, properties));
-            complexAnnotationList.addOnly(this.physicalProperties);
+            complexAnnotationList.add(this.physicalProperties);
         }
         // remove all physical properties if the collection is not empty
         else if (!complexAnnotationList.isEmpty()) {
@@ -407,7 +407,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     }
 
     public void setRecommendedName(String name) {
-        ComplexAliasList complexAliasList = (ComplexAliasList) getAliases();
+        Collection<GraphAlias> complexAliasList = getAliases();
 
         // add new recommended name if not null
         if (name != null) {
@@ -415,10 +415,10 @@ public class GraphComplex extends GraphInteractor implements Complex {
             CvTerm recommendedName = CvTermUtils.createComplexRecommendedName();
             // first remove old recommended name if not null
             if (this.recommendedName != null) {
-                complexAliasList.removeOnly(this.recommendedName);
+                complexAliasList.remove(this.recommendedName);
             }
             this.recommendedName = new GraphAlias(new GraphAlias(recommendedName, name));
-            complexAliasList.addOnly(this.recommendedName);
+            complexAliasList.add(this.recommendedName);
         }
         // remove all recommended name if the collection is not empty
         else if (!complexAliasList.isEmpty()) {
@@ -434,7 +434,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
 
 
     public void setSystematicName(String name) {
-        ComplexAliasList complexAliasList = (ComplexAliasList) getAliases();
+        Collection<GraphAlias> complexAliasList =  getAliases();
 
         // add new systematic name if not null
         if (name != null) {
@@ -442,10 +442,10 @@ public class GraphComplex extends GraphInteractor implements Complex {
             CvTerm systematicName = CvTermUtils.createComplexSystematicName();
             // first remove systematic name  if not null
             if (this.systematicName != null) {
-                complexAliasList.removeOnly(this.systematicName);
+                complexAliasList.remove(this.systematicName);
             }
             this.systematicName = new GraphAlias(new GraphAlias(systematicName, name));
-            complexAliasList.addOnly(this.systematicName);
+            complexAliasList.add(this.systematicName);
         }
         // remove all systematic name  if the collection is not empty
         else if (!complexAliasList.isEmpty()) {
@@ -775,6 +775,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         return UniqueKeyGenerator.createInteractorKey(interactor);
     }
 
+    @Transient
     private class ComplexAnnotationList extends AbstractListHavingProperties<GraphAnnotation> {
         public ComplexAnnotationList() {
             super();
@@ -796,6 +797,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    @Transient
     private class ComplexChecksumList extends AbstractListHavingProperties<GraphChecksum> {
         public ComplexChecksumList() {
             super();
@@ -817,6 +819,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    @Transient
     private class ComplexAliasList extends AbstractListHavingProperties<GraphAlias> {
         public ComplexAliasList() {
             super();
@@ -838,6 +841,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    @Transient
     private class ComplexXrefList extends AbstractListHavingProperties<GraphXref> {
         public ComplexXrefList() {
             super();

@@ -56,9 +56,9 @@ public class GraphCooperativeEffect implements CooperativeEffect {
 
     public GraphCooperativeEffect(CooperativeEffect cooperativeEffect) {
         setAc(CommonUtility.extractAc(cooperativeEffect));
-        setUniqueKey(createUniqueKey(cooperativeEffect));
         setOutCome(cooperativeEffect.getOutCome());
         setResponse(cooperativeEffect.getResponse());
+        setUniqueKey(createUniqueKey(cooperativeEffect));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();

@@ -46,8 +46,8 @@ public class GraphCooperativityEvidence implements CooperativityEvidence {
 
     public GraphCooperativityEvidence(CooperativityEvidence cooperativityEvidence) {
         setAc(CommonUtility.extractAc(cooperativityEvidence));
-        setUniqueKey(createUniqueKey(cooperativityEvidence));
         setPublication(cooperativityEvidence.getPublication());
+        setUniqueKey(createUniqueKey(cooperativityEvidence));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();

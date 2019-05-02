@@ -176,4 +176,8 @@ public class RelationshipTypes {
 
     //Cooperative Evidence
     public static final String EVIDENCE_METHODS = "evidenceMethods";
+
+    //Modelled Participant
+
+    public static final String IC_PARTICIPANT = "IC_PARTICIPANT";
 }

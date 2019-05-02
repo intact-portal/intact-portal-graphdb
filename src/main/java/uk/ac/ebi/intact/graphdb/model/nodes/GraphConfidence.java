@@ -48,7 +48,7 @@ public class GraphConfidence implements Confidence {
             if (!childAlreadyCreated) {
                 createNodeNatively();
                 if (!isAlreadyCreated()) {
-                    createRelationShipNatively();
+                    createRelationShipNatively(this.getGraphId());
                 }
             }
         }
@@ -75,8 +75,8 @@ public class GraphConfidence implements Confidence {
         }
     }
 
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.getGraphId(), RelationshipTypes.TYPE);
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(type, graphId, RelationshipTypes.TYPE);
     }
 
 /*    public GraphConfidence(CvTerm type, String value) {

@@ -62,7 +62,7 @@ public class GraphParameter implements Parameter {
             if (!childAlreadyCreated) {
                 createNodeNatively();
                 if (!isAlreadyCreated()) {
-                    createRelationShipNatively();
+                    createRelationShipNatively(this.getGraphId());
                 }
             }
         }
@@ -133,10 +133,10 @@ public class GraphParameter implements Parameter {
         }
     }
 
-    public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
-        CommonUtility.createRelationShip(value, this.graphId, RelationshipTypes.VALUE);
+    public void createRelationShipNatively(Long graphId) {
+        CommonUtility.createRelationShip(type, graphId, RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(unit, graphId, RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(value, graphId, RelationshipTypes.VALUE);
     }
 
     public CvTerm getType() {

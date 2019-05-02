@@ -27,7 +27,7 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
 
     private String ac;
 
-    @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
+    @Relationship(type = RelationshipTypes.IC_PARTICIPANT, direction = Relationship.INCOMING)
     private GraphModelledInteraction interaction;
 
     @Relationship(type = RelationshipTypes.BIOLOGICAL_ROLE)
@@ -58,7 +58,7 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
         setBiologicalRole(modelledParticipant.getBiologicalRole());
 
 
-        if (!callingClasses.contains("GraphModelledInteraction")) {
+        if (!callingClasses.contains("GraphModelledInteraction") && !(modelledParticipant.getInteraction() instanceof Complex)) {
             setInteraction(modelledParticipant.getInteraction());
         }
         /*if (!callingClasses.contains("GraphBinaryInteractionEvidence")) {
@@ -103,7 +103,7 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
-        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
+        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IC_PARTICIPANT);
         CommonUtility.createXrefRelationShips(xrefs, this.graphId);
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
         CommonUtility.createAliasRelationShips(aliases, this.graphId);

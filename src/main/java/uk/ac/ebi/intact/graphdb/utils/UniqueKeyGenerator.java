@@ -224,8 +224,10 @@ public class UniqueKeyGenerator {
 
         try {
 
-            uniqueKeyStringBuilder.append(modelledParameter.getPublication().getPubmedId());
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            if(modelledParameter.getPublication()!=null) {
+                uniqueKeyStringBuilder.append(modelledParameter.getPublication().getPubmedId());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
 
             CvTerm type = modelledParameter.getType();
             uniqueKeyStringBuilder.append(createCvTermKey(type));
@@ -528,6 +530,8 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(createGeneKey((Gene) interactor));
             } else if (interactor instanceof Molecule) {
                 uniqueKeyStringBuilder.append(createMoleculeKey((Molecule) interactor));
+            }else if (interactor instanceof Complex) {
+                uniqueKeyStringBuilder.append(createComplexKey((Complex) interactor));
             } else if (!interactor.getIdentifiers().isEmpty()) {
                 uniqueKeyStringBuilder.append(createXrefListKey(interactor.getIdentifiers()));
             }
@@ -631,6 +635,7 @@ public class UniqueKeyGenerator {
     }
 
     public static String createCooperativeEffectKey(CooperativeEffect cooperativeEffect) {
+        //TODO...
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "cooperative effect::";
         uniqueKeyStringBuilder.append(prefix);
@@ -647,6 +652,7 @@ public class UniqueKeyGenerator {
     }
 
     public static String createCooperativeEvidenceKey(CooperativityEvidence cooperativityEvidence) {
+        //TODO...
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "cooperative evidence::";
         uniqueKeyStringBuilder.append(prefix);
@@ -711,6 +717,9 @@ public class UniqueKeyGenerator {
 
     public static String createModelledInteractionKey(ModelledInteraction modelledInteraction) {
 
+        if(modelledInteraction instanceof Complex){
+            return (createInteractorKey((Complex)modelledInteraction));
+        }
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "interaction evidence::";
         uniqueKeyStringBuilder.append(prefix);

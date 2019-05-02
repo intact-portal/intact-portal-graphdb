@@ -46,5 +46,13 @@ public class CreationConfig {
         CommonUtility.createSchemaConstraint(GraphVariableParameter.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphVariableParameterValue.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphVariableParameterValueSet.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphCooperativityEvidence.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphCooperativeEffect.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledInteraction.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledConfidence.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledEntity.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledFeature.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledParameter.class, "uniqueKey");
+        CommonUtility.createSchemaConstraint(GraphModelledParticipant.class, "uniqueKey");
     }
 }

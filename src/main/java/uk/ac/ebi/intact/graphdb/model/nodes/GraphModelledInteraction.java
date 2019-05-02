@@ -67,7 +67,7 @@ public class GraphModelledInteraction implements ModelledInteraction {
     @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
 
-    @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.IC_PARTICIPANT, direction = Relationship.OUTGOING)
     @JsonManagedReference
     private Collection<GraphModelledParticipant> participants;
 

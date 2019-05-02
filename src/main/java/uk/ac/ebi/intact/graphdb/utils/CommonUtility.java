@@ -191,7 +191,7 @@ public class CommonUtility {
     public static void createModelledParticipantsRelationShips(Collection<GraphModelledParticipant> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphModelledParticipant obj : relCollection) {
-                createRelationShip(obj, fromId, IE_PARTICIPANT);
+                createRelationShip(obj, fromId, IC_PARTICIPANT);
 
             }
         }

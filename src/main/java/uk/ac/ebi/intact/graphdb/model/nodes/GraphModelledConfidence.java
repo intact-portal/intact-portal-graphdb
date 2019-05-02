@@ -70,7 +70,7 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
     }
 
     public void createRelationShipNatively() {
-        super.createRelationShipNatively();
+        super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 

@@ -35,28 +35,28 @@ public class CollectionAdaptor {
         return parameters.stream().map(p -> new GraphParameter(p, false)).collect(Collectors.toList());
     }
 
-    public static Collection<GraphCooperativityEvidence> convertCooperativityEvidenceIntoGraphModel(Collection<CooperativityEvidence> parameters) {
-        return parameters.stream().map(GraphCooperativityEvidence::new).collect(Collectors.toList());
+    public static Collection<GraphCooperativityEvidence> convertCooperativityEvidenceIntoGraphModel(Collection<CooperativityEvidence> cooperativityEvidences) {
+        return cooperativityEvidences.stream().map(GraphCooperativityEvidence::new).collect(Collectors.toList());
     }
 
-    public static Collection<GraphModelledInteraction> convertModelledInteractionIntoGraphModel(Collection<ModelledInteraction> parameters) {
-        return parameters.stream().map(GraphModelledInteraction::new).collect(Collectors.toList());
+    public static Collection<GraphModelledInteraction> convertModelledInteractionIntoGraphModel(Collection<ModelledInteraction> modelledInteractions) {
+        return modelledInteractions.stream().map(GraphModelledInteraction::new).collect(Collectors.toList());
     }
 
-    public static Collection<GraphInteractionEvidence> convertInteractionEvidenceIntoGraphModel(Collection<InteractionEvidence> parameters) {
-        return parameters.stream().map(p -> new GraphInteractionEvidence(p, false)).collect(Collectors.toList());
+    public static Collection<GraphInteractionEvidence> convertInteractionEvidenceIntoGraphModel(Collection<InteractionEvidence> interactionEvidences) {
+        return interactionEvidences.stream().map(p -> new GraphInteractionEvidence(p, false)).collect(Collectors.toList());
     }
 
-    public static Collection<GraphModelledConfidence> convertModelledConfidenceIntoGraphModel(Collection<ModelledConfidence> parameters) {
-        return parameters.stream().map(GraphModelledConfidence::new).collect(Collectors.toList());
+    public static Collection<GraphModelledConfidence> convertModelledConfidenceIntoGraphModel(Collection<ModelledConfidence> confidences) {
+        return confidences.stream().map(GraphModelledConfidence::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphModelledParameter> convertModelledParameterIntoGraphModel(Collection<ModelledParameter> parameters) {
         return parameters.stream().map(GraphModelledParameter::new).collect(Collectors.toList());
     }
 
-    public static Collection<GraphCooperativeEffect> convertCooperativeEffectIntoGraphModel(Collection<CooperativeEffect> parameters) {
-        return parameters.stream().map(GraphCooperativeEffect::new).collect(Collectors.toList());
+    public static Collection<GraphCooperativeEffect> convertCooperativeEffectIntoGraphModel(Collection<CooperativeEffect> cooperativeEffects) {
+        return cooperativeEffects.stream().map(GraphCooperativeEffect::new).collect(Collectors.toList());
     }
 
     public static Collection<GraphConfidence> convertConfidenceIntoGraphModel(Collection<Confidence> confidences) {
