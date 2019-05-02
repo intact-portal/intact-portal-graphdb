@@ -325,7 +325,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     public void assignComplexAc(String accession, String version) {
         // add new complex ac if not null
         if (accession != null) {
-            Collection<GraphXref> complexXrefList =  getXrefs();
+            Collection<GraphXref> complexXrefList = getXrefs();
 
             CvTerm complexPortalDatabase = CvTermUtils.createComplexPortalDatabase();
             CvTerm complexPortalPrimaryQualifier = CvTermUtils.createComplexPortalPrimaryQualifier();
@@ -381,7 +381,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
 
 
     public void setPhysicalProperties(String properties) {
-        Collection<GraphAnnotation> complexAnnotationList =  getAnnotations();
+        Collection<GraphAnnotation> complexAnnotationList = getAnnotations();
 
         // add new physical properties if not null
         if (properties != null) {
@@ -434,7 +434,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
 
 
     public void setSystematicName(String name) {
-        Collection<GraphAlias> complexAliasList =  getAliases();
+        Collection<GraphAlias> complexAliasList = getAliases();
 
         // add new systematic name if not null
         if (name != null) {

@@ -224,7 +224,7 @@ public class UniqueKeyGenerator {
 
         try {
 
-            if(modelledParameter.getPublication()!=null) {
+            if (modelledParameter.getPublication() != null) {
                 uniqueKeyStringBuilder.append(modelledParameter.getPublication().getPubmedId());
                 uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             }
@@ -530,7 +530,7 @@ public class UniqueKeyGenerator {
                 uniqueKeyStringBuilder.append(createGeneKey((Gene) interactor));
             } else if (interactor instanceof Molecule) {
                 uniqueKeyStringBuilder.append(createMoleculeKey((Molecule) interactor));
-            }else if (interactor instanceof Complex) {
+            } else if (interactor instanceof Complex) {
                 uniqueKeyStringBuilder.append(createComplexKey((Complex) interactor));
             } else if (!interactor.getIdentifiers().isEmpty()) {
                 uniqueKeyStringBuilder.append(createXrefListKey(interactor.getIdentifiers()));
@@ -717,8 +717,8 @@ public class UniqueKeyGenerator {
 
     public static String createModelledInteractionKey(ModelledInteraction modelledInteraction) {
 
-        if(modelledInteraction instanceof Complex){
-            return (createInteractorKey((Complex)modelledInteraction));
+        if (modelledInteraction instanceof Complex) {
+            return (createInteractorKey((Complex) modelledInteraction));
         }
         StringBuilder uniqueKeyStringBuilder = new StringBuilder();
         String prefix = "interaction evidence::";
