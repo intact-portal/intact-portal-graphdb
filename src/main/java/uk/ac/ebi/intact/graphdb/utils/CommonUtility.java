@@ -366,6 +366,14 @@ public class CommonUtility {
         }
     }
 
+    public static void createModelledRangeRelationShips(Collection<GraphModelledRange> relCollection, long fromId) {
+        if (relCollection != null) {
+            for (GraphModelledRange obj : relCollection) {
+                createRelationShip(obj, fromId, RANGES);
+            }
+        }
+    }
+
     public static void createExperimentRelationShips(Collection<GraphExperiment> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphExperiment obj : relCollection) {

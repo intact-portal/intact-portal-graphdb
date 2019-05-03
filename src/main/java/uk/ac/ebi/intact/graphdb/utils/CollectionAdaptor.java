@@ -91,6 +91,10 @@ public class CollectionAdaptor {
         return ranges.stream().map(p -> new GraphRange(p, featureUniqueKey)).collect(Collectors.toList());
     }
 
+    public static Collection<GraphModelledRange> convertModelledRangeIntoGraphModel(Collection<Range> ranges, String featureUniqueKey) {
+        return ranges.stream().map(p -> new GraphModelledRange(p, featureUniqueKey)).collect(Collectors.toList());
+    }
+
     public static Collection<GraphFeatureEvidence> convertFeatureEvidenceIntoGraphModel(Collection<FeatureEvidence> featureEvidences) {
         return featureEvidences.stream().map(GraphFeatureEvidence::new).collect(Collectors.toList());
     }

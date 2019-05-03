@@ -51,7 +51,7 @@ public class GraphModelledFeature implements ModelledFeature {
     private Collection<GraphAnnotation> annotations;
 
     @Relationship(type = RelationshipTypes.RANGES)
-    private Collection<GraphRange> ranges;
+    private Collection<GraphModelledRange> ranges;
 
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
@@ -140,7 +140,7 @@ public class GraphModelledFeature implements ModelledFeature {
         CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
         CommonUtility.createXrefRelationShips(xrefs, this.graphId);
         CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createRangeRelationShips(ranges, this.graphId);
+        CommonUtility.createModelledRangeRelationShips(ranges, this.graphId);
         CommonUtility.createAliasRelationShips(aliases, this.graphId);
         CommonUtility.createModelledFeatureRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
     }
@@ -255,18 +255,18 @@ public class GraphModelledFeature implements ModelledFeature {
         }
     }
 
-    public Collection<GraphRange> getRanges() {
+    public Collection<GraphModelledRange> getRanges() {
         if (this.ranges == null) {
-            this.ranges = new ArrayList<GraphRange>();
+            this.ranges = new ArrayList<GraphModelledRange>();
         }
         return this.ranges;
     }
 
     public void setRanges(Collection<Range> ranges) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, this.getUniqueKey());
+            this.ranges = CollectionAdaptor.convertModelledRangeIntoGraphModel(ranges, this.getUniqueKey());
         } else {
-            this.ranges = new ArrayList<GraphRange>();
+            this.ranges = new ArrayList<GraphModelledRange>();
         }
     }
 

@@ -289,7 +289,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     }
 
     public void setModelledParameters(Collection<ModelledParameter> modelledParameters) {
-        if (parameters != null) {
+        if (modelledParameters != null) {
             this.parameters = CollectionAdaptor.convertModelledParameterIntoGraphModel(modelledParameters);
         } else {
             this.parameters = new ArrayList<GraphModelledParameter>();
