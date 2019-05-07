@@ -547,7 +547,11 @@ public class UniqueKeyGenerator {
         uniqueKeyStringBuilder.append(prefix);
 
         try {
-            uniqueKeyStringBuilder.append(complex.getComplexAc());
+            if (complex.getComplexAc() != null) {
+                uniqueKeyStringBuilder.append(complex.getComplexAc());
+            } else {
+                uniqueKeyStringBuilder.append(complex.getPreferredIdentifier().getId());
+            }
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }

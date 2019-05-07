@@ -341,8 +341,6 @@ public class GraphComplex extends GraphInteractor implements Complex {
                 this.complexAcXref = new GraphXref(new GraphXref(complexPortalDatabase, accession, version, complexPortalPrimaryQualifier));
                 complexXrefList.add(this.complexAcXref);
             }
-        } else {
-            throw new IllegalArgumentException("The complex ac has to be non null.");
         }
     }
 
