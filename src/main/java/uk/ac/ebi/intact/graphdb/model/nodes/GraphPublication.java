@@ -560,20 +560,20 @@ public class GraphPublication implements Publication {
     protected void processRemovedIdentifierEvent(Xref removed) {
         // the removed identifier is pubmed
         if (pubmedId != null && pubmedId.equals(removed)) {
-            Xref pubmedIdXref= XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.PUBMED_MI, Xref.PUBMED);
-            if(pubmedIdXref!=null){
+            Xref pubmedIdXref = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.PUBMED_MI, Xref.PUBMED);
+            if (pubmedIdXref != null) {
                 pubmedId = new GraphXref(pubmedIdXref);
-            }else{
-                pubmedId=null;
+            } else {
+                pubmedId = null;
             }
         }
         // the removed identifier is doi
         else if (doi != null && doi.equals(removed)) {
-            Xref doiXref= XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.DOI_MI, Xref.DOI);
-            if(doiXref!=null){
+            Xref doiXref = XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.DOI_MI, Xref.DOI);
+            if (doiXref != null) {
                 doi = new GraphXref(doiXref);
-            }else {
-                doi=null;
+            } else {
+                doi = null;
             }
         }
     }

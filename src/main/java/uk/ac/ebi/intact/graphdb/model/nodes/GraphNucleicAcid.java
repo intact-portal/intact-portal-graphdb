@@ -261,21 +261,25 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         if (ddbjEmblGenbank != null && ddbjEmblGenbank.equals(removed)) {
-            Xref ddbjEmblGenbankXref=XrefUtils.collectFirstIdentifierWithDatabase(
+            Xref ddbjEmblGenbankXref = XrefUtils.collectFirstIdentifierWithDatabase(
                     getIdentifiers(),
                     Xref.DDBJ_EMBL_GENBANK_MI,
                     Xref.DDBJ_EMBL_GENBANK);
-            if(ddbjEmblGenbankXref!=null) {
+            if (ddbjEmblGenbankXref != null) {
                 ddbjEmblGenbank = new GraphXref(ddbjEmblGenbankXref);
-            }else{ddbjEmblGenbank=null;}
+            } else {
+                ddbjEmblGenbank = null;
+            }
         } else if (refseq != null && refseq.equals(removed)) {
-            Xref refseqXref=XrefUtils.collectFirstIdentifierWithDatabase(
+            Xref refseqXref = XrefUtils.collectFirstIdentifierWithDatabase(
                     getIdentifiers(),
                     Xref.REFSEQ_MI,
                     Xref.REFSEQ);
-            if(refseqXref!=null) {
+            if (refseqXref != null) {
                 refseq = new GraphXref(refseqXref);
-            } else {refseq=null;}
+            } else {
+                refseq = null;
+            }
         }
     }
 
