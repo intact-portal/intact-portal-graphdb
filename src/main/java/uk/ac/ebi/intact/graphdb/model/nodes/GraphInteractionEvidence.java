@@ -93,6 +93,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         setInteractionType(binaryInteractionEvidence.getInteractionType());
         setAc(CommonUtility.extractAc(binaryInteractionEvidence));
         setUniqueKey(createUniqueKey(binaryInteractionEvidence));
+        setExperiment(binaryInteractionEvidence.getExperiment());
 
         if (CreationConfig.createNatively) {
             initialzeNodeProperties();

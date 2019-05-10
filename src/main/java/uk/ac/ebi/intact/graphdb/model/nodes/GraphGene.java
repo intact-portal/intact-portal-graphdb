@@ -412,13 +412,33 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         if (ensembl != null && ensembl.equals(removed)) {
-            ensembl = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_MI, Xref.ENSEMBL));
+            Xref ensemblXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_MI, Xref.ENSEMBL);
+            if(ensemblXref!=null) {
+                ensembl = new GraphXref(ensemblXref);
+            }else {
+                ensembl = null;
+            }
         } else if (ensemblGenome != null && ensemblGenome.equals(removed)) {
-            ensemblGenome = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES));
+            Xref ensemblGenomeXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES);
+            if(ensemblGenomeXref!=null){
+                ensemblGenome = new GraphXref(ensemblGenomeXref);
+            }else{
+                ensemblGenome=null;
+            }
         } else if (entrezGeneId != null && entrezGeneId.equals(removed)) {
-            entrezGeneId = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE));
+            Xref entrezGeneIdXref= XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.ENTREZ_GENE_MI, Xref.ENTREZ_GENE);
+            if(entrezGeneIdXref!=null) {
+                entrezGeneId = new GraphXref(entrezGeneIdXref);
+            }else {
+                entrezGeneId=null;
+            }
         } else if (refseq != null && refseq.equals(removed)) {
-            refseq = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ));
+            Xref refseqXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ);
+            if(refseqXref!=null) {
+                refseq = new GraphXref(refseqXref);
+            }else {
+                refseq=null;
+            }
         }
     }
 

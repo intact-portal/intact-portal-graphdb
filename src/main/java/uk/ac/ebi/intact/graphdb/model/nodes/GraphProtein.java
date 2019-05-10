@@ -362,15 +362,35 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     protected void processRemovedIdentifierEvent(Xref removed) {
         if (uniprotkb != null && uniprotkb.equals(removed)) {
-            uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_MI, Xref.UNIPROTKB));
+            Xref uniprotkbXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_MI, Xref.UNIPROTKB);
+            if(uniprotkbXref!=null) {
+                uniprotkb = new GraphXref(uniprotkbXref);
+            }else{
+                uniprotkb=null;
+            }
             if (uniprotkb == null) {
-                uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_SWISSPROT_MI, Xref.UNIPROTKB_SWISSPROT));
+                Xref uniprotkbSwissProtXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_SWISSPROT_MI, Xref.UNIPROTKB_SWISSPROT);
+                if(uniprotkbSwissProtXref!=null) {
+                    uniprotkb = new GraphXref(uniprotkbSwissProtXref);
+                }else {
+                    uniprotkb=null;
+                }
                 if (uniprotkb == null) {
-                    uniprotkb = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL));
+                    Xref uniprotkbTremblXref= XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.UNIPROTKB_TREMBL_MI, Xref.UNIPROTKB_TREMBL);
+                    if(uniprotkbTremblXref!=null) {
+                        uniprotkb = new GraphXref(uniprotkbTremblXref);
+                    }else {
+                        uniprotkbTremblXref=null;
+                    }
                 }
             }
         } else if (refseq != null && refseq.equals(removed)) {
-            refseq = new GraphXref(XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ));
+            Xref refseqXref=XrefUtils.collectFirstIdentifierWithDatabase(getIdentifiers(), Xref.REFSEQ_MI, Xref.REFSEQ);
+            if(refseqXref!=null) {
+                refseq = new GraphXref(refseqXref);
+            }else{
+                refseq=null;
+            }
         }
     }
 

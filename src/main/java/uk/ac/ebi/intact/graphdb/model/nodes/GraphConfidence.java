@@ -62,7 +62,6 @@ public class GraphConfidence implements Confidence {
         try {
             BatchInserter batchInserter = CreationConfig.batchInserter;
 
-            Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
 
             Label[] labels = CommonUtility.getLabels(GraphConfidence.class);

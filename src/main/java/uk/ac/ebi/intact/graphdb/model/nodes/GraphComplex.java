@@ -66,7 +66,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     @Relationship(type = RelationshipTypes.INTERACTIONS)
     private Collection<GraphInteractionEvidence> interactionEvidences;
 
-    @Relationship(type = RelationshipTypes.COMPONENTS)
+    @Relationship(type = RelationshipTypes.IC_PARTICIPANT)
     private Collection<GraphModelledParticipant> components;
 
     @Relationship(type = RelationshipTypes.COOPERATIVE_EFFECT)

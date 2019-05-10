@@ -39,6 +39,10 @@ public class GraphParameterValue extends ParameterValue {
 
     public GraphParameterValue(BigDecimal factorC, short baseC, short exponentC) {
         super(factorC, baseC, exponentC);
+        // below is needed because ParameterValue is not a GraphClass
+        setFactor(factorC);
+        setBase(baseC);
+        setExponent(exponentC);
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -102,7 +106,34 @@ public class GraphParameterValue extends ParameterValue {
     }
 
     public String toString() {
-        return (base != 0 && factor.doubleValue() != 0 ? factor.toString() + (exponent != 0 ? "x" + base + "^(" + exponent + ")" : "") : "0");
+        return (getBase() != 0 && getFactor().doubleValue() != 0 ? getFactor().toString() + (getExponent() != 0 ? "x" + getBase() + "^(" + getExponent() + ")" : "") : "0");
     }
 
+
+    @Override
+    public short getBase() {
+        return base;
+    }
+
+    public void setBase(short base) {
+        this.base = base;
+    }
+
+    @Override
+    public BigDecimal getFactor() {
+        return factor;
+    }
+
+    public void setFactor(BigDecimal factor) {
+        this.factor = factor;
+    }
+
+    @Override
+    public short getExponent() {
+        return exponent;
+    }
+
+    public void setExponent(short exponent) {
+        this.exponent = exponent;
+    }
 }

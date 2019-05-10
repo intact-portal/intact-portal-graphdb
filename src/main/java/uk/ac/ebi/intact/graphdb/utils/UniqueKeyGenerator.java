@@ -827,6 +827,7 @@ public class UniqueKeyGenerator {
         uniqueKeyStringBuilder.append(prefix);
 
         try {
+
             uniqueKeyStringBuilder.append(createExperimentKey(variableParameter.getExperiment()));
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             uniqueKeyStringBuilder.append(variableParameter.getDescription());
@@ -846,7 +847,7 @@ public class UniqueKeyGenerator {
         uniqueKeyStringBuilder.append(prefix);
 
         try {
-            uniqueKeyStringBuilder.append(createVariableParameterKey(value.getVariableParameter()));
+            uniqueKeyStringBuilder.append(value.getVariableParameter().hashCode());
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             if (value.getValue() != null) {
                 uniqueKeyStringBuilder.append(value.getValue());
@@ -886,9 +887,7 @@ public class UniqueKeyGenerator {
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             uniqueKeyStringBuilder.append(createOrganismKey(experiment.getHostOrganism()));
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-            if (experiment.getInteractionEvidences() != null && !experiment.getInteractionEvidences().isEmpty()) {
-                uniqueKeyStringBuilder.append(createInteractionEvidenceListKey(experiment.getInteractionEvidences()));
-            }
+            uniqueKeyStringBuilder.append(experiment.hashCode());
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
