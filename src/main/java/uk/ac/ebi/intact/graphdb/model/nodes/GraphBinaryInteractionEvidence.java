@@ -5,6 +5,7 @@ import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
+import psidev.psi.mi.jami.model.InteractionEvidence;
 import psidev.psi.mi.jami.model.Interactor;
 import psidev.psi.mi.jami.model.ParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -46,8 +47,8 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Relationship(type = RelationshipTypes.COMPLEX_EXPANSION)
     private GraphCvTerm complexExpansion;
 
-    //TODO
-    private GraphInteractionEvidence graphInteractionEvidence;
+    @Relationship(type = RelationshipTypes.INTERACTION_EVIDENCE, direction = Relationship.UNDIRECTED)
+    private GraphInteractionEvidence interactionEvidence;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -61,6 +62,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
+        setInteractionEvidence((InteractionEvidence)binaryInteractionEvidence);
 
         if (binaryInteractionEvidence.getParticipantA() != null)
             setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
@@ -84,7 +86,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             Map<String, Object> nodeProperties = new HashMap<String, Object>();
             nodeProperties.put("uniqueKey", this.getUniqueKey());
             nodeProperties.putAll(super.getNodeProperties());
-            Label[] labels = CommonUtility.getLabels(GraphBinaryInteractionEvidence.class);
+            List<Label> labelList = new ArrayList<>();
+            labelList.add(Label.label(GraphBinaryInteractionEvidence.class.getSimpleName()));
+            Label[] labels=labelList.toArray(new Label[labelList.size()]);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
@@ -101,6 +105,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         CommonUtility.createRelationShip(interactorA, this.getGraphId(), RelationshipTypes.INTERACTOR_A);
         CommonUtility.createRelationShip(interactorB, this.getGraphId(), RelationshipTypes.INTERACTOR_B);
         CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), RelationshipTypes.COMPLEX_EXPANSION);
+        CommonUtility.createRelationShip(interactionEvidence, this.getGraphId(), RelationshipTypes.INTERACTION_EVIDENCE);
         CommonUtility.createInteractorRelationShips(interactors, this.graphId);
     }
 
@@ -214,12 +219,20 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         }
     }
 
-    public GraphInteractionEvidence getGraphInteractionEvidence() {
-        return graphInteractionEvidence;
+    public InteractionEvidence getInteractionEvidence() {
+        return interactionEvidence;
     }
 
-    public void setGraphInteractionEvidence(GraphInteractionEvidence graphInteractionEvidence) {
-        this.graphInteractionEvidence = graphInteractionEvidence;
+    public void setInteractionEvidence(InteractionEvidence interactionEvidence) {
+        if (interactionEvidence != null) {
+            if (interactionEvidence instanceof GraphInteractionEvidence) {
+                this.interactionEvidence = (GraphInteractionEvidence) interactionEvidence;
+            } else {
+                this.interactionEvidence = new GraphInteractionEvidence(interactionEvidence, false);
+            }
+        } else {
+            this.complexExpansion = null;
+        }
     }
 
     public Long getGraphId() {

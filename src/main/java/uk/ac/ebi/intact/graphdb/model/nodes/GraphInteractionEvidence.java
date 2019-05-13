@@ -68,6 +68,9 @@ public class GraphInteractionEvidence implements InteractionEvidence {
     @JsonManagedReference
     private Collection<GraphParticipantEvidence> participants;
 
+    @Relationship(type = RelationshipTypes.INTERACTION_EVIDENCE, direction = Relationship.UNDIRECTED)
+    private Collection<GraphBinaryInteractionEvidence> binaryInteractionEvidences;
+
     @Transient
     private boolean isAlreadyCreated;
 
