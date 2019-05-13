@@ -12905,3 +12905,19 @@ Storage files: (filename : modification date - size)
 2019-05-10 14:44:03.743+0000 WARN [o.n.k.i.c.MonitorGc] GC Monitor: Application threads blocked for 43185ms.
 2019-05-10 14:44:16.005+0000 WARN [o.n.k.i.c.MonitorGc] GC Monitor: Application threads blocked for 12162ms.
 2019-05-10 14:51:08.008+0000 WARN [o.n.k.i.c.MonitorGc] GC Monitor: Application threads blocked for 411902ms.
+2019-05-10 16:03:10.670+0000 WARN [o.n.k.i.c.MonitorGc] GC Monitor: Application threads blocked for 4322561ms.
+2019-05-10 16:03:19.182+0000 WARN [o.n.k.i.c.MonitorGc] GC Monitor: Application threads blocked for 8410ms.
+2019-05-10 16:03:19.241+0000 INFO [o.n.k.i.f.GraphDatabaseFacadeFactory] Shutdown started
+2019-05-10 16:03:19.242+0000 INFO [o.n.k.i.f.GraphDatabaseFacadeFactory] Database is now unavailable
+2019-05-10 16:03:19.254+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Starting check pointing...
+2019-05-10 16:03:19.254+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Starting store flush...
+2019-05-10 16:03:20.005+0000 INFO [o.n.k.i.s.c.CountsTracker] About to rotate counts store at transaction 1 to [/home/anjali/intellij_projects/intact-graphdb-hackathon/src/test/resources/databases/graph.db/neostore.counts.db.b], from [/home/anjali/intellij_projects/intact-graphdb-hackathon/src/test/resources/databases/graph.db/neostore.counts.db.a].
+2019-05-10 16:03:20.028+0000 INFO [o.n.k.i.s.c.CountsTracker] Successfully rotated counts store at transaction 1 to [/home/anjali/intellij_projects/intact-graphdb-hackathon/src/test/resources/databases/graph.db/neostore.counts.db.b], from [/home/anjali/intellij_projects/intact-graphdb-hackathon/src/test/resources/databases/graph.db/neostore.counts.db.a].
+2019-05-10 16:03:20.043+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Store flush completed
+2019-05-10 16:03:20.043+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Starting appending check point entry into the tx log...
+2019-05-10 16:03:20.050+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Appending check point entry into the tx log completed
+2019-05-10 16:03:20.050+0000 INFO [o.n.k.i.t.l.c.CheckPointerImpl] Check Pointing triggered by database shutdown [1]:  Check pointing completed
+2019-05-10 16:03:20.050+0000 INFO [o.n.k.i.t.l.p.LogPruningImpl] Log Rotation [0]:  Starting log pruning.
+2019-05-10 16:03:20.052+0000 INFO [o.n.k.i.t.l.p.LogPruningImpl] Log Rotation [0]:  Log pruning complete.
+2019-05-10 16:03:20.175+0000 INFO [o.n.k.i.DiagnosticsManager] --- STOPPING diagnostics START ---
+2019-05-10 16:03:20.175+0000 INFO [o.n.k.i.DiagnosticsManager] --- STOPPING diagnostics END ---

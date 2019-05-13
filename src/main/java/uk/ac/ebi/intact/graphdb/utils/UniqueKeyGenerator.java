@@ -887,7 +887,12 @@ public class UniqueKeyGenerator {
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
             uniqueKeyStringBuilder.append(createOrganismKey(experiment.getHostOrganism()));
             uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-            uniqueKeyStringBuilder.append(experiment.hashCode());
+            String ac = CommonUtility.extractAc(experiment);
+            if(ac!=null&&!ac.isEmpty()){
+                uniqueKeyStringBuilder.append(ac);
+            }else {
+                uniqueKeyStringBuilder.append(experiment.hashCode());
+            }
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
