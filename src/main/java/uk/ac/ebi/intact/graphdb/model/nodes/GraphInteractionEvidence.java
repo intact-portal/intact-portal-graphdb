@@ -118,7 +118,7 @@ public class GraphInteractionEvidence implements InteractionEvidence {
         }
 
         if (CreationConfig.createNatively) {
-            if (!isAlreadyCreated() && !childAlreadyCreated) {
+            if (!childAlreadyCreated) {
                 createRelationShipNatively(this.getGraphId());
             }
         }

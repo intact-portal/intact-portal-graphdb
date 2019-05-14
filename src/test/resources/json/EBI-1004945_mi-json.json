@@ -1,1 +1,166 @@
-{"data":[{"object":"interactor","id":"intact_EBI-11620908","sequence":"MRIPVDASTSRRFTPPSTALSPGKMSEALPLGAPDAGAALAGKLRSGDRSMVEVLADHPGELVRTDSPNFLCSVLPTHWRCNKTLPIAFKVVALGDVPDGTLVTVMAGNDENYSAELRNATAAMKNQVARFNDLRFVGRSGRGKSFTLTITVFTNPPQVATYHRAIKITVDGPREPRNRTEKHSTMPDSPVDVKTQSRLTPPTMPPPPTTQGAPRTSSFTPTTLTNGTSHSPTALNGAPSPPNGFSNGPSSSSSSSLANQQLPPACGARQLSKLKRFLTTLQQFGNDISPEIGERVRTLVLGLVNSTLTIEEFHSKLQEATNFPLRPFVIPFLKANLPLLQRELLHCARLAKQNPAQYLAQHEQLLLDASTTSPVDSSELLLDVNENGKRRTPDRTKENGFDREPLHSEHPSKRPCTISPGQRYSPNNGLSYQPNGLPHPTPPPPQHYRLDDMAIAHHYRDSYRHPSHRDLRDRNRPMGLHGTRQEEMIDHRLTDREWAEEWKHLDHLLNCIMDMVEKTRRSLTVLRRCQEADREELNYWIRRYSDAEDLKKGGGSSSSHSRQQSPVNPDPVALDAHREFLHRPASGYVPEEIWKKAEEAVNEVKRQAMTELQKAVSEAERKAHDMITTERAKMERTVAEAKRQAAEDALAVINQQEDSSESCWNCGRKASETCSGCNTARYCGSFCQHKDWEKHHHICGQTLQAQQQGDTPAVSSSVTPNSGAGSPMDTPPAATPRSTTPGTPSTIETTPR","type":{"id":"MI:0326","name":"protein"},"organism":{"taxid":"9606","common":"human","scientific":"Homo sapiens"},"identifier":{"db":"intact","id":"EBI-11620908"},"label":"aml1_eto_chimera"},{"object":"interaction","id":"intact_EBI-1004945","interactionType":{"id":"MI:0407","name":"direct interaction"},"experiment":{"detmethod":{"id":"MI:0027","name":"cosedimentation"},"host":{"taxid":"-1","common":"in vitro","scientific":"In vitro"},"pubid":[{"db":"pubmed","id":"16616331"},{"db":"intact","id":"EBI-1989526"},{"db":"imex","id":"IM-11855"}],"sourceDatabase":{"id":"MI:0469","name":"European Bioinformatics Institute"},"experimentModifications":["Absorbance data 280 nm (NHR2, m4), 230 nm (m7, m2) were collected at a rotor speed of 50, 000 rpm at 20 C in aluminum-filled double sector cells at a scan interval of approximately 260 s."],"figures":["3 C, Table 2"]},"identifiers":[{"db":"intact","id":"EBI-1004945"},{"db":"imex","id":"IM-11855-2"}],"participants":[{"id":"1","interactorRef":"intact_EBI-11620908","stoichiometry":"4","bioRole":{"id":"MI:0499","name":"unspecified role"},"expRole":{"id":"MI:0497","name":"neutral component"},"identificationMethods":[{"id":"MI:0396","name":"predetermined participant"}],"expressedIn":{"taxid":"83333","common":"ecoli","scientific":"Escherichia coli (strain K12)"},"features":[{"id":"2","name":"m7","category":"pointMutations","type":{"id":"MI:0573","name":"mutation disrupting interaction"},"sequenceData":[{"pos":"523-523","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"526-526","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"537-537","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"493-493","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"505-505","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"508-508","interactorRef":"intact_EBI-11620908","participantRef":"1"},{"pos":"509-509","interactorRef":"intact_EBI-11620908","participantRef":"1"}]},{"id":"3","name":"NHR2 domain","category":"bindingSites","type":{"id":"MI:0442","name":"sufficient binding region"},"sequenceData":[{"pos":"483-551","interactorRef":"intact_EBI-11620908","participantRef":"1"}]}]}]}]}
+{
+  "data": [
+    {
+      "object": "interactor",
+      "id": "intact_EBI-11620908",
+      "sequence": "MRIPVDASTSRRFTPPSTALSPGKMSEALPLGAPDAGAALAGKLRSGDRSMVEVLADHPGELVRTDSPNFLCSVLPTHWRCNKTLPIAFKVVALGDVPDGTLVTVMAGNDENYSAELRNATAAMKNQVARFNDLRFVGRSGRGKSFTLTITVFTNPPQVATYHRAIKITVDGPREPRNRTEKHSTMPDSPVDVKTQSRLTPPTMPPPPTTQGAPRTSSFTPTTLTNGTSHSPTALNGAPSPPNGFSNGPSSSSSSSLANQQLPPACGARQLSKLKRFLTTLQQFGNDISPEIGERVRTLVLGLVNSTLTIEEFHSKLQEATNFPLRPFVIPFLKANLPLLQRELLHCARLAKQNPAQYLAQHEQLLLDASTTSPVDSSELLLDVNENGKRRTPDRTKENGFDREPLHSEHPSKRPCTISPGQRYSPNNGLSYQPNGLPHPTPPPPQHYRLDDMAIAHHYRDSYRHPSHRDLRDRNRPMGLHGTRQEEMIDHRLTDREWAEEWKHLDHLLNCIMDMVEKTRRSLTVLRRCQEADREELNYWIRRYSDAEDLKKGGGSSSSHSRQQSPVNPDPVALDAHREFLHRPASGYVPEEIWKKAEEAVNEVKRQAMTELQKAVSEAERKAHDMITTERAKMERTVAEAKRQAAEDALAVINQQEDSSESCWNCGRKASETCSGCNTARYCGSFCQHKDWEKHHHICGQTLQAQQQGDTPAVSSSVTPNSGAGSPMDTPPAATPRSTTPGTPSTIETTPR",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "intact",
+        "id": "EBI-11620908"
+      },
+      "label": "aml1_eto_chimera"
+    },
+    {
+      "object": "interaction",
+      "id": "intact_EBI-1004945",
+      "interactionType": {
+        "id": "MI:0407",
+        "name": "direct interaction"
+      },
+      "experiment": {
+        "detmethod": {
+          "id": "MI:0027",
+          "name": "cosedimentation"
+        },
+        "host": {
+          "taxid": "-1",
+          "common": "in vitro",
+          "scientific": "In vitro"
+        },
+        "pubid": [
+          {
+            "db": "pubmed",
+            "id": "16616331"
+          },
+          {
+            "db": "intact",
+            "id": "EBI-1989526"
+          },
+          {
+            "db": "imex",
+            "id": "IM-11855"
+          }
+        ],
+        "sourceDatabase": {
+          "id": "MI:0469",
+          "name": "European Bioinformatics Institute"
+        },
+        "experimentModifications": [
+          "Absorbance data 280 nm (NHR2, m4), 230 nm (m7, m2) were collected at a rotor speed of 50, 000 rpm at 20 C in aluminum-filled double sector cells at a scan interval of approximately 260 s."
+        ],
+        "figures": [
+          "3 C, Table 2"
+        ]
+      },
+      "identifiers": [
+        {
+          "db": "intact",
+          "id": "EBI-1004945"
+        },
+        {
+          "db": "imex",
+          "id": "IM-11855-2"
+        }
+      ],
+      "participants": [
+        {
+          "id": "1",
+          "interactorRef": "intact_EBI-11620908",
+          "stoichiometry": "4",
+          "bioRole": {
+            "id": "MI:0499",
+            "name": "unspecified role"
+          },
+          "expRole": {
+            "id": "MI:0497",
+            "name": "neutral component"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0396",
+              "name": "predetermined participant"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "83333",
+            "common": "ecoli",
+            "scientific": "Escherichia coli (strain K12)"
+          },
+          "features": [
+            {
+              "id": "3",
+              "name": "m7",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:0573",
+                "name": "mutation disrupting interaction"
+              },
+              "sequenceData": [
+                {
+                  "pos": "523-523",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "526-526",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "537-537",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "493-493",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "505-505",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "508-508",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "509-509",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "name": "NHR2 domain",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "483-551",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
