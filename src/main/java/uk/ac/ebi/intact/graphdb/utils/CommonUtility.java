@@ -413,7 +413,16 @@ public class CommonUtility {
         long id = -1;
         boolean isAlreadyCreated = false;
         String uniqueKey = (String) nodeProperties.get("uniqueKey");
+
+        // Remove below code when you don't need it anymore
+        if (uniqueKey != null && uniqueKey.length() >= 32766) {
+            System.out.println("Unique Key length crossed the index size limit: " + uniqueKey);
+            uniqueKey = "" + uniqueKey.hashCode();
+        }
+        // Code End
+
         isAlreadyCreated = Constants.createdNodeIdMap.get(uniqueKey) != null ? true : false;
+
 
         if (isAlreadyCreated) {
             id = Constants.createdNodeIdMap.get(uniqueKey);
