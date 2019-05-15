@@ -415,9 +415,10 @@ public class CommonUtility {
         String uniqueKey = (String) nodeProperties.get("uniqueKey");
 
         // Remove below code when you don't need it anymore
+        // This is done because indexed properties cannot be more than 32766
         if (uniqueKey != null && uniqueKey.length() >= 32766) {
             System.out.println("Unique Key length crossed the index size limit: " + uniqueKey);
-            uniqueKey = "" + uniqueKey.hashCode();
+            nodeProperties.put("uniqueKey",""+uniqueKey.hashCode());
         }
         // Code End
 
