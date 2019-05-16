@@ -18,9 +18,7 @@ import psidev.psi.mi.jami.utils.XrefUtils;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by anjali on 07/02/19.
@@ -283,7 +281,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("GraphParticipantEvidence does not contain feature with Interpro Id : " + interproId,
                 graphFeatureEvidenceWithInterpro);
 
-        // for linked features
+        // for linked features 1
         String ac5 = "EBI-10054743";
         Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional5 = graphInteractionEvidenceRepository.
                 findByInteractionAcForMiJson(ac5);
@@ -316,6 +314,41 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertEquals("GraphInteractionEvidence 5 Participant Feature :" + featureAc2_withLinkedFeature +
                         " has wrong linked feature", featureAc1_withLinkedFeature,
                 linkedFeatures.get(featureAc2_withLinkedFeature).iterator().next().getAc());
+
+        //linked features 2
+        String ac6 = "EBI-10042058";
+        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional6 = graphInteractionEvidenceRepository.
+                findByInteractionAcForMiJson(ac6);
+
+
+        Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional6.isPresent());
+
+        GraphInteractionEvidence graphInteractionEvidence6 = graphInteractionEvidenceOptional6.get();
+        HashMap<String, Collection<GraphFeatureEvidence>> linkedFeatures2 = new HashMap<>();
+        String featureAc1_withLinkedFeature_2 = "EBI-10042083";
+        String featureAc2_withLinkedFeature_2 = "EBI-10042078";
+
+        try {
+            for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence6.getParticipants()) {
+                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                    if (graphFeatureEvidence1.getLinkedFeatures() != null) {
+                        linkedFeatures2.put(graphFeatureEvidence1.getAc(), graphFeatureEvidence1.getLinkedFeatures());
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        Assert.assertEquals("GraphInteractionEvidence 6 Participant Feature :" + featureAc1_withLinkedFeature_2 +
+                " has wrong number of linked features", 1, linkedFeatures2.get(featureAc1_withLinkedFeature_2).size());
+        Assert.assertEquals("GraphInteractionEvidence 6 Participant Feature :" + featureAc1_withLinkedFeature +
+                        " has wrong linked feature", featureAc2_withLinkedFeature_2,
+                linkedFeatures2.get(featureAc1_withLinkedFeature_2).iterator().next().getAc());
+        Assert.assertEquals("GraphInteractionEvidence 6 Participant Feature :" + featureAc2_withLinkedFeature_2 +
+                " has wrong number of linked features", 1, linkedFeatures2.get(featureAc2_withLinkedFeature_2).size());
+        Assert.assertEquals("GraphInteractionEvidence 6 Participant Feature :" + featureAc2_withLinkedFeature_2 +
+                        " has wrong linked feature", featureAc1_withLinkedFeature_2,
+                linkedFeatures2.get(featureAc2_withLinkedFeature_2).iterator().next().getAc());
 
     }
 }

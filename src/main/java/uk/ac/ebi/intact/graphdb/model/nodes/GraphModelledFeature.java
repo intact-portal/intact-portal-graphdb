@@ -72,11 +72,7 @@ public class GraphModelledFeature implements ModelledFeature {
     public GraphModelledFeature(ModelledFeature modelledFeature) {
         boolean wasInitializedBefore = false;
         String callingClass = Arrays.toString(Thread.currentThread().getStackTrace());
-        if (GraphEntityCache.modelledFeatureCacheMap.get(modelledFeature.getShortName()) == null) {
-            GraphEntityCache.modelledFeatureCacheMap.put(modelledFeature.getShortName(), this);
-        } else {
-            wasInitializedBefore = true;
-        }
+
         setShortName(modelledFeature.getShortName());
         setFullName(modelledFeature.getFullName());
         setInterpro(modelledFeature.getInterpro());
@@ -84,6 +80,12 @@ public class GraphModelledFeature implements ModelledFeature {
         setRole(modelledFeature.getRole());
         setAc(CommonUtility.extractAc(modelledFeature));
         setUniqueKey(createUniqueKey(modelledFeature));
+
+        if (GraphEntityCache.modelledFeatureCacheMap.get(this.getUniqueKey()) == null) {
+            GraphEntityCache.modelledFeatureCacheMap.put(this.getUniqueKey(), this);
+        } else {
+            wasInitializedBefore = true;
+        }
 
         if (CreationConfig.createNatively) {
             createNodeNatively();

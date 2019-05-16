@@ -149,10 +149,10 @@ public class GraphEntity implements ExperimentalEntity {
         if (feature == null) {
             return false;
         }
-
+        String featureKey=UniqueKeyGenerator.createFeatureKey(feature);
         GraphFeatureEvidence graphFeatureEvidence = null;
-        if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
-            graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(feature.getShortName());
+        if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
+            graphFeatureEvidence = GraphEntityCache.featureCacheMap.get(featureKey);
 
         } else {
             graphFeatureEvidence = new GraphFeatureEvidence(feature);

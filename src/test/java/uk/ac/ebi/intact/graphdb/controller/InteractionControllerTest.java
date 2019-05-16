@@ -73,6 +73,7 @@ public class InteractionControllerTest {
         interactionAcsToTest.add("EBI-10048599");// for checking Interaction Parameters
         interactionAcsToTest.add("EBI-10049314");// for checking expressedIn
         interactionAcsToTest.add("EBI-10054743");// for checking linkedFeatures
+        interactionAcsToTest.add("EBI-10042058");// for checking linkedFeatures
         interactionAcsToTest.add("EBI-1005174");// for checking interpro
         interactionAcsToTest.add("EBI-1004945");// for checking experiment Modifications
         for (String interactionAc : interactionAcsToTest) {

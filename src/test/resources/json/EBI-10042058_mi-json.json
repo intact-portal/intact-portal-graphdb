@@ -1,0 +1,204 @@
+{
+  "data": [
+    {
+      "object": "interactor",
+      "id": "uniprotkb_Q03135",
+      "sequence": "MSGGKYVDSEGHLYTVPIREQGNIYKPNNKAMADELSEKQVYDAHTKEIDLVNRDPKHLNDDVVKIDFEDVIAEPEGTHSFDGIWKASFTTFTVTKYWFYRLLSALFGIPMALIWGIYFAILSFLHIWAVVPCIKSFLIEIQCISRVYSIYVHTVCDPLFEAVGKIFSNVRINLQKEI",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "uniprotkb",
+        "id": "Q03135"
+      },
+      "label": "cav1_human"
+    },
+    {
+      "object": "interactor",
+      "id": "uniprotkb_Q12809",
+      "sequence": "MPVRRGHVAPQNTFLDTIIRKFEGQSRKFIIANARVENCAVIYCNDGFCELCGYSRAEVMQRPCTCDFLHGPRTQRRAAAQIAQALLGAEERKVEIAFYRKDGSCFLCLVDVVPVKNEDGAVIMFILNFEVVMEKDMVGSPAHDTNHRGPPTSWLAPGRAKTFRLKLPALLALTARESSVRSGGAGGAGAPGAVVVDVDLTPAAPSSESLALDEVTAMDNHVAGLGPAEERRALVGPGSPPRSAPGQLPSPRAHSLNPDASGSSCSLARTRSRESCASVRRASSADDIEAMRAGVLPPPPRHASTGAMHPLRSGLLNSTSDSDLVRYRTISKIPQITLNFVDLKGDPFLASPTSDREIIAPKIKERTHNVTEKVTQVLSLGADVLPEYKLQAPRIHRWTILHYSPFKAVWDWLILLLVIYTAVFTPYSAAFLLKETEEGPPATECGYACQPLAVVDLIVDIMFIVDILINFRTTYVNANEEVVSHPGRIAVHYFKGWFLIDMVAAIPFDLLIFGSGSEELIGLLKTARLLRLVRVARKLDRYSEYGAAVLFLLMCTFALIAHWLACIWYAIGNMEQPHMDSRIGWLHNLGDQIGKPYNSSGLGGPSIKDKYVTALYFTFSSLTSVGFGNVSPNTNSEKIFSICVMLIGSLMYASIFGNVSAIIQRLYSGTARYHTQMLRVREFIRFHQIPNPLRQRLEEYFQHAWSYTNGIDMNAVLKGFPECLQADICLHLNRSLLQHCKPFRGATKGCLRALAMKFKTTHAPPGDTLVHAGDLLTALYFISRGSIEILRGDVVVAILGKNDIFGEPLNLYARPGKSNGDVRALTYCDLHKIHRDDLLEVLDMYPEFSDHFWSSLEITFNLRDTNMIPGSPGSTELEGGFSRQRKRKLSFRRRTDKDTEQPGEVSALGPGRAGAGPSSRGRPGGPWGESPSSGPSSPESSEDEGPGRSSSPLRLVPFSSPRPPGEPPGGEPLMEDCEKSSDTCNPLSGAFSGVSNIFSFWGDSRGRQYQELPRCPAPTPSLLNIPLSSPGRRPRGDVESRLDALQRQLNRLETRLSADMATVLQLLQRQMTLVPPAYSAVTTPGPGPTSTSPLLPVSPLPTLTLDSLSQVSQFMACEELPPGAPELPQEGPTRRLSLPGQLGALTSQPLHRHGSDPGS",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "uniprotkb",
+        "id": "Q12809"
+      },
+      "label": "kcnh2_human"
+    },
+    {
+      "object": "interaction",
+      "id": "intact_EBI-10042058",
+      "interactionType": {
+        "id": "MI:0915",
+        "name": "physical association"
+      },
+      "experiment": {
+        "detmethod": {
+          "id": "MI:0018",
+          "name": "two hybrid"
+        },
+        "host": {
+          "taxid": "4932",
+          "common": "yeasx",
+          "scientific": "Saccharomyces cerevisiae (Baker's yeast)"
+        },
+        "pubid": [
+          {
+            "db": "pubmed",
+            "id": "18923542"
+          },
+          {
+            "db": "intact",
+            "id": "EBI-9976479"
+          },
+          {
+            "db": "imex",
+            "id": "IM-23290"
+          }
+        ],
+        "sourceDatabase": {
+          "id": "MI:1332",
+          "name": "bhf-ucl"
+        },
+        "figures": [
+          "Table 3"
+        ]
+      },
+      "identifiers": [
+        {
+          "db": "intact",
+          "id": "EBI-10042058"
+        },
+        {
+          "db": "imex",
+          "id": "IM-23290-6"
+        }
+      ],
+      "participants": [
+        {
+          "id": "1",
+          "interactorRef": "uniprotkb_Q03135",
+          "bioRole": {
+            "id": "MI:0499",
+            "name": "unspecified role"
+          },
+          "expRole": {
+            "id": "MI:0498",
+            "name": "prey"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0396",
+              "name": "predetermined participant"
+            }
+          ],
+          "features": [
+            {
+              "id": "2",
+              "name": "region",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "1-101",
+                  "interactorRef": "uniprotkb_Q03135",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "name": "region",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0429",
+                "name": "necessary binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "61-101",
+                  "interactorRef": "uniprotkb_Q03135",
+                  "participantRef": "1"
+                }
+              ],
+              "linkedFeatures": [
+                "4"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "interactorRef": "uniprotkb_Q12809",
+          "bioRole": {
+            "id": "MI:0499",
+            "name": "unspecified role"
+          },
+          "expRole": {
+            "id": "MI:0496",
+            "name": "bait"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0396",
+              "name": "predetermined participant"
+            }
+          ],
+          "features": [
+            {
+              "id": "6",
+              "name": "region",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0693",
+                "name": "gal4 dna binding domain"
+              },
+              "sequenceData": [
+                {
+                  "pos": "?-?",
+                  "interactorRef": "uniprotkb_Q12809",
+                  "participantRef": "5"
+                }
+              ]
+            },
+            {
+              "id": "4",
+              "name": "c-terminal",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "669-1159",
+                  "interactorRef": "uniprotkb_Q12809",
+                  "participantRef": "5"
+                }
+              ],
+              "linkedFeatures": [
+                "3"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

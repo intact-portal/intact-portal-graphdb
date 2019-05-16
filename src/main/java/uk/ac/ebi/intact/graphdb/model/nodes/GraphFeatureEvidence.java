@@ -71,11 +71,6 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     public GraphFeatureEvidence(FeatureEvidence featureEvidence) {
         boolean wasInitializedBefore = false;
         String callingClass = Arrays.toString(Thread.currentThread().getStackTrace());
-        if (GraphEntityCache.featureCacheMap.get(featureEvidence.getShortName()) == null) {
-            GraphEntityCache.featureCacheMap.put(featureEvidence.getShortName(), this);
-        } else {
-            wasInitializedBefore = true;
-        }
         setShortName(featureEvidence.getShortName());
         setFullName(featureEvidence.getFullName());
         setInterpro(featureEvidence.getInterpro());
@@ -83,6 +78,12 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         setRole(featureEvidence.getRole());
         setAc(CommonUtility.extractAc(featureEvidence));
         setUniqueKey(createUniqueKey(featureEvidence));
+
+        if (GraphEntityCache.featureCacheMap.get(this.getUniqueKey()) == null) {
+            GraphEntityCache.featureCacheMap.put(this.getUniqueKey(), this);
+        } else {
+            wasInitializedBefore = true;
+        }
 
         if (CreationConfig.createNatively) {
             createNodeNatively();

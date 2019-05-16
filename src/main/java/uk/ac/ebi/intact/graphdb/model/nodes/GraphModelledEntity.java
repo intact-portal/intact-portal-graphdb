@@ -152,8 +152,9 @@ public class GraphModelledEntity implements ModelledEntity {
         }
 
         GraphModelledFeature graphModelledFeature = null;
-        if (GraphEntityCache.featureCacheMap.get(feature.getShortName()) != null) {
-            graphModelledFeature = GraphEntityCache.modelledFeatureCacheMap.get(feature.getShortName());
+        String featureKey=UniqueKeyGenerator.createModelledFeatureKey(feature);
+        if (GraphEntityCache.modelledFeatureCacheMap.get(featureKey) != null) {
+            graphModelledFeature = GraphEntityCache.modelledFeatureCacheMap.get(featureKey);
 
         } else {
             graphModelledFeature = new GraphModelledFeature(feature);
