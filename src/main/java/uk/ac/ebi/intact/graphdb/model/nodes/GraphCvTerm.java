@@ -228,12 +228,20 @@ public class GraphCvTerm implements CvTerm {
         if (this.identifiers == null) {
             this.identifiers = new ArrayList<GraphXref>();
         }
+        /*This is needed because jami always puts ac identifier at last
+        * and takes the first identifier from the list for various use cases
+        * so we need to put this transient ac identifier at the end of list */
+        moveAcIdentifierToLast(this.identifiers);
         return this.identifiers;
     }
 
     public void setIdentifiers(Collection<Xref> identifiers) {
         if (identifiers != null) {
             this.identifiers = CollectionAdaptor.convertXrefIntoGraphModel(identifiers);
+        /*This is needed because jami always puts ac identifier at last
+        * and takes the first identifier from the list for various use cases
+        * so we need to put this transient ac identifier at the end of list */
+            moveAcIdentifierToLast(this.identifiers);
         } else {
             this.identifiers = new ArrayList<GraphXref>();
         }
@@ -466,6 +474,25 @@ public class GraphCvTerm implements CvTerm {
 
     public String createUniqueKey(CvTerm cvTerm) {
         return UniqueKeyGenerator.createCvTermKey(cvTerm);
+    }
+
+    public void moveAcIdentifierToLast(Collection<GraphXref> graphXrefs) {
+
+        GraphXref graphAcXrefToBeMoved = null;
+
+        int counter = 1;
+        for (GraphXref graphXref : graphXrefs) {
+            if (graphXref.getId() != null && graphXref.getId().startsWith("EBI-") && counter != graphXrefs.size()) {
+                graphAcXrefToBeMoved = graphXref;
+            }
+            counter++;
+        }
+
+        if (graphAcXrefToBeMoved != null) {
+            graphXrefs.remove(graphAcXrefToBeMoved);
+            graphXrefs.add(graphAcXrefToBeMoved);
+        }
+
     }
 
 }

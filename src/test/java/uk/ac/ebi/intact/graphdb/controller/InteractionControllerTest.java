@@ -80,6 +80,7 @@ public class InteractionControllerTest {
                 System.out.println("Unit Test for Interaction with ac: " + interactionAc);
                 String jsonMimeType = "application/json";
                 HttpUriRequest request = new HttpGet(graphDBServerUrl + "/graph/interaction/export?ac=" + interactionAc);
+                // deleted participant and feature ids as it was hindering with order ignoring while json comparison
                 HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
                 Assert.assertNotNull("Response is null", response);
@@ -105,9 +106,18 @@ public class InteractionControllerTest {
                 // use below if you need to ignore fields
             /*JSONAssert.assertEquals(expectedJsonString, actualJsonString,
                     new CustomComparator(JSONCompareMode.LENIENT,
-                            new Customization("data.participants.id", (o1, o2) -> true),
-                            new Customization("a", (o1, o2) -> true)
+                            new Customization("*.participants[*].id", (o1, o2) -> true)
+
                     ));*/
+                /*ArrayValueMatcher<Object> arrValMatch = new ArrayValueMatcher<>(new CustomComparator(
+                        JSONCompareMode.LENIENT,
+                        new Customization("data[*].participants[*].id", (o1, o2) -> true)));
+
+                Customization arrayValueMatchCustomization = new Customization("data[*].participants", arrValMatch);
+                CustomComparator customArrayValueComparator = new CustomComparator(
+                        JSONCompareMode.LENIENT,
+                        arrayValueMatchCustomization);
+                JSONAssert.assertEquals(expectedJsonString, actualJsonString, customArrayValueComparator);*/
 
             } catch (IOException e) {
                 System.err.println("Exception while connecting to Graph DB Web Service");

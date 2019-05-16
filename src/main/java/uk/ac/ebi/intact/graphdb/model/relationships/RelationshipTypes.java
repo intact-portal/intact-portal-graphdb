@@ -76,6 +76,7 @@ public class RelationshipTypes {
     public static final String EXPERIMENT = "experiment";
     public static final String INTERACTION_TYPE = "interactionType";
     public static final String HAS = "HAS";
+    public static final String INTERACTION_EVIDENCE = "interactionEvidence";
 
     //Interactor
     public static final String ORGANISM = "organism";
@@ -180,4 +181,5 @@ public class RelationshipTypes {
     //Modelled Participant
 
     public static final String IC_PARTICIPANT = "IC_PARTICIPANT";
+
 }

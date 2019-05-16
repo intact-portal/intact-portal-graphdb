@@ -5,12 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphClusteredInteraction;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractionEvidenceRepository;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,7 +51,30 @@ public class GraphInteractionService {
     public GraphInteractionEvidence findByInteractionAcForMiJson(String ac) {
         Optional<GraphInteractionEvidence> optionalExp = graphInteractionEvidenceRepository.findByInteractionAcForMiJson(ac);
         if (optionalExp.isPresent()) {
-            return optionalExp.get();
+            // below is needed so that everytime participants come in same order so that unit tests do not fail unnecessarily
+            GraphInteractionEvidence graphInteractionEvidence = optionalExp.get();
+            Comparator<GraphParticipantEvidence> participantEvidenceComparator = new Comparator<GraphParticipantEvidence>() {
+                @Override
+                public int compare(GraphParticipantEvidence e1, GraphParticipantEvidence e2) {
+                    return e1.getAc().compareTo(e2.getAc());
+                }
+            };
+
+            // below is needed so that everytime features come in same order so that unit tests do not fail unnecessarily
+            for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence.getParticipants()) {
+
+                Comparator<GraphFeatureEvidence> featureEvidenceComparator = new Comparator<GraphFeatureEvidence>() {
+                    @Override
+                    public int compare(GraphFeatureEvidence e1, GraphFeatureEvidence e2) {
+                        return e1.getAc().compareTo(e2.getAc());
+                    }
+                };
+
+                Collections.sort((List<GraphFeatureEvidence>) graphParticipantEvidence.getFeatures(), featureEvidenceComparator);
+            }
+
+            Collections.sort((List<GraphParticipantEvidence>) graphInteractionEvidence.getParticipants(), participantEvidenceComparator);
+            return graphInteractionEvidence;
         }
         return null;
     }

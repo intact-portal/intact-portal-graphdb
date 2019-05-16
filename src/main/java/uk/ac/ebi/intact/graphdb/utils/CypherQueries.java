@@ -68,7 +68,7 @@ public class CypherQueries {
                                  COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
     * */
     public static final String GET_PARTICIPANTS_BY_INTERACTION_AC =
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
                     "OPTIONAL MATCH (participantEvidenceN)-[expRoleR:" + RelationshipTypes.EXPERIMENTAL_ROLE + "]-(expRoleN:GraphCvTerm)" +
                     "OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(bioRoleN:GraphCvTerm)" +
                     "OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:" + RelationshipTypes.IDENTIFICATION_METHOD + "]-(identificationMethodN:GraphCvTerm)" +
@@ -86,7 +86,7 @@ public class CypherQueries {
                     "COLLECT(experimentaPreparationR),COLLECT(experimentaPreparationN),COLLECT(parametersR),COLLECT(parametersN),COLLECT(confidencesR),COLLECT(confidencesN),COLLECT(aliasesR),COLLECT(aliasesN),COLLECT(featuresR)," +
                     "COLLECT(featuresN),COLLECT(itorAliasesR),COLLECT(itorAliasesN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN),COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
 
-    public static final String GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT = "MATCH (gie:GraphBinaryInteractionEvidence{ ac: {0} }) --(p:GraphParticipantEvidence)  RETURN COUNT(DISTINCT p)";
+    public static final String GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT = "MATCH (gie:GraphInteractionEvidence{ ac: {0} }) --(p:GraphParticipantEvidence)  RETURN COUNT(DISTINCT p)";
 
     /*
     * Equivalent Query String : MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(experimentN:GraphExperiment)-[publicationR:PUB_EXP]-(publicationN:GraphPublication)
@@ -106,7 +106,7 @@ public class CypherQueries {
                                        COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)
     */
     public static final String GET_EXP_PUB_BY_INTERACTION_AC =
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(experimentN:GraphExperiment)-[publicationR:" + RelationshipTypes.PUB_EXP + "]-(publicationN:GraphPublication) " +
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(experimentN:GraphExperiment)-[publicationR:" + RelationshipTypes.PUB_EXP + "]-(publicationN:GraphPublication) " +
                     "OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]-(interactionDetectionMethodN:GraphCvTerm)" +
                     "OPTIONAL MATCH (experimentN)-[hostOrganismR:" + RelationshipTypes.HOST_ORGANISM + "]-(hostOrganismN:GraphOrganism)" +
                     "OPTIONAL MATCH (experimentN)-[expXrefsR:" + RelationshipTypes.XREFS + "]-(expXrefsN:GraphXref)" +
@@ -123,7 +123,7 @@ public class CypherQueries {
                     "COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
 
     public static final String GET_FEATURES_BY_INTERACTION_AC_COUNT =
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeatureEvidence)" +
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeatureEvidence)" +
                     "RETURN COUNT(DISTINCT graphFeaturesN)";
 
     /*
@@ -142,7 +142,7 @@ public class CypherQueries {
     * */
 
     public static final String GET_FEATURES_BY_INTERACTION_AC =
-            "MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(graphFeaturesN:GraphFeatureEvidence)" +
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(graphFeaturesN:GraphFeatureEvidence)" +
                     "MATCH (graphParticipantEvidenceN)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
                     "OPTIONAL MATCH (interactorN)-[preferredIdentifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(preferredIdentifierN:GraphXref)" +
                     "OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:" + RelationshipTypes.DATABASE + "]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
@@ -499,7 +499,7 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
     **/
     public static final String GET_INTERACTION_DETAILS_FOR_MIJSON =
             "MATCH (publicationN)-[publicationR:" + RelationshipTypes.PUB_EXP + "]-(experimentN:GraphExperiment)-[experimentR:" + RelationshipTypes.EXPERIMENT + "]-" +
-                    " (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} })" +
+                    " (binaryIEN:GraphInteractionEvidence{ ac: {0} })" +
                     " OPTIONAL MATCH (binaryIEN)-[interactionIdentifiersR:" + RelationshipTypes.IDENTIFIERS + "]-(interactionIdentifiersN:GraphXref)" +
                     " OPTIONAL MATCH (interactionIdentifiersN)-[interactionIdentifiersDatabaseR:" + RelationshipTypes.DATABASE + "]-(interactionIdentifiersDatabaseN:GraphCvTerm)" +
 
@@ -746,6 +746,12 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                     " OPTIONAL MATCH (interactorN)-[interactorTypeR:" + RelationshipTypes.INTERACTOR_TYPE + "]-(interactorTypeN:GraphCvTerm)" +
                     " OPTIONAL MATCH (interactorN)-[preferredIdentifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(preferredIdentifierN:GraphXref)" +
                     " OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:" + RelationshipTypes.DATABASE + "]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (featuresRangeN)-[featuresRangeResultingSequenceR:" + RelationshipTypes.RESULTING_SEQUENCE + "]-(featuresRangeResultingSequenceN:GraphResultingSequence)" +
+                    " OPTIONAL MATCH (featuresN)-[featureDetectionMethodR:" + RelationshipTypes.DETECTION_METHOD + "]-(featureDetectionMethodN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (featureDetectionMethodN)-[featureDetectionMethodIdentifiersR:" + RelationshipTypes.IDENTIFIERS + "]" +
+                    "-(featureDetectionMethodIdentifiersN:GraphXref)" +
+                    " OPTIONAL MATCH (featureDetectionMethodIdentifiersN)-[featureDetectionMethodIdentifiersDatabaseR:" + RelationshipTypes.DATABASE + "]" +
+                    "-(featureDetectionMethodIdentifiersDatabaseN:GraphCvTerm)" +
 
                     " WITH binaryIEN,publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN," +
                     " interactionIdentifiersNCollection,interactionIdentifiersRCollection," +
@@ -805,7 +811,14 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                     " COLLECT(participantExpressedInCellTypeIdentifiersN) as participantExpressedInCellTypeIdentifiersNCollection," +
                     " COLLECT(participantExpressedInCellTypeIdentifiersDatabaseR) as participantExpressedInCellTypeIdentifiersDatabaseRCollection," +
                     " COLLECT(participantExpressedInCellTypeIdentifiersDatabaseN) as participantExpressedInCellTypeIdentifiersDatabaseNCollection," +
-                    " COLLECT(featureLinkedFeaturesLFR) as featureLinkedFeaturesLFR,COLLECT(featureLinkedFeaturesLFN) as featureLinkedFeaturesLFN" +
+                    " COLLECT(featureLinkedFeaturesLFR) as featureLinkedFeaturesLFR,COLLECT(featureLinkedFeaturesLFN) as featureLinkedFeaturesLFN," +
+                    " COLLECT(featuresRangeResultingSequenceR) as featuresRangeResultingSequenceRCollection,COLLECT(featuresRangeResultingSequenceN) " +
+                    " as featuresRangeResultingSequenceNCollection,COLLECT(featureDetectionMethodR) as featureDetectionMethodRCollection," +
+                    " COLLECT(featureDetectionMethodN) as featureDetectionMethodNCollection," +
+                    " COLLECT(featureDetectionMethodIdentifiersR) as featureDetectionMethodIdentifiersRCollection," +
+                    " COLLECT(featureDetectionMethodIdentifiersN) as featureDetectionMethodIdentifiersNCollection," +
+                    " COLLECT(featureDetectionMethodIdentifiersDatabaseR) as featureDetectionMethodIdentifiersDatabaseRCollection," +
+                    " COLLECT(featureDetectionMethodIdentifiersDatabaseN) as featureDetectionMethodIdentifiersDatabaseNCollection" +
 
                     " RETURN publicationN,publicationR,experimentN,experimentR,pubImexIdR,pubImexIdN,interactionIdentifiersNCollection,interactionIdentifiersRCollection,interactionIdentifiersDatabaseRCollection," +
                     " interactionIdentifiersDatabaseNCollection,interactionXrefsRCollection,interactionXrefsNCollection,interactionXrefsDatabaseRCollection," +
@@ -839,7 +852,10 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                     " participantConfidencesNCollection,participantConfidencesTypeRCollection,participantConfidencesTypeNCollection," +
                     " participantExpressedInCellTypeRCollection,participantExpressedInCellTypeNCollection,participantExpressedInCellTypeIdentifiersRCollection," +
                     " participantExpressedInCellTypeIdentifiersNCollection,participantExpressedInCellTypeIdentifiersDatabaseRCollection," +
-                    " participantExpressedInCellTypeIdentifiersDatabaseNCollection,featureLinkedFeaturesLFR,featureLinkedFeaturesLFN,binaryIEN limit 1";
+                    " participantExpressedInCellTypeIdentifiersDatabaseNCollection,featureLinkedFeaturesLFR,featureLinkedFeaturesLFN," +
+                    " featuresRangeResultingSequenceRCollection,featuresRangeResultingSequenceNCollection,featureDetectionMethodRCollection," +
+                    " featureDetectionMethodNCollection,featureDetectionMethodIdentifiersRCollection,featureDetectionMethodIdentifiersNCollection," +
+                    " featureDetectionMethodIdentifiersDatabaseRCollection,featureDetectionMethodIdentifiersDatabaseNCollection,binaryIEN limit 1";
 
 
 }
