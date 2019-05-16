@@ -101,16 +101,18 @@ public class InteractionController {
             annotations.add(new Annotation(term, annotation.getValue()));
         });
 
-        List<TermType> parameters = new ArrayList<>();
-        graphInteractionEvidence.getParameters().forEach(param -> {
-            CvTerm cvTerm = new CvTerm(param.getType().getShortName(), param.getType().getMIIdentifier());
-            parameters.add(new TermType(cvTerm, param.getValue().toString()));
+        List<Parameter> parameters = new ArrayList<>();
+        graphInteractionEvidence.getParameters().forEach(parameter -> {
+            CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+            CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+            parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
+
         });
 
-        List<TermType> confidences = new ArrayList<>();
+        List<Confidence> confidences = new ArrayList<>();
         graphInteractionEvidence.getConfidences().forEach(confidence -> {
             CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
-            confidences.add(new TermType(cvTerm, confidence.getValue()));
+            confidences.add(new Confidence(cvTerm, confidence.getValue()));
         });
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
@@ -164,12 +166,9 @@ public class InteractionController {
         return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
     }
 
-    @RequestMapping(value = "/export",
-            params = {
-                    "ac"
-            },
+    @RequestMapping(value = "/export/{ac}",
             method = RequestMethod.GET)
-    public ResponseEntity<String> exportInteraction(@RequestParam(value = "ac", required = false) String ac,
+    public ResponseEntity<String> exportInteraction(@PathVariable String ac,
                                                     @RequestParam(value = "format", defaultValue = "json", required = false) String format,
                                                     HttpServletResponse response) throws Exception {
         Boolean exportAsFile = false;

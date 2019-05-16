@@ -29,6 +29,7 @@ public class GraphParameterValue extends ParameterValue {
     private BigDecimal factor;
     private short exponent = 0;
 
+
     @Transient
     private boolean isAlreadyCreated;
 
@@ -36,13 +37,13 @@ public class GraphParameterValue extends ParameterValue {
         super(new BigDecimal(0));
     }
 
-
     public GraphParameterValue(BigDecimal factorC, short baseC, short exponentC) {
         super(factorC, baseC, exponentC);
         // below is needed because ParameterValue is not a GraphClass
         setFactor(factorC);
         setBase(baseC);
         setExponent(exponentC);
+
         setUniqueKey(createUniqueKey());
         if (CreationConfig.createNatively) {
             createNodeNatively();

@@ -13,6 +13,11 @@ public enum InteractionExportFormat {
         format = f;
     }
 
+
+    String showFormat() {
+        return format;
+    }
+
     public static InteractionExportFormat formatOf(String format) {
         if (JSON.format.equals(format)) return JSON;
         else if (XML25.format.equals(format)) return XML25;
@@ -20,7 +25,4 @@ public enum InteractionExportFormat {
         else return JSON;
     }
 
-    String showFormat() {
-        return format;
-    }
 }

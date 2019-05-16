@@ -42,7 +42,6 @@ public class GraphExperimentalEntity extends GraphEntity {
                 if (!isAlreadyCreated()) {
                     createRelationShipNatively();
                 }
-
             }
         }
 
@@ -108,7 +107,6 @@ public class GraphExperimentalEntity extends GraphEntity {
 
     public String createUniqueKey(ExperimentalEntity experimentalEntity) {
         return UniqueKeyGenerator.createEntityKey(experimentalEntity);
-
     }
 
 }

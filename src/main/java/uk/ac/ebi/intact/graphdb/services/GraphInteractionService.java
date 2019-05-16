@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractionEvidenceRepository;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

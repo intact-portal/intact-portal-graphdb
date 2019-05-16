@@ -67,6 +67,7 @@ public class CypherQueries {
                                  COLLECT(aliasesR),COLLECT(aliasesN),COLLECT(featuresR),COLLECT(featuresN),COLLECT(itorAliasesR),COLLECT(itorAliasesN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN),
                                  COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
     * */
+
     public static final String GET_PARTICIPANTS_BY_INTERACTION_AC =
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
                     "OPTIONAL MATCH (participantEvidenceN)-[expRoleR:" + RelationshipTypes.EXPERIMENTAL_ROLE + "]-(expRoleN:GraphCvTerm)" +
@@ -126,6 +127,7 @@ public class CypherQueries {
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeatureEvidence)" +
                     "RETURN COUNT(DISTINCT graphFeaturesN)";
 
+
     /*
       Equivalent Query String : MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:PARTICIPANT_FEATURE]-(graphFeaturesN:GraphFeatureEvidence)
                                 MATCH (graphParticipantEvidenceN)-[interactorR:interactor]-(interactorN:GraphInteractor)
@@ -140,6 +142,7 @@ public class CypherQueries {
                                        COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN),
                                        COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)
     * */
+
 
     public static final String GET_FEATURES_BY_INTERACTION_AC =
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(graphFeaturesN:GraphFeatureEvidence)" +

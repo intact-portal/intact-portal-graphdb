@@ -66,6 +66,7 @@ public class RelationshipTypes {
     public static final String PARTICIPANT_FEATURE = "PARTICIPANT_FEATURE";
     public static final String INTERPRO = "interpro";
 
+
     //Gene
     public static final String ENSEMBL = "ensembl";
     public static final String ENSEMBL_GENOME = "ensemblGenome";

@@ -300,7 +300,6 @@ public class GraphEntity implements ExperimentalEntity {
 
     @Override
     public int hashCode() {
-
         if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
             return this.getUniqueKey().hashCode();
         }

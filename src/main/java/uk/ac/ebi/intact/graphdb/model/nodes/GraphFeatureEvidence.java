@@ -534,6 +534,4 @@ public class GraphFeatureEvidence implements FeatureEvidence {
         return UniqueKeyGenerator.createFeatureKey(featureEvidence);
     }
 
-
-
 }

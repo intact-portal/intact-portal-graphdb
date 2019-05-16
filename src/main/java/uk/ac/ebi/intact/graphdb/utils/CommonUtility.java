@@ -179,6 +179,7 @@ public class CommonUtility {
         }
     }
 
+
     public static void createParticipantsRelationShips(Collection<GraphParticipantEvidence> relCollection, long fromId) {
         if (relCollection != null) {
             for (GraphParticipantEvidence obj : relCollection) {
@@ -196,6 +197,7 @@ public class CommonUtility {
             }
         }
     }
+
 
     public static void createInteractorRelationShips(Collection<GraphInteractor> relCollection, long fromId) {
         if (relCollection != null) {

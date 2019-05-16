@@ -125,8 +125,6 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             participant.getAliases().forEach(alias -> {
                 if (alias.getType() != null) {
                     aliases.add(new Alias(alias.getName(), new CvTerm(alias.getType().getShortName(), alias.getType().getMIIdentifier())));
-                } else {
-                    aliases.add(new Alias(alias.getName(), null));
                 }
             });
 
@@ -150,9 +148,6 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
                 if (detectionMethod != null) {
                     detectionMethods.add(new CvTerm(detectionMethod.getShortName(), detectionMethod.getMIIdentifier()));
                 }
-                else {
-                    detectionMethods.add(null);
-                }
             });
 
             CvTerm experimentalRole = null;
@@ -169,36 +164,46 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             participant.getExperimentalPreparations().forEach(experimentalPreparation -> {
                 if (experimentalPreparation != null) {
                     experimentalPreparations.add(new CvTerm(experimentalPreparation.getShortName(), experimentalPreparation.getMIIdentifier()));
-                } else {
-                    experimentalPreparations.add(null);
                 }
             });
 
-            Collection<TermType> parameters = new ArrayList<>();
+            Collection<Parameter> parameters = new ArrayList<>();
             participant.getParameters().forEach(parameter -> {
                 if (parameter.getType() != null) {
-                    CvTerm cvTerm = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-                    parameters.add(new TermType(cvTerm, parameter.getValue().toString()));
-
-                } else {
-                    parameters.add(new TermType(null, parameter.getValue().toString()));
+                    CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+                    CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                    parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
                 }
             });
 
-            Collection<TermType> confidences = new ArrayList<>();
+            Collection<Confidence> confidences = new ArrayList<>();
             participant.getConfidences().forEach(confidence -> {
                 if (confidence.getType() != null) {
                     CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
-                    confidences.add(new TermType(cvTerm, confidence.getValue()));
-                } else {
-                    confidences.add(new TermType(null, confidence.getValue()));
+                    confidences.add(new Confidence(cvTerm, confidence.getValue()));
+                }
+            });
 
+            Collection<Xref> xrefs = new ArrayList<>();
+            participant.getXrefs().forEach(xref -> {
+                if (xref != null) {
+                    CvTerm xrefDatabase = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                    CvTerm xrefQualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
+                    xrefs.add(new Xref(xrefDatabase, xref.getId(), xrefQualifier));
+                }
+            });
+
+            Collection<Annotation> annotations = new ArrayList<>();
+            participant.getAnnotations().forEach(graphAnnotation -> {
+                if (graphAnnotation != null) {
+                    CvTerm cvTerm = new CvTerm(graphAnnotation.getTopic().getShortName(), graphAnnotation.getTopic().getMIIdentifier());
+                    annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
                 }
             });
 
             ParticipantDetails participantDetails = new ParticipantDetails(participantAc, type, participantIdentifier, aliases,
                     description, species, expressionSystem, detectionMethods, experimentalRole, biologicalRole, experimentalPreparations,
-                    parameters, confidences);
+                    parameters, confidences, xrefs, annotations);
 
             participantDetailsList.add(participantDetails);
         });

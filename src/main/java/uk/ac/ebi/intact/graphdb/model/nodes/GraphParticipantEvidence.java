@@ -285,6 +285,7 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
         GraphFeatureEvidence graphFeatureEvidence = new GraphFeatureEvidence(feature);
         if (getFeatures().add(graphFeatureEvidence)) {
             graphFeatureEvidence.setParticipant(this);
+
             return true;
         }
         return false;

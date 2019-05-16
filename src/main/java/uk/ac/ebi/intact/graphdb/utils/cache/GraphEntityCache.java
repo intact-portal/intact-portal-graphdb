@@ -17,6 +17,4 @@ public class GraphEntityCache {
     public static HashMap<String, GraphModelledFeature> modelledFeatureCacheMap = new HashMap<String, GraphModelledFeature>();
     public static HashMap<String, GraphExperiment> experimentCacheMap = new HashMap<String, GraphExperiment>();
     public static HashMap<String, GraphVariableParameter> parameterValueCacheMap = new HashMap<String, GraphVariableParameter>();
-
-
 }

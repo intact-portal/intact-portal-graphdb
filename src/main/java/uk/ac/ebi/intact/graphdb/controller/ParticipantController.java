@@ -14,10 +14,7 @@ import uk.ac.ebi.intact.graphdb.controller.model.ParticipantDetails;
 import uk.ac.ebi.intact.graphdb.controller.model.ParticipantDetailsResult;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.services.GraphParticipantService;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -50,7 +47,7 @@ public class ParticipantController {
 
     @RequestMapping(value = "/details/{ac}",
             method = RequestMethod.GET)
-    public Page<ParticipantDetails> getParticipantsNew(
+    public Page<ParticipantDetails> getParticipantsNWithPagination(
             @PathVariable String ac,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
@@ -64,8 +61,7 @@ public class ParticipantController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getParticipantsDatatablesHandler(@PathVariable String ac,
-                                                                   HttpServletRequest request,
-                                                                   HttpServletResponse response) throws ServletException, IOException {
+                                                                   HttpServletRequest request) throws IOException {
 
         int page = Integer.parseInt(request.getParameter("page"));
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));
@@ -97,6 +93,4 @@ public class ParticipantController {
         return new ResponseEntity<>(result.toString(), headers, HttpStatus.OK);
 
     }
-
-
 }
