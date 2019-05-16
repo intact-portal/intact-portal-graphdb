@@ -80,7 +80,7 @@ public class InteractionControllerTest {
 
                 System.out.println("Unit Test for Interaction with ac: " + interactionAc);
                 String jsonMimeType = "application/json";
-                HttpUriRequest request = new HttpGet(graphDBServerUrl + "/graph/interaction/export?ac=" + interactionAc);
+                HttpUriRequest request = new HttpGet(graphDBServerUrl + "/graph/interaction/export/" + interactionAc);
                 // deleted participant and feature ids as it was hindering with order ignoring while json comparison
 
                 HttpResponse response = HttpClientBuilder.create().build().execute(request);
