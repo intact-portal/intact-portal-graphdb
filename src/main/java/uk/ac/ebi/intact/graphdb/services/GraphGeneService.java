@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphGene;
 import uk.ac.ebi.intact.graphdb.repositories.GraphGeneRepository;
-import uk.ac.ebi.intact.graphdb.repositories.GraphProteinRepository;
 
 import java.util.Optional;
 
@@ -21,6 +20,6 @@ public class GraphGeneService {
     }
 
     public Optional<GraphGene> findWithDepth(Long id, int depth) {
-        return graphGeneRepository.findById(id,depth);
+        return graphGeneRepository.findById(id, depth);
     }
 }

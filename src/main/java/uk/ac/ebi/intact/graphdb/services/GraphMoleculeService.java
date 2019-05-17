@@ -20,6 +20,6 @@ public class GraphMoleculeService {
     }
 
     public Optional<GraphMolecule> findWithDepth(Long id, int depth) {
-        return graphMoleculeRepository.findById(id,depth);
+        return graphMoleculeRepository.findById(id, depth);
     }
 }

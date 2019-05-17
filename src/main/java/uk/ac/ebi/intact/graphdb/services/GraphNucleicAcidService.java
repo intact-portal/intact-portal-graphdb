@@ -20,6 +20,6 @@ public class GraphNucleicAcidService {
     }
 
     public Optional<GraphNucleicAcid> findWithDepth(Long id, int depth) {
-        return graphNucleicAcidRepository.findById(id,depth);
+        return graphNucleicAcidRepository.findById(id, depth);
     }
 }

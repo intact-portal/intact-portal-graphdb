@@ -6,18 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
-import psidev.psi.mi.jami.model.Interaction;
-import psidev.psi.mi.jami.tab.extension.MitabBinaryInteractionEvidence;
-import uk.ac.ebi.intact.graphdb.error.GraphDbException;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.repositories.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractorRepository;
 import uk.ac.ebi.intact.graphdb.utils.InteractionProvider;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

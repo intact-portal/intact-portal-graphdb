@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.controller.model.ParticipantDetails;
 import uk.ac.ebi.intact.graphdb.controller.model.ParticipantDetailsResult;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 import uk.ac.ebi.intact.graphdb.services.GraphParticipantService;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;

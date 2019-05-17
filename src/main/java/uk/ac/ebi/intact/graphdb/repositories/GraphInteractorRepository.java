@@ -18,9 +18,9 @@ import java.util.Collection;
 @RepositoryRestResource(collectionResourceRel = "interactor", path = "interactor")
 public interface GraphInteractorRepository extends Neo4jRepository<GraphInteractor, String> {
 
-    GraphInteractor findByShortName(@Param("shortName") String shortName );
+    GraphInteractor findByShortName(@Param("shortName") String shortName);
 
-    GraphInteractor findByAc(@Param("ac") String ac );
+    GraphInteractor findByAc(@Param("ac") String ac);
 
     @Query("MATCH (a:Interactor)<-[i:INTERACTS_IN]-(b:Interactor) RETURN i,a,b LIMIT {limit}")
     Collection<GraphInteractor> graph(@Param("limit") int limit);

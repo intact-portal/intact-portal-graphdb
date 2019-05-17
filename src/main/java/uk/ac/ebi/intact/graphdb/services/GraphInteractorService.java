@@ -58,7 +58,7 @@ public class GraphInteractorService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Object>  graph(int limit) {
+    public Map<String, Object> graph(int limit) {
         Collection<GraphInteractor> result = graphInteractorRepository.graph(limit);
         return toD3Format(result);
     }
@@ -71,8 +71,8 @@ public class GraphInteractorService {
         return graphInteractorRepository.findById(id);
     }
 
-    public Optional<GraphInteractor> findWithDepth(String id,int depth) {
-        return graphInteractorRepository.findById(id,depth);
+    public Optional<GraphInteractor> findWithDepth(String id, int depth) {
+        return graphInteractorRepository.findById(id, depth);
     }
 
     public GraphInteractor findByAc(String ac) {

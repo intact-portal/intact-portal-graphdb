@@ -26,7 +26,7 @@ public class GraphPublicationService {
     }
 
     public Optional<GraphPublication> findWithDepth(String id, int depth) {
-        return graphPublicationRepository.findById(id,depth);
+        return graphPublicationRepository.findById(id, depth);
     }
 
     public Page<GraphPublication> findAll(Pageable page, int depth) {

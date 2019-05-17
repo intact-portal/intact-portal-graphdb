@@ -9,7 +9,6 @@ import psidev.psi.mi.jami.utils.comparator.range.UnambiguousPositionComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
-import uk.ac.ebi.intact.graphdb.utils.Constants;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
@@ -41,13 +40,13 @@ public class GraphPosition implements Position {
     public GraphPosition() {
     }
 
-    public GraphPosition(Position position,String rangeUniqueKey) {
+    public GraphPosition(Position position, String rangeUniqueKey) {
 
         setStatus(position.getStatus());
         setStart(position.getStart());
         setEnd(position.getEnd());
         setPositionUndetermined(position.isPositionUndetermined());
-        setUniqueKey(createUniqueKey(position,rangeUniqueKey));
+        setUniqueKey(createUniqueKey(position, rangeUniqueKey));
 
         if (CreationConfig.createNatively) {
             createNodeNatively();
@@ -182,8 +181,8 @@ public class GraphPosition implements Position {
         return super.hashCode();
     }
 
-    public String createUniqueKey(Position position,String rangeUniqueKey) {
-        return UniqueKeyGenerator.createPositionKey(position,rangeUniqueKey);
+    public String createUniqueKey(Position position, String rangeUniqueKey) {
+        return UniqueKeyGenerator.createPositionKey(position, rangeUniqueKey);
     }
 
 }

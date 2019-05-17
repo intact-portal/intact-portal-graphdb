@@ -21,6 +21,6 @@ public class GraphPolymerService {
     }
 
     public Optional<GraphPolymer> findWithDepth(Long id, int depth) {
-        return graphPolymerRepository.findById(id,depth);
+        return graphPolymerRepository.findById(id, depth);
     }
 }

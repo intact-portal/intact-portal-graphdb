@@ -6,7 +6,10 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
-import uk.ac.ebi.intact.graphdb.utils.*;
+import uk.ac.ebi.intact.graphdb.utils.CollectionAdaptor;
+import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
+import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
+import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 
 import java.util.*;
@@ -58,7 +61,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
     @Relationship(type = RelationshipTypes.ALIASES)
     private Collection<GraphAlias> aliases;
 
-    @Relationship(type = RelationshipTypes.LINKED_FEATURES,direction = Relationship.UNDIRECTED)
+    @Relationship(type = RelationshipTypes.LINKED_FEATURES, direction = Relationship.UNDIRECTED)
     private Collection<GraphFeatureEvidence> linkedFeatures;
 
     @Transient
@@ -408,7 +411,7 @@ public class GraphFeatureEvidence implements FeatureEvidence {
 
     public void setRanges(Collection<Range> ranges) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges,this.getUniqueKey());
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, this.getUniqueKey());
         } else {
             this.ranges = new ArrayList<GraphRange>();
         }

@@ -18,7 +18,9 @@ import psidev.psi.mi.jami.utils.XrefUtils;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * Created by anjali on 07/02/19.

@@ -152,7 +152,7 @@ public class GraphModelledEntity implements ModelledEntity {
         }
 
         GraphModelledFeature graphModelledFeature = null;
-        String featureKey=UniqueKeyGenerator.createModelledFeatureKey(feature);
+        String featureKey = UniqueKeyGenerator.createModelledFeatureKey(feature);
         if (GraphEntityCache.modelledFeatureCacheMap.get(featureKey) != null) {
             graphModelledFeature = GraphEntityCache.modelledFeatureCacheMap.get(featureKey);
 
@@ -217,16 +217,6 @@ public class GraphModelledEntity implements ModelledEntity {
     }
 
     @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
-    }
-
-    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -238,6 +228,16 @@ public class GraphModelledEntity implements ModelledEntity {
             this.stoichiometry = null;
         }
         //TODO login it
+    }
+
+    @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
     }
 
     public Map<String, Object> getNodeProperties() {

@@ -33,7 +33,7 @@ public class GraphParticipantEvidenceRepositoryTest {
         int pageNumber = 0;
         int pageSize = 10;
         Page<GraphParticipantEvidence> page = graphParticipantEvidenceRepository.findByInteractionAc(interactionAc,
-                                              PageRequest.of(pageNumber, pageSize));
+                PageRequest.of(pageNumber, pageSize));
 
         Assert.assertNotNull("Page is Null", page);
 
@@ -52,20 +52,20 @@ public class GraphParticipantEvidenceRepositoryTest {
 
         Assert.assertNotNull("Experiment Role is null ", graphParticipantEvidence.getExperimentalRole());
         Assert.assertEquals("Experiment Role is wrong ", "bait",
-                            graphParticipantEvidence.getExperimentalRole().getShortName());
+                graphParticipantEvidence.getExperimentalRole().getShortName());
         Assert.assertEquals("Biological Role is wrong ", "unspecified role",
-                            graphParticipantEvidence.getBiologicalRole().getShortName());
+                graphParticipantEvidence.getBiologicalRole().getShortName());
         Assert.assertNotNull("Detection Methods is null ", graphParticipantEvidence.getIdentificationMethods());
         Assert.assertEquals("Detection Methods size is incorrect ", 1,
-                            graphParticipantEvidence.getIdentificationMethods().size());
+                graphParticipantEvidence.getIdentificationMethods().size());
         Assert.assertEquals("Detection Method is wrong ", "weight by comassie",
-                           graphParticipantEvidence.getIdentificationMethods().iterator().next().getShortName());
+                graphParticipantEvidence.getIdentificationMethods().iterator().next().getShortName());
         Assert.assertNotNull("Experimental Preparation is null ", graphParticipantEvidence.getExperimentalPreparations());
         Assert.assertEquals("Experimental Preparation size is incorrect ", 2,
-                            graphParticipantEvidence.getExperimentalPreparations().size());
+                graphParticipantEvidence.getExperimentalPreparations().size());
 
         Assert.assertEquals("Experimental Preparation Count is wrong ", 2,
-                            graphParticipantEvidence.getExperimentalPreparations().size());
+                graphParticipantEvidence.getExperimentalPreparations().size());
 
         GraphCvTerm experimentalPreparation = null;
         String experimentalPreparationAc = "EBI-1537765";
@@ -76,7 +76,7 @@ public class GraphParticipantEvidenceRepositoryTest {
         }
 
         Assert.assertNotNull("Experimental Praparation : " +
-                            experimentalPreparationAc + " not present", experimentalPreparation);
+                experimentalPreparationAc + " not present", experimentalPreparation);
         Assert.assertEquals("Experimental Preparation is wrong ", "living cell", experimentalPreparation.getShortName());
         Assert.assertEquals("Confidences are expected to be empty ", 0, graphParticipantEvidence.getConfidences().size());
         Assert.assertEquals("Parameters are expected to be empty ", 0, graphParticipantEvidence.getParameters().size());
@@ -86,19 +86,19 @@ public class GraphParticipantEvidenceRepositoryTest {
         Assert.assertNotNull("Features are null ", graphParticipantEvidence.getFeatures());
         Assert.assertEquals("Features size is incorrect", 1, graphParticipantEvidence.getFeatures().size());
         Assert.assertEquals("Feature is wrong", "strep tag",
-                            graphParticipantEvidence.getFeatures().iterator().next().getShortName());
+                graphParticipantEvidence.getFeatures().iterator().next().getShortName());
         Assert.assertNotNull("Interactor is null", graphParticipantEvidence.getInteractor());
         Assert.assertNotNull("Interactor Ac is not present",
-                            ((GraphInteractor) graphParticipantEvidence.getInteractor()).getAc());
+                ((GraphInteractor) graphParticipantEvidence.getInteractor()).getAc());
         Assert.assertEquals("Interactor is wrong", "pan3_yeast", graphParticipantEvidence.getInteractor().getShortName());
         Assert.assertNotNull("Interactor Type is null", graphParticipantEvidence.getInteractor().getInteractorType());
         Assert.assertEquals("Interactor Type is wrong", "protein",
-                           graphParticipantEvidence.getInteractor().getInteractorType().getShortName());
+                graphParticipantEvidence.getInteractor().getInteractorType().getShortName());
         Assert.assertEquals("Preferred Identifier is wrong", "P36102",
-                           ((GraphInteractor) graphParticipantEvidence.getInteractor()).getPreferredIdentifierStr());
+                ((GraphInteractor) graphParticipantEvidence.getInteractor()).getPreferredIdentifierStr());
 
         Assert.assertEquals("Interactor Alias Count is wrong ", 5,
-                           ((GraphInteractor) graphParticipantEvidence.getInteractor()).getAliases().size());
+                ((GraphInteractor) graphParticipantEvidence.getInteractor()).getAliases().size());
         GraphAlias graphAlias = null;
         String itorAliasAc = "EBI-55299";
         for (GraphAlias itorAlias : ((GraphInteractor) graphParticipantEvidence.getInteractor()).getAliases()) {
@@ -110,10 +110,10 @@ public class GraphParticipantEvidenceRepositoryTest {
         Assert.assertNotNull("Interactor Alias with ac:" + itorAliasAc + " not present", graphAlias);
         Assert.assertEquals("Interactor Alias is wrong", "PAN3", graphAlias.getName());
         Assert.assertEquals("Interactor Name is wrong", "pan3_yeast",
-                            graphParticipantEvidence.getInteractor().getShortName());
+                graphParticipantEvidence.getInteractor().getShortName());
         Assert.assertNotNull("Interactor Species is null", graphParticipantEvidence.getInteractor().getOrganism());
         Assert.assertEquals("Interactor Species is wrong", "yeast",
-                            graphParticipantEvidence.getInteractor().getOrganism().getCommonName());
+                graphParticipantEvidence.getInteractor().getOrganism().getCommonName());
 
 
     }

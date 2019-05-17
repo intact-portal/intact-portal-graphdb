@@ -62,7 +62,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
-        setInteractionEvidence((InteractionEvidence)binaryInteractionEvidence);
+        setInteractionEvidence((InteractionEvidence) binaryInteractionEvidence);
 
         if (binaryInteractionEvidence.getParticipantA() != null)
             setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
@@ -88,7 +88,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             nodeProperties.putAll(super.getNodeProperties());
             List<Label> labelList = new ArrayList<>();
             labelList.add(Label.label(GraphBinaryInteractionEvidence.class.getSimpleName()));
-            Label[] labels=labelList.toArray(new Label[labelList.size()]);
+            Label[] labels = labelList.toArray(new Label[labelList.size()]);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());

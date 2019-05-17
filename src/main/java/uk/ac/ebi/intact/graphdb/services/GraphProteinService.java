@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphProtein;
 import uk.ac.ebi.intact.graphdb.repositories.GraphProteinRepository;
 
@@ -22,6 +21,6 @@ public class GraphProteinService {
     }
 
     public Optional<GraphProtein> findWithDepth(Long id, int depth) {
-        return graphProteinRepository.findById(id,depth);
+        return graphProteinRepository.findById(id, depth);
     }
 }

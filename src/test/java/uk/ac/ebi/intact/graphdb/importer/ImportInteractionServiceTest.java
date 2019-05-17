@@ -41,7 +41,7 @@ public class ImportInteractionServiceTest {
     @Test
     public void testImportInteractions() throws Exception {
 
-     //   InteractionProvider interactionProvider = mock(InteractionProvider.class);
+        //   InteractionProvider interactionProvider = mock(InteractionProvider.class);
 //
 //        GraphProtein A = new GraphProtein("A");
 //        GraphProtein B = new GraphProtein("B");
@@ -51,9 +51,9 @@ public class ImportInteractionServiceTest {
 //        when(interaction.getInteractorA()).thenReturn(A);
 //        when(interaction.getInteractorB()).thenReturn(B);
 //        when(interactions.get(0)).thenReturn(interaction);
-     // when(interactionProvider.getInteractions()).thenReturn(interactions);
+        // when(interactionProvider.getInteractions()).thenReturn(interactions);
 
-     //   ImportInteractionService importInteractionService = new ImportInteractionService(interactionProvider);
+        //   ImportInteractionService importInteractionService = new ImportInteractionService(interactionProvider);
 //        importInteractionService.importInteractions();
 //        verify(interactionProvider, times(1)).getInteractions();
 

@@ -24,26 +24,26 @@ public class GraphParticipantServiceTest {
     private GraphParticipantService graphParticipantService;
 
     @Test
-    public void getParticipantEvidencesByInteractionAc(){
-        Page<GraphParticipantEvidence> graphParticipantEvidencePage=null;
-        String interactionAc="EBI-10052707";
-        int pageNumber=0;
-        int pageSize=10;
-        graphParticipantEvidencePage=graphParticipantService.findByInteractionAc(interactionAc,pageNumber,pageSize);
-        Assert.assertNotNull("Page is Null",graphParticipantEvidencePage);
+    public void getParticipantEvidencesByInteractionAc() {
+        Page<GraphParticipantEvidence> graphParticipantEvidencePage = null;
+        String interactionAc = "EBI-10052707";
+        int pageNumber = 0;
+        int pageSize = 10;
+        graphParticipantEvidencePage = graphParticipantService.findByInteractionAc(interactionAc, pageNumber, pageSize);
+        Assert.assertNotNull("Page is Null", graphParticipantEvidencePage);
 
-        List<GraphParticipantEvidence> graphParticipantEvidenceList=graphParticipantEvidencePage.getContent();
+        List<GraphParticipantEvidence> graphParticipantEvidenceList = graphParticipantEvidencePage.getContent();
 
-        Assert.assertNotNull("graphParticipantEvidenceList is null ",graphParticipantEvidenceList);
-        Assert.assertEquals("Participant Count is wrong ",2,graphParticipantEvidenceList.size());
+        Assert.assertNotNull("graphParticipantEvidenceList is null ", graphParticipantEvidenceList);
+        Assert.assertEquals("Participant Count is wrong ", 2, graphParticipantEvidenceList.size());
 
-        GraphParticipantEvidence graphParticipantEvidence=null;
-        String participantAc="EBI-10052709";
-        for(GraphParticipantEvidence graphParticipantEvidence1:graphParticipantEvidenceList){
-            if(graphParticipantEvidence1.getAc().equals(participantAc)){
-                graphParticipantEvidence=graphParticipantEvidence1;
+        GraphParticipantEvidence graphParticipantEvidence = null;
+        String participantAc = "EBI-10052709";
+        for (GraphParticipantEvidence graphParticipantEvidence1 : graphParticipantEvidenceList) {
+            if (graphParticipantEvidence1.getAc().equals(participantAc)) {
+                graphParticipantEvidence = graphParticipantEvidence1;
             }
         }
-        Assert.assertNotNull(participantAc+ " participant is not present",graphParticipantEvidence);
+        Assert.assertNotNull(participantAc + " participant is not present", graphParticipantEvidence);
     }
 }
