@@ -25,7 +25,7 @@ public class GraphFeatureServiceTest {
 
     @Test
     public void getFeaturesByInteractionAc() {
-        String interactionAc = "EBI-10042058";
+        String interactionAc = "EBI-10000974";
         int pageNumber = 0;
         int pageSize = 10;
 
