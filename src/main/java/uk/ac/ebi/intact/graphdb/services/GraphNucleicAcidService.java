@@ -12,6 +12,7 @@ import java.util.Optional;
  */
 @Service
 public class GraphNucleicAcidService {
+
     final private GraphNucleicAcidRepository graphNucleicAcidRepository;
 
     @Autowired

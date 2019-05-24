@@ -33,7 +33,7 @@ public class ParticipantController {
     }
 
     @RequestMapping("/")
-    public String SpringBootSolrExample() {
+    public String welcomeMessage() {
         return "Welcome to Participant Controller";
     }
 

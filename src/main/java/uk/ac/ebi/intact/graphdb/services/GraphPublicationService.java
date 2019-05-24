@@ -14,6 +14,7 @@ import java.util.Optional;
  */
 @Service
 public class GraphPublicationService {
+
     final private GraphPublicationRepository graphPublicationRepository;
 
     @Autowired

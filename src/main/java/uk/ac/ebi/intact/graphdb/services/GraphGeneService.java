@@ -12,6 +12,7 @@ import java.util.Optional;
  */
 @Service
 public class GraphGeneService {
+
     final private GraphGeneRepository graphGeneRepository;
 
     @Autowired

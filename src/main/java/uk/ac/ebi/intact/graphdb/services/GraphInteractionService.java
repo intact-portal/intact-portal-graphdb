@@ -21,7 +21,6 @@ import java.util.Optional;
 public class GraphInteractionService {
 
     final private GraphBinaryInteractionEvidenceRepository graphBinaryInteractionEvidenceRepository;
-
     final private GraphInteractionEvidenceRepository graphInteractionEvidenceRepository;
 
     @Autowired

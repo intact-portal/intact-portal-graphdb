@@ -162,7 +162,6 @@ public class RelationshipTypes {
     public static final String COOPERATIVE_EFFECT = "cooperativeEffects";
 
     //Complex
-
     public static final String RECOMMENDED_NAME = "recommendedName";
     public static final String SYSTEMATIC_NAME = "systematicName";
     public static final String COMPLEX_AC_XREF = "complexAcXref";

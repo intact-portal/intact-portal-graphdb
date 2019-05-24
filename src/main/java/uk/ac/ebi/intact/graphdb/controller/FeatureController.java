@@ -34,7 +34,7 @@ public class FeatureController {
     }
 
     @RequestMapping("/")
-    public String SpringBootSolrExample() {
+    public String welcomeMessage() {
         return "Welcome to Feature Controller";
     }
 

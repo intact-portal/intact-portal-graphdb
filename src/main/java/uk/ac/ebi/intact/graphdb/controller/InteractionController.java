@@ -48,7 +48,7 @@ public class InteractionController {
     }
 
     @RequestMapping("/")
-    public String SpringBootSolrExample() {
+    public String welcomeMessage() {
         return "Welcome to Spring Boot GraphDB Example";
     }
 
