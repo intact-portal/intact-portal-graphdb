@@ -998,9 +998,16 @@ public class UniqueKeyGenerator {
 
         try {
             // we don't need to sort it because it is already sorted in graph (i.e one pair will always be counted once)
-            uniqueKeyStringBuilder.append(createInteractorKey(clusteredInteraction.getInteractorPA()));
-            uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
-            uniqueKeyStringBuilder.append(createInteractorKey(clusteredInteraction.getinteractorPB()));
+            if(clusteredInteraction.getInteractorPA()!=null) {
+                uniqueKeyStringBuilder.append(clusteredInteraction.getInteractorPA().getUniqueKey());
+                uniqueKeyStringBuilder.append(Constants.FIELD_SEPARATOR);
+            }
+            if(clusteredInteraction.getinteractorPB()!=null) {
+                uniqueKeyStringBuilder.append(clusteredInteraction.getinteractorPB().getUniqueKey());
+            }
+
+            // delete any trailing underscore
+            uniqueKeyStringBuilder = deleteTrailingUnderScore(uniqueKeyStringBuilder);
         } catch (Exception e) {
             return prefix + Constants.NOT_GENERATED_UNIQUE_KEY;
         }
