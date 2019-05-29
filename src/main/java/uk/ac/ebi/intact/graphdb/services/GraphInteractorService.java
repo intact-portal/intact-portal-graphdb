@@ -75,8 +75,8 @@ public class GraphInteractorService {
         return graphInteractorRepository.findById(id, depth);
     }
 
-    public GraphInteractor findByAc(String ac) {
-        return graphInteractorRepository.findByAc(ac);
+    public Optional<GraphInteractor> findByAc(String ac, int depth) {
+        return graphInteractorRepository.findByAc(ac, depth);
     }
 
 //    public List<Interactor> retrieveInteractors (String name) {
