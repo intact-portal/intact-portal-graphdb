@@ -33,11 +33,6 @@ public class FeatureController {
         this.graphFeatureService = graphFeatureService;
     }
 
-    @RequestMapping("/")
-    public String welcomeMessage() {
-        return "Welcome to Feature Controller";
-    }
-
     @RequestMapping(value = "/detailsOld/{ac}",
             method = RequestMethod.GET)
     public Page<GraphFeatureEvidence> getFeatures(

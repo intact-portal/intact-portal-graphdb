@@ -15,7 +15,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableSwagger2
-public class GrpahSwaggerConfig {
+public class GraphSwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -29,11 +29,11 @@ public class GrpahSwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "IntAct Interaction Search REST API",
-                "This API allow searching interactor information in the IntAct database.",
+                "IntAct Data REST API",
+                "This API allow accessing information in the IntAct database.",
                 "API 1.0 BETA",
                 "https://www.ebi.ac.uk/about/terms-of-use",
-                 new Contact("IntAct", "https://www.ebi.ac.uk/intact", "intact@helpdesk.ebi.ac.uk"),
+                new Contact("IntAct", "https://www.ebi.ac.uk/intact", "intact@helpdesk.ebi.ac.uk"),
                 "License of API", "https://creativecommons.org/licenses/by/4.0/", Collections.emptyList());
     }
 }

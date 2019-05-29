@@ -47,11 +47,6 @@ public class InteractionController {
         this.graphExperimentService = graphExperimentService;
     }
 
-    @RequestMapping("/")
-    public String welcomeMessage() {
-        return "Welcome to Spring Boot GraphDB Example";
-    }
-
     @RequestMapping(value = "/details/{ac}", method = RequestMethod.GET)
     public InteractionDetails getInteractionDetails(
             @PathVariable String ac,

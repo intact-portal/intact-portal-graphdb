@@ -32,11 +32,6 @@ public class ParticipantController {
         this.graphParticipantService = graphParticipantService;
     }
 
-    @RequestMapping("/")
-    public String welcomeMessage() {
-        return "Welcome to Participant Controller";
-    }
-
     @RequestMapping(value = "/detailsOld/{ac}",
             method = RequestMethod.GET)
     public Page<GraphParticipantEvidence> getParticipantsOld(
