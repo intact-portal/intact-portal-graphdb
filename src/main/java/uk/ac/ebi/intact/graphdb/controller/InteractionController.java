@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  * Created by ntoro on 02/08/2017.
  */
@@ -47,7 +49,7 @@ public class InteractionController {
         this.graphExperimentService = graphExperimentService;
     }
 
-    @RequestMapping(value = "/details/{ac}", method = RequestMethod.GET)
+    @GetMapping(value = "/details/{ac}", produces = {APPLICATION_JSON_VALUE})
     public InteractionDetails getInteractionDetails(
             @PathVariable String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
@@ -58,19 +60,42 @@ public class InteractionController {
         return createInteractionDetails(graphInteractionEvidence, graphExperiment);
     }
 
-    @RequestMapping(value = "/detailsOld",
+    @GetMapping(value = "/detailsOld",
             params = {"ac"},
-            method = RequestMethod.GET)
+            produces = {APPLICATION_JSON_VALUE})
     public GraphInteractionEvidence getDetailsOld(
             @RequestParam(value = "ac") String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
         return graphInteractionService.findByInteractionAc(ac, depth);
     }
 
-    @RequestMapping(value = "/experiment/{ac}", method = RequestMethod.GET)
+    @GetMapping(value = "/experiment/{ac}",
+            produces = {APPLICATION_JSON_VALUE})
     public GraphExperiment getExperimentAndPublicationDetails(
             @PathVariable String ac) {
         return graphExperimentService.findByInteractionAc(ac);
+    }
+
+    @GetMapping(value = "/export/{ac}")
+    public ResponseEntity<String> exportInteraction(@PathVariable String ac,
+                                                    @RequestParam(value = "format", defaultValue = "json", required = false) String format,
+                                                    HttpServletResponse response) throws Exception {
+        Boolean exportAsFile = false;
+
+        InteractionEvidence interactionEvidence = graphInteractionService.findByInteractionAcForMiJson(ac);
+
+        ResponseEntity<String> responseEntity = null;
+        if (interactionEvidence != null) {
+            InteractionWriterFactory writerFactory = InteractionWriterFactory.getInstance();
+            switch (InteractionExportFormat.formatOf(format)) {
+                case JSON:
+                default:
+                    responseEntity = createJsonResponse(interactionEvidence, writerFactory);
+                    break;
+            }
+            return responseEntity;
+        }
+        throw new Exception("Export failed " + ac + ". No Interaction result");
     }
 
     /**
@@ -161,28 +186,6 @@ public class InteractionController {
         return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
     }
 
-    @RequestMapping(value = "/export/{ac}",
-            method = RequestMethod.GET)
-    public ResponseEntity<String> exportInteraction(@PathVariable String ac,
-                                                    @RequestParam(value = "format", defaultValue = "json", required = false) String format,
-                                                    HttpServletResponse response) throws Exception {
-        Boolean exportAsFile = false;
-
-        InteractionEvidence interactionEvidence = graphInteractionService.findByInteractionAcForMiJson(ac);
-
-        ResponseEntity<String> responseEntity = null;
-        if (interactionEvidence != null) {
-            InteractionWriterFactory writerFactory = InteractionWriterFactory.getInstance();
-            switch (InteractionExportFormat.formatOf(format)) {
-                case JSON:
-                default:
-                    responseEntity = createJsonResponse(interactionEvidence, writerFactory);
-                    break;
-            }
-            return responseEntity;
-        }
-        throw new Exception("Export failed " + ac + ". No Interaction result");
-    }
 
     private ResponseEntity<String> createJsonResponse(InteractionEvidence interactionEvidence,
                                                       InteractionWriterFactory writerFactory) {
@@ -223,5 +226,4 @@ public class InteractionController {
         headers.add("Access-Control-Max-Age", "3600");
         headers.add("Access-Control-Allow-Headers", "x-requested-with");
     }
-
 }
