@@ -30,6 +30,12 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
     @Query(value = CypherQueries.COMM_NEIGH_OF_INTOR)
     Slice<ClusterDataFeed> getInteractorPairWithEvidences(Pageable page);
 
+    @Query(value = CypherQueries.COMM_NEIGH_OF_INTOR_SELF_INTERACTION_CASE)
+    Slice<ClusterDataFeed> getSelfInteractingEvidences(Pageable page);
+
+    @Query(value = CypherQueries.COMM_NEIGH_OF_INTOR_SELF_PUTATIVE_CASE)
+    Slice<ClusterDataFeed> getSelfPutativeEvidences(Pageable page);
+
     List<GraphBinaryInteractionEvidence> findByUniqueKeyIn(Set<String> uniqueKey, @Depth int depth);
 
     @Query(CypherQueries.INTERACTOR_PAIR_COUNT)

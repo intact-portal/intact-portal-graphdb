@@ -9,18 +9,6 @@ public class CypherQueries {
 
     /*Common BinaryInteractionEvidences of any two interactors*/
 
-    /*
-    * Equivalent Query String : MATCH (interactorA:GraphInteractor)<-[:interactors]-(binaryIE:GraphInteractionEvidence)-[:interactors]->(interactorB:GraphInteractor)
-                                WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB
-                                UNWIND interactions as interaction
-                                MATCH (interaction:GraphInteractionEvidence) -[experiment:experiment] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:interactionDetectionMethod]->(dm_cvterm:GraphCvTerm),
-                                (interaction:GraphInteractionEvidence) - [interactionType:interactionType] -> (it_cvterm:GraphCvTerm),
-                                (graphExperiment:GraphExperiment)<-[publication:PUB_EXP]-(graphpublication:GraphPublication)
-                                WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))
-                                RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments,
-                                         COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms,
-                                         COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac;
-    * */
     public static final String COMM_NEIGH_OF_INTOR =
             "MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTORS + "]-(binaryIE:GraphBinaryInteractionEvidence)-[:" + RelationshipTypes.INTERACTORS + "]->(interactorB:GraphInteractor)" +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
@@ -31,21 +19,32 @@ public class CypherQueries {
                     " WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))" +
                     " RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
-                    " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac" +
+                    " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
 
-                    " UNION" +
-                    " MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTOR_A + "]-(binaryIE:GraphBinaryInteractionEvidence)" +
-                    " OPTIONAL MATCH (binaryIE)-[:" + RelationshipTypes.INTERACTOR_B + "]->(interactorB:GraphInteractor)" +
+
+    public static final String COMM_NEIGH_OF_INTOR_SELF_INTERACTION_CASE=
+            "MATCH (interactorA:GraphInteractor)<-[:"+ RelationshipTypes.INTERACTOR_A +"]-(binaryIE:GraphBinaryInteractionEvidence) -[:"+ RelationshipTypes.INTERACTOR_B +"]->(interactorB:GraphInteractor)" +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
                     " UNWIND interactions as interaction" +
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
                     " (interaction:GraphBinaryInteractionEvidence) - [interactionType:" + RelationshipTypes.INTERACTION_TYPE + "] -> (it_cvterm:GraphCvTerm)," +
                     " (graphExperiment:GraphExperiment)<-[publication:" + RelationshipTypes.PUB_EXP + "]-(graphpublication:GraphPublication)" +
-                    " WHERE (ID(interactorA) = ID(interactorB)) OR interactorB is null" +
+                    " WHERE  (ID(interactorA)=ID(interactorB))" +
                     " RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
                     " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
 
+    public static final String  COMM_NEIGH_OF_INTOR_SELF_PUTATIVE_CASE=
+            "MATCH (interactorA:GraphInteractor)-[:"+ RelationshipTypes.INTERACTOR_A +"]-(binaryIE:GraphBinaryInteractionEvidence)" +
+                    " WHERE  (NOT (binaryIE)-[:"+ RelationshipTypes.INTERACTOR_B +"]-(:GraphInteractor))" +
+                    " WITH  COLLECT(binaryIE) as interactions,interactorA" +
+                    " UNWIND interactions as interaction" +
+                    " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
+                    " (interaction:GraphBinaryInteractionEvidence) - [interactionType:" + RelationshipTypes.INTERACTION_TYPE + "] -> (it_cvterm:GraphCvTerm)," +
+                    " (graphExperiment:GraphExperiment)<-[publication:" + RelationshipTypes.PUB_EXP + "]-(graphpublication:GraphPublication)" +
+                    " RETURN interactorA,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
+                    " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
+                    " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
     /*
     * Equivalent Query String : MATCH (interactorA:GraphInteractor)<-[:interactorA]-(binaryIE:GraphInteractionEvidence)-[:interactorB]->(interactorB:GraphInteractor)
                                 WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB
