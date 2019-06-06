@@ -26,6 +26,21 @@ public class GraphFeatureRepositoryTest {
     GraphFeatureRepository graphFeatureRepository;
 
     @Test
+    public void checkFeaturePagination() {
+        String interactionAc = "EBI-10049645";
+        int pageNumber = 0;
+        int pageSize = 1;
+
+        Page<GraphFeatureEvidence> page1 = graphFeatureRepository.findByInteractionAc(interactionAc, PageRequest.of(pageNumber, pageSize));
+        Assert.assertNotNull("Page is Null", page1);
+        Assert.assertEquals("Page1 should contain only 1 feature",1,page1.getContent().size());
+
+        Page<GraphFeatureEvidence> page2 = graphFeatureRepository.findByInteractionAc(interactionAc,page1.nextPageable());
+        Assert.assertNotNull("Page is Null", page2);
+        Assert.assertEquals("Page2 should contain only 1 feature",1,page2.getContent().size());
+
+    }
+    @Test
     public void getFeaturesByInteractionAc() {
         String interactionAc = "EBI-10000974";
         int pageNumber = 0;

@@ -170,7 +170,7 @@ public class CypherQueries {
                     "OPTIONAL MATCH (rangesN)-[startR:" + RelationshipTypes.START + "]-(startN:GraphPosition)" +
                     "OPTIONAL MATCH (rangesN)-[endR:" + RelationshipTypes.END + "]-(endN:GraphPosition)" +
                     "OPTIONAL MATCH (endN)-[statusR:" + RelationshipTypes.STATUS + "]-(statusN:GraphCvTerm)" +
-                    "RETURN graphParticipantEvidenceN,COLLECT(graphFeaturesN),COLLECT(graphFeaturesR),COLLECT(interactorR),COLLECT(interactorN),COLLECT(typeR),COLLECT(typeN),COLLECT(rangesR)," +
+                    "RETURN graphParticipantEvidenceN,graphFeaturesN,graphFeaturesR,COLLECT(interactorR),COLLECT(interactorN),COLLECT(typeR),COLLECT(typeN),COLLECT(rangesR)," +
                     "COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN)," +
                     "COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
 
