@@ -107,6 +107,12 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
         return null;
     }
 
+    @Override
+    @JsonIgnore
+    public boolean isEmpty() {
+        return participantEvidencePage.isEmpty();
+    }
+
     private List<ParticipantDetails> createParticipantsDetails(List<GraphParticipantEvidence> participantEvidences) {
 
         List<ParticipantDetails> participantDetailsList = new ArrayList<>();
