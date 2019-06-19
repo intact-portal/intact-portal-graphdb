@@ -47,6 +47,15 @@ public class GraphInteractionService {
         return graphInteractionEvidence;
     }
 
+    public GraphInteractionEvidence findByInteractionAcForDetails(String ac) {
+        Optional<GraphInteractionEvidence> optionalExp = graphInteractionEvidenceRepository.findByInteractionAcForDetails(ac);
+        if (optionalExp.isPresent()) {
+            GraphInteractionEvidence graphInteractionEvidence = optionalExp.get();
+            return graphInteractionEvidence;
+        }
+        return null;
+    }
+
     public GraphInteractionEvidence findByInteractionAcForMiJson(String ac) {
         Optional<GraphInteractionEvidence> optionalExp = graphInteractionEvidenceRepository.findByInteractionAcForMiJson(ac);
         if (optionalExp.isPresent()) {

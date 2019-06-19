@@ -174,6 +174,37 @@ public class CypherQueries {
                     "COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN)," +
                     "COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
 
+
+    public static final String GET_INTERACTION_EVIDENCE_BY_INTERACTION_AC =
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} })" +
+                    " OPTIONAL MATCH (binaryIEN)-[interactionTypeR:" + RelationshipTypes.INTERACTION_TYPE + "]-(interactionTypeN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:" + RelationshipTypes.XREFS + "]-(interactionXrefsN:GraphXref)" +
+                    " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(interactionXrefsDatabaseN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (binaryIEN)-[interactionAnnotationR:" + RelationshipTypes.ANNOTATIONS + "]-(interactionAnnotationN:GraphAnnotation)" +
+                    " OPTIONAL MATCH (interactionAnnotationN)-[interactionAnnotationTopicR:" + RelationshipTypes.TOPIC + "]-(interactionAnnotationTopicN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (binaryIEN)-[interactionConfidencesR:" + RelationshipTypes.CONFIDENCE + "]-(interactionConfidencesN:GraphConfidence)" +
+                    " OPTIONAL MATCH (interactionConfidencesN)-[interactionConfidencesTypeR:" + RelationshipTypes.TYPE + "]-(interactionConfidencesTypeN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (binaryIEN)-[interactionParametersR:" + RelationshipTypes.PARAMETERS + "]-(interactionParametersN:GraphParameter)" +
+                    " OPTIONAL MATCH (interactionParametersN)-[interactionParametersTypeR:" + RelationshipTypes.TYPE + "]-(interactionParametersTypeN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (interactionParametersN)-[interactionParametersUnitR:" + RelationshipTypes.UNIT + "]-(interactionParametersUnitN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (interactionParametersN)-[interactionParametersValueR:" + RelationshipTypes.VALUE + "]-(interactionParametersValueN:GraphParameterValue)" +
+                    " RETURN binaryIEN,interactionTypeR,interactionTypeN," +
+                    " COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection," +
+                    " COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)" +
+                    " as interactionXrefsDatabaseNCollection," +
+                    " COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as" +
+                    " interactionAnnotationNCollection,COLLECT(interactionAnnotationTopicR) as interactionAnnotationTopicRCollection," +
+                    " COLLECT(interactionAnnotationTopicN) as interactionAnnotationTopicNCollection," +
+                    " COLLECT(interactionConfidencesR) as interactionConfidencesRCollection," +
+                    " COLLECT(interactionConfidencesN) as interactionConfidencesNCollection,COLLECT(interactionConfidencesTypeR) as" +
+                    " interactionConfidencesTypeRCollection,COLLECT(interactionConfidencesTypeN) as interactionConfidencesTypeNCollection," +
+                    " COLLECT(interactionParametersR) as" +
+                    " interactionParametersRCollection ,COLLECT(interactionParametersN) as interactionParametersNCollection," +
+                    " COLLECT(interactionParametersTypeR) as interactionParametersTypeRCollection,COLLECT(interactionParametersTypeN)" +
+                    " as interactionParametersTypeNCollection,COLLECT(interactionParametersUnitR) as interactionParametersUnitRCollection," +
+                    " COLLECT(interactionParametersUnitN) as interactionParametersUnitNCollection,COLLECT(interactionParametersValueR)" +
+                    " as interactionParametersValueRCollection,COLLECT(interactionParametersValueN) as interactionParametersValueNCollection";
+
     /*
     * Equivalent Query String :
 MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[experimentR:experiment]-(binaryIEN:GraphBinaryInteractionEvidence{ ac: 'EBI-10048599' })

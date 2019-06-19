@@ -31,6 +31,9 @@ public interface GraphInteractionEvidenceRepository extends Neo4jRepository<Grap
 
     @Query(value = CypherQueries.GET_INTERACTION_DETAILS_FOR_MIJSON)
     Optional<GraphInteractionEvidence> findByInteractionAcForMiJson(String ac);
+
+    @Query(value = CypherQueries.GET_INTERACTION_EVIDENCE_BY_INTERACTION_AC)
+    Optional<GraphInteractionEvidence> findByInteractionAcForDetails(String ac);
 //
 //    Page<BinaryInteractionEvidence> findByInteractorA_ShortName(Pageable pageable, @Param("shortName") String shortName);
 //
