@@ -124,20 +124,40 @@ public class CypherQueries {
     */
     public static final String GET_EXP_PUB_BY_INTERACTION_AC =
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(experimentN:GraphExperiment)-[publicationR:" + RelationshipTypes.PUB_EXP + "]-(publicationN:GraphPublication) " +
-                    "OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]-(interactionDetectionMethodN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (experimentN)-[hostOrganismR:" + RelationshipTypes.HOST_ORGANISM + "]-(hostOrganismN:GraphOrganism)" +
-                    "OPTIONAL MATCH (experimentN)-[expXrefsR:" + RelationshipTypes.XREFS + "]-(expXrefsN:GraphXref)" +
-                    "OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(expXrefsDatabaseN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (experimentN)-[expAnnotationsR:" + RelationshipTypes.ANNOTATIONS + "]-(expAnnotationsN:GraphAnnotation)" +
-                    "OPTIONAL MATCH (expAnnotationsN)-[expAnnotationsNTopicR:" + RelationshipTypes.TOPIC + "]-(expAnnotationsNTopicN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (publicationN)-[pubXrefsR:" + RelationshipTypes.XREFS + "]-(pubXrefsN:GraphXref)" +
-                    "OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(pubXrefsDatabaseN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (publicationN)-[publicationAnnotationsR:" + RelationshipTypes.ANNOTATIONS + "]-(publicationAnnotationsN:GraphAnnotation)" +
-                    "OPTIONAL MATCH (publicationAnnotationsN)-[publicationAnnotationsTopicR:" + RelationshipTypes.TOPIC + "]-(publicationAnnotationsTopicN:GraphCvTerm) " +
-                    "RETURN experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
-                    "COLLECT(expXrefsR),COLLECT(expXrefsN),COLLECT(expAnnotationsR),COLLECT(expAnnotationsN),COLLECT(expXrefsDatabaseR),COLLECT(expXrefsDatabaseN)," +
-                    "COLLECT(expAnnotationsNTopicR),COLLECT(expAnnotationsNTopicN),COLLECT(pubXrefsR),COLLECT(pubXrefsN),COLLECT(pubXrefsDatabaseR),COLLECT(pubXrefsDatabaseN)," +
-                    "COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
+                    " OPTIONAL MATCH (experimentN)-[interactionDetectionMethodR:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]-(interactionDetectionMethodN:GraphCvTerm)" +
+                    " OPTIONAL MATCH (experimentN)-[hostOrganismR:" + RelationshipTypes.HOST_ORGANISM + "]-(hostOrganismN:GraphOrganism)" +
+                    " OPTIONAL MATCH (experimentN)-[expXrefsR:" + RelationshipTypes.XREFS + "]-(expXrefsN:GraphXref)" +
+                    " OPTIONAL MATCH (expXrefsN)-[expXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(expXrefsDatabaseN:GraphCvTerm)" +
+
+                    " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
+                    " COLLECT(expXrefsR) as expXrefsRCollection,COLLECT(expXrefsN) as expXrefsNCollection," +
+                    " COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection,COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection"+
+
+                    " OPTIONAL MATCH (experimentN)-[expAnnotationsR:" + RelationshipTypes.ANNOTATIONS + "]-(expAnnotationsN:GraphAnnotation)" +
+                    " OPTIONAL MATCH (expAnnotationsN)-[expAnnotationsNTopicR:" + RelationshipTypes.TOPIC + "]-(expAnnotationsNTopicN:GraphCvTerm)" +
+
+                    " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
+                    " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                    " COLLECT(expAnnotationsR) as expAnnotationsRCollection,COLLECT(expAnnotationsN) as expAnnotationsNCollection ," +
+                    " COLLECT(expAnnotationsNTopicR) as expAnnotationsNTopicRCollection,COLLECT(expAnnotationsNTopicN) as expAnnotationsNTopicNCollection"+
+
+                    " OPTIONAL MATCH (publicationN)-[pubXrefsR:" + RelationshipTypes.XREFS + "]-(pubXrefsN:GraphXref)" +
+                    " OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(pubXrefsDatabaseN:GraphCvTerm)" +
+
+                    " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
+                    " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection,"+
+                    " COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection," +
+                    " COLLECT(pubXrefsDatabaseR) as pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection" +
+
+                    " OPTIONAL MATCH (publicationN)-[publicationAnnotationsR:" + RelationshipTypes.ANNOTATIONS + "]-(publicationAnnotationsN:GraphAnnotation)" +
+                    " OPTIONAL MATCH (publicationAnnotationsN)-[publicationAnnotationsTopicR:" + RelationshipTypes.TOPIC + "]-(publicationAnnotationsTopicN:GraphCvTerm) " +
+                    " RETURN " +
+                    " experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
+                    " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
+                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection,"+
+                    " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection," +
+                    " COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
 
     public static final String GET_FEATURES_BY_INTERACTION_AC_COUNT =
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(graphParticipantEvidenceN:GraphParticipantEvidence)--(graphFeaturesN:GraphFeatureEvidence)" +
@@ -180,30 +200,53 @@ public class CypherQueries {
                     " OPTIONAL MATCH (binaryIEN)-[interactionTypeR:" + RelationshipTypes.INTERACTION_TYPE + "]-(interactionTypeN:GraphCvTerm)" +
                     " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:" + RelationshipTypes.XREFS + "]-(interactionXrefsN:GraphXref)" +
                     " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(interactionXrefsDatabaseN:GraphCvTerm)" +
+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection," +
+                    " COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)" +
+                    " as interactionXrefsDatabaseNCollection" +
+
                     " OPTIONAL MATCH (binaryIEN)-[interactionAnnotationR:" + RelationshipTypes.ANNOTATIONS + "]-(interactionAnnotationN:GraphAnnotation)" +
                     " OPTIONAL MATCH (interactionAnnotationN)-[interactionAnnotationTopicR:" + RelationshipTypes.TOPIC + "]-(interactionAnnotationTopicN:GraphCvTerm)" +
+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " interactionXrefsRCollection,interactionXrefsNCollection," +
+                    " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                    " COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as" +
+                    " interactionAnnotationNCollection,COLLECT(interactionAnnotationTopicR) as interactionAnnotationTopicRCollection," +
+                    " COLLECT(interactionAnnotationTopicN) as interactionAnnotationTopicNCollection" +
+
                     " OPTIONAL MATCH (binaryIEN)-[interactionConfidencesR:" + RelationshipTypes.CONFIDENCE + "]-(interactionConfidencesN:GraphConfidence)" +
                     " OPTIONAL MATCH (interactionConfidencesN)-[interactionConfidencesTypeR:" + RelationshipTypes.TYPE + "]-(interactionConfidencesTypeN:GraphCvTerm)" +
+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " interactionXrefsRCollection,interactionXrefsNCollection," +
+                    " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                    " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                    " interactionAnnotationTopicNCollection," +
+                    " COLLECT(interactionConfidencesR) as interactionConfidencesRCollection," +
+                    " COLLECT(interactionConfidencesN) as interactionConfidencesNCollection,COLLECT(interactionConfidencesTypeR) as" +
+                    " interactionConfidencesTypeRCollection,COLLECT(interactionConfidencesTypeN) as interactionConfidencesTypeNCollection" +
+
                     " OPTIONAL MATCH (binaryIEN)-[interactionParametersR:" + RelationshipTypes.PARAMETERS + "]-(interactionParametersN:GraphParameter)" +
                     " OPTIONAL MATCH (interactionParametersN)-[interactionParametersTypeR:" + RelationshipTypes.TYPE + "]-(interactionParametersTypeN:GraphCvTerm)" +
                     " OPTIONAL MATCH (interactionParametersN)-[interactionParametersUnitR:" + RelationshipTypes.UNIT + "]-(interactionParametersUnitN:GraphCvTerm)" +
                     " OPTIONAL MATCH (interactionParametersN)-[interactionParametersValueR:" + RelationshipTypes.VALUE + "]-(interactionParametersValueN:GraphParameterValue)" +
-                    " RETURN binaryIEN,interactionTypeR,interactionTypeN," +
-                    " COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection," +
-                    " COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)" +
-                    " as interactionXrefsDatabaseNCollection," +
-                    " COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as" +
-                    " interactionAnnotationNCollection,COLLECT(interactionAnnotationTopicR) as interactionAnnotationTopicRCollection," +
-                    " COLLECT(interactionAnnotationTopicN) as interactionAnnotationTopicNCollection," +
-                    " COLLECT(interactionConfidencesR) as interactionConfidencesRCollection," +
-                    " COLLECT(interactionConfidencesN) as interactionConfidencesNCollection,COLLECT(interactionConfidencesTypeR) as" +
-                    " interactionConfidencesTypeRCollection,COLLECT(interactionConfidencesTypeN) as interactionConfidencesTypeNCollection," +
+                    " RETURN " +
+                    " binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " interactionXrefsRCollection,interactionXrefsNCollection," +
+                    " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
+                    " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
+                    " interactionAnnotationTopicNCollection," +
+                    " interactionConfidencesRCollection,interactionConfidencesNCollection,interactionConfidencesTypeRCollection," +
+                    " interactionConfidencesTypeNCollection," +
                     " COLLECT(interactionParametersR) as" +
                     " interactionParametersRCollection ,COLLECT(interactionParametersN) as interactionParametersNCollection," +
                     " COLLECT(interactionParametersTypeR) as interactionParametersTypeRCollection,COLLECT(interactionParametersTypeN)" +
                     " as interactionParametersTypeNCollection,COLLECT(interactionParametersUnitR) as interactionParametersUnitRCollection," +
                     " COLLECT(interactionParametersUnitN) as interactionParametersUnitNCollection,COLLECT(interactionParametersValueR)" +
                     " as interactionParametersValueRCollection,COLLECT(interactionParametersValueN) as interactionParametersValueNCollection";
+
 
     /*
     * Equivalent Query String :
