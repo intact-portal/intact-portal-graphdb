@@ -50,6 +50,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Relationship(type = RelationshipTypes.INTERACTION_EVIDENCE, direction = Relationship.UNDIRECTED)
     private GraphInteractionEvidence interactionEvidence;
 
+    @Relationship(type = RelationshipTypes.INTERACTIONS, direction = Relationship.UNDIRECTED)
+    private GraphClusteredInteraction clusteredInteraction;
+
     @Transient
     private boolean isAlreadyCreated;
 
@@ -233,6 +236,14 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         } else {
             this.complexExpansion = null;
         }
+    }
+
+    public GraphClusteredInteraction getClusteredInteraction() {
+        return clusteredInteraction;
+    }
+
+    public void setClusteredInteraction(GraphClusteredInteraction clusteredInteraction) {
+        this.clusteredInteraction = clusteredInteraction;
     }
 
     public Long getGraphId() {
