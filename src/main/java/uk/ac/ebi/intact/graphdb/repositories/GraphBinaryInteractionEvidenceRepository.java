@@ -14,6 +14,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphXref;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -42,6 +43,10 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
     long getInteractorPairCount();
 
     @Query(CypherQueries.GET_CLUSTERED_INTERACTION)
-    GraphClusteredInteraction getClusteredInteraction(String uniqueKey);
+    GraphClusteredInteraction getClusteredInteraction(String idA, String idB);
+
+    Optional<GraphBinaryInteractionEvidence> findByAc(String ac, @Depth int depth);
+    Optional<GraphBinaryInteractionEvidence> findByUniqueKey(String uniqueKey, @Depth int depth);
 
 }
+

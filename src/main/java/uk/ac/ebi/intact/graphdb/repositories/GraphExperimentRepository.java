@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.repositories;
 
+import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @RepositoryRestResource(collectionResourceRel = "experiments", path = "experiments")
 public interface GraphExperimentRepository extends Neo4jRepository<GraphExperiment, String> {
 
-    GraphExperiment findByAc(@Param("ac") String ac);
+    GraphExperiment findByAc(@Param("ac") String ac, @Depth int depth);
 
     @Query(value = CypherQueries.GET_EXP_PUB_BY_INTERACTION_AC)
     Optional<GraphExperiment> findByInteractionAc(String ac);
