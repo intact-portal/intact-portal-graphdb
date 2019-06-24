@@ -23,7 +23,7 @@ import java.io.StringWriter;
  * @author Elisabet Barrera
  */
 @RestController
-@RequestMapping("/graph/features")
+@RequestMapping("/features")
 public class FeatureController {
 
     private GraphFeatureService graphFeatureService;
@@ -33,6 +33,7 @@ public class FeatureController {
         this.graphFeatureService = graphFeatureService;
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/detailsOld/{ac}",
             method = RequestMethod.GET)
     public Page<GraphFeatureEvidence> getFeatures(
@@ -42,6 +43,7 @@ public class FeatureController {
         return graphFeatureService.findByInteractionAc(ac, page, pageSize);
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/details/{ac}",
             method = RequestMethod.GET)
     public Page<FeatureDetails> getFeaturesWithPagination(
@@ -54,6 +56,7 @@ public class FeatureController {
         return new FeatureDetailsResult(featureEvidences);
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/datatables/{ac}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
