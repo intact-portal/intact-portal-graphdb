@@ -31,6 +31,15 @@ public class GraphInteractionServiceTest {
     }
 
     @Test
+    public void getInteractionEvidenceByAcForDetails() {
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        String ac = "EBI-10000974";
+        graphInteractionEvidence = graphInteractionService.findByInteractionAcForDetails(ac);
+
+        Assert.assertEquals("Interaction not present", ac, graphInteractionEvidence.getAc());
+    }
+
+    @Test
     public void findByInteractionAcForMiJson() {
         String interactionAc = "EBI-10052707";
         GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAcForMiJson(interactionAc);
