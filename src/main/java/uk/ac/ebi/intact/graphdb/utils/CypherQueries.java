@@ -60,8 +60,8 @@ public class CypherQueries {
                     " WHERE  (ID(interactorA) = ID(interactorB)) OR interactorB is null  " +
                     " RETURN COUNT(*)+binaryCount as totalCount";
 
-    public static final String GET_CLUSTERED_INTERACTION = "MATCH (n:GraphClusteredInteraction)-->(m:GraphBinaryInteractionEvidence{ uniqueKey: {0}}) RETURN (n)";
-
+    public static final String GET_CLUSTERED_INTERACTION =
+    "MATCH (:GraphInteractor { ac:{0}})<--(n:GraphClusteredInteraction)-->(:GraphInteractor{ ac:{1}}) return (n)";
 
     /*
     * Equivalent Query String :"MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:interactor]-(interactorN:GraphInteractor)
@@ -950,5 +950,10 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                     " featureDetectionMethodNCollection,featureDetectionMethodIdentifiersRCollection,featureDetectionMethodIdentifiersNCollection," +
                     " featureDetectionMethodIdentifiersDatabaseRCollection,featureDetectionMethodIdentifiersDatabaseNCollection,binaryIEN limit 1";
 
+    public static final String GET_HOST_ORGANISM_BY_EXPERIMENT_AC =
+            "MATCH (e:GraphExperiment{ ac: {0} })-[r:hostOrganism]->(n:GraphOrganism) RETURN n;";
+
+    public static final String GET_INTERACTION_DETMETHOD_BY_EXPERIMENT_AC =
+            "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
 }

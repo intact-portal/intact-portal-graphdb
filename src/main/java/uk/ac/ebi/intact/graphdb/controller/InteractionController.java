@@ -36,7 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Created by ntoro on 02/08/2017.
  */
 @RestController
-@RequestMapping("/graph/interaction")
+@RequestMapping("/interaction")
 public class InteractionController {
 
     private GraphInteractionService graphInteractionService;
@@ -49,17 +49,18 @@ public class InteractionController {
         this.graphExperimentService = graphExperimentService;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/details/{ac}", produces = {APPLICATION_JSON_VALUE})
     public InteractionDetails getInteractionDetails(
-            @PathVariable String ac,
-            @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
+            @PathVariable String ac) {
 
-        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac, depth);
+        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAcForDetails(ac);
         GraphExperiment graphExperiment = graphExperimentService.findByInteractionAc(ac);
 
         return createInteractionDetails(graphInteractionEvidence, graphExperiment);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/detailsOld",
             params = {"ac"},
             produces = {APPLICATION_JSON_VALUE})
@@ -69,6 +70,7 @@ public class InteractionController {
         return graphInteractionService.findByInteractionAc(ac, depth);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/experiment/{ac}",
             produces = {APPLICATION_JSON_VALUE})
     public GraphExperiment getExperimentAndPublicationDetails(
@@ -76,6 +78,7 @@ public class InteractionController {
         return graphExperimentService.findByInteractionAc(ac);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/export/{ac}")
     public ResponseEntity<String> exportInteraction(@PathVariable String ac,
                                                     @RequestParam(value = "format", defaultValue = "json", required = false) String format,
@@ -216,14 +219,7 @@ public class InteractionController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.add("X-Clacks-Overhead", "GNU Terry Pratchett"); //In memory of Sir Terry Pratchett
-        enableCORS(httpHeaders);
         return new ResponseEntity<String>(answer.toString(), httpHeaders, HttpStatus.OK);
     }
 
-    protected void enableCORS(HttpHeaders headers) {
-        headers.add("Access-Control-Allow-Origin", "*");
-        headers.add("Access-Control-Allow-Methods", "GET");
-        headers.add("Access-Control-Max-Age", "3600");
-        headers.add("Access-Control-Allow-Headers", "x-requested-with");
-    }
 }

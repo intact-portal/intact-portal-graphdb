@@ -60,7 +60,13 @@ public class GraphInteractor implements Interactor {
 
     @Relationship(type = RelationshipTypes.INTERACTORS, direction = Relationship.UNDIRECTED)
     @JsonBackReference
-    private List<GraphBinaryInteractionEvidence> interactions;
+    private Collection<GraphBinaryInteractionEvidence> interactions;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR_PA, direction = Relationship.UNDIRECTED)
+    private Collection<GraphClusteredInteraction> clusterA;
+
+    @Relationship(type = RelationshipTypes.INTERACTOR_PB, direction = Relationship.UNDIRECTED)
+    private Collection<GraphClusteredInteraction> clusterB;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -450,11 +456,11 @@ public class GraphInteractor implements Interactor {
     }
 
     //TODO improve this part
-    public List<GraphBinaryInteractionEvidence> getInteractions() {
+    public Collection<GraphBinaryInteractionEvidence> getInteractions() {
         return interactions;
     }
 
-    public void setInteractions(List<GraphBinaryInteractionEvidence> interactions) {
+    public void setInteractions(Collection<GraphBinaryInteractionEvidence> interactions) {
         this.interactions = interactions;
     }
 
@@ -550,5 +556,27 @@ public class GraphInteractor implements Interactor {
         } else {
             this.preferredIdentifier = null;
         }
+    }
+
+    public Collection<GraphClusteredInteraction> getClusterA() {
+        if (clusterA == null) {
+            this.clusterA = new ArrayList<>();
+        }
+        return clusterA;
+    }
+
+    public void setClusterA(Collection<GraphClusteredInteraction> clusterA) {
+        this.clusterA = clusterA;
+    }
+
+    public Collection<GraphClusteredInteraction> getClusterB() {
+        if (clusterB == null) {
+            this.clusterB = new ArrayList<>();
+        }
+        return clusterB;
+    }
+
+    public void setClusterB(Collection<GraphClusteredInteraction> clusterB) {
+        this.clusterB = clusterB;
     }
 }

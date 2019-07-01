@@ -23,7 +23,7 @@ import java.io.StringWriter;
  * @author Elisabet Barrera
  */
 @RestController
-@RequestMapping("/graph/participants")
+@RequestMapping("/participants")
 public class ParticipantController {
     private GraphParticipantService graphParticipantService;
 
@@ -32,6 +32,7 @@ public class ParticipantController {
         this.graphParticipantService = graphParticipantService;
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/detailsOld/{ac}",
             method = RequestMethod.GET)
     public Page<GraphParticipantEvidence> getParticipantsOld(
@@ -41,6 +42,7 @@ public class ParticipantController {
         return graphParticipantService.findByInteractionAc(ac, page, pageSize);
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/details/{ac}",
             method = RequestMethod.GET)
     public Page<ParticipantDetails> getParticipantsNWithPagination(
@@ -53,6 +55,7 @@ public class ParticipantController {
         return new ParticipantDetailsResult(participantEvidences);
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/datatables/{ac}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)

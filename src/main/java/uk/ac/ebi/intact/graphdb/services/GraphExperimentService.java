@@ -34,16 +34,13 @@ public class GraphExperimentService {
         return graphExperimentRepository.findAll(page, depth);
     }
 
-    public GraphExperiment findByAc(String ac) {
-        return graphExperimentRepository.findByAc(ac);
+    public GraphExperiment findByAc(String ac, int depth) {
+        return graphExperimentRepository.findByAc(ac, depth);
     }
 
     public GraphExperiment findByInteractionAc(String ac) {
         Optional<GraphExperiment> optionalExp = graphExperimentRepository.findByInteractionAc(ac);
-        if (optionalExp.isPresent()) {
-            return optionalExp.get();
-        }
-        return null;
+        return optionalExp.orElse(null);
     }
 
 }

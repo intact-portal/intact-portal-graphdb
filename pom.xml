@@ -5,7 +5,7 @@
 
     <groupId>uk.ac.ebi.intact.graphdb</groupId>
     <artifactId>intact-graphdb</artifactId>
-    <version>3.0.14-SNAPSHOT</version>
+    <version>3.0.15-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>IntAct Portal :: Graph DB Core</name>
@@ -38,30 +38,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-neo4j</artifactId>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.neo4j</groupId>-->
-                    <!--<artifactId>neo4j-ogm-http-driver</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.neo4j</groupId>-->
-            <!--<artifactId>neo4j-ogm-bolt-driver</artifactId>-->
-            <!--<version>${neo4j-ogm.version}</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-configuration-processor</artifactId>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -100,7 +82,7 @@
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-embedded-driver</artifactId>
             <version>${neo4j-ogm.version}</version>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
 
         <dependency>
@@ -110,16 +92,16 @@
         </dependency>
 
         <!--Neo4j batch importer-->
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-kernel</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-lucene-index</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j</groupId>-->
+<!--            <artifactId>neo4j-kernel</artifactId>-->
+<!--            <version>${neo4j.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j</groupId>-->
+<!--            <artifactId>neo4j-lucene-index</artifactId>-->
+<!--            <version>${neo4j.version}</version>-->
+<!--        </dependency>-->
 
         <!--For object pooling-->
 
@@ -164,7 +146,6 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

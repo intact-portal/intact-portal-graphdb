@@ -12,7 +12,7 @@ import uk.ac.ebi.intact.graphdb.services.GraphInteractorService;
  * Time: 17:44
  */
 @RestController
-@RequestMapping("/graph/interactor")
+@RequestMapping("/interactor")
 public class InteractorController {
 
     final GraphInteractorService graphInteractorService;

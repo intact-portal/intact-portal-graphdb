@@ -34,8 +34,8 @@ public class GraphInteractionService {
         return this.graphBinaryInteractionEvidenceRepository.findAll(page, depth);
     }
 
-    public GraphClusteredInteraction findClusteredInteraction(String uniqueKey) {
-        return this.graphBinaryInteractionEvidenceRepository.getClusteredInteraction(uniqueKey);
+    public GraphClusteredInteraction findClusteredInteraction(String idA, String idB) {
+        return this.graphBinaryInteractionEvidenceRepository.getClusteredInteraction(idA, idB);
     }
 
     public GraphInteractionEvidence findByInteractionAc(String ac, int depth) {
@@ -54,6 +54,12 @@ public class GraphInteractionService {
             return graphInteractionEvidence;
         }
         return null;
+    }
+
+    public GraphBinaryInteractionEvidence findBinaryInteractionByUniqueKey(String uniqueKey, int depth) {
+        Optional<GraphBinaryInteractionEvidence> optionalGraphInteractionEvidence =
+                graphBinaryInteractionEvidenceRepository.findByUniqueKey(uniqueKey, depth);
+        return optionalGraphInteractionEvidence.orElse(null);
     }
 
     public GraphInteractionEvidence findByInteractionAcForMiJson(String ac) {
@@ -86,4 +92,5 @@ public class GraphInteractionService {
         }
         return null;
     }
+
 }
