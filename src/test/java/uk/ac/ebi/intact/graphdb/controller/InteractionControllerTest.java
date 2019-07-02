@@ -65,7 +65,7 @@ public class InteractionControllerTest {
                 System.out.println("Test interaction with ac: " + interactionAc);
 
                 ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                        "/graph/interaction/export/" + interactionAc, String.class);
+                        "/interaction/export/" + interactionAc, String.class);
 
                 assertNotNull("Response is null", response);
                 assertNotNull("Response status line is null", response.getStatusCode());
