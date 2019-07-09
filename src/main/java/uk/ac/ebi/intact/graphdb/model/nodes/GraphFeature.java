@@ -1,4 +1,3 @@
-/*
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
@@ -18,13 +17,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-*/
 /**
  * Created by anjali on 07/09/18.
- *//*
-
+ */
 @NodeEntity
-public class GraphFeature implements Feature {
+public class GraphFeature<P extends Entity, F extends Feature> implements Feature<P,F> {
 
     @GraphId
     private Long graphId;
@@ -43,8 +40,8 @@ public class GraphFeature implements Feature {
     @Relationship(type = RelationshipTypes.ROLE)
     private GraphCvTerm role;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT)
-    private GraphEntity participant;
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.INCOMING)
+    private GraphEntity<Feature> participant;
 
     // private GraphXref interpro; // To do
     @Relationship(type = RelationshipTypes.IDENTIFIERS)
@@ -102,8 +99,9 @@ public class GraphFeature implements Feature {
             if (!childAlreadyCreated) {
                 createNodeNatively();
                 if (!wasInitializedBefore) {
-                    setLinkedFeatures(featureEvidence.getLinkedFeatures());// to avoid looping
                     setParticipant(featureEvidence.getParticipant());// to avoid looping
+                    setLinkedFeatures(featureEvidence.getLinkedFeatures());// to avoid looping
+
                 }
 
             }
@@ -152,7 +150,7 @@ public class GraphFeature implements Feature {
     public void createRelationShipNatively(Long graphId) {
         CommonUtility.createRelationShip(type, graphId, RelationshipTypes.TYPE);
         CommonUtility.createRelationShip(role, graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, graphId, RelationshipTypes.PARTICIPANT);
+        CommonUtility.createRelationShip(participant, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);
         CommonUtility.createAnnotationRelationShips(annotations, graphId);
@@ -165,7 +163,6 @@ public class GraphFeature implements Feature {
     public String getShortName() {
         return this.shortName;
     }
-*/
 /*protected void initialiseParameters() {
         this.parameters = new ArrayList<Parameter>();
     }
@@ -190,8 +187,7 @@ public class GraphFeature implements Feature {
         else {
             this.parameters = parameters;
         }
-    }*//*
-
+    }*/
 
     public void setShortName(String name) {
         this.shortName = name;
@@ -218,8 +214,7 @@ public class GraphFeature implements Feature {
     }
 
     public void setInterpro(String interpro) {
-       */
-/* Collection<Xref> featureIdentifiers = getIdentifiers();
+       /* Collection<Xref> featureIdentifiers = getIdentifiers();
 
         // add new interpro if not null
         if (interpro != null){
@@ -236,14 +231,12 @@ public class GraphFeature implements Feature {
         else if (!featureIdentifiers.isEmpty()) {
             XrefUtils.removeAllXrefsWithDatabase(featureIdentifiers, Xref.INTERPRO_MI, Xref.INTERPRO);
             this.interpro = null;
-        }*//*
-
+        }*/
 
         this.interpro = interpro;
     }
 
-    */
-/*protected void initialiseIdentifiers(){
+    /*protected void initialiseIdentifiers(){
        // this.identifiers = new AbstractFeature.FeatureIdentifierList();
     }
 
@@ -319,8 +312,7 @@ public class GraphFeature implements Feature {
         else {
             this.aliases = aliases;
         }
-    }*//*
-
+    }*/
 
     public Collection<GraphXref> getIdentifiers() {
         if (this.identifiers == null) {
@@ -352,11 +344,9 @@ public class GraphFeature implements Feature {
         }
     }
 
-   */
-/* public String getInterpro() {
+   /* public String getInterpro() {
         return this.interpro != null ? this.interpro.getId() : null;
-    }*//*
-
+    }*/
 
     public Collection<GraphAnnotation> getAnnotations() {
         if (this.annotations == null) {
@@ -421,8 +411,8 @@ public class GraphFeature implements Feature {
     }
 
     @Override
-    public Entity getParticipant() {
-        return this.participant;
+    public P getParticipant() {
+        return (P)this.participant;
     }
 
     @Override
@@ -456,9 +446,77 @@ public class GraphFeature implements Feature {
         return this.linkedFeatures;
     }
 
+
+    public boolean addLinkedFeature(Feature feature) {
+        if (feature == null) {
+            return false;
+        }
+        String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
+        GraphFeature graphFeature = null;
+        if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
+            graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
+
+        } else if (feature instanceof FeatureEvidence) {
+            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+        }else {
+            graphFeature = new GraphFeature(feature, false);
+        }
+        if (getLinkedFeatures().add(graphFeature)) {
+            graphFeature.setParticipant(this.getParticipant());
+            return true;
+        }
+
+        return false;
+    }
+
+    //Todo review
+
+    public boolean removeFeature(Feature feature) {
+        if (feature == null) {
+            return false;
+        }
+
+        if (getLinkedFeatures().remove(feature)) {
+            feature.setParticipant(null);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean addAllLinkedFeatures(Collection<? extends Feature> features) {
+        if (features == null) {
+            return false;
+        }
+
+        boolean added = false;
+        for (Feature feature : features) {
+            if (addLinkedFeature(feature)) {
+                added = true;
+            }
+        }
+        return added;
+    }
+
+
+    public boolean removeAllLinkedFeatures(Collection<? extends Feature> features) {
+        if (features == null) {
+            return false;
+        }
+
+        boolean added = false;
+        for (Feature feature : features) {
+            if (removeFeature(feature)) {
+                added = true;
+            }
+        }
+        return added;
+    }
+
+
     public void setLinkedFeatures(Collection<Feature> linkedFeatures) {
         if (linkedFeatures != null) {
-            this.linkedFeatures = CollectionAdaptor.convertFeatureIntoGraphModel(linkedFeatures);
+            addAllLinkedFeatures(linkedFeatures);
         } else {
             this.linkedFeatures = new ArrayList<GraphFeature>();
         }
@@ -530,4 +588,3 @@ public class GraphFeature implements Feature {
     }
 
 }
-*/

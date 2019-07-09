@@ -103,9 +103,9 @@ public class CollectionAdaptor {
         return featureEvidences.stream().map(GraphModelledFeature::new).collect(Collectors.toList());
     }
 
-    /* public static Collection<GraphFeature> convertFeatureIntoGraphModel(Collection<Feature> featureEvidences) {
+     public static Collection<GraphFeature> convertFeatureIntoGraphModel(Collection<Feature> featureEvidences) {
         return featureEvidences.stream().map(p -> new GraphFeature(p,false)).collect(Collectors.toList());
-    }*/
+    }
 
 
     public static Collection<GraphExperiment> convertExperimentIntoGraphModel(Collection<Experiment> experiments) {

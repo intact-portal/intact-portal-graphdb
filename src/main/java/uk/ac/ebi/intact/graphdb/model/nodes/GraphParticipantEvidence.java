@@ -278,64 +278,6 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
     }
 
     @Override
-    public boolean addFeature(FeatureEvidence feature) {
-        if (feature == null) {
-            return false;
-        }
-        GraphFeatureEvidence graphFeatureEvidence = new GraphFeatureEvidence(feature);
-        if (getFeatures().add(graphFeatureEvidence)) {
-            graphFeatureEvidence.setParticipant(this);
-
-            return true;
-        }
-        return false;
-    }
-
-    //Todo review
-    @Override
-    public boolean removeFeature(FeatureEvidence feature) {
-        if (feature == null) {
-            return false;
-        }
-
-        if (getFeatures().remove(feature)) {
-            feature.setParticipant(null);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean addAllFeatures(Collection<? extends FeatureEvidence> features) {
-        if (features == null) {
-            return false;
-        }
-
-        boolean added = false;
-        for (FeatureEvidence feature : features) {
-            if (addFeature(feature)) {
-                added = true;
-            }
-        }
-        return added;
-    }
-
-    @Override
-    public boolean removeAllFeatures(Collection<? extends FeatureEvidence> features) {
-        if (features == null) {
-            return false;
-        }
-
-        boolean added = false;
-        for (FeatureEvidence feature : features) {
-            if (removeFeature(feature)) {
-                added = true;
-            }
-        }
-        return added;
-    }
-
-    @Override
     public Collection<GraphConfidence> getConfidences() {
         if (this.confidences == null) {
             this.confidences = new ArrayList<GraphConfidence>();

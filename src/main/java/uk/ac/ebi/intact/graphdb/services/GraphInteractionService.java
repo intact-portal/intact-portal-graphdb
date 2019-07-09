@@ -77,14 +77,14 @@ public class GraphInteractionService {
             // below is needed so that everytime features come in same order so that unit tests do not fail unnecessarily
             for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence.getParticipants()) {
 
-                Comparator<GraphFeatureEvidence> featureEvidenceComparator = new Comparator<GraphFeatureEvidence>() {
+                Comparator<GraphFeature> featureEvidenceComparator = new Comparator<GraphFeature>() {
                     @Override
-                    public int compare(GraphFeatureEvidence e1, GraphFeatureEvidence e2) {
+                    public int compare(GraphFeature e1, GraphFeature e2) {
                         return e1.getAc().compareTo(e2.getAc());
                     }
                 };
 
-                Collections.sort((List<GraphFeatureEvidence>) graphParticipantEvidence.getFeatures(), featureEvidenceComparator);
+                Collections.sort((List<GraphFeature>) graphParticipantEvidence.getFeatures(), featureEvidenceComparator);
             }
 
             Collections.sort((List<GraphParticipantEvidence>) graphInteractionEvidence.getParticipants(), participantEvidenceComparator);

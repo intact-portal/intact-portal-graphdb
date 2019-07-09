@@ -7,6 +7,8 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.ExperimentalEntity;
+import psidev.psi.mi.jami.model.Feature;
+import psidev.psi.mi.jami.model.FeatureEvidence;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphExperimentalEntity extends GraphEntity {
+public class GraphExperimentalEntity extends GraphEntity<FeatureEvidence> {
 
     @GraphId
     private Long graphId;

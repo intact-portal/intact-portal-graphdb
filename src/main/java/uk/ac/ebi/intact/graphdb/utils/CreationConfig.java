@@ -28,7 +28,7 @@ public class CreationConfig {
         CommonUtility.createSchemaConstraint(GraphExperiment.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphExperimentalEntity.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphFeatureEvidence.class, "uniqueKey");
-        /*CommonUtility.createSchemaConstraint(GraphFeature.class, "uniqueKey");*/
+        CommonUtility.createSchemaConstraint(GraphFeature.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphInteractionEvidence.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphInteractor.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphNucleicAcid.class, "uniqueKey");

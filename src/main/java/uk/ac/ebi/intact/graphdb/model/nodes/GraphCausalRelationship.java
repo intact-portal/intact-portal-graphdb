@@ -3,10 +3,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
-import psidev.psi.mi.jami.model.CausalRelationship;
-import psidev.psi.mi.jami.model.CvTerm;
-import psidev.psi.mi.jami.model.Entity;
-import psidev.psi.mi.jami.model.Participant;
+import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousCausalRelationshipComparator;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -30,7 +27,7 @@ public class GraphCausalRelationship implements CausalRelationship {
     private GraphCvTerm relationType;
 
     @Relationship(type = RelationshipTypes.TARGET)
-    private GraphEntity target;
+    private GraphEntity<FeatureEvidence> target;
 
     @Transient
     private boolean isAlreadyCreated;
@@ -119,7 +116,7 @@ public class GraphCausalRelationship implements CausalRelationship {
             if (target instanceof GraphEntity) {
                 this.target = (GraphEntity) target;
             } else {
-                this.target = new GraphEntity(target, false);
+                this.target = new GraphEntity<FeatureEvidence>(target, false);
             }
         } else {
             this.target = null;

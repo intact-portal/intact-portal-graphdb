@@ -810,8 +810,8 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
                     " OPTIONAL MATCH (participantEvidenceN)-[featuresR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresN:GraphFeatureEvidence)" +
                     " OPTIONAL MATCH (featuresN)-[featuresTypeR:" + RelationshipTypes.TYPE + "]-(featuresTypeN:GraphCvTerm)" +
                     " OPTIONAL MATCH (featuresN)-[featuresRoleR:" + RelationshipTypes.ROLE + "]-(featuresRoleN:GraphCvTerm)" +
-                    " OPTIONAL MATCH (featuresN)-[featureLinkedFeaturesR:" + RelationshipTypes.LINKED_FEATURES + "]-(featureLinkedFeaturesN:GraphFeatureEvidence)" +
-                    " OPTIONAL MATCH (featureLinkedFeaturesN)-[featureLinkedFeaturesLFR:" + RelationshipTypes.LINKED_FEATURES + "]-(featureLinkedFeaturesLFN:GraphFeatureEvidence)" +
+                    " OPTIONAL MATCH (featuresN)-[featureLinkedFeaturesR:" + RelationshipTypes.LINKED_FEATURES + "]-(featureLinkedFeaturesN:GraphFeature)" +
+                    " OPTIONAL MATCH (featureLinkedFeaturesN)-[featureLinkedFeaturesLFR:" + RelationshipTypes.LINKED_FEATURES + "]-(featureLinkedFeaturesLFN:GraphFeature)" +
                     " OPTIONAL MATCH (featuresN)-[featuresRangeR:" + RelationshipTypes.RANGES + "]-(featuresRangeN:GraphRange)" +
                     " OPTIONAL MATCH (featuresN)-[featuresParticipantR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresParticipantN:GraphExperimentalEntity)" +
                     " OPTIONAL MATCH (featuresParticipantN)-[featuresParticipantInteractorR:" + RelationshipTypes.INTERACTOR + "]-(featuresParticipantInteractorN:GraphInteractor)" +

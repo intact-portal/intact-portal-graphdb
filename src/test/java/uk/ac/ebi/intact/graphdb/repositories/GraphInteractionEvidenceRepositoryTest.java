@@ -192,7 +192,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertEquals("Features Count is wrong", 1, graphParticipantEvidence_P36102.getFeatures().size());
 
         //features...
-        GraphFeatureEvidence graphFeatureEvidence = graphParticipantEvidence_P36102.getFeatures().iterator().next();
+        GraphFeature graphFeatureEvidence = graphParticipantEvidence_P36102.getFeatures().iterator().next();
         Assert.assertEquals("Feature has wrong name", "strep tag", graphFeatureEvidence.getShortName());
         Assert.assertNotNull("Feature Type is null", graphFeatureEvidence.getType());
         Assert.assertEquals("Feature Type short name is wrong", "strep ii tag", graphFeatureEvidence.getType().getShortName());
@@ -200,7 +200,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Feature Ranges are null", graphFeatureEvidence.getRanges());
         Assert.assertEquals("Feature Ranges Count is wrong", 1, graphFeatureEvidence.getRanges().size());
 
-        GraphRange graphRange = graphFeatureEvidence.getRanges().iterator().next();
+        GraphRange graphRange = (GraphRange)graphFeatureEvidence.getRanges().iterator().next();
         Assert.assertEquals("Feature Ranges Count is wrong", "c-c", graphRange.getRangeString());
         Assert.assertNotNull("Interactor is null", graphParticipantEvidence_P53010.getInteractor());
 
@@ -321,12 +321,12 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertEquals("GraphInteractionEvidence 4 is not correct", ac4, graphInteractionEvidence4.getAc());
         Assert.assertNotNull("GraphInteractionEvidence 4 participants is null", graphInteractionEvidence4.getParticipants());
 
-        GraphFeatureEvidence graphFeatureEvidenceWithInterpro = null;
+        GraphFeature graphFeatureEvidenceWithInterpro = null;
         String interproId = "IPR001012";
 
         try {
             for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence4.getParticipants()) {
-                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                for (GraphFeature graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
                     if (graphFeatureEvidence1.getInterpro() != null && graphFeatureEvidence1.getInterpro().equals(interproId)) {
                         graphFeatureEvidenceWithInterpro = graphFeatureEvidence1;
                     }
@@ -346,12 +346,12 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional5.isPresent());
 
         GraphInteractionEvidence graphInteractionEvidence5 = graphInteractionEvidenceOptional5.get();
-        HashMap<String, Collection<GraphFeatureEvidence>> linkedFeatures = new HashMap<>();
+        HashMap<String, Collection<GraphFeature>> linkedFeatures = new HashMap<>();
         String featureAc1_withLinkedFeature = "EBI-10055168";
         String featureAc2_withLinkedFeature = "EBI-10055163";
         try {
             for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence5.getParticipants()) {
-                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                for (GraphFeature graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
                     if (graphFeatureEvidence1.getLinkedFeatures() != null) {
                         linkedFeatures.put(graphFeatureEvidence1.getAc(), graphFeatureEvidence1.getLinkedFeatures());
                     }
@@ -380,13 +380,13 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional6.isPresent());
 
         GraphInteractionEvidence graphInteractionEvidence6 = graphInteractionEvidenceOptional6.get();
-        HashMap<String, Collection<GraphFeatureEvidence>> linkedFeatures2 = new HashMap<>();
+        HashMap<String, Collection<GraphFeature>> linkedFeatures2 = new HashMap<>();
         String featureAc1_withLinkedFeature_2 = "EBI-10042083";
         String featureAc2_withLinkedFeature_2 = "EBI-10042078";
 
         try {
             for (GraphParticipantEvidence graphParticipantEvidence : graphInteractionEvidence6.getParticipants()) {
-                for (GraphFeatureEvidence graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
+                for (GraphFeature graphFeatureEvidence1 : graphParticipantEvidence.getFeatures()) {
                     if (graphFeatureEvidence1.getLinkedFeatures() != null) {
                         linkedFeatures2.put(graphFeatureEvidence1.getAc(), graphFeatureEvidence1.getLinkedFeatures());
                     }
