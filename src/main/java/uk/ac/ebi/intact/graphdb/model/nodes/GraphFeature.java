@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by anjali on 07/09/18.
  */
 @NodeEntity
-public class GraphFeature<P extends Entity, F extends Feature> implements Feature<P,F> {
+public class GraphFeature<P extends Entity, F extends Feature> implements Feature<P, F> {
 
     @GraphId
     private Long graphId;
@@ -110,7 +110,7 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        setRanges(featureEvidence.getRanges(),this.getUniqueKey());
+        setRanges(featureEvidence.getRanges(), this.getUniqueKey());
 
         setAliases(featureEvidence.getAliases());
 
@@ -386,9 +386,9 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         return this.ranges;
     }
 
-    public void setRanges(Collection<Range> ranges,String featureUniqueKey) {
+    public void setRanges(Collection<Range> ranges, String featureUniqueKey) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges,featureUniqueKey);
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, featureUniqueKey);
         } else {
             this.ranges = new ArrayList<GraphRange>();
         }
@@ -412,7 +412,7 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
 
     @Override
     public P getParticipant() {
-        return (P)this.participant;
+        return (P) this.participant;
     }
 
     @Override
@@ -446,6 +446,15 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         return this.linkedFeatures;
     }
 
+    public void setLinkedFeatures(Collection<Feature> linkedFeatures) {
+        if (linkedFeatures != null) {
+            addAllLinkedFeatures(linkedFeatures);
+        } else {
+            this.linkedFeatures = new ArrayList<GraphFeature>();
+        }
+    }
+
+    //Todo review
 
     public boolean addLinkedFeature(Feature feature) {
         if (feature == null) {
@@ -458,7 +467,7 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
 
         } else if (feature instanceof FeatureEvidence) {
             graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
-        }else {
+        } else {
             graphFeature = new GraphFeature(feature, false);
         }
         if (getLinkedFeatures().add(graphFeature)) {
@@ -468,8 +477,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
 
         return false;
     }
-
-    //Todo review
 
     public boolean removeFeature(Feature feature) {
         if (feature == null) {
@@ -482,7 +489,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         }
         return false;
     }
-
 
     public boolean addAllLinkedFeatures(Collection<? extends Feature> features) {
         if (features == null) {
@@ -498,7 +504,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         return added;
     }
 
-
     public boolean removeAllLinkedFeatures(Collection<? extends Feature> features) {
         if (features == null) {
             return false;
@@ -511,15 +516,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
             }
         }
         return added;
-    }
-
-
-    public void setLinkedFeatures(Collection<Feature> linkedFeatures) {
-        if (linkedFeatures != null) {
-            addAllLinkedFeatures(linkedFeatures);
-        } else {
-            this.linkedFeatures = new ArrayList<GraphFeature>();
-        }
     }
 
     public Collection<GraphAlias> getAliases() {

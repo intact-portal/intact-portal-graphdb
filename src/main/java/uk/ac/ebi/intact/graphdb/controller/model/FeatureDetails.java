@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.controller.model;
 
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeature;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
 
 import java.util.Collection;
 

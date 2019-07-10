@@ -19,7 +19,7 @@ import java.util.*;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, FeatureEvidence> implements FeatureEvidence{
+public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, FeatureEvidence> implements FeatureEvidence {
 
     @GraphId
     private Long graphId;

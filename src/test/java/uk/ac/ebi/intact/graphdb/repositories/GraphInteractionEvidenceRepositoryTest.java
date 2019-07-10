@@ -200,7 +200,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Feature Ranges are null", graphFeatureEvidence.getRanges());
         Assert.assertEquals("Feature Ranges Count is wrong", 1, graphFeatureEvidence.getRanges().size());
 
-        GraphRange graphRange = (GraphRange)graphFeatureEvidence.getRanges().iterator().next();
+        GraphRange graphRange = (GraphRange) graphFeatureEvidence.getRanges().iterator().next();
         Assert.assertEquals("Feature Ranges Count is wrong", "c-c", graphRange.getRangeString());
         Assert.assertNotNull("Interactor is null", graphParticipantEvidence_P53010.getInteractor());
 

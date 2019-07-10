@@ -22,8 +22,8 @@ public class CypherQueries {
                     " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
 
 
-    public static final String COMM_NEIGH_OF_INTOR_SELF_INTERACTION_CASE=
-            "MATCH (interactorA:GraphInteractor)<-[:"+ RelationshipTypes.INTERACTOR_A +"]-(binaryIE:GraphBinaryInteractionEvidence) -[:"+ RelationshipTypes.INTERACTOR_B +"]->(interactorB:GraphInteractor)" +
+    public static final String COMM_NEIGH_OF_INTOR_SELF_INTERACTION_CASE =
+            "MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTOR_A + "]-(binaryIE:GraphBinaryInteractionEvidence) -[:" + RelationshipTypes.INTERACTOR_B + "]->(interactorB:GraphInteractor)" +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
                     " UNWIND interactions as interaction" +
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
@@ -34,9 +34,9 @@ public class CypherQueries {
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
                     " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications ORDER BY interactorA.ac";
 
-    public static final String  COMM_NEIGH_OF_INTOR_SELF_PUTATIVE_CASE=
-            "MATCH (interactorA:GraphInteractor)-[:"+ RelationshipTypes.INTERACTOR_A +"]-(binaryIE:GraphBinaryInteractionEvidence)" +
-                    " WHERE  (NOT (binaryIE)-[:"+ RelationshipTypes.INTERACTOR_B +"]-(:GraphInteractor))" +
+    public static final String COMM_NEIGH_OF_INTOR_SELF_PUTATIVE_CASE =
+            "MATCH (interactorA:GraphInteractor)-[:" + RelationshipTypes.INTERACTOR_A + "]-(binaryIE:GraphBinaryInteractionEvidence)" +
+                    " WHERE  (NOT (binaryIE)-[:" + RelationshipTypes.INTERACTOR_B + "]-(:GraphInteractor))" +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA" +
                     " UNWIND interactions as interaction" +
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
@@ -51,17 +51,17 @@ public class CypherQueries {
                                 WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB)) RETURN COUNT(*)
     * */
     public static final String INTERACTOR_PAIR_COUNT =
-            "MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTORS +"]-(binaryIE:GraphBinaryInteractionEvidence) -[:" + RelationshipTypes.INTERACTORS +"]->(interactorB:GraphInteractor) " +
+            "MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTORS + "]-(binaryIE:GraphBinaryInteractionEvidence) -[:" + RelationshipTypes.INTERACTORS + "]->(interactorB:GraphInteractor) " +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB" +
                     " WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB)) " +
-                    " WITH COUNT(*) as binaryCount   MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTOR_A +"]-(binaryIE:GraphBinaryInteractionEvidence)" +
-                    " OPTIONAL MATCH (binaryIE)-[:" + RelationshipTypes.INTERACTOR_B +"]->(interactorB:GraphInteractor) " +
+                    " WITH COUNT(*) as binaryCount   MATCH (interactorA:GraphInteractor)<-[:" + RelationshipTypes.INTERACTOR_A + "]-(binaryIE:GraphBinaryInteractionEvidence)" +
+                    " OPTIONAL MATCH (binaryIE)-[:" + RelationshipTypes.INTERACTOR_B + "]->(interactorB:GraphInteractor) " +
                     " WITH  COLLECT(binaryIE) as interactions,interactorA,interactorB,binaryCount" +
                     " WHERE  (ID(interactorA) = ID(interactorB)) OR interactorB is null  " +
                     " RETURN COUNT(*)+binaryCount as totalCount";
 
     public static final String GET_CLUSTERED_INTERACTION =
-    "MATCH (:GraphInteractor { ac:{0}})<--(n:GraphClusteredInteraction)-->(:GraphInteractor{ ac:{1}}) return (n)";
+            "MATCH (:GraphInteractor { ac:{0}})<--(n:GraphClusteredInteraction)-->(:GraphInteractor{ ac:{1}}) return (n)";
 
     /*
     * Equivalent Query String :"MATCH (binaryIEN:GraphBinaryInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:interactor]-(interactorN:GraphInteractor)
@@ -131,7 +131,7 @@ public class CypherQueries {
 
                     " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
                     " COLLECT(expXrefsR) as expXrefsRCollection,COLLECT(expXrefsN) as expXrefsNCollection," +
-                    " COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection,COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection"+
+                    " COLLECT(expXrefsDatabaseR) as expXrefsDatabaseRCollection,COLLECT(expXrefsDatabaseN) as expXrefsDatabaseNCollection" +
 
                     " OPTIONAL MATCH (experimentN)-[expAnnotationsR:" + RelationshipTypes.ANNOTATIONS + "]-(expAnnotationsN:GraphAnnotation)" +
                     " OPTIONAL MATCH (expAnnotationsN)-[expAnnotationsNTopicR:" + RelationshipTypes.TOPIC + "]-(expAnnotationsNTopicN:GraphCvTerm)" +
@@ -139,14 +139,14 @@ public class CypherQueries {
                     " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
                     " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
                     " COLLECT(expAnnotationsR) as expAnnotationsRCollection,COLLECT(expAnnotationsN) as expAnnotationsNCollection ," +
-                    " COLLECT(expAnnotationsNTopicR) as expAnnotationsNTopicRCollection,COLLECT(expAnnotationsNTopicN) as expAnnotationsNTopicNCollection"+
+                    " COLLECT(expAnnotationsNTopicR) as expAnnotationsNTopicRCollection,COLLECT(expAnnotationsNTopicN) as expAnnotationsNTopicNCollection" +
 
                     " OPTIONAL MATCH (publicationN)-[pubXrefsR:" + RelationshipTypes.XREFS + "]-(pubXrefsN:GraphXref)" +
                     " OPTIONAL MATCH (pubXrefsN)-[pubXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(pubXrefsDatabaseN:GraphCvTerm)" +
 
                     " WITH experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
                     " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
-                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection,"+
+                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection," +
                     " COLLECT(pubXrefsR) as pubXrefsRCollection,COLLECT(pubXrefsN) as pubXrefsNCollection," +
                     " COLLECT(pubXrefsDatabaseR) as pubXrefsDatabaseRCollection,COLLECT(pubXrefsDatabaseN) as pubXrefsDatabaseNCollection" +
 
@@ -155,7 +155,7 @@ public class CypherQueries {
                     " RETURN " +
                     " experimentN,binaryIEN,publicationR,publicationN,interactionDetectionMethodR,interactionDetectionMethodN,hostOrganismR,hostOrganismN," +
                     " expXrefsRCollection,expXrefsNCollection, expXrefsDatabaseRCollection,expXrefsDatabaseNCollection," +
-                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection,"+
+                    " expAnnotationsRCollection,expAnnotationsNCollection ,expAnnotationsNTopicRCollection,expAnnotationsNTopicNCollection," +
                     " pubXrefsRCollection,pubXrefsNCollection,pubXrefsDatabaseRCollection,pubXrefsDatabaseNCollection," +
                     " COLLECT(publicationAnnotationsR),COLLECT(publicationAnnotationsN),COLLECT(publicationAnnotationsTopicR),COLLECT(publicationAnnotationsTopicN)";
 
@@ -201,7 +201,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (binaryIEN)-[interactionXrefsR:" + RelationshipTypes.XREFS + "]-(interactionXrefsN:GraphXref)" +
                     " OPTIONAL MATCH (interactionXrefsN)-[interactionXrefsDatabaseR:" + RelationshipTypes.DATABASE + "]-(interactionXrefsDatabaseN:GraphCvTerm)" +
 
-                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN," +
                     " COLLECT(interactionXrefsR) as interactionXrefsRCollection,COLLECT(interactionXrefsN) as interactionXrefsNCollection," +
                     " COLLECT(interactionXrefsDatabaseR) as interactionXrefsDatabaseRCollection,COLLECT(interactionXrefsDatabaseN)" +
                     " as interactionXrefsDatabaseNCollection" +
@@ -209,7 +209,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (binaryIEN)-[interactionAnnotationR:" + RelationshipTypes.ANNOTATIONS + "]-(interactionAnnotationN:GraphAnnotation)" +
                     " OPTIONAL MATCH (interactionAnnotationN)-[interactionAnnotationTopicR:" + RelationshipTypes.TOPIC + "]-(interactionAnnotationTopicN:GraphCvTerm)" +
 
-                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN," +
                     " interactionXrefsRCollection,interactionXrefsNCollection," +
                     " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
                     " COLLECT(interactionAnnotationR) as interactionAnnotationRCollection,COLLECT(interactionAnnotationN) as" +
@@ -219,7 +219,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (binaryIEN)-[interactionConfidencesR:" + RelationshipTypes.CONFIDENCE + "]-(interactionConfidencesN:GraphConfidence)" +
                     " OPTIONAL MATCH (interactionConfidencesN)-[interactionConfidencesTypeR:" + RelationshipTypes.TYPE + "]-(interactionConfidencesTypeN:GraphCvTerm)" +
 
-                    " WITH binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " WITH binaryIEN,interactionTypeR,interactionTypeN," +
                     " interactionXrefsRCollection,interactionXrefsNCollection," +
                     " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
                     " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +
@@ -233,7 +233,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (interactionParametersN)-[interactionParametersUnitR:" + RelationshipTypes.UNIT + "]-(interactionParametersUnitN:GraphCvTerm)" +
                     " OPTIONAL MATCH (interactionParametersN)-[interactionParametersValueR:" + RelationshipTypes.VALUE + "]-(interactionParametersValueN:GraphParameterValue)" +
                     " RETURN " +
-                    " binaryIEN,interactionTypeR,interactionTypeN,"+
+                    " binaryIEN,interactionTypeR,interactionTypeN," +
                     " interactionXrefsRCollection,interactionXrefsNCollection," +
                     " interactionXrefsDatabaseRCollection,interactionXrefsDatabaseNCollection," +
                     " interactionAnnotationRCollection,interactionAnnotationNCollection,interactionAnnotationTopicRCollection," +

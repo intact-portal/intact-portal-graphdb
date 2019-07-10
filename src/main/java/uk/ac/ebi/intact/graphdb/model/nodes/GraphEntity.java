@@ -156,7 +156,7 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
 
         } else if (feature instanceof FeatureEvidence) {
             graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
-        }else {
+        } else {
             graphFeature = new GraphFeature(feature, false);
         }
         if (getFeatures().add(graphFeature)) {
@@ -217,6 +217,16 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
     }
 
     @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
+    }
+
+    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -228,16 +238,6 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
             this.stoichiometry = null;
         }
         //TODO login it
-    }
-
-    @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
     }
 
     public Map<String, Object> getNodeProperties() {

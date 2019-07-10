@@ -51,7 +51,7 @@ public class GraphRange implements Range {
     public GraphRange() {
     }
 
-    public GraphRange(Range range,String featureUniqueKey) {
+    public GraphRange(Range range, String featureUniqueKey) {
         setRangeString(RangeUtils.convertRangeToString(range));
         setLink(range.isLink());
         setParticipant(range.getParticipant());
@@ -76,7 +76,7 @@ public class GraphRange implements Range {
             if (this.getRangeString() != null) nodeProperties.put("rangeString", this.getRangeString());
             nodeProperties.put("isLink", this.isLink());
 
-             Label[] labels = CommonUtility.getLabels(GraphRange.class);
+            Label[] labels = CommonUtility.getLabels(GraphRange.class);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());

@@ -420,7 +420,7 @@ public class CommonUtility {
         // This is done because indexed properties cannot be more than 32766
         if (uniqueKey != null && uniqueKey.length() >= 32766) {
             System.out.println("Unique Key length crossed the index size limit: " + uniqueKey);
-            nodeProperties.put("uniqueKey",""+uniqueKey.hashCode());
+            nodeProperties.put("uniqueKey", "" + uniqueKey.hashCode());
         }
         // Code End
 

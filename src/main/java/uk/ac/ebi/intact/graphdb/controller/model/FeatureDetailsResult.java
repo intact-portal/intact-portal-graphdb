@@ -136,7 +136,7 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
             });
 
             String participantName = null;
-            if (feature.getParticipant() != null && feature.getParticipant().getInteractor() != null ) {
+            if (feature.getParticipant() != null && feature.getParticipant().getInteractor() != null) {
                 participantName = feature.getParticipant().getInteractor().getShortName();
             }
 
