@@ -33,10 +33,6 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
     @Relationship(type = RelationshipTypes.PARAMETERS)
     private Collection<GraphParameter> parameters;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.INCOMING)
-    @JsonManagedReference
-    private GraphParticipantEvidence participantEvidence;
-
     @Transient
     private boolean isAlreadyCreated;
 
@@ -199,11 +195,4 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
         return UniqueKeyGenerator.createFeatureKey(featureEvidence);
     }
 
-    public GraphParticipantEvidence getParticipantEvidence() {
-        return participantEvidence;
-    }
-
-    public void setParticipantEvidence(GraphParticipantEvidence participantEvidence) {
-        this.participantEvidence = participantEvidence;
-    }
 }
