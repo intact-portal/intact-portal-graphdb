@@ -21,9 +21,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphModelledConfidence extends GraphConfidence implements ModelledConfidence {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -111,16 +108,6 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
 
     public String createUniqueKey(ModelledConfidence modelledConfidence) {
         return UniqueKeyGenerator.createModelledConfidenceKey(modelledConfidence);
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

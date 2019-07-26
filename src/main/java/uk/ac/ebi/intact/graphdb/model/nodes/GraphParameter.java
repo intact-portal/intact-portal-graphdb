@@ -20,10 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphParameter implements Parameter {
+public class GraphParameter  extends GraphDatabaseObject implements Parameter {
 
-    @GraphId
-    private Long graphId;
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -196,14 +194,6 @@ public class GraphParameter implements Parameter {
             this.value = null;
         }
         //TODO login it
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

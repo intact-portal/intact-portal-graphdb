@@ -24,11 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphEntity<F extends Feature> implements Entity<F> {
-
-    @GraphId
-    private Long graphId;
-
+public class GraphEntity<F extends Feature>  extends GraphDatabaseObject  implements Entity<F> {
 
     private String uniqueKey;
 
@@ -280,15 +276,6 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
     @Override
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

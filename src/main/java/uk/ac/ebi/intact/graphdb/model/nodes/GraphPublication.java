@@ -17,10 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
-public class GraphPublication implements Publication {
-
-    @GraphId
-    private Long graphId;
+public class GraphPublication  extends GraphDatabaseObject  implements Publication {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -206,15 +203,15 @@ public class GraphPublication implements Publication {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(graphCurationDepth, this.graphId, RelationshipTypes.GRAPH_CURATION_DEPTH);
-        CommonUtility.createRelationShip(imexId, this.graphId, RelationshipTypes.IMEX_ID);
-        CommonUtility.createRelationShip(source, this.graphId, RelationshipTypes.SOURCE);
-        CommonUtility.createRelationShip(pubmedId, this.graphId, RelationshipTypes.PMID);
-        CommonUtility.createRelationShip(doi, this.graphId, RelationshipTypes.DOI);
-        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createExperimentRelationShips(experiments, this.graphId);
+        CommonUtility.createRelationShip(graphCurationDepth, this.getGraphId(), RelationshipTypes.GRAPH_CURATION_DEPTH);
+        CommonUtility.createRelationShip(imexId, this.getGraphId(), RelationshipTypes.IMEX_ID);
+        CommonUtility.createRelationShip(source, this.getGraphId(), RelationshipTypes.SOURCE);
+        CommonUtility.createRelationShip(pubmedId, this.getGraphId(), RelationshipTypes.PMID);
+        CommonUtility.createRelationShip(doi, this.getGraphId(), RelationshipTypes.DOI);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.getGraphId());
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createExperimentRelationShips(experiments, this.getGraphId());
         CommonUtility.createAuthorRelationShips(this.getGraphAuthors(), this.getGraphId());
     }
 
@@ -447,14 +444,6 @@ public class GraphPublication implements Publication {
         } else {
             this.source = null;
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

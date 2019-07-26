@@ -22,9 +22,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -109,7 +106,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         CommonUtility.createRelationShip(interactorB, this.getGraphId(), RelationshipTypes.INTERACTOR_B);
         CommonUtility.createRelationShip(complexExpansion, this.getGraphId(), RelationshipTypes.COMPLEX_EXPANSION);
         CommonUtility.createRelationShip(interactionEvidence, this.getGraphId(), RelationshipTypes.INTERACTION_EVIDENCE);
-        CommonUtility.createInteractorRelationShips(interactors, this.graphId);
+        CommonUtility.createInteractorRelationShips(interactors, this.getGraphId());
     }
 
     public String getUniqueKey() {
@@ -244,14 +241,6 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public void setClusteredInteraction(GraphClusteredInteraction clusteredInteraction) {
         this.clusteredInteraction = clusteredInteraction;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

@@ -21,10 +21,7 @@ import java.util.Map;
  * Created by anjali on 07/09/18.
  */
 @NodeEntity
-public class GraphFeature<P extends Entity, F extends Feature> implements Feature<P, F> {
-
-    @GraphId
-    private Long graphId;
+public class GraphFeature<P extends Entity, F extends Feature>  extends GraphDatabaseObject implements Feature<P, F> {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -531,15 +528,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         } else {
             this.aliases = new ArrayList<GraphAlias>();
         }
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

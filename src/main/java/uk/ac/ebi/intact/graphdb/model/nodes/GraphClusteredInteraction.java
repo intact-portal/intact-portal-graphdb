@@ -19,10 +19,8 @@ import java.util.Set;
  * Created by anjali on 06/03/18.
  */
 @NodeEntity
-public class GraphClusteredInteraction {
+public class GraphClusteredInteraction extends GraphDatabaseObject {
 
-    @GraphId
-    private Long graphId;
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -141,15 +139,6 @@ public class GraphClusteredInteraction {
     public void setAlreadyCreated(boolean alreadyCreated) {
         isAlreadyCreated = alreadyCreated;
     }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
-    }
-
 
     public String getUniqueKey() {
         return uniqueKey;

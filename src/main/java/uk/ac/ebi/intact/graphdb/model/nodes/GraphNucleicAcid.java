@@ -25,10 +25,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
-    @GraphId
-    private Long graphId;
-
-
     private String uniqueKey;
 
     @Relationship(type = RelationshipTypes.DDBJ_EMBL_GENBANK)
@@ -142,8 +138,8 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, RelationshipTypes.DDBJ_EMBL_GENBANK);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(ddbjEmblGenbank, this.getGraphId(), RelationshipTypes.DDBJ_EMBL_GENBANK);
+        CommonUtility.createRelationShip(refseq, this.getGraphId(), RelationshipTypes.REFSEQ);
     }
 
     public String getUniqueKey() {
@@ -299,14 +295,6 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         } else {
             super.setInteractorType(interactorType);
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

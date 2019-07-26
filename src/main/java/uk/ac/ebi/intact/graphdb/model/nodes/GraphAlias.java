@@ -17,10 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphAlias implements Alias {
-
-    @GraphId
-    private Long graphId;
+public class GraphAlias extends GraphDatabaseObject implements Alias {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -121,14 +118,6 @@ public class GraphAlias implements Alias {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getAc() {

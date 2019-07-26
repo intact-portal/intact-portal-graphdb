@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.utils;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import psidev.psi.mi.jami.model.*;
@@ -463,6 +464,13 @@ public class CommonUtility {
         return graphInteractor;
     }
 
+    public static String getRelationshipAsString (String... relationships) {
+        String result = "";
+        if (relationships != null && relationships.length > 0) {
+            result = ":" + StringUtils.join(relationships, "|");
+        }
+        return result;
+    }
 
 }
 

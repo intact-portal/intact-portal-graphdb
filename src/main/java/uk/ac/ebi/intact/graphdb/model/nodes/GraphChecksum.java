@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphChecksum implements Checksum {
-
-    @GraphId
-    private Long graphId;
+public class GraphChecksum extends GraphDatabaseObject implements Checksum {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -110,14 +107,6 @@ public class GraphChecksum implements Checksum {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

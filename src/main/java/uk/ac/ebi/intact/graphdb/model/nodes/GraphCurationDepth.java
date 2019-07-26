@@ -19,10 +19,7 @@ import java.util.Map;
  * Created by anjali on 01/05/18.
  */
 @NodeEntity
-public class GraphCurationDepth {
-
-    @GraphId
-    private Long graphId;
+public class GraphCurationDepth  extends GraphDatabaseObject {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -63,14 +60,6 @@ public class GraphCurationDepth {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

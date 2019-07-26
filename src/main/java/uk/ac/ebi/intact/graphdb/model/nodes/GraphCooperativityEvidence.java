@@ -21,10 +21,7 @@ import java.util.Map;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphCooperativityEvidence implements CooperativityEvidence {
-
-    @GraphId
-    private Long graphId;
+public class GraphCooperativityEvidence  extends GraphDatabaseObject  implements CooperativityEvidence {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -80,8 +77,8 @@ public class GraphCooperativityEvidence implements CooperativityEvidence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUBLICATION);
-        CommonUtility.createEvidenceMethodRelationShips(evidenceMethods, this.graphId);
+        CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUBLICATION);
+        CommonUtility.createEvidenceMethodRelationShips(evidenceMethods, this.getGraphId());
     }
 
     public Publication getPublication() {
@@ -113,14 +110,6 @@ public class GraphCooperativityEvidence implements CooperativityEvidence {
         } else {
             this.evidenceMethods = new ArrayList<GraphCvTerm>();
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

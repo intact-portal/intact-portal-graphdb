@@ -20,9 +20,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphMolecule extends GraphInteractor implements Molecule {
 
-    @GraphId
-    private Long graphId;
-
     private String uniqueKey;
 
     @Transient
@@ -147,16 +144,6 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Override
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

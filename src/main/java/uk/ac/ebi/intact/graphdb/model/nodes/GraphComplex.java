@@ -23,9 +23,6 @@ import java.util.*;
 @NodeEntity
 public class GraphComplex extends GraphInteractor implements Complex {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -719,16 +716,6 @@ public class GraphComplex extends GraphInteractor implements Complex {
         } else {
             this.components = new ArrayList<GraphModelledParticipant>();
         }
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

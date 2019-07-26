@@ -12,10 +12,7 @@ import uk.ac.ebi.intact.graphdb.utils.*;
 import java.util.*;
 
 @NodeEntity
-public class GraphInteractor implements Interactor {
-
-    @GraphId
-    private Long graphId;
+public class GraphInteractor extends GraphDatabaseObject implements Interactor {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -469,14 +466,6 @@ public class GraphInteractor implements Interactor {
                 Interactor.UNKNOWN_INTERACTOR,
                 Interactor.UNKNOWN_INTERACTOR_MI,
                 GraphUtils.INTERACTOR_TYPE_OBJCLASS);
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

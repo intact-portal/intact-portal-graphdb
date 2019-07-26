@@ -19,9 +19,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphSource extends GraphCvTerm implements Source {
 
-    @GraphId
-    private Long graphId;
-
     private String postalAddress;
     private String uniqueKey;
     private String ac;
@@ -76,7 +73,7 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(getPublication(), this.graphId, RelationshipTypes.PUBLICATION);
+        CommonUtility.createRelationShip(getPublication(), this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 
     public String getUniqueKey() {
@@ -103,14 +100,6 @@ public class GraphSource extends GraphCvTerm implements Source {
         } else {
             this.publication = null;
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

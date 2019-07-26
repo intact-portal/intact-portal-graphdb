@@ -21,9 +21,6 @@ import java.util.*;
 @NodeEntity
 public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, FeatureEvidence> implements FeatureEvidence {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -94,8 +91,8 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.graphId);
-        CommonUtility.createParameterRelationShips(parameters, this.graphId);
+        CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.getGraphId());
+        CommonUtility.createParameterRelationShips(parameters, this.getGraphId());
     }
 
 
@@ -162,14 +159,6 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

@@ -17,10 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphStoichiometry implements Stoichiometry {
-
-    @GraphId
-    private Long graphId;
+public class GraphStoichiometry  extends GraphDatabaseObject implements Stoichiometry {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -98,14 +95,6 @@ public class GraphStoichiometry implements Stoichiometry {
 
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

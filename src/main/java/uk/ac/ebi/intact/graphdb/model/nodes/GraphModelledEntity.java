@@ -24,10 +24,7 @@ import java.util.Map;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphModelledEntity implements ModelledEntity {
-
-    @GraphId
-    private Long graphId;
+public class GraphModelledEntity  extends GraphDatabaseObject  implements ModelledEntity {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -280,15 +277,6 @@ public class GraphModelledEntity implements ModelledEntity {
     @Override
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

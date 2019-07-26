@@ -20,10 +20,7 @@ import java.util.*;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphModelledInteraction implements ModelledInteraction {
-
-    @GraphId
-    private Long graphId;
+public class GraphModelledInteraction  extends GraphDatabaseObject  implements ModelledInteraction {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -428,14 +425,6 @@ public class GraphModelledInteraction implements ModelledInteraction {
             }
         }*/
         return false;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

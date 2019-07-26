@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphConfidence implements Confidence {
-
-    @GraphId
-    private Long graphId;
+public class GraphConfidence extends GraphDatabaseObject implements Confidence {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -119,15 +116,6 @@ public class GraphConfidence implements Confidence {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

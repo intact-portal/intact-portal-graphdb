@@ -22,9 +22,6 @@ import java.util.*;
 @NodeEntity
 public class GraphParticipantEvidence extends GraphExperimentalEntity implements ParticipantEvidence {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -132,18 +129,18 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(experimentalRole, this.graphId, RelationshipTypes.EXPERIMENTAL_ROLE);
-        CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
-        CommonUtility.createRelationShip(expressedIn, this.graphId, RelationshipTypes.EXPRESSED_IN);
-        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
+        CommonUtility.createRelationShip(experimentalRole, this.getGraphId(), RelationshipTypes.EXPERIMENTAL_ROLE);
+        CommonUtility.createRelationShip(biologicalRole, this.getGraphId(), RelationshipTypes.BIOLOGICAL_ROLE);
+        CommonUtility.createRelationShip(expressedIn, this.getGraphId(), RelationshipTypes.EXPRESSED_IN);
+        CommonUtility.createRelationShip(interaction, this.getGraphId(), RelationshipTypes.IE_PARTICIPANT);
         //CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createConfidenceRelationShips(confidences, this.graphId);
-        CommonUtility.createParameterRelationShips(parameters, this.graphId);
-        CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.graphId);
-        CommonUtility.createExperimentalPreparationRelationShips(experimentalPreparations, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createConfidenceRelationShips(confidences, this.getGraphId());
+        CommonUtility.createParameterRelationShips(parameters, this.getGraphId());
+        CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.getGraphId());
+        CommonUtility.createExperimentalPreparationRelationShips(experimentalPreparations, this.getGraphId());
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createAliasRelationShips(aliases, this.getGraphId());
     }
 
     public String getUniqueKey() {
@@ -395,14 +392,6 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
 
     public void setAc(String ac) {
         this.ac = ac;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

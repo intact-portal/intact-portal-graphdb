@@ -20,10 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
-public class GraphInteractionEvidence implements InteractionEvidence {
-
-    @GraphId
-    private Long graphId;
+public class GraphInteractionEvidence extends GraphDatabaseObject implements InteractionEvidence {
 
     private String uniqueKey;
     private String ac;
@@ -583,14 +580,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     public void setNodeProperties(Map<String, Object> nodeProperties) {
         this.nodeProperties = nodeProperties;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

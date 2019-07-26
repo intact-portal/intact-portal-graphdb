@@ -18,10 +18,7 @@ import java.util.Map;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphRange implements Range {
-
-    @GraphId
-    private Long graphId;
+public class GraphRange  extends GraphDatabaseObject implements Range {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -88,10 +85,10 @@ public class GraphRange implements Range {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(start, this.graphId, RelationshipTypes.START);
-        CommonUtility.createRelationShip(end, this.graphId, RelationshipTypes.END);
-        CommonUtility.createRelationShip(resultingSequence, this.graphId, RelationshipTypes.RESULTING_SEQUENCE);
-        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT);
+        CommonUtility.createRelationShip(start, this.getGraphId(), RelationshipTypes.START);
+        CommonUtility.createRelationShip(end, this.getGraphId(), RelationshipTypes.END);
+        CommonUtility.createRelationShip(resultingSequence, this.getGraphId(), RelationshipTypes.RESULTING_SEQUENCE);
+        CommonUtility.createRelationShip(participant, this.getGraphId(), RelationshipTypes.PARTICIPANT);
     }
 
     public void setPositions(Position start, Position end) {
@@ -193,14 +190,6 @@ public class GraphRange implements Range {
             this.participant = null;
         }
 
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

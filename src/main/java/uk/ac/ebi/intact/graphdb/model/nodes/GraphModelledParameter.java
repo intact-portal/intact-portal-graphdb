@@ -21,9 +21,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphModelledParameter extends GraphParameter implements ModelledParameter {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -111,16 +108,6 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
 
     public String createUniqueKey(ModelledParameter modelledParameter) {
         return UniqueKeyGenerator.createModelledParameterKey(modelledParameter);
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphCausalRelationship implements CausalRelationship {
-
-    @GraphId
-    private Long graphId;
+public class GraphCausalRelationship extends GraphDatabaseObject implements CausalRelationship {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -121,15 +118,6 @@ public class GraphCausalRelationship implements CausalRelationship {
         } else {
             this.target = null;
         }
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

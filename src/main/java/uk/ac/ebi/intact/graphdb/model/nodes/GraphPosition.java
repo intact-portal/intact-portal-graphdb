@@ -19,10 +19,7 @@ import java.util.Map;
  * Created by anjali on 21/11/17.
  */
 @NodeEntity
-public class GraphPosition implements Position {
-
-    @GraphId
-    private Long graphId;
+public class GraphPosition  extends GraphDatabaseObject  implements Position {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -78,7 +75,7 @@ public class GraphPosition implements Position {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(status, this.graphId, RelationshipTypes.STATUS);
+        CommonUtility.createRelationShip(status, this.getGraphId(), RelationshipTypes.STATUS);
     }
 
     public String getUniqueKey() {
@@ -128,14 +125,6 @@ public class GraphPosition implements Position {
 
     public void setPositionUndetermined(boolean positionUndetermined) {
         isPositionUndetermined = positionUndetermined;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

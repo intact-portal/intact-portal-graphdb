@@ -20,10 +20,7 @@ import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 import java.util.*;
 
 @NodeEntity
-public class GraphCvTerm implements CvTerm {
-
-    @GraphId
-    private Long graphId;
+public class GraphCvTerm  extends GraphDatabaseObject  implements CvTerm {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -429,15 +426,6 @@ public class GraphCvTerm implements CvTerm {
 
     public void setTypeLabels(List<String> typeLabels) {
         this.typeLabels = typeLabels;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

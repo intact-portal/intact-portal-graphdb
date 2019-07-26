@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphCooperativeEffect implements CooperativeEffect {
+public class GraphCooperativeEffect  implements CooperativeEffect {
 
     @GraphId
     private Long graphId;

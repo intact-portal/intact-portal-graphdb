@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphAnnotation implements Annotation {
-
-    @GraphId
-    private Long graphId;
+public class GraphAnnotation extends GraphDatabaseObject implements Annotation {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -124,14 +121,6 @@ public class GraphAnnotation implements Annotation {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

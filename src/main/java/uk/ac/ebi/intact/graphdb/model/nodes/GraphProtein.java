@@ -31,8 +31,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphProtein extends GraphPolymer implements Protein {
 
-    @GraphId
-    private Long graphId;
     private String uniqueKey;
 
     private String uniprotName;
@@ -158,10 +156,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(uniprotkb, this.graphId, RelationshipTypes.UNIPROTKB);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
-        CommonUtility.createRelationShip(geneName, this.graphId, RelationshipTypes.GENE_NAME);
-        CommonUtility.createRelationShip(rogid, this.graphId, RelationshipTypes.ROGID);
+        CommonUtility.createRelationShip(uniprotkb, this.getGraphId(), RelationshipTypes.UNIPROTKB);
+        CommonUtility.createRelationShip(refseq, this.getGraphId(), RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(geneName, this.getGraphId(), RelationshipTypes.GENE_NAME);
+        CommonUtility.createRelationShip(rogid, this.getGraphId(), RelationshipTypes.ROGID);
     }
 
     /**
@@ -410,14 +408,6 @@ public class GraphProtein extends GraphPolymer implements Protein {
         } else {
             super.setInteractorType(interactorType);
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

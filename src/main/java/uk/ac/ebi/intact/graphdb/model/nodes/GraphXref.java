@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphXref implements Xref {
-
-    @GraphId
-    private Long graphId;
+public class GraphXref  extends GraphDatabaseObject implements Xref {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -223,14 +220,6 @@ public class GraphXref implements Xref {
     @Override
     public String toString() {
         return getDatabase().toString() + ":" + getId() + (getQualifier() != null ? " (" + getQualifier().toString() + ")" : "");
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

@@ -21,10 +21,7 @@ import java.util.Map;
 /**
  * Created by anjali on 24/11/17.
  */
-public class GraphVariableParameterValue implements VariableParameterValue {
-
-    @GraphId
-    private Long graphId;
+public class GraphVariableParameterValue  extends GraphDatabaseObject implements VariableParameterValue {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -78,7 +75,7 @@ public class GraphVariableParameterValue implements VariableParameterValue {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(variableParameter, this.graphId, RelationshipTypes.VARIABLE_PARAMETER);
+        CommonUtility.createRelationShip(variableParameter, this.getGraphId(), RelationshipTypes.VARIABLE_PARAMETER);
     }
 
 /*    public GraphVariableParameterValue(String value, VariableParameter variableParameter){
@@ -136,14 +133,6 @@ public class GraphVariableParameterValue implements VariableParameterValue {
         } else {
             this.variableParameter = null;
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

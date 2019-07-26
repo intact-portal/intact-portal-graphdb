@@ -16,10 +16,7 @@ import java.util.Map;
 /**
  * Created by anjali on 30/04/18.
  */
-public class GraphAuthor {
-
-    @GraphId
-    private Long graphId;
+public class GraphAuthor extends GraphDatabaseObject {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -63,15 +60,6 @@ public class GraphAuthor {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {
