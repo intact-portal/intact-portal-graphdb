@@ -37,6 +37,7 @@ public class LazyFetchAspect {
     public Object autoFetch(ProceedingJoinPoint pjp) throws Throwable {
         if (!enableAOP) return pjp.proceed();
 
+
          // Target is the whole object that originated this pointcut.
         GraphDatabaseObject databaseObject = (GraphDatabaseObject) pjp.getTarget();
 
@@ -95,16 +96,16 @@ public class LazyFetchAspect {
      * AspectJ pointcut for all the getters that return a Collection of DatabaseObject
      * or instance of DatabaseObject.
      */
-    /*@SuppressWarnings("SingleElementAnnotation")
-    @Pointcut("execution(public java.util.Collection<java.lang.Object>+ uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))" +
-            "|| execution(public java.lang.Object+ uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
-    public void modelGetter() {
-    }*/
-
     @SuppressWarnings("SingleElementAnnotation")
-    @Pointcut("execution(* uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence.getExperiment())")
+    @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))" +
+            "|| execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
     public void modelGetter() {
     }
+
+    /*@SuppressWarnings("SingleElementAnnotation")
+    @Pointcut("execution(* uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence.getExperiment())")
+    public void modelGetter() {
+    }*/
 
     /**
      * Method used to get the Relationship annotation on top of the
