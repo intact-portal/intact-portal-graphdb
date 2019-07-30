@@ -15,9 +15,6 @@ import uk.ac.ebi.intact.graphdb.aop.LazyFetchAspect;
 @EnableLoadTimeWeaving(aspectjWeaving= EnableLoadTimeWeaving.AspectJWeaving.ENABLED)*/
 public class GraphDBApplication {
 
-/*    @Value("${aop.enabled}")
-    private boolean aopEnabled;*/
-
     public static void main(String[] args) {
         SpringApplication.run(GraphDBApplication.class, args);
     }

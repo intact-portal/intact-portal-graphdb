@@ -44,15 +44,21 @@ public class AdvancedDatabaseObjectRepository {
 
     private Result queryRelationshipTypesByDbId(Long dbId, String clazz, String direction, String... relationships) {
         String query;
+        String relationShipClass;
+        if (clazz == null) {
+            relationShipClass = "GraphDatabaseObject";
+        } else {
+            relationShipClass = clazz;
+        }
         switch (direction) {
             case "OUTGOING":
-                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]->(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]->(m:" + relationShipClass + ") WHERE ID(x)={dbId} RETURN m";
                 break;
             case "INCOMING":
-                query = "MATCH (x:GraphDatabaseObject)<-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)<-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + relationShipClass + ") WHERE ID(x)={dbId} RETURN m";
                 break;
             default: //UNDIRECTED
-                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + relationShipClass + ") WHERE ID(x)={dbId} RETURN m";
                 break;
         }
         Map<String, Object> map = new HashMap<>();

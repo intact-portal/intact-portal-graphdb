@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.GraphDBApplication;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 import uk.ac.ebi.intact.graphdb.repositories.GraphInteractionEvidenceRepository;
@@ -46,5 +44,7 @@ public class LazyFetchAspectTest {
         Assert.assertNotNull("Publication not present", graphInteractionEvidence.getExperiment().getPublication());
         Assert.assertEquals("Publication shortlabel not present", "25314077",
                 ((GraphPublication) graphInteractionEvidence.getExperiment().getPublication()).getPubmedIdStr());
+        Assert.assertNotNull("Interaction xrefs is null", graphInteractionEvidence.getXrefs());
+        Assert.assertEquals("Interaction xref count is wrong", 1, graphInteractionEvidence.getXrefs().size());
     }
 }

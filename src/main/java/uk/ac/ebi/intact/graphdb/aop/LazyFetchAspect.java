@@ -26,7 +26,7 @@ import java.util.*;
 public class LazyFetchAspect {
 
     @Value("${aop.enabled}")
-    private boolean enableAOP = true;
+    private boolean enableAOP;
 
     @Autowired
     private AdvancedDatabaseObjectService advancedDatabaseObjectService;
@@ -48,7 +48,8 @@ public class LazyFetchAspect {
         if (relationship != null && !databaseObject.preventLazyLoading) { // && !databaseObject.isLoaded) {
             // Check whether the object has been loaded.
             // pjp.proceed() has the result of the invoked method.
-            if (pjp.proceed() == null) {
+            Object objectToBeLoaded = pjp.proceed();
+            if (objectToBeLoaded == null || (objectToBeLoaded instanceof Collection && ((Collection) objectToBeLoaded).isEmpty())) {
                 Long dbId = databaseObject.getGraphId();
                 String setterMethod = method.getName().replaceFirst("get", "set");
                 Class<?> methodReturnClazz = method.getReturnType();
@@ -74,16 +75,18 @@ public class LazyFetchAspect {
                         databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObjectAsCollection);
                         return lazyLoadedObjectAsCollection;
                     }
-                }
-
-               /* if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {*/
-                String clazz = methodReturnClazz.getSimpleName();
-                // querying the graph and fill the single object
-                GraphDatabaseObject lazyLoadedObject = advancedDatabaseObjectService.findByRelationship(dbId, clazz, relationship.direction(), relationship.type());
-                if (lazyLoadedObject != null) {
-                    // invoke the setter in order to set the object in the target
-                    databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObject);
-                    return lazyLoadedObject;
+                } else {
+                    String clazz = null;
+                    if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
+                        clazz = methodReturnClazz.getSimpleName();
+                    }
+                    // querying the graph and fill the single object
+                    GraphDatabaseObject lazyLoadedObject = advancedDatabaseObjectService.findByRelationship(dbId, clazz, relationship.direction(), relationship.type());
+                    if (lazyLoadedObject != null) {
+                        // invoke the setter in order to set the object in the target
+                        databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObject);
+                        return lazyLoadedObject;
+                    }
                 }
                 //}
             }
