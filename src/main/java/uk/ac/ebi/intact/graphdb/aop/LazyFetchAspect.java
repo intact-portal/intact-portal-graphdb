@@ -9,9 +9,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphDatabaseObject;
 import uk.ac.ebi.intact.graphdb.services.AdvancedDatabaseObjectService;
 
@@ -28,7 +26,7 @@ import java.util.*;
 public class LazyFetchAspect {
 
     @Value("${aop.enabled}")
-    private boolean enableAOP;
+    private boolean enableAOP = true;
 
     @Autowired
     private AdvancedDatabaseObjectService advancedDatabaseObjectService;
@@ -38,25 +36,25 @@ public class LazyFetchAspect {
         if (!enableAOP) return pjp.proceed();
 
 
-         // Target is the whole object that originated this pointcut.
+        // Target is the whole object that originated this pointcut.
         GraphDatabaseObject databaseObject = (GraphDatabaseObject) pjp.getTarget();
 
-         // Gathering information of the method we are invoking and it's being intercepted by AOP
+        // Gathering information of the method we are invoking and it's being intercepted by AOP
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
 
-         // Get the relationship that is annotated in the attribute
+        // Get the relationship that is annotated in the attribute
         Relationship relationship = getRelationship(method.getName(), databaseObject.getClass());
         if (relationship != null && !databaseObject.preventLazyLoading) { // && !databaseObject.isLoaded) {
-             // Check whether the object has been loaded.
-             // pjp.proceed() has the result of the invoked method.
+            // Check whether the object has been loaded.
+            // pjp.proceed() has the result of the invoked method.
             if (pjp.proceed() == null) {
                 Long dbId = databaseObject.getGraphId();
                 String setterMethod = method.getName().replaceFirst("get", "set");
                 Class<?> methodReturnClazz = method.getReturnType();
 
                 if (Collection.class.isAssignableFrom(methodReturnClazz)) {
-                    ParameterizedType stringListType = (ParameterizedType)  method.getGenericReturnType();
+                    ParameterizedType stringListType = (ParameterizedType) method.getGenericReturnType();
                     Class<?> type = (Class<?>) stringListType.getActualTypeArguments()[0];
                     String clazz = type.getSimpleName();
                     // DatabaseObject.isLoaded only works for OUTGOING relationships
@@ -66,8 +64,10 @@ public class LazyFetchAspect {
                     Collection<GraphDatabaseObject> lazyLoadedObjectAsCollection = isLoaded ? null : advancedDatabaseObjectService.findCollectionByRelationship(dbId, clazz, methodReturnClazz, relationship.direction(), relationship.type());
                     if (lazyLoadedObjectAsCollection == null) {
                         //If a set or list has been requested and is null, then we set empty collection to avoid requesting again
-                        if (List.class.isAssignableFrom(methodReturnClazz)) lazyLoadedObjectAsCollection = new ArrayList<>();
-                        if (Set.class.isAssignableFrom(methodReturnClazz)) lazyLoadedObjectAsCollection = new HashSet<>();
+                        if (List.class.isAssignableFrom(methodReturnClazz))
+                            lazyLoadedObjectAsCollection = new ArrayList<>();
+                        if (Set.class.isAssignableFrom(methodReturnClazz))
+                            lazyLoadedObjectAsCollection = new HashSet<>();
                     }
                     if (lazyLoadedObjectAsCollection != null) {
                         // invoke the setter in order to set the object in the target
@@ -76,16 +76,16 @@ public class LazyFetchAspect {
                     }
                 }
 
-                if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
-                    String clazz = methodReturnClazz.getSimpleName();
-                    // querying the graph and fill the single object
-                    GraphDatabaseObject lazyLoadedObject = advancedDatabaseObjectService.findByRelationship(dbId, clazz, relationship.direction(), relationship.type());
-                    if (lazyLoadedObject != null) {
-                        // invoke the setter in order to set the object in the target
-                        databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObject);
-                        return lazyLoadedObject;
-                    }
+               /* if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {*/
+                String clazz = methodReturnClazz.getSimpleName();
+                // querying the graph and fill the single object
+                GraphDatabaseObject lazyLoadedObject = advancedDatabaseObjectService.findByRelationship(dbId, clazz, relationship.direction(), relationship.type());
+                if (lazyLoadedObject != null) {
+                    // invoke the setter in order to set the object in the target
+                    databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObject);
+                    return lazyLoadedObject;
                 }
+                //}
             }
         }
 
@@ -121,7 +121,7 @@ public class LazyFetchAspect {
 
         String attribute = new String(c);
 
-         // Look up for the given attribute in the class and after superclasses.
+        // Look up for the given attribute in the class and after superclasses.
         //noinspection ClassGetClass
         while (_clazz != null && !_clazz.getClass().equals(Object.class)) {
             for (Field field : _clazz.getDeclaredFields()) {

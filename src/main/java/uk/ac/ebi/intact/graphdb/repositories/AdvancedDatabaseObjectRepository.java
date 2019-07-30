@@ -46,13 +46,13 @@ public class AdvancedDatabaseObjectRepository {
         String query;
         switch (direction) {
             case "OUTGOING":
-                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]->(m:" + clazz + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]->(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
                 break;
             case "INCOMING":
-                query = "MATCH (x:GraphDatabaseObject)<-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + clazz + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)<-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
                 break;
             default: //UNDIRECTED
-                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + clazz + ") WHERE ID(x)={dbId} RETURN m";
+                query = "MATCH (x:GraphDatabaseObject)-[r" + CommonUtility.getRelationshipAsString(relationships) + "]-(m:" + "GraphDatabaseObject" + ") WHERE ID(x)={dbId} RETURN m";
                 break;
         }
         Map<String, Object> map = new HashMap<>();
