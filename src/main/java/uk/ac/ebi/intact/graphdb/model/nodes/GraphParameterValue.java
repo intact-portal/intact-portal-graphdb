@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
@@ -12,24 +13,28 @@ import uk.ac.ebi.intact.graphdb.utils.CommonUtility;
 import uk.ac.ebi.intact.graphdb.utils.CreationConfig;
 import uk.ac.ebi.intact.graphdb.utils.UniqueKeyGenerator;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
 public class GraphParameterValue extends ParameterValue {
 
+    @Transient
+    public transient boolean preventLazyLoading = false;
+    @Transient
+    public transient boolean isLoaded = false;
     @GraphId
     private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
-
     private short base;
     private BigDecimal factor;
     private short exponent = 0;
-
-
     @Transient
     private boolean isAlreadyCreated;
 
@@ -136,5 +141,55 @@ public class GraphParameterValue extends ParameterValue {
 
     public void setExponent(short exponent) {
         this.exponent = exponent;
+    }
+
+    @JsonIgnore
+    public <T extends GraphParameterValue> T preventLazyLoading() {
+        return preventLazyLoading(true);
+    }
+
+    @SuppressWarnings({"unchecked", "WeakerAccess", "UnusedReturnValue"})
+    @JsonIgnore
+    public <T extends GraphParameterValue> T preventLazyLoading(boolean preventLazyLoading) {
+        if (this.preventLazyLoading == preventLazyLoading) return (T) this;
+
+        this.preventLazyLoading = preventLazyLoading;
+
+        //Here we go through all the getters and prevent LazyLoading for all the objects
+        Method[] methods = getClass().getMethods();
+        for (Method method : methods) {
+            if (!method.getName().startsWith("get")) continue;
+            try {
+                Class<?> methodReturnClazz = method.getReturnType();
+
+                if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
+                    GraphDatabaseObject object = (GraphDatabaseObject) method.invoke(this);
+                    if (object != null && object.preventLazyLoading != preventLazyLoading) {
+                        object.preventLazyLoading(preventLazyLoading);
+                    }
+                }
+
+                if (Collection.class.isAssignableFrom(methodReturnClazz)) {
+                    ParameterizedType stringListType = (ParameterizedType) method.getGenericReturnType();
+                    Class<?> type = (Class<?>) stringListType.getActualTypeArguments()[0];
+                    String clazz = type.getSimpleName();
+                    if (GraphDatabaseObject.class.isAssignableFrom(type)) {
+                        Collection collection = (Collection) method.invoke(this);
+                        if (collection != null) {
+                            for (Object obj : collection) {
+                                GraphDatabaseObject object = (GraphDatabaseObject) obj;
+                                if (object != null && object.preventLazyLoading != preventLazyLoading) {
+                                    object.preventLazyLoading(preventLazyLoading);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return (T) this;
     }
 }
