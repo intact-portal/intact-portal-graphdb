@@ -10,8 +10,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import psidev.psi.mi.jami.model.ParameterValue;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphDatabaseObject;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParameterValue;
@@ -26,7 +26,7 @@ import java.util.*;
  * @author Guilherme Viteri (gviteri@ebi.ac.uk)
  */
 @Aspect
-@Component
+@Configurable
 public class LazyFetchAspect {
 
     private static final Log log = LogFactory.getLog(LazyFetchAspect.class);
@@ -133,70 +133,6 @@ public class LazyFetchAspect {
         return pjp.proceed();
     }
 
-    /*@Around("graphVariableParameterValueSetGetters()")
-    public Object autoFetchForGraphVariableParameterValueSet(ProceedingJoinPoint pjp) throws Throwable {
-        if (!enableAOP) return pjp.proceed();
-
-
-        // Target is the whole object that originated this pointcut.
-        GraphVariableParameterValueSet databaseObject = (GraphVariableParameterValueSet) pjp.getTarget();
-
-        // Gathering information of the method we are invoking and it's being intercepted by AOP
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-        Method method = signature.getMethod();
-
-        // Get the relationship that is annotated in the attribute
-        Relationship relationship = getRelationship(method.getName(), databaseObject.getClass());
-        if (relationship != null && !databaseObject.preventLazyLoading) { // && !databaseObject.isLoaded) {
-            // Check whether the object has been loaded.
-            // pjp.proceed() has the result of the invoked method.
-            Object objectToBeLoaded = pjp.proceed();
-            if (objectToBeLoaded == null || (objectToBeLoaded instanceof Collection && ((Collection) objectToBeLoaded).isEmpty())) {
-                Long dbId = databaseObject.getGraphId();
-                String setterMethod = method.getName().replaceFirst("get", "set");
-                Class<?> methodReturnClazz = method.getReturnType();
-
-                if (Collection.class.isAssignableFrom(methodReturnClazz)) {
-                    ParameterizedType stringListType = (ParameterizedType) method.getGenericReturnType();
-                    Class<?> type = (Class<?>) stringListType.getActualTypeArguments()[0];
-                    String clazz = type.getSimpleName();
-                    // DatabaseObject.isLoaded only works for OUTGOING relationships
-                    //noinspection EqualsBetweenInconvertibleTypes
-                    boolean isLoaded = databaseObject.isLoaded && relationship.equals(Relationship.OUTGOING);
-                    // querying the graph and fill the collection if it hasn't been fully loaded before
-                    Collection<GraphDatabaseObject> lazyLoadedObjectAsCollection = isLoaded ? null : advancedDatabaseObjectService.findCollectionByRelationship(dbId, clazz, methodReturnClazz, relationship.direction(), relationship.type());
-                    if (lazyLoadedObjectAsCollection == null) {
-                        //If a set or list has been requested and is null, then we set empty collection to avoid requesting again
-                        if (List.class.isAssignableFrom(methodReturnClazz))
-                            lazyLoadedObjectAsCollection = new ArrayList<>();
-                        if (Set.class.isAssignableFrom(methodReturnClazz))
-                            lazyLoadedObjectAsCollection = new HashSet<>();
-                    }
-                    if (lazyLoadedObjectAsCollection != null) {
-                        // invoke the setter in order to set the object in the target
-                        databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObjectAsCollection);
-                        return lazyLoadedObjectAsCollection;
-                    }
-                } else {
-                    String clazz = null;
-                    if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
-                        clazz = methodReturnClazz.getSimpleName();
-                    }
-                    // querying the graph and fill the single object
-                    GraphDatabaseObject lazyLoadedObject = advancedDatabaseObjectService.findByRelationship(dbId, clazz, relationship.direction(), relationship.type());
-                    if (lazyLoadedObject != null) {
-                        // invoke the setter in order to set the object in the target
-                        databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedObject);
-                        return lazyLoadedObject;
-                    }
-                }
-                //}
-            }
-        }
-
-        return pjp.proceed();
-    }*/
-
     /**
      * AspectJ pointcut for all the getters that return a Collection of DatabaseObject
      * or instance of DatabaseObject.
@@ -206,21 +142,6 @@ public class LazyFetchAspect {
             "|| execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
     public void modelGetter() {
     }
-
-/*    *//**
-     * AspectJ pointcut for getters of GraphVariableParameterValueSet that return a Collection of DatabaseObject
-     * or instance of DatabaseObject.
-     *//*
-    @SuppressWarnings("SingleElementAnnotation")
-    @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.GraphVariableParameterValueSet.get*(..))" +
-            "|| execution(public * uk.ac.ebi.intact.graphdb.model.nodes.GraphVariableParameterValueSet.get*(..))")
-    public void graphVariableParameterValueSetGetters() {
-    }*/
-
-    /*@SuppressWarnings("SingleElementAnnotation")
-    @Pointcut("execution(* uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence.getExperiment())")
-    public void modelGetter() {
-    }*/
 
     /**
      * Method used to get the Relationship annotation on top of the
