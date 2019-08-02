@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -88,6 +91,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             nodeProperties.putAll(super.getNodeProperties());
             List<Label> labelList = new ArrayList<>();
             labelList.add(Label.label(GraphBinaryInteractionEvidence.class.getSimpleName()));
+            labelList.add(Label.label(GraphDatabaseObject.class.getSimpleName()));
             Label[] labels = labelList.toArray(new Label[labelList.size()]);
 
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
@@ -166,7 +170,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         }
     }
 
-    public GraphInteractor getInteractorA() {
+    public Interactor getInteractorA() {
         return interactorA;
     }
 
@@ -182,7 +186,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         }
     }
 
-    public GraphInteractor getInteractorB() {
+    public Interactor getInteractorB() {
         return interactorB;
     }
 
@@ -211,10 +215,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         if (interactors == null) {
             interactors = new ArrayList<GraphInteractor>();
             if (this.getInteractorA() != null) {
-                interactors.add(this.getInteractorA());
+                interactors.add((GraphInteractor) this.getInteractorA());
             }
             if (this.getInteractorB() != null) {
-                interactors.add(this.getInteractorB());
+                interactors.add((GraphInteractor) this.getInteractorB());
             }
         }
     }

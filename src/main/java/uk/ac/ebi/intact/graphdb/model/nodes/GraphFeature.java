@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -21,7 +24,7 @@ import java.util.Map;
  * Created by anjali on 07/09/18.
  */
 @NodeEntity
-public class GraphFeature<P extends Entity, F extends Feature>  extends GraphDatabaseObject implements Feature<P, F> {
+public class GraphFeature<P extends Entity, F extends Feature> extends GraphDatabaseObject implements Feature<P, F> {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -107,7 +110,7 @@ public class GraphFeature<P extends Entity, F extends Feature>  extends GraphDat
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        setRanges(featureEvidence.getRanges(), this.getUniqueKey());
+        setRanges(featureEvidence.getRanges());
 
         setAliases(featureEvidence.getAliases());
 
@@ -383,9 +386,9 @@ public class GraphFeature<P extends Entity, F extends Feature>  extends GraphDat
         return this.ranges;
     }
 
-    public void setRanges(Collection<Range> ranges, String featureUniqueKey) {
+    public void setRanges(Collection<Range> ranges) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, featureUniqueKey);
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, this.getUniqueKey());
         } else {
             this.ranges = new ArrayList<GraphRange>();
         }

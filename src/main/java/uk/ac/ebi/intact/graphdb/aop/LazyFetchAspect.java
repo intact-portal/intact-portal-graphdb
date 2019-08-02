@@ -39,7 +39,7 @@ public class LazyFetchAspect {
 
     @Around("modelGetter()")
     public Object autoFetch(ProceedingJoinPoint pjp) throws Throwable {
-        if (!enableAOP || !(pjp.getTarget() instanceof GraphDatabaseObject)) return pjp.proceed();
+        if (!enableAOP) return pjp.proceed();
 
 
         // Target is the whole object that originated this pointcut.
@@ -138,8 +138,7 @@ public class LazyFetchAspect {
      * or instance of DatabaseObject.
      */
     @SuppressWarnings("SingleElementAnnotation")
-    @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))" +
-            "|| execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
+    @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
     public void modelGetter() {
     }
 

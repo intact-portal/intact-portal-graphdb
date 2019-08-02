@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -341,9 +344,7 @@ public class GraphInteractor extends GraphDatabaseObject implements Interactor {
     public void setIdentifiers(Collection<Xref> identifiers) {
         initialiseIdentifiers();
         if (identifiers != null) {
-            this.getIdentifiers().addAll(CollectionAdaptor.convertXrefIntoGraphModel(identifiers));
-        } else {
-            this.identifiers = getIdentifiers();
+            this.identifiers.addAll(CollectionAdaptor.convertXrefIntoGraphModel(identifiers));
         }
     }
 
@@ -366,9 +367,7 @@ public class GraphInteractor extends GraphDatabaseObject implements Interactor {
     public void setChecksums(Collection<Checksum> checksums) {
         initialiseChecksums();
         if (checksums != null) {
-            this.getChecksums().addAll(CollectionAdaptor.convertChecksumIntoGraphModel(checksums));
-        } else {
-            this.checksums = getChecksums();
+            this.checksums.addAll(CollectionAdaptor.convertChecksumIntoGraphModel(checksums));
         }
     }
 
@@ -412,9 +411,7 @@ public class GraphInteractor extends GraphDatabaseObject implements Interactor {
     public void setAliases(Collection<Alias> aliases) {
         initialiseAliases();
         if (aliases != null) {
-            this.getAliases().addAll(CollectionAdaptor.convertAliasIntoGraphModel(aliases));
-        } else {
-            this.aliases = getAliases();
+            this.aliases.addAll(CollectionAdaptor.convertAliasIntoGraphModel(aliases));
         }
     }
 
