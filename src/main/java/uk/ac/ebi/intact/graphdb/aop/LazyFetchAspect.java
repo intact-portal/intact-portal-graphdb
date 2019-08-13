@@ -55,7 +55,8 @@ public class LazyFetchAspect {
             Method method = signature.getMethod();
 
             // Get the relationship that is annotated in the attribute
-            Relationship relationship = getRelationship(method.getName(), databaseObject.getClass());
+            MethodMetaData methodMetaData = getRelationship(method.getName(), databaseObject.getClass());
+            Relationship relationship = methodMetaData.getRelationship();
             if (relationship != null && !objectPreventLazyLoading) { // && !databaseObject.isLoaded) {
                 // Check whether the object has been loaded.
                 // pjp.proceed() has the result of the invoked method.
@@ -64,7 +65,13 @@ public class LazyFetchAspect {
                     Method graphIdmethod = databaseObjectClass.getMethod("getGraphId");
                     Long dbId = (Long) graphIdmethod.invoke(databaseObjectClass.cast(databaseObject));
                     String setterMethod = method.getName().replaceFirst("get", "set");
-                    Class<?> methodReturnClazz = method.getReturnType();
+                    // In some cases getter return won't be same as field type, so we have to use field type in that case as method return class
+                    Class<?> methodReturnClazz = null;
+                    if(String.class.equals(method.getReturnType())){
+                         methodReturnClazz = methodMetaData.getFieldType();
+                    }else{
+                         methodReturnClazz = method.getReturnType();
+                    }
 
                     if (Collection.class.isAssignableFrom(methodReturnClazz)) {
                         ParameterizedType stringListType = (ParameterizedType) method.getGenericReturnType();
@@ -115,7 +122,7 @@ public class LazyFetchAspect {
                         if (lazyLoadedGraphDataBaseObject != null) {
                             // invoke the setter in order to set the object in the target
                             databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedGraphDataBaseObject);
-                            return lazyLoadedGraphDataBaseObject;
+                            return databaseObject.getClass().getMethod(method.getName()).invoke(databaseObject);
                         }
                         // we need to do this since GraphParameterValue cannot extend GraphDataBaseObject
                         if (lazyLoadedGraphParameterValue != null) {
@@ -134,9 +141,9 @@ public class LazyFetchAspect {
     }
 
     /**
-     * AspectJ pointcut for all the getters that return a Collection of DatabaseObject
-     * or instance of DatabaseObject.
-     */
+     * AspectJ pointcut for all the getters inside uk.ac.ebi.intact.graphdb.model.nodes package that return anything
+     *
+     * */
     @SuppressWarnings("SingleElementAnnotation")
     @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
     public void modelGetter() {
@@ -149,7 +156,10 @@ public class LazyFetchAspect {
      *
      * @return the Relationship annotation
      */
-    private Relationship getRelationship(String methodName, Class<?> _clazz) {
+    private MethodMetaData getRelationship(String methodName, Class<?> _clazz) {
+
+        MethodMetaData methodMetaData = new MethodMetaData();
+
         methodName = methodName.substring(3); // crop, remove 'get'
         char c[] = methodName.toCharArray();
         c[0] = Character.toLowerCase(c[0]); // lower the first char
@@ -162,7 +172,9 @@ public class LazyFetchAspect {
             for (Field field : _clazz.getDeclaredFields()) {
                 if (field.getAnnotation(Relationship.class) != null) {
                     if (field.getName().equals(attribute)) {
-                        return field.getAnnotation(Relationship.class);
+                        methodMetaData.setFieldType(field.getType());
+                        methodMetaData.setRelationship(field.getAnnotation(Relationship.class));
+                        return methodMetaData;
                     }
                 }
             }
