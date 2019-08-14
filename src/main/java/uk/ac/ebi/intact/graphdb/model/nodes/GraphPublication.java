@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
@@ -17,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
-public class GraphPublication  extends GraphDatabaseObject  implements Publication {
+public class GraphPublication extends GraphDatabaseObject implements Publication {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -306,6 +309,10 @@ public class GraphPublication  extends GraphDatabaseObject  implements Publicati
 
     public String getImexId() {
         return this.imexId != null ? this.imexId.getId() : null;
+    }
+
+    public void setImexId(GraphXref imexId) {
+        this.imexId = imexId;
     }
 
     public void assignImexId(String identifier) {

@@ -55,7 +55,7 @@ public class LazyFetchAspect {
             Method method = signature.getMethod();
 
             // Get the relationship that is annotated in the attribute
-            MethodMetaData methodMetaData = getRelationship(method.getName(), databaseObject.getClass());
+            MethodMetaData methodMetaData = getMethodMetaData(method.getName(), databaseObject.getClass());
             Relationship relationship = methodMetaData.getRelationship();
             if (relationship != null && !objectPreventLazyLoading) { // && !databaseObject.isLoaded) {
                 // Check whether the object has been loaded.
@@ -67,10 +67,10 @@ public class LazyFetchAspect {
                     String setterMethod = method.getName().replaceFirst("get", "set");
                     // In some cases getter return won't be same as field type, so we have to use field type in that case as method return class
                     Class<?> methodReturnClazz = null;
-                    if(String.class.equals(method.getReturnType())){
-                         methodReturnClazz = methodMetaData.getFieldType();
-                    }else{
-                         methodReturnClazz = method.getReturnType();
+                    if (String.class.equals(method.getReturnType())) {
+                        methodReturnClazz = methodMetaData.getFieldType();
+                    } else {
+                        methodReturnClazz = method.getReturnType();
                     }
 
                     if (Collection.class.isAssignableFrom(methodReturnClazz)) {
@@ -128,7 +128,7 @@ public class LazyFetchAspect {
                         if (lazyLoadedGraphParameterValue != null) {
                             // invoke the setter in order to set the object in the target
                             databaseObject.getClass().getMethod(setterMethod, methodReturnClazz).invoke(databaseObject, lazyLoadedGraphParameterValue);
-                            return lazyLoadedGraphParameterValue;
+                            return databaseObject.getClass().getMethod(method.getName()).invoke(databaseObject);
                         }
                     }
                     //}
@@ -142,8 +142,7 @@ public class LazyFetchAspect {
 
     /**
      * AspectJ pointcut for all the getters inside uk.ac.ebi.intact.graphdb.model.nodes package that return anything
-     *
-     * */
+     */
     @SuppressWarnings("SingleElementAnnotation")
     @Pointcut("execution(public * uk.ac.ebi.intact.graphdb.model.nodes.*.get*(..))")
     public void modelGetter() {
@@ -156,7 +155,7 @@ public class LazyFetchAspect {
      *
      * @return the Relationship annotation
      */
-    private MethodMetaData getRelationship(String methodName, Class<?> _clazz) {
+    private MethodMetaData getMethodMetaData(String methodName, Class<?> _clazz) {
 
         MethodMetaData methodMetaData = new MethodMetaData();
 
@@ -183,7 +182,7 @@ public class LazyFetchAspect {
             _clazz = _clazz.getSuperclass();
         }
 
-        return null;
+        return methodMetaData;
     }
 
     @SuppressWarnings("unused")

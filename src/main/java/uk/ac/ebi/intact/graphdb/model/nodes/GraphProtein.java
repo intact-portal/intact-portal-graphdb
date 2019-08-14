@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -182,6 +181,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
         return this.uniprotkb != null ? this.uniprotkb.getId() : null;
     }
 
+    public void setUniprotkb(GraphXref uniprotkb) {
+        this.uniprotkb = uniprotkb;
+    }
+
     public void setUniprotkb(String ac) {
 
         setUniprotName(ac);
@@ -209,6 +212,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
         return this.refseq != null ? this.refseq.getId() : null;
     }
 
+    public void setRefseq(GraphXref refseq) {
+        this.refseq = refseq;
+    }
+
     public void setRefseq(String ac) {
         GraphProtein.ProteinIdentifierList proteinIdentifiers = (GraphProtein.ProteinIdentifierList) getIdentifiers();
 
@@ -234,6 +241,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
         return this.geneName != null ? this.geneName.getName() : null;
     }
 
+    public void setGeneName(GraphAlias geneName) {
+        this.geneName = geneName;
+    }
+
     public void setGeneName(String name) {
         GraphProtein.ProteinAliasList proteinAliases = (GraphProtein.ProteinAliasList) getAliases();
 
@@ -256,6 +267,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public String getRogid() {
         return this.rogid != null ? this.rogid.getValue() : null;
+    }
+
+    public void setRogid(GraphChecksum rogid) {
+        this.rogid = rogid;
     }
 
     public void setRogid(String rogid) {

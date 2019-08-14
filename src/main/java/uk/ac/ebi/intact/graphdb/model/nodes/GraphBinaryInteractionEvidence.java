@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -24,6 +26,8 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence implements BinaryInteractionEvidence {
+
+    private static final Log log = LogFactory.getLog(GraphBinaryInteractionEvidence.class);
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -97,6 +101,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
             NodeDataFeed nodeDataFeed = CommonUtility.createNode(nodeProperties, labels);
             setGraphId(nodeDataFeed.getGraphId());
             setAlreadyCreated(nodeDataFeed.isAlreadyCreated());
+            if (isAlreadyCreated) {
+                log.info("Binary Interaction Evidence already created with Graph Id : " + getGraphId() + " Interaction ac : " + getAc());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -439,6 +439,10 @@ public class GraphFeature<P extends Entity, F extends Feature> extends GraphData
         }
     }
 
+    protected void initialiseLinkedFeatures() {
+        this.linkedFeatures = new ArrayList<GraphFeature>();
+    }
+
     public Collection<GraphFeature> getLinkedFeatures() {
         if (this.linkedFeatures == null) {
             this.linkedFeatures = new ArrayList<GraphFeature>();
@@ -460,17 +464,25 @@ public class GraphFeature<P extends Entity, F extends Feature> extends GraphData
         if (feature == null) {
             return false;
         }
-        String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
         GraphFeature graphFeature = null;
-        if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
-            graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
-
-        } else if (feature instanceof FeatureEvidence) {
-            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+        if (feature instanceof GraphFeature) {
+            graphFeature = (GraphFeature) feature;
+        } else if (feature instanceof GraphFeatureEvidence) {
+            graphFeature = (GraphFeatureEvidence) feature;
         } else {
-            graphFeature = new GraphFeature(feature, false);
+            String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
+            if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
+                graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
+            } else if (feature instanceof FeatureEvidence) {
+                graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+            } else {
+                graphFeature = new GraphFeature(feature, false);
+            }
         }
-        if (getLinkedFeatures().add(graphFeature)) {
+        if (this.linkedFeatures == null) {
+            initialiseLinkedFeatures();
+        }
+        if (this.linkedFeatures.add(graphFeature)) {
             graphFeature.setParticipant(this.getParticipant());
             return true;
         }
