@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Organism;
@@ -19,10 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphOrganism implements Organism {
-
-    @GraphId
-    private Long graphId;
+public class GraphOrganism extends GraphDatabaseObject implements Organism {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -132,10 +132,10 @@ public class GraphOrganism implements Organism {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(cellType, this.graphId, RelationshipTypes.CELL_TYPE);
-        CommonUtility.createRelationShip(compartment, this.graphId, RelationshipTypes.COMPARTMENT);
-        CommonUtility.createRelationShip(tissue, this.graphId, RelationshipTypes.TISSUE);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createRelationShip(cellType, this.getGraphId(), RelationshipTypes.CELL_TYPE);
+        CommonUtility.createRelationShip(compartment, this.getGraphId(), RelationshipTypes.COMPARTMENT);
+        CommonUtility.createRelationShip(tissue, this.getGraphId(), RelationshipTypes.TISSUE);
+        CommonUtility.createAliasRelationShips(aliases, this.getGraphId());
     }
 
     public String getCommonName() {
@@ -235,14 +235,6 @@ public class GraphOrganism implements Organism {
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

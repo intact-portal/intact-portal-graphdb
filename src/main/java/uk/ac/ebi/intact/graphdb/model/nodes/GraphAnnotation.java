@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -15,10 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphAnnotation implements Annotation {
-
-    @GraphId
-    private Long graphId;
+public class GraphAnnotation extends GraphDatabaseObject implements Annotation {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -124,14 +124,6 @@ public class GraphAnnotation implements Annotation {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

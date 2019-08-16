@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.ModelledConfidence;
 import psidev.psi.mi.jami.model.Publication;
@@ -20,9 +23,6 @@ import java.util.Map;
  */
 @NodeEntity
 public class GraphModelledConfidence extends GraphConfidence implements ModelledConfidence {
-
-    @GraphId
-    private Long graphId;
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -111,16 +111,6 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
 
     public String createUniqueKey(ModelledConfidence modelledConfidence) {
         return UniqueKeyGenerator.createModelledConfidenceKey(modelledConfidence);
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

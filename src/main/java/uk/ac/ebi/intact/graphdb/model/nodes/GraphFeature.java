@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -21,10 +24,7 @@ import java.util.Map;
  * Created by anjali on 07/09/18.
  */
 @NodeEntity
-public class GraphFeature<P extends Entity, F extends Feature> implements Feature<P, F> {
-
-    @GraphId
-    private Long graphId;
+public class GraphFeature<P extends Entity, F extends Feature> extends GraphDatabaseObject implements Feature<P, F> {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -110,7 +110,7 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         setIdentifiers(featureEvidence.getIdentifiers());
         setXrefs(featureEvidence.getXrefs());
         setAnnotations(featureEvidence.getAnnotations());
-        setRanges(featureEvidence.getRanges(), this.getUniqueKey());
+        setRanges(featureEvidence.getRanges());
 
         setAliases(featureEvidence.getAliases());
 
@@ -386,9 +386,9 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         return this.ranges;
     }
 
-    public void setRanges(Collection<Range> ranges, String featureUniqueKey) {
+    public void setRanges(Collection<Range> ranges) {
         if (ranges != null) {
-            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, featureUniqueKey);
+            this.ranges = CollectionAdaptor.convertRangeIntoGraphModel(ranges, this.getUniqueKey());
         } else {
             this.ranges = new ArrayList<GraphRange>();
         }
@@ -439,6 +439,10 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         }
     }
 
+    protected void initialiseLinkedFeatures() {
+        this.linkedFeatures = new ArrayList<GraphFeature>();
+    }
+
     public Collection<GraphFeature> getLinkedFeatures() {
         if (this.linkedFeatures == null) {
             this.linkedFeatures = new ArrayList<GraphFeature>();
@@ -460,17 +464,25 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         if (feature == null) {
             return false;
         }
-        String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
         GraphFeature graphFeature = null;
-        if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
-            graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
-
-        } else if (feature instanceof FeatureEvidence) {
-            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+        if (feature instanceof GraphFeature) {
+            graphFeature = (GraphFeature) feature;
+        } else if (feature instanceof GraphFeatureEvidence) {
+            graphFeature = (GraphFeatureEvidence) feature;
         } else {
-            graphFeature = new GraphFeature(feature, false);
+            String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
+            if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
+                graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
+            } else if (feature instanceof FeatureEvidence) {
+                graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+            } else {
+                graphFeature = new GraphFeature(feature, false);
+            }
         }
-        if (getLinkedFeatures().add(graphFeature)) {
+        if (this.linkedFeatures == null) {
+            initialiseLinkedFeatures();
+        }
+        if (this.linkedFeatures.add(graphFeature)) {
             graphFeature.setParticipant(this.getParticipant());
             return true;
         }
@@ -531,15 +543,6 @@ public class GraphFeature<P extends Entity, F extends Feature> implements Featur
         } else {
             this.aliases = new ArrayList<GraphAlias>();
         }
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

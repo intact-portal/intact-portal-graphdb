@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -24,10 +23,6 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
-
-    @GraphId
-    private Long graphId;
-
 
     private String uniqueKey;
 
@@ -142,8 +137,8 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ddbjEmblGenbank, this.graphId, RelationshipTypes.DDBJ_EMBL_GENBANK);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(ddbjEmblGenbank, this.getGraphId(), RelationshipTypes.DDBJ_EMBL_GENBANK);
+        CommonUtility.createRelationShip(refseq, this.getGraphId(), RelationshipTypes.REFSEQ);
     }
 
     public String getUniqueKey() {
@@ -299,14 +294,6 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         } else {
             super.setInteractorType(interactorType);
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

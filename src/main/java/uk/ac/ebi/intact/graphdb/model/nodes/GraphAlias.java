@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.Alias;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -17,10 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphAlias implements Alias {
-
-    @GraphId
-    private Long graphId;
+public class GraphAlias extends GraphDatabaseObject implements Alias {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -121,14 +121,6 @@ public class GraphAlias implements Alias {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getAc() {

@@ -1,8 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -20,9 +22,6 @@ import java.util.*;
  */
 @NodeEntity
 public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, FeatureEvidence> implements FeatureEvidence {
-
-    @GraphId
-    private Long graphId;
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -90,8 +89,8 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.graphId);
-        CommonUtility.createParameterRelationShips(parameters, this.graphId);
+        CommonUtility.createDetectionMethodRelationShips(detectionMethods, this.getGraphId());
+        CommonUtility.createParameterRelationShips(parameters, this.getGraphId());
     }
 
 
@@ -158,14 +157,6 @@ public class GraphFeatureEvidence extends GraphFeature<ExperimentalEntity, Featu
 
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

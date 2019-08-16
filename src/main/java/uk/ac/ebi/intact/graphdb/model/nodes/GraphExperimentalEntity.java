@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
@@ -18,9 +17,6 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphExperimentalEntity extends GraphEntity<FeatureEvidence> {
-
-    @GraphId
-    private Long graphId;
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -68,16 +64,6 @@ public class GraphExperimentalEntity extends GraphEntity<FeatureEvidence> {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -20,10 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @NodeEntity
-public class GraphInteractionEvidence implements InteractionEvidence {
-
-    @GraphId
-    private Long graphId;
+public class GraphInteractionEvidence extends GraphDatabaseObject implements InteractionEvidence {
 
     private String uniqueKey;
     private String ac;
@@ -583,14 +579,6 @@ public class GraphInteractionEvidence implements InteractionEvidence {
 
     public void setNodeProperties(Map<String, Object> nodeProperties) {
         this.nodeProperties = nodeProperties;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

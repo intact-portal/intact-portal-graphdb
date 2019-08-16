@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -40,9 +39,6 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphGene extends GraphMolecule implements Gene {
-
-    @GraphId
-    private Long graphId;
 
     private String uniqueKey;
 
@@ -211,10 +207,10 @@ public class GraphGene extends GraphMolecule implements Gene {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(ensembl, this.graphId, RelationshipTypes.ENSEMBL);
-        CommonUtility.createRelationShip(ensemblGenome, this.graphId, RelationshipTypes.ENSEMBL_GENOME);
-        CommonUtility.createRelationShip(entrezGeneId, this.graphId, RelationshipTypes.ENTREZ_GENE_ID);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(ensembl, this.getGraphId(), RelationshipTypes.ENSEMBL);
+        CommonUtility.createRelationShip(ensemblGenome, this.getGraphId(), RelationshipTypes.ENSEMBL_GENOME);
+        CommonUtility.createRelationShip(entrezGeneId, this.getGraphId(), RelationshipTypes.ENTREZ_GENE_ID);
+        CommonUtility.createRelationShip(refseq, this.getGraphId(), RelationshipTypes.REFSEQ);
     }
 
     /**
@@ -456,15 +452,6 @@ public class GraphGene extends GraphMolecule implements Gene {
         } else {
             super.setInteractorType(type);
         }
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

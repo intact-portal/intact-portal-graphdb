@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.comparator.participant.UnambiguousCausalRelationshipComparator;
@@ -15,10 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphCausalRelationship implements CausalRelationship {
-
-    @GraphId
-    private Long graphId;
+public class GraphCausalRelationship extends GraphDatabaseObject implements CausalRelationship {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -121,15 +121,6 @@ public class GraphCausalRelationship implements CausalRelationship {
         } else {
             this.target = null;
         }
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

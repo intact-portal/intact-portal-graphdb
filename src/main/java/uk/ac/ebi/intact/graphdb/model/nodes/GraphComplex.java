@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.*;
@@ -22,9 +25,6 @@ import java.util.*;
  */
 @NodeEntity
 public class GraphComplex extends GraphInteractor implements Complex {
-
-    @GraphId
-    private Long graphId;
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -719,16 +719,6 @@ public class GraphComplex extends GraphInteractor implements Complex {
         } else {
             this.components = new ArrayList<GraphModelledParticipant>();
         }
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

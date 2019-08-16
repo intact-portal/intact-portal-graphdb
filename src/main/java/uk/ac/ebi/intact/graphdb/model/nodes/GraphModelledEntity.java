@@ -3,7 +3,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
@@ -24,10 +27,7 @@ import java.util.Map;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphModelledEntity implements ModelledEntity {
-
-    @GraphId
-    private Long graphId;
+public class GraphModelledEntity extends GraphDatabaseObject implements ModelledEntity {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -217,6 +217,16 @@ public class GraphModelledEntity implements ModelledEntity {
     }
 
     @Override
+    public void setStoichiometry(Integer stoichiometry) {
+        if (stoichiometry != null) {
+            this.stoichiometry = new GraphStoichiometry(stoichiometry);
+
+        } else {
+            this.stoichiometry = null;
+        }
+    }
+
+    @Override
     public void setStoichiometry(Stoichiometry stoichiometry) {
         if (stoichiometry != null) {
             if (stoichiometry instanceof GraphStoichiometry) {
@@ -228,16 +238,6 @@ public class GraphModelledEntity implements ModelledEntity {
             this.stoichiometry = null;
         }
         //TODO login it
-    }
-
-    @Override
-    public void setStoichiometry(Integer stoichiometry) {
-        if (stoichiometry != null) {
-            this.stoichiometry = new GraphStoichiometry(stoichiometry);
-
-        } else {
-            this.stoichiometry = null;
-        }
     }
 
     public Map<String, Object> getNodeProperties() {
@@ -280,15 +280,6 @@ public class GraphModelledEntity implements ModelledEntity {
     @Override
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

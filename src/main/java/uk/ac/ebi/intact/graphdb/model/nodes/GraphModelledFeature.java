@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
@@ -20,10 +23,7 @@ import java.util.*;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphModelledFeature implements ModelledFeature {
-
-    @GraphId
-    private Long graphId;
+public class GraphModelledFeature extends GraphDatabaseObject implements ModelledFeature {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -135,16 +135,16 @@ public class GraphModelledFeature implements ModelledFeature {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(type, this.graphId, RelationshipTypes.TYPE);
-        CommonUtility.createRelationShip(interpro, this.graphId, RelationshipTypes.INTERPRO);
-        CommonUtility.createRelationShip(role, this.graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, this.graphId, RelationshipTypes.PARTICIPANT_FEATURE);
-        CommonUtility.createIdentifierRelationShips(identifiers, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createModelledRangeRelationShips(ranges, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
-        CommonUtility.createModelledFeatureRelationShips(linkedFeatures, this.graphId, RelationshipTypes.LINKED_FEATURES);
+        CommonUtility.createRelationShip(type, this.getGraphId(), RelationshipTypes.TYPE);
+        CommonUtility.createRelationShip(interpro, this.getGraphId(), RelationshipTypes.INTERPRO);
+        CommonUtility.createRelationShip(role, this.getGraphId(), RelationshipTypes.ROLE);
+        CommonUtility.createRelationShip(participant, this.getGraphId(), RelationshipTypes.PARTICIPANT_FEATURE);
+        CommonUtility.createIdentifierRelationShips(identifiers, this.getGraphId());
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createModelledRangeRelationShips(ranges, this.getGraphId());
+        CommonUtility.createAliasRelationShips(aliases, this.getGraphId());
+        CommonUtility.createModelledFeatureRelationShips(linkedFeatures, this.getGraphId(), RelationshipTypes.LINKED_FEATURES);
     }
 
     @Override
@@ -345,14 +345,6 @@ public class GraphModelledFeature implements ModelledFeature {
         } else {
             this.linkedFeatures = new ArrayList<GraphModelledFeature>();
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

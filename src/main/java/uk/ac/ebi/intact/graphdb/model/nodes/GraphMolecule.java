@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -19,9 +18,6 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphMolecule extends GraphInteractor implements Molecule {
-
-    @GraphId
-    private Long graphId;
 
     private String uniqueKey;
 
@@ -147,16 +143,6 @@ public class GraphMolecule extends GraphInteractor implements Molecule {
     @Override
     public void setUniqueKey(String uniqueKey) {
         this.uniqueKey = uniqueKey;
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

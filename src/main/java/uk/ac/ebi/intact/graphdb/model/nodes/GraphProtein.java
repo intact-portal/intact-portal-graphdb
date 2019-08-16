@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -31,8 +30,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphProtein extends GraphPolymer implements Protein {
 
-    @GraphId
-    private Long graphId;
     private String uniqueKey;
 
     private String uniprotName;
@@ -158,10 +155,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(uniprotkb, this.graphId, RelationshipTypes.UNIPROTKB);
-        CommonUtility.createRelationShip(refseq, this.graphId, RelationshipTypes.REFSEQ);
-        CommonUtility.createRelationShip(geneName, this.graphId, RelationshipTypes.GENE_NAME);
-        CommonUtility.createRelationShip(rogid, this.graphId, RelationshipTypes.ROGID);
+        CommonUtility.createRelationShip(uniprotkb, this.getGraphId(), RelationshipTypes.UNIPROTKB);
+        CommonUtility.createRelationShip(refseq, this.getGraphId(), RelationshipTypes.REFSEQ);
+        CommonUtility.createRelationShip(geneName, this.getGraphId(), RelationshipTypes.GENE_NAME);
+        CommonUtility.createRelationShip(rogid, this.getGraphId(), RelationshipTypes.ROGID);
     }
 
     /**
@@ -207,6 +204,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
+    public void setUniprotkb(GraphXref uniprotkb) {
+        this.uniprotkb = uniprotkb;
+    }
+
     public String getRefseq() {
         return this.refseq != null ? this.refseq.getId() : null;
     }
@@ -230,6 +231,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
             XrefUtils.removeAllXrefsWithDatabase(proteinIdentifiers, Xref.REFSEQ_MI, Xref.REFSEQ);
             this.refseq = null;
         }
+    }
+
+    public void setRefseq(GraphXref refseq) {
+        this.refseq = refseq;
     }
 
     public String getGeneName() {
@@ -256,6 +261,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
         }
     }
 
+    public void setGeneName(GraphAlias geneName) {
+        this.geneName = geneName;
+    }
+
     public String getRogid() {
         return this.rogid != null ? this.rogid.getValue() : null;
     }
@@ -277,6 +286,10 @@ public class GraphProtein extends GraphPolymer implements Protein {
             ChecksumUtils.removeAllChecksumWithMethod(proteinChecksums, Checksum.ROGID_MI, Checksum.ROGID);
             this.rogid = null;
         }
+    }
+
+    public void setRogid(GraphChecksum rogid) {
+        this.rogid = rogid;
     }
 
     public boolean isAlreadyCreated() {
@@ -410,14 +423,6 @@ public class GraphProtein extends GraphPolymer implements Protein {
         } else {
             super.setInteractorType(interactorType);
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

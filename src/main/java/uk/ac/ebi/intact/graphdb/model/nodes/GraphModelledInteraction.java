@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -20,10 +23,7 @@ import java.util.*;
  * Created by anjali on 30/04/19.
  */
 @NodeEntity
-public class GraphModelledInteraction implements ModelledInteraction {
-
-    @GraphId
-    private Long graphId;
+public class GraphModelledInteraction extends GraphDatabaseObject implements ModelledInteraction {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -428,14 +428,6 @@ public class GraphModelledInteraction implements ModelledInteraction {
             }
         }*/
         return false;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

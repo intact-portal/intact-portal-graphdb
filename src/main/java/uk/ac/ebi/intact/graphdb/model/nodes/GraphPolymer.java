@@ -2,7 +2,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -28,8 +27,6 @@ import java.util.Map;
 @NodeEntity
 public class GraphPolymer extends GraphMolecule implements Polymer {
 
-    @GraphId
-    private Long graphId;
     private String uniqueKey;
 
     private String sequence;
@@ -211,16 +208,6 @@ public class GraphPolymer extends GraphMolecule implements Polymer {
 
     public String createUniqueKey(Polymer polymer) {
         return UniqueKeyGenerator.createInteractorKey(polymer);
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
 }

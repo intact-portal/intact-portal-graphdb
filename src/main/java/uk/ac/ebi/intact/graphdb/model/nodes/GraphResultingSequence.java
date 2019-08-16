@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Transient;
@@ -21,10 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphResultingSequence implements ResultingSequence {
-
-    @GraphId
-    private Long graphId;
+public class GraphResultingSequence extends GraphDatabaseObject implements ResultingSequence {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -75,7 +71,7 @@ public class GraphResultingSequence implements ResultingSequence {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
     }
 
 
@@ -139,14 +135,6 @@ public class GraphResultingSequence implements ResultingSequence {
         } else {
             this.xrefs = new ArrayList<GraphXref>();
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

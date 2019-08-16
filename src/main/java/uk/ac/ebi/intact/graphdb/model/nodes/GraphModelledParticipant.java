@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.listener.EntityInteractorChangeListener;
 import psidev.psi.mi.jami.model.*;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
@@ -18,9 +21,6 @@ import java.util.*;
  */
 @NodeEntity
 public class GraphModelledParticipant extends GraphModelledEntity implements ModelledParticipant {
-
-    @GraphId
-    private Long graphId;
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -102,11 +102,11 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
-        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IC_PARTICIPANT);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createRelationShip(biologicalRole, this.getGraphId(), RelationshipTypes.BIOLOGICAL_ROLE);
+        CommonUtility.createRelationShip(interaction, this.getGraphId(), RelationshipTypes.IC_PARTICIPANT);
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createAliasRelationShips(aliases, this.getGraphId());
     }
 
 
@@ -209,16 +209,6 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
         if (interaction != null) {
             interaction.addParticipant(this);
         }
-    }
-
-    @Override
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    @Override
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     @Override

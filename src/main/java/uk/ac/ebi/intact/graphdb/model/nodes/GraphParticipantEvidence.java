@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.CvTermUtils;
@@ -22,9 +25,6 @@ import java.util.*;
 @NodeEntity
 public class GraphParticipantEvidence extends GraphExperimentalEntity implements ParticipantEvidence {
 
-    @GraphId
-    private Long graphId;
-
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
@@ -37,7 +37,7 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
     private GraphCvTerm biologicalRole;
 
     @Relationship(type = RelationshipTypes.EXPRESSED_IN)
-    private GraphOrganism expressedIn;
+    private GraphOrganism expressedInOrganism;
 
     @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.INCOMING)
     @JsonBackReference
@@ -132,18 +132,18 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(experimentalRole, this.graphId, RelationshipTypes.EXPERIMENTAL_ROLE);
-        CommonUtility.createRelationShip(biologicalRole, this.graphId, RelationshipTypes.BIOLOGICAL_ROLE);
-        CommonUtility.createRelationShip(expressedIn, this.graphId, RelationshipTypes.EXPRESSED_IN);
-        CommonUtility.createRelationShip(interaction, this.graphId, RelationshipTypes.IE_PARTICIPANT);
+        CommonUtility.createRelationShip(experimentalRole, this.getGraphId(), RelationshipTypes.EXPERIMENTAL_ROLE);
+        CommonUtility.createRelationShip(biologicalRole, this.getGraphId(), RelationshipTypes.BIOLOGICAL_ROLE);
+        CommonUtility.createRelationShip(expressedInOrganism, this.getGraphId(), RelationshipTypes.EXPRESSED_IN);
+        CommonUtility.createRelationShip(interaction, this.getGraphId(), RelationshipTypes.IE_PARTICIPANT);
         //CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
-        CommonUtility.createConfidenceRelationShips(confidences, this.graphId);
-        CommonUtility.createParameterRelationShips(parameters, this.graphId);
-        CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.graphId);
-        CommonUtility.createExperimentalPreparationRelationShips(experimentalPreparations, this.graphId);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createAliasRelationShips(aliases, this.graphId);
+        CommonUtility.createConfidenceRelationShips(confidences, this.getGraphId());
+        CommonUtility.createParameterRelationShips(parameters, this.getGraphId());
+        CommonUtility.createIdentificationMethodRelationShips(identificationMethods, this.getGraphId());
+        CommonUtility.createExperimentalPreparationRelationShips(experimentalPreparations, this.getGraphId());
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createAliasRelationShips(aliases, this.getGraphId());
     }
 
     public String getUniqueKey() {
@@ -193,19 +193,19 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
 
     @Override
     public Organism getExpressedInOrganism() {
-        return this.expressedIn;
+        return this.expressedInOrganism;
     }
 
     @Override
     public void setExpressedInOrganism(Organism organism) {
         if (organism != null) {
             if (organism instanceof GraphOrganism) {
-                this.expressedIn = (GraphOrganism) organism;
+                this.expressedInOrganism = (GraphOrganism) organism;
             } else {
-                this.expressedIn = new GraphOrganism(organism);
+                this.expressedInOrganism = new GraphOrganism(organism);
             }
         } else {
-            this.expressedIn = null;
+            this.expressedInOrganism = null;
         }
         //TODO login it
     }
@@ -395,14 +395,6 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
 
     public void setAc(String ac) {
         this.ac = ac;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

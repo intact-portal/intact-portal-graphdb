@@ -3,7 +3,6 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -24,11 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NodeEntity
-public class GraphEntity<F extends Feature> implements Entity<F> {
-
-    @GraphId
-    private Long graphId;
-
+public class GraphEntity<F extends Feature> extends GraphDatabaseObject implements Entity<F> {
 
     private String uniqueKey;
 
@@ -149,17 +144,28 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
         if (feature == null) {
             return false;
         }
-        String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
         GraphFeature graphFeature = null;
-        if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
-            graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
-
-        } else if (feature instanceof FeatureEvidence) {
-            graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+        if (feature instanceof GraphFeature) {
+            graphFeature = (GraphFeature) feature;
+        } else if (feature instanceof GraphFeatureEvidence) {
+            graphFeature = (GraphFeatureEvidence) feature;
         } else {
-            graphFeature = new GraphFeature(feature, false);
+            String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
+
+            if (GraphEntityCache.featureCacheMap.get(featureKey) != null) {
+                graphFeature = GraphEntityCache.featureCacheMap.get(featureKey);
+
+            } else if (feature instanceof FeatureEvidence) {
+                graphFeature = new GraphFeatureEvidence((FeatureEvidence) feature);
+            } else {
+                graphFeature = new GraphFeature(feature, false);
+            }
+
         }
-        if (getFeatures().add(graphFeature)) {
+        if (this.features == null) {
+            initialiseFeatures();
+        }
+        if (this.features.add(graphFeature)) {
             graphFeature.setParticipant(this);
             return true;
         }
@@ -179,6 +185,10 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
             return true;
         }
         return false;
+    }
+
+    protected void initialiseFeatures() {
+        this.features = new ArrayList<GraphFeature>();
     }
 
     @Override
@@ -280,15 +290,6 @@ public class GraphEntity<F extends Feature> implements Entity<F> {
     @Override
     public void setChangeListener(EntityInteractorChangeListener changeListener) {
         this.changeListener = changeListener;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getUniqueKey() {

@@ -2,7 +2,10 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.utils.comparator.experiment.UnambiguousExperimentComparator;
@@ -19,10 +22,7 @@ import java.util.*;
 import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.INTERACTION_DETECTION_METHOD;
 
 @NodeEntity
-public class GraphExperiment implements Experiment {
-
-    @GraphId
-    private Long graphId;
+public class GraphExperiment extends GraphDatabaseObject implements Experiment {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -122,13 +122,13 @@ public class GraphExperiment implements Experiment {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(interactionDetectionMethod, this.graphId, RelationshipTypes.INTERACTION_DETECTION_METHOD);
-        CommonUtility.createRelationShip(hostOrganism, this.graphId, RelationshipTypes.HOST_ORGANISM);
-        CommonUtility.createRelationShip(publication, this.graphId, RelationshipTypes.PUB_EXP);
-        CommonUtility.createXrefRelationShips(xrefs, this.graphId);
-        CommonUtility.createAnnotationRelationShips(annotations, this.graphId);
-        CommonUtility.createConfidenceRelationShips(confidences, this.graphId);
-        CommonUtility.createVariableParameterRelationShips(variableParameters, this.graphId);
+        CommonUtility.createRelationShip(interactionDetectionMethod, this.getGraphId(), RelationshipTypes.INTERACTION_DETECTION_METHOD);
+        CommonUtility.createRelationShip(hostOrganism, this.getGraphId(), RelationshipTypes.HOST_ORGANISM);
+        CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUB_EXP);
+        CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
+        CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
+        CommonUtility.createConfidenceRelationShips(confidences, this.getGraphId());
+        CommonUtility.createVariableParameterRelationShips(variableParameters, this.getGraphId());
     }
 
 /*    public GraphExperiment(Publication publication) {
@@ -424,15 +424,6 @@ public class GraphExperiment implements Experiment {
             }
         }
         return removed;
-    }
-
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public String getAc() {

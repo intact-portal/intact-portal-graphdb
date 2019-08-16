@@ -1,7 +1,10 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Experiment;
@@ -25,10 +28,7 @@ import java.util.Map;
  * Created by anjali on 24/11/17.
  */
 @NodeEntity
-public class GraphVariableParameter implements VariableParameter {
-
-    @GraphId
-    private Long graphId;
+public class GraphVariableParameter extends GraphDatabaseObject implements VariableParameter {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -100,9 +100,9 @@ public class GraphVariableParameter implements VariableParameter {
     }
 
     public void createRelationShipNatively() {
-        CommonUtility.createRelationShip(unit, this.graphId, RelationshipTypes.UNIT);
-        CommonUtility.createRelationShip(experiment, this.graphId, RelationshipTypes.EXPERIMENT);
-        CommonUtility.createVariableParameterValueRelationShips(variableValues, this.graphId);
+        CommonUtility.createRelationShip(unit, this.getGraphId(), RelationshipTypes.UNIT);
+        CommonUtility.createRelationShip(experiment, this.getGraphId(), RelationshipTypes.EXPERIMENT);
+        CommonUtility.createVariableParameterValueRelationShips(variableValues, this.getGraphId());
     }
 
    /* public GraphVariableParameter(String description) {
@@ -217,14 +217,6 @@ public class GraphVariableParameter implements VariableParameter {
             experiment.addVariableParameter(this);
         }
 
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {

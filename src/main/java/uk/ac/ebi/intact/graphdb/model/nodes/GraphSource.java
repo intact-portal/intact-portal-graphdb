@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
@@ -18,9 +17,6 @@ import java.util.Map;
 
 @NodeEntity
 public class GraphSource extends GraphCvTerm implements Source {
-
-    @GraphId
-    private Long graphId;
 
     private String postalAddress;
     private String uniqueKey;
@@ -76,7 +72,7 @@ public class GraphSource extends GraphCvTerm implements Source {
 
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
-        CommonUtility.createRelationShip(getPublication(), this.graphId, RelationshipTypes.PUBLICATION);
+        CommonUtility.createRelationShip(getPublication(), this.getGraphId(), RelationshipTypes.PUBLICATION);
     }
 
     public String getUniqueKey() {
@@ -103,14 +99,6 @@ public class GraphSource extends GraphCvTerm implements Source {
         } else {
             this.publication = null;
         }
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 
     public boolean isAlreadyCreated() {
