@@ -40,6 +40,7 @@ public class GraphFeatureRepositoryTest {
         Assert.assertEquals("Page2 should contain only 1 feature",1,page2.getContent().size());
 
     }
+
     @Test
     public void getFeaturesByInteractionAc() {
         String interactionAc = "EBI-10000974";

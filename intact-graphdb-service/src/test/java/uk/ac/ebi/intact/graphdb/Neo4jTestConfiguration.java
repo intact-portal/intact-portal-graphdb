@@ -24,4 +24,5 @@ public class Neo4jTestConfiguration {
     public LazyFetchAspect lazyFetchAspect() {
         return org.aspectj.lang.Aspects.aspectOf(LazyFetchAspect.class);
     }
+
 }
