@@ -13,10 +13,10 @@ import uk.ac.ebi.intact.graphdb.aop.LazyFetchAspect;
         "uk.ac.ebi.intact.graphdb.ws.controller"})
 @EntityScan({"uk.ac.ebi.intact.graphdb.model"})
 @EnableNeo4jRepositories("uk.ac.ebi.intact.graphdb.repository")
-public class GraphDBApplication {
+public class GraphDBServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GraphDBApplication.class, args);
+        SpringApplication.run(GraphDBServiceApplication.class, args);
     }
 
     /* This enables aspectJ (together with the aop.enable property in application.properties) */
