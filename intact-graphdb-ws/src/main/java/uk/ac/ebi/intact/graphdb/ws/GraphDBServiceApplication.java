@@ -10,7 +10,7 @@ import uk.ac.ebi.intact.graphdb.aop.LazyFetchAspect;
 
 @SpringBootApplication(scanBasePackages = {"uk.ac.ebi.intact.graphdb.service",
         "uk.ac.ebi.intact.graphdb.repository",
-        "uk.ac.ebi.intact.graphdb.ws.controller"})
+        "uk.ac.ebi.intact.graphdb.ws"})
 @EntityScan({"uk.ac.ebi.intact.graphdb.model"})
 @EnableNeo4jRepositories("uk.ac.ebi.intact.graphdb.repository")
 public class GraphDBServiceApplication {
