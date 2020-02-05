@@ -34,6 +34,27 @@ public class GraphInteractionEvidenceRepositoryTest {
     private GraphInteractionEvidenceRepository graphInteractionEvidenceRepository;
 
     @Test
+    public void testGraphInteractionEvidenceRepositoryPagination() {
+        int pageNumber = 0;
+        int totalElements = 0;
+        int pageSize = 10;
+        int depth = 0;
+        Page<GraphInteractionEvidence> page;
+
+        do{
+            page = graphInteractionEvidenceRepository.findAll(PageRequest.of(pageNumber, pageSize), depth);
+            Assert.assertNotNull("Page is Null", page);
+            totalElements = totalElements + page.getNumberOfElements();
+            pageNumber++;
+        } while (page.hasNext());
+
+        Assert.assertEquals(pageNumber, page.getTotalPages());
+        Assert.assertEquals(totalElements, page.getTotalElements());
+        Assert.assertEquals(1000, totalElements);
+        Assert.assertTrue(pageNumber > 1);
+    }
+
+    @Test
     public void getInteractionEvidenceByAc() {
         GraphInteractionEvidence graphInteractionEvidence = null;
         String ac = "EBI-10000974";

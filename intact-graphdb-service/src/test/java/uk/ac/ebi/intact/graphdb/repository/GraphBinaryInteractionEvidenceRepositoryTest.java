@@ -9,26 +9,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional(readOnly = true)
-public class GraphInteractorRepositoryTest {
+public class GraphBinaryInteractionEvidenceRepositoryTest {
 
      @Autowired
-     private GraphInteractorRepository graphInteractorRepository;
+     private GraphBinaryInteractionEvidenceRepository graphBinaryInteractionEvidenceRepository;
 
      @Test
-     public void testGraphInteractorRepositoryPagination() {
+     public void testGraphBinaryInteractionEvidenceRepositoryPagination() {
           int pageNumber = 0;
           int totalElements = 0;
-          int pageSize = 10;
+          int pageSize = 100;
           int depth = 0;
-          Page<GraphInteractor> page;
+          Page<GraphBinaryInteractionEvidence> page;
 
           do{
-               page = graphInteractorRepository.findAll(PageRequest.of(pageNumber, pageSize), depth);
+               page = graphBinaryInteractionEvidenceRepository.findAll(PageRequest.of(pageNumber, pageSize), depth);
                Assert.assertNotNull("Page is Null", page);
                totalElements = totalElements + page.getNumberOfElements();
                pageNumber++;
@@ -36,8 +36,7 @@ public class GraphInteractorRepositoryTest {
 
           Assert.assertEquals(pageNumber, page.getTotalPages());
           Assert.assertEquals(totalElements, page.getTotalElements());
-          Assert.assertEquals(655, totalElements);
+          Assert.assertEquals(1534, totalElements);
           Assert.assertTrue(pageNumber > 1);
-
      }
 }
