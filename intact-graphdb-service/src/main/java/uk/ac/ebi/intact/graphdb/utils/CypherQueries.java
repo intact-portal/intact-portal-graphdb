@@ -16,7 +16,7 @@ public class CypherQueries {
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
                     " (interaction:GraphBinaryInteractionEvidence) - [interactionType:" + RelationshipTypes.INTERACTION_TYPE + "] -> (it_cvterm:GraphCvTerm)," +
                     " (graphExperiment:GraphExperiment)<-[publication:" + RelationshipTypes.PUB_EXP + "]-(graphpublication:GraphPublication)," +
-                    " (graphpublication)-[pubmedXrefR:"+RelationshipTypes.PMID+"]-(pubmedXrefN:GraphXref)" +
+                    " (graphpublication)-[pubmedXrefR:" + RelationshipTypes.PMID + "]-(pubmedXrefN:GraphXref)" +
                     " WHERE  (ID(interactorA)<ID(interactorB)) OR (ID(interactorA) = ID(interactorB))" +
                     " RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
@@ -30,7 +30,7 @@ public class CypherQueries {
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
                     " (interaction:GraphBinaryInteractionEvidence) - [interactionType:" + RelationshipTypes.INTERACTION_TYPE + "] -> (it_cvterm:GraphCvTerm)," +
                     " (graphExperiment:GraphExperiment)<-[publication:" + RelationshipTypes.PUB_EXP + "]-(graphpublication:GraphPublication)," +
-                    " (graphpublication)-[pubmedXrefR:"+RelationshipTypes.PMID+"]-(pubmedXrefN:GraphXref)" +
+                    " (graphpublication)-[pubmedXrefR:" + RelationshipTypes.PMID + "]-(pubmedXrefN:GraphXref)" +
                     " WHERE  (ID(interactorA)=ID(interactorB))" +
                     " RETURN interactorA,interactorB,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
@@ -44,7 +44,7 @@ public class CypherQueries {
                     " MATCH (interaction:GraphBinaryInteractionEvidence) -[experiment:" + RelationshipTypes.EXPERIMENT + "] ->(graphExperiment:GraphExperiment)-[interactionDetectionMethod:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]->(dm_cvterm:GraphCvTerm)," +
                     " (interaction:GraphBinaryInteractionEvidence) - [interactionType:" + RelationshipTypes.INTERACTION_TYPE + "] -> (it_cvterm:GraphCvTerm)," +
                     " (graphExperiment:GraphExperiment)<-[publication:" + RelationshipTypes.PUB_EXP + "]-(graphpublication:GraphPublication)," +
-                    " (graphpublication)-[pubmedXrefR:"+RelationshipTypes.PMID+"]-(pubmedXrefN:GraphXref)" +
+                    " (graphpublication)-[pubmedXrefR:" + RelationshipTypes.PMID + "]-(pubmedXrefN:GraphXref)" +
                     " RETURN interactorA,COLLECT(interaction) as interactions,COLLECT(experiment) as experiments,COLLECT(graphExperiment) as graphExperiments," +
                     " COLLECT(interactionDetectionMethod) as interactionDetectionMethods,COLLECT(dm_cvterm) as dm_cvterms,COLLECT(interactionType) as interactionTypes,COLLECT(it_cvterm) as it_cvterms," +
                     " COLLECT(publication) as dm_publications,COLLECT(graphpublication) as publications,COLLECT(pubmedXrefR) as pubmedXrefRs,COLLECT(pubmedXrefN) as pubmedXrefNs ORDER BY interactorA.ac";
@@ -88,23 +88,9 @@ public class CypherQueries {
     * */
 
     public static final String GET_PARTICIPANTS_BY_INTERACTION_AC =
-            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[expRoleR:" + RelationshipTypes.EXPERIMENTAL_ROLE + "]-(expRoleN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[bioRoleR:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(bioRoleN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[identificationMethodR:" + RelationshipTypes.IDENTIFICATION_METHOD + "]-(identificationMethodN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[experimentaPreparationR:" + RelationshipTypes.EXPERIMENTAL_PREPARATION + "]-(experimentaPreparationN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[parametersR:" + RelationshipTypes.PARAMETERS + "]-(parametersN:GraphParameter)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[confidencesR:" + RelationshipTypes.CONFIDENCE + "]-(confidencesN:GraphConfidence)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[aliasesR:" + RelationshipTypes.ALIASES + "]-(aliasesN:GraphAlias)" +
-                    "OPTIONAL MATCH (participantEvidenceN)-[featuresR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresN:GraphFeatureEvidence)" +
-                    "OPTIONAL MATCH (interactorN)-[itorAliasesR:" + RelationshipTypes.ALIASES + "]-(itorAliasesN:GraphAlias)" +
-                    "OPTIONAL MATCH (interactorN)-[organismR:" + RelationshipTypes.ORGANISM + "]-(organismN:GraphOrganism)" +
-                    "OPTIONAL MATCH (interactorN)-[interactorTypeR:" + RelationshipTypes.INTERACTOR_TYPE + "]-(interactorTypeN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (interactorN)-[preferredIdentifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(preferredIdentifierN:GraphXref)" +
-                    "OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:" + RelationshipTypes.DATABASE + "]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
-                    "RETURN  participantEvidenceN,expRoleR,expRoleN,bioRoleR,bioRoleN,interactorR,interactorN,organismR,organismN,interactorTypeR,interactorTypeN,COLLECT(identificationMethodR),COLLECT(identificationMethodN)," +
-                    "COLLECT(experimentaPreparationR),COLLECT(experimentaPreparationN),COLLECT(parametersR),COLLECT(parametersN),COLLECT(confidencesR),COLLECT(confidencesN),COLLECT(aliasesR),COLLECT(aliasesN),COLLECT(featuresR)," +
-                    "COLLECT(featuresN),COLLECT(itorAliasesR),COLLECT(itorAliasesN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN),COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
+            "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} }) --(participantEvidenceN:GraphParticipantEvidence)" +
+                    " RETURN  participantEvidenceN";
+
 
     public static final String GET_PARTICIPANTS_BY_INTERACTION_AC_COUNT = "MATCH (gie:GraphInteractionEvidence{ ac: {0} }) --(p:GraphParticipantEvidence)  RETURN COUNT(DISTINCT p)";
 
@@ -185,17 +171,7 @@ public class CypherQueries {
 
     public static final String GET_FEATURES_BY_INTERACTION_AC =
             "MATCH (binaryIEN:GraphInteractionEvidence{ ac: {0} })--(graphParticipantEvidenceN:GraphParticipantEvidence)-[graphFeaturesR:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(graphFeaturesN:GraphFeatureEvidence)" +
-                    "MATCH (graphParticipantEvidenceN)-[interactorR:" + RelationshipTypes.INTERACTOR + "]-(interactorN:GraphInteractor)" +
-                    "OPTIONAL MATCH (interactorN)-[preferredIdentifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(preferredIdentifierN:GraphXref)" +
-                    "OPTIONAL MATCH (preferredIdentifierN)-[preferredIdentifierDatabaseR:" + RelationshipTypes.DATABASE + "]-(preferredIdentifierDatabaseN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (graphFeaturesN)-[typeR:" + RelationshipTypes.TYPE + "]-(typeN:GraphCvTerm)" +
-                    "OPTIONAL MATCH (graphFeaturesN)-[rangesR:" + RelationshipTypes.RANGES + "]-(rangesN:GraphRange)" +
-                    "OPTIONAL MATCH (rangesN)-[startR:" + RelationshipTypes.START + "]-(startN:GraphPosition)" +
-                    "OPTIONAL MATCH (rangesN)-[endR:" + RelationshipTypes.END + "]-(endN:GraphPosition)" +
-                    "OPTIONAL MATCH (endN)-[statusR:" + RelationshipTypes.STATUS + "]-(statusN:GraphCvTerm)" +
-                    "RETURN graphParticipantEvidenceN,graphFeaturesN,graphFeaturesR,COLLECT(interactorR),COLLECT(interactorN),COLLECT(typeR),COLLECT(typeN),COLLECT(rangesR)," +
-                    "COLLECT(rangesN),COLLECT(startR),COLLECT(startN),COLLECT(endR),COLLECT(endN),COLLECT(statusR),COLLECT(statusN),COLLECT(preferredIdentifierR),COLLECT(preferredIdentifierN)," +
-                    "COLLECT(preferredIdentifierDatabaseR),COLLECT(preferredIdentifierDatabaseN)";
+                    "RETURN graphFeaturesN";
 
 
     public static final String GET_INTERACTION_EVIDENCE_BY_INTERACTION_AC =

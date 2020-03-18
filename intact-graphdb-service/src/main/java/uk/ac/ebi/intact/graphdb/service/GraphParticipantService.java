@@ -37,6 +37,6 @@ public class GraphParticipantService {
 
     public Page<GraphParticipantEvidence> findByInteractionAc(String ac, int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
-        return graphParticpantRepository.findByInteractionAc(ac, pageRequest, 0);
+        return graphParticpantRepository.findByInteractionAc(ac, pageRequest);
     }
 }

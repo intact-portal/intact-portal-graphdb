@@ -30,7 +30,7 @@ public class GraphParticipantEvidenceRepositoryTest {
         int pageNumber = 0;
         int pageSize = 10;
         Page<GraphParticipantEvidence> page = graphParticipantEvidenceRepository.findByInteractionAc(interactionAc,
-                PageRequest.of(pageNumber, pageSize), 0);
+                PageRequest.of(pageNumber, pageSize));
 
         Assert.assertNotNull("Page is Null", page);
 
@@ -114,7 +114,7 @@ public class GraphParticipantEvidenceRepositoryTest {
 
         String interactionAc2 = "EBI-10051289";
         Page<GraphParticipantEvidence> page2 = graphParticipantEvidenceRepository.findByInteractionAc(interactionAc2,
-                PageRequest.of(pageNumber, pageSize), 0);
+                PageRequest.of(pageNumber, pageSize));
 
         Assert.assertNotNull("Page is Null", page2);
 

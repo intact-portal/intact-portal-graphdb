@@ -109,6 +109,12 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
         return null;
     }
 
+    @Override
+    @JsonIgnore
+    public boolean isEmpty() {
+        return featureEvidencePage.isEmpty();
+    }
+
     private List<FeatureDetails> createFeatureDetails(List<GraphFeatureEvidence> featureEvidences) {
 
         List<FeatureDetails> featureDetailsList = new ArrayList<>();
