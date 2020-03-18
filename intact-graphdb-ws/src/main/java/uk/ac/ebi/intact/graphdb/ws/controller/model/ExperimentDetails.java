@@ -8,17 +8,17 @@ import java.util.Collection;
 public class ExperimentDetails {
 
     private String experimentAc;
-    private String interactionDetMethod;
-    private String hostOrganism;
+    private String interactionDetectionMethod;
+    private String interactionHostOrganism;
     private Collection<Xref> experimentXrefs;
     private Collection<Annotation> experimentAnnotations;
 
-    public ExperimentDetails(String experimentAc, String interactionDetMethod, String hostOrganism,
+    public ExperimentDetails(String experimentAc, String interactionDetMethod, String interactionHostOrganism,
                              Collection<Xref> experimentXrefs,
                              Collection<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
-        this.interactionDetMethod = interactionDetMethod;
-        this.hostOrganism = hostOrganism;
+        this.interactionDetectionMethod = interactionDetMethod;
+        this.interactionHostOrganism = interactionHostOrganism;
         this.experimentXrefs = experimentXrefs;
         this.experimentAnnotations = experimentAnnotations;
     }
@@ -31,20 +31,20 @@ public class ExperimentDetails {
         this.experimentAc = experimentAc;
     }
 
-    public String getInteractionDetMethod() {
-        return interactionDetMethod;
+    public String getInteractionDetectionMethod() {
+        return interactionDetectionMethod;
     }
 
-    public void setInteractionDetMethod(String interactionDetMethod) {
-        this.interactionDetMethod = interactionDetMethod;
+    public void setInteractionDetectionMethod(String interactionDetectionMethod) {
+        this.interactionDetectionMethod = interactionDetectionMethod;
     }
 
-    public String getHostOrganism() {
-        return hostOrganism;
+    public String getInteractionHostOrganism() {
+        return interactionHostOrganism;
     }
 
-    public void setHostOrganism(String hostOrganism) {
-        this.hostOrganism = hostOrganism;
+    public void setInteractionHostOrganism(String interactionHostOrganism) {
+        this.interactionHostOrganism = interactionHostOrganism;
     }
 
     public Collection<Xref> getExperimentXrefs() {
