@@ -9,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphAlias;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphCvTerm;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.*;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class GraphParticipantEvidenceRepositoryTest {
         int pageNumber = 0;
         int pageSize = 10;
         Page<GraphParticipantEvidence> page = graphParticipantEvidenceRepository.findByInteractionAc(interactionAc,
-                PageRequest.of(pageNumber, pageSize));
+                PageRequest.of(pageNumber, pageSize), 0);
 
         Assert.assertNotNull("Page is Null", page);
 
@@ -114,6 +111,32 @@ public class GraphParticipantEvidenceRepositoryTest {
         Assert.assertNotNull("Interactor Species is null", graphParticipantEvidence.getInteractor().getOrganism());
         Assert.assertEquals("Interactor Species is wrong", "yeast",
                 graphParticipantEvidence.getInteractor().getOrganism().getCommonName());
+
+        String interactionAc2 = "EBI-10051289";
+        Page<GraphParticipantEvidence> page2 = graphParticipantEvidenceRepository.findByInteractionAc(interactionAc2,
+                PageRequest.of(pageNumber, pageSize), 0);
+
+        Assert.assertNotNull("Page is Null", page2);
+
+        List<GraphParticipantEvidence> graphParticipantEvidenceList2 = page2.getContent();
+        boolean annotationPresent = false;
+        boolean xrefPresent = false;
+        for (GraphParticipantEvidence graphParticipantEvidence1 : graphParticipantEvidenceList2) {
+            if (graphParticipantEvidence1.getAnnotations() != null && !graphParticipantEvidence1.getAnnotations().isEmpty()) {
+                Assert.assertEquals("Only one annotation was expected", 1, graphParticipantEvidence1.getAnnotations().size());
+                GraphAnnotation graphAnnotation = graphParticipantEvidence1.getAnnotations().iterator().next();
+                Assert.assertEquals("Annotation comment is wrong", "comment", graphAnnotation.getTopic().getShortName());
+                Assert.assertEquals("Annotation desc is wrong", "Monomeric and dimeric forms of TfR1 detetcted in the precipitate.", graphAnnotation.getValue());
+                annotationPresent = true;
+            }
+
+            if (graphParticipantEvidence1.getXrefs() != null && !graphParticipantEvidence1.getXrefs().isEmpty()) {
+                xrefPresent = true;
+            }
+        }
+
+        Assert.assertTrue("Annotation Should have been present", annotationPresent);
+        Assert.assertFalse("Xref should not have been present", xrefPresent);
 
 
     }
