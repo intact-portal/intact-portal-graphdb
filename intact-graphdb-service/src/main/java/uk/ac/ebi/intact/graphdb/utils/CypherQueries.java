@@ -959,4 +959,38 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
     public static final String GET_INTERACTION_DETMETHOD_BY_EXPERIMENT_AC =
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
+    public static final String GET_JSON_LINES="CALL apoc.export.json.query(\n" +
+            "\"MATCH (interactorA:GraphInteractor)<-[:interactors]-(interaction:GraphBinaryInteractionEvidence)-[:interactors]->(interactorB:GraphInteractor)\n" +
+            "WHERE  interactorA.uniprotName IN ['A0A024A2C9', 'A0A024R0L9','A0A024R0Y4','A0A024R493','A0A024R4Q5'] AND ID(interactorA)<ID(interactorB) AND EXISTS(interactorA.uniprotName) AND EXISTS(interactorB.uniprotName)\n" +
+            "OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
+            "OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)\n" +
+            "OPTIONAL MATCH (experimentN)-[participantIdentificationMethodR:participantIdentificationMethod]-(participantIdentificationMethodN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (experimentN)-[publicationR:PUB_EXP]-(publicationN:GraphPublication)-[pubmedIdXrefR:pubmedId]-(pubmedIdXrefN:GraphXref)\n" +
+            "OPTIONAL MATCH (interaction)-[clusteredInteractionR:interactions]-(clusteredInteractionN:GraphClusteredInteraction)\n" +
+            "OPTIONAL MATCH (interaction)-[complexExpansionR:complexExpansion]-(complexExpansionN:GraphCvTerm) \n" +
+            "\n" +
+            "RETURN \n" +
+            "       distinct\n" +
+            "       interactorA.uniprotName as interactorA_uniprot_name,\n" +
+            "       interactorB.uniprotName as interactorB_uniprot_name,\n" +
+            "       interactiontypeN.shortName as interaction_type_short_name,\n" +
+            "       interactiontypeN.mIIdentifier as interaction_type_mi_identifier,\n" +
+            "       interactionDetectionMethodN.shortName as interaction_detection_method_short_name,\n" +
+            "       interactionDetectionMethodN.mIIdentifier as interaction_detection_method_mi_identifier,\n" +
+            "       hostOrganismN.scientificName as host_organism_scientific_name,\n" +
+            "       hostOrganismN.taxId as host_organism_tax_id,\n" +
+            "       participantIdentificationMethodN.shortName as participant_detection_method_short_name,\n" +
+            "       participantIdentificationMethodN.mIIdentifier as participant_detection_method_mi_identifier,\n" +
+            "       clusteredInteractionN.miscore as mi_score,\n" +
+            "       pubmedIdXrefN.identifier as pubmed_id,\n" +
+            "       COLLECT(identifiersN.identifier) as interaction_identifier,\n" +
+            "       CASE WHEN complexExpansionN.shortName IS NULL THEN 'Not Needed' ELSE complexExpansionN.shortName END as expansion_method_short_name,\n" +
+            "       CASE WHEN complexExpansionN.mIIdentifier IS NULL THEN 'Not Needed' ELSE complexExpansionN.mIIdentifier END as expansion_method_mi_identifier,\n" +
+            "       COLLECT (sourceN.shortName) as source_databases\n" +
+            "       ORDER BY interactorA_uniprot_name\",\"cytoscape/embedded.json\",null)" ;
+/*            "       YIELD file, nodes, relationships, properties, data\n" +
+            "       RETURN file, nodes, relationships, properties, data";*/
+
 }

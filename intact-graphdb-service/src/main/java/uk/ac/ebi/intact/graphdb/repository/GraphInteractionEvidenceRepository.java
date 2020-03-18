@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.repository;
 
 
+import org.neo4j.procedure.Procedure;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Depth;
@@ -11,7 +12,10 @@ import psidev.psi.mi.jami.model.Xref;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,6 +38,9 @@ public interface GraphInteractionEvidenceRepository extends Neo4jRepository<Grap
 
     @Query(value = CypherQueries.GET_INTERACTION_EVIDENCE_BY_INTERACTION_AC)
     Optional<GraphInteractionEvidence> findByInteractionAcForDetails(String ac);
+
+    @Query(value = CypherQueries.GET_JSON_LINES)
+    void findJsonLines();
 //
 //    Page<BinaryInteractionEvidence> findByInteractorA_ShortName(Pageable pageable, @Param("shortName") String shortName);
 //
