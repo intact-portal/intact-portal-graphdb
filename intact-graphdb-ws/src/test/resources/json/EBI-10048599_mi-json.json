@@ -201,7 +201,7 @@
             "common": "spofr-sf_9",
             "scientific": "Spodoptera frugiperda insect cells",
             "cellType": {
-              "id": "ACC 125",
+              "id": "MINT-86941",
               "name": "insect cells"
             }
           },
@@ -223,7 +223,7 @@
               ]
             },
             {
-              "id": "6",
+              "id": "7",
               "name": "p.Leu1196Met",
               "category": "pointMutations",
               "type": {
@@ -240,7 +240,7 @@
               ]
             },
             {
-              "id": "7",
+              "id": "6",
               "name": "tyrosine_kinase_domain",
               "category": "bindingSites",
               "type": {

@@ -57,12 +57,12 @@
         },
         "pubid": [
           {
-            "db": "pubmed",
-            "id": "15120077"
-          },
-          {
             "db": "intact",
             "id": "EBI-1989530"
+          },
+          {
+            "db": "pubmed",
+            "id": "15120077"
           },
           {
             "db": "imex",
@@ -113,22 +113,6 @@
           "features": [
             {
               "id": "2",
-              "name": "n-terminus",
-              "category": "experimentalFeatures",
-              "type": {
-                "id": "MI:0519",
-                "name": "glutathione s tranferase tag"
-              },
-              "sequenceData": [
-                {
-                  "pos": "n-n",
-                  "interactorRef": "uniprotkb_O14048",
-                  "participantRef": "1"
-                }
-              ]
-            },
-            {
-              "id": "3",
               "name": "region",
               "category": "bindingSites",
               "type": {
@@ -143,6 +127,22 @@
                 }
               ],
               "InterPro": "IPR001012"
+            },
+            {
+              "id": "3",
+              "name": "n-terminus",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0519",
+                "name": "glutathione s tranferase tag"
+              },
+              "sequenceData": [
+                {
+                  "pos": "n-n",
+                  "interactorRef": "uniprotkb_O14048",
+                  "participantRef": "1"
+                }
+              ]
             }
           ]
         },

@@ -18,9 +18,9 @@ import psidev.psi.mi.jami.utils.XrefUtils;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Optional;
 
 /**
  * Created by anjali on 07/02/19.
@@ -41,7 +41,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         int depth = 0;
         Page<GraphInteractionEvidence> page;
 
-        do{
+        do {
             page = graphInteractionEvidenceRepository.findAll(PageRequest.of(pageNumber, pageSize), depth);
             Assert.assertNotNull("Page is Null", page);
             totalElements = totalElements + page.getNumberOfElements();
@@ -78,15 +78,18 @@ public class GraphInteractionEvidenceRepositoryTest {
 
     @Test
     public void getInteractionEvidenceByAcForDetailsPage() {
-        GraphInteractionEvidence graphInteractionEvidence;
-        String ac1 = "EBI-10000974";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional1 = graphInteractionEvidenceRepository.
-                findByInteractionAcForDetails(ac1);
-        Assert.assertTrue("GraphInteractionEvidence is not present ", graphInteractionEvidenceOptional1.isPresent());
+        String ac = "EBI-10000974";
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        int depth = 2;
+        Page<GraphInteractionEvidence> page = graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0, 1),
+                depth);
+        if (page != null && !page.getContent().isEmpty()) {
+            graphInteractionEvidence = page.getContent().get(0);
+        }
 
         // interaction
-        graphInteractionEvidence = graphInteractionEvidenceOptional1.get();
-        Assert.assertEquals("GraphInteractionEvidence is not correct", ac1, graphInteractionEvidence.getAc());
+        Assert.assertNotNull("Interaction:" + ac + " was expected here" + graphInteractionEvidence);
+        Assert.assertEquals("GraphInteractionEvidence is not correct", ac, graphInteractionEvidence.getAc());
         Assert.assertNotNull("Interaction type is null", graphInteractionEvidence.getInteractionType());
         Assert.assertEquals("Interaction type is wrong", "physical association", graphInteractionEvidence.getInteractionType().
                 getShortName());
@@ -132,16 +135,16 @@ public class GraphInteractionEvidenceRepositoryTest {
 
     @Test
     public void findByInteractionAcForMiJson() {
-        GraphInteractionEvidence graphInteractionEvidence;
-        String ac1 = "EBI-10052707";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional1 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac1);
+        String ac = "EBI-10052707";
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        Page<GraphInteractionEvidence> page = graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0, 1), 0);
+        if (page != null && !page.getContent().isEmpty()) {
+            graphInteractionEvidence = page.getContent().get(0);
+        }
 
-        Assert.assertTrue("GraphInteractionEvidence is not present ", graphInteractionEvidenceOptional1.isPresent());
-
-        // interaction...
-        graphInteractionEvidence = graphInteractionEvidenceOptional1.get();
-        Assert.assertEquals("GraphInteractionEvidence is not correct", ac1, graphInteractionEvidence.getAc());
+        // interaction
+        Assert.assertNotNull("Interaction:" + ac + " was expected here" + graphInteractionEvidence);
+        Assert.assertEquals("GraphInteractionEvidence is not correct", ac, graphInteractionEvidence.getAc());
         Assert.assertNotNull("Interaction type is null", graphInteractionEvidence.getInteractionType());
         Assert.assertEquals("Interaction type is wrong", "direct interaction", graphInteractionEvidence.getInteractionType().
                 getShortName());
@@ -274,12 +277,13 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         // for interaction parameters checking
         String ac2 = "EBI-10048599";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional2 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac2);
+        GraphInteractionEvidence graphInteractionEvidence2 = null;
+        Page<GraphInteractionEvidence> page2 = graphInteractionEvidenceRepository.findTopByAc(ac2, PageRequest.of(0, 1), 0);
+        if (page2 != null && !page2.getContent().isEmpty()) {
+            graphInteractionEvidence2 = page2.getContent().get(0);
+        }
 
-        Assert.assertTrue("GraphInteractionEvidence 2 is not present ", graphInteractionEvidenceOptional2.isPresent());
-
-        GraphInteractionEvidence graphInteractionEvidence2 = graphInteractionEvidenceOptional2.get();
+        Assert.assertNotNull("Interaction:" + ac2 + " was expected here" + graphInteractionEvidence2);
         Assert.assertEquals("GraphInteractionEvidence 2 is not correct", ac2, graphInteractionEvidence2.getAc());
         Assert.assertNotNull("Interaction Evidence Parameters is null", graphInteractionEvidence2.getParameters());
         Assert.assertEquals("Interaction Evidence Parameters count is wrong", 2, graphInteractionEvidence2.getParameters().size());
@@ -303,13 +307,13 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         //for experimentalModifications Checking and expressed In
         String ac3 = "EBI-1004945";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional3 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac3);
+        GraphInteractionEvidence graphInteractionEvidence3 = null;
+        Page<GraphInteractionEvidence> page3 = graphInteractionEvidenceRepository.findTopByAc(ac3, PageRequest.of(0, 1), 0);
+        if (page3 != null && !page3.getContent().isEmpty()) {
+            graphInteractionEvidence3 = page3.getContent().get(0);
+        }
 
-
-        Assert.assertTrue("GraphInteractionEvidence 3 is not present ", graphInteractionEvidenceOptional3.isPresent());
-
-        GraphInteractionEvidence graphInteractionEvidence3 = graphInteractionEvidenceOptional3.get();
+        Assert.assertNotNull("Interaction:" + ac3 + " was expected here" + graphInteractionEvidence3);
         Assert.assertEquals("GraphInteractionEvidence 3 is not correct", ac3, graphInteractionEvidence3.getAc());
         Assert.assertNotNull("GraphInteractionEvidence 3 Experiment is null", graphInteractionEvidence3.getExperiment());
         Assert.assertNotNull("GraphInteractionEvidence 3 Experiment Annotations is null", graphInteractionEvidence3.getExperiment());
@@ -332,13 +336,13 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         // for interpro
         String ac4 = "EBI-1005174";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional4 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac4);
+        GraphInteractionEvidence graphInteractionEvidence4 = null;
+        Page<GraphInteractionEvidence> page4 = graphInteractionEvidenceRepository.findTopByAc(ac4, PageRequest.of(0, 1), 0);
+        if (page4 != null && !page4.getContent().isEmpty()) {
+            graphInteractionEvidence4 = page4.getContent().get(0);
+        }
 
-
-        Assert.assertTrue("GraphInteractionEvidence 4 is not present ", graphInteractionEvidenceOptional4.isPresent());
-
-        GraphInteractionEvidence graphInteractionEvidence4 = graphInteractionEvidenceOptional4.get();
+        Assert.assertNotNull("Interaction:" + ac4 + " was expected here" + graphInteractionEvidence4);
         Assert.assertEquals("GraphInteractionEvidence 4 is not correct", ac4, graphInteractionEvidence4.getAc());
         Assert.assertNotNull("GraphInteractionEvidence 4 participants is null", graphInteractionEvidence4.getParticipants());
 
@@ -360,13 +364,14 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         // for linked features 1
         String ac5 = "EBI-10054743";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional5 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac5);
+        GraphInteractionEvidence graphInteractionEvidence5 = null;
+        Page<GraphInteractionEvidence> page5 = graphInteractionEvidenceRepository.findTopByAc(ac5, PageRequest.of(0, 1), 0);
+        if (page5 != null && !page5.getContent().isEmpty()) {
+            graphInteractionEvidence5 = page5.getContent().get(0);
+        }
 
+        Assert.assertNotNull("Interaction:" + ac5 + " was expected here" + graphInteractionEvidence5);
 
-        Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional5.isPresent());
-
-        GraphInteractionEvidence graphInteractionEvidence5 = graphInteractionEvidenceOptional5.get();
         HashMap<String, Collection<GraphFeature>> linkedFeatures = new HashMap<>();
         String featureAc1_withLinkedFeature = "EBI-10055168";
         String featureAc2_withLinkedFeature = "EBI-10055163";
@@ -394,13 +399,14 @@ public class GraphInteractionEvidenceRepositoryTest {
 
         //linked features 2
         String ac6 = "EBI-10042058";
-        Optional<GraphInteractionEvidence> graphInteractionEvidenceOptional6 = graphInteractionEvidenceRepository.
-                findByInteractionAcForMiJson(ac6);
+        GraphInteractionEvidence graphInteractionEvidence6 = null;
+        Page<GraphInteractionEvidence> page6 = graphInteractionEvidenceRepository.findTopByAc(ac6, PageRequest.of(0, 1), 0);
+        if (page6 != null && !page6.getContent().isEmpty()) {
+            graphInteractionEvidence6 = page6.getContent().get(0);
+        }
 
+        Assert.assertNotNull("Interaction:" + ac6 + " was expected here" + graphInteractionEvidence6);
 
-        Assert.assertTrue("GraphInteractionEvidence 5 is not present ", graphInteractionEvidenceOptional6.isPresent());
-
-        GraphInteractionEvidence graphInteractionEvidence6 = graphInteractionEvidenceOptional6.get();
         HashMap<String, Collection<GraphFeature>> linkedFeatures2 = new HashMap<>();
         String featureAc1_withLinkedFeature_2 = "EBI-10042083";
         String featureAc2_withLinkedFeature_2 = "EBI-10042078";
@@ -426,6 +432,76 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertEquals("GraphInteractionEvidence 6 Participant Feature :" + featureAc2_withLinkedFeature_2 +
                         " has wrong linked feature", featureAc1_withLinkedFeature_2,
                 linkedFeatures2.get(featureAc2_withLinkedFeature_2).iterator().next().getAc());
+
+    }
+
+    @Test
+    public void getExperimentByInteractionAc() {
+        GraphInteractionEvidence graphInteractionEvidence = null;
+        String ac = "EBI-10052707";
+        int depth = 2;
+        Page<GraphInteractionEvidence> page = graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0, 1),
+                depth);
+        if (page != null && !page.getContent().isEmpty()) {
+            graphInteractionEvidence = page.getContent().get(0);
+        }
+
+        Assert.assertNotNull("Interaction is null", graphInteractionEvidence);
+        Assert.assertEquals("Interaction is incorrect", ac, graphInteractionEvidence.getAc());
+
+        GraphExperiment graphExperiment = (GraphExperiment) graphInteractionEvidence.getExperiment();
+        Assert.assertNotNull("Experiment was expected here", graphExperiment);
+        Assert.assertEquals("GraphExperiment is not correct", "EBI-9837129", graphExperiment.getAc());
+        Assert.assertNotNull("Host Organism is null", graphExperiment.getHostOrganism());
+        Assert.assertEquals("Host Organism is incorrect", "in vitro", graphExperiment.getHostOrganism().getCommonName());
+        Assert.assertNotNull("Interaction Detection method is null", graphExperiment.getInteractionDetectionMethod());
+        Assert.assertEquals("Interaction Detection Method is incorect", "pull down",
+                graphExperiment.getInteractionDetectionMethod().getShortName());
+        Assert.assertNotNull("Experiment Xrefs is null", graphExperiment.getXrefs());
+        Assert.assertEquals("Experiment Xrefs count is wrong", 2, graphExperiment.getXrefs().size());
+
+        GraphXref experimentXref = null;
+        String imexIdOfExp = "IM-23527";
+        for (GraphXref xref : graphExperiment.getXrefs()) {
+            if (xref.getId() != null && xref.getId().equals(imexIdOfExp)) {
+                experimentXref = xref;
+            }
+        }
+        Assert.assertNotNull("Experiment Imex Id :" + imexIdOfExp + " Xref not present", experimentXref);
+
+        Assert.assertNotNull("Experiment Annotations is null", graphExperiment.getAnnotations());
+        Assert.assertEquals("Experiment Annotations count is wrong", 7, graphExperiment.getAnnotations().size());
+
+        GraphPublication graphPublication = (GraphPublication) graphExperiment.getPublication();
+
+        Assert.assertNotNull("GraphPublication is not present", graphPublication);
+        Assert.assertEquals("GraphPublication is not correct", "EBI-9836453", graphPublication.getAc());
+        Assert.assertEquals("pubmedid is not correct", "24872509", graphPublication.getPubmedIdStr());
+        Assert.assertEquals("Publication Title is wrong", "Structural basis for Pan3 binding to Pan2 and its function" +
+                " in mRNA recruitment and deadenylation.", graphPublication.getTitle());
+        Assert.assertEquals("Journal is wrong", "EMBO J. (0261-4189)", graphPublication.getJournal());
+        try {
+            Assert.assertEquals("Publication Date is wrong", new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2014"),
+                    graphPublication.getPublicationDate());
+        } catch (Exception parseException) {
+            parseException.printStackTrace();
+        }
+
+        Assert.assertNotNull("Publication Xrefs is null", graphPublication.getXrefs());
+        Assert.assertEquals("Publication Xrefs count is wrong", 1, graphPublication.getXrefs().size());
+
+        GraphXref publicationXref = null;
+        String imexIdOfPub = "IM-23527";
+        for (GraphXref xref : graphPublication.getXrefs()) {
+            if (xref.getId() != null && xref.getId().equals(imexIdOfPub)) {
+                publicationXref = xref;
+            }
+        }
+
+        Assert.assertNotNull("Publication Imex Id :" + imexIdOfPub + " Xref not present", publicationXref);
+
+        Assert.assertNotNull("Publication Annotations is null", graphPublication.getAnnotations());
+        Assert.assertEquals("Publication Annotations count is wrong", 3, graphPublication.getAnnotations().size());
 
     }
 }

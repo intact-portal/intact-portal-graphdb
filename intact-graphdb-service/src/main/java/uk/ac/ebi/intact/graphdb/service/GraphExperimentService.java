@@ -38,9 +38,4 @@ public class GraphExperimentService {
         return graphExperimentRepository.findByAc(ac, depth);
     }
 
-    public GraphExperiment findByInteractionAc(String ac) {
-        Optional<GraphExperiment> optionalExp = graphExperimentRepository.findByInteractionAc(ac);
-        return optionalExp.orElse(null);
-    }
-
 }

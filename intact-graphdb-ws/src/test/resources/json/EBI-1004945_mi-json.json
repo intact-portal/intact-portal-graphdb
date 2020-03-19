@@ -38,12 +38,12 @@
         },
         "pubid": [
           {
-            "db": "pubmed",
-            "id": "16616331"
-          },
-          {
             "db": "intact",
             "id": "EBI-1989526"
+          },
+          {
+            "db": "pubmed",
+            "id": "16616331"
           },
           {
             "db": "imex",
@@ -97,53 +97,66 @@
           },
           "features": [
             {
-              "id": "3",
+              "id": "2",
               "name": "m7",
               "category": "pointMutations",
               "type": {
                 "id": "MI:0573",
                 "name": "mutation disrupting interaction"
               },
+              "detmethods": [
+                {
+                  "id": "MI:0074",
+                  "name": "mutation analysis"
+                }
+              ],
               "sequenceData": [
                 {
-                  "pos": "523-523",
+                  "pos": "537-537",
+                  "resultingSequence": "R",
                   "interactorRef": "intact_EBI-11620908",
                   "participantRef": "1"
                 },
                 {
                   "pos": "526-526",
+                  "resultingSequence": "E",
                   "interactorRef": "intact_EBI-11620908",
                   "participantRef": "1"
                 },
                 {
-                  "pos": "537-537",
-                  "interactorRef": "intact_EBI-11620908",
-                  "participantRef": "1"
-                },
-                {
-                  "pos": "493-493",
-                  "interactorRef": "intact_EBI-11620908",
-                  "participantRef": "1"
-                },
-                {
-                  "pos": "505-505",
-                  "interactorRef": "intact_EBI-11620908",
-                  "participantRef": "1"
-                },
-                {
-                  "pos": "508-508",
+                  "pos": "523-523",
+                  "resultingSequence": "R",
                   "interactorRef": "intact_EBI-11620908",
                   "participantRef": "1"
                 },
                 {
                   "pos": "509-509",
+                  "resultingSequence": "R",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "508-508",
+                  "resultingSequence": "E",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "505-505",
+                  "resultingSequence": "E",
+                  "interactorRef": "intact_EBI-11620908",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "493-493",
+                  "resultingSequence": "R",
                   "interactorRef": "intact_EBI-11620908",
                   "participantRef": "1"
                 }
               ]
             },
             {
-              "id": "2",
+              "id": "3",
               "name": "NHR2 domain",
               "category": "bindingSites",
               "type": {
@@ -164,4 +177,3 @@
     }
   ]
 }
-

@@ -57,12 +57,12 @@
         },
         "pubid": [
           {
-            "db": "pubmed",
-            "id": "18923542"
-          },
-          {
             "db": "intact",
             "id": "EBI-9976479"
+          },
+          {
+            "db": "pubmed",
+            "id": "18923542"
           },
           {
             "db": "imex",
@@ -107,22 +107,6 @@
           ],
           "features": [
             {
-              "id": "4",
-              "name": "region",
-              "category": "bindingSites",
-              "type": {
-                "id": "MI:0442",
-                "name": "sufficient binding region"
-              },
-              "sequenceData": [
-                {
-                  "pos": "1-101",
-                  "interactorRef": "uniprotkb_Q03135",
-                  "participantRef": "1"
-                }
-              ]
-            },
-            {
               "id": "2",
               "name": "region",
               "category": "bindingSites",
@@ -139,6 +123,22 @@
               ],
               "linkedFeatures": [
                 "3"
+              ]
+            },
+            {
+              "id": "4",
+              "name": "region",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "1-101",
+                  "interactorRef": "uniprotkb_Q03135",
+                  "participantRef": "1"
+                }
               ]
             }
           ]
@@ -162,6 +162,25 @@
           ],
           "features": [
             {
+              "id": "3",
+              "name": "c-terminal",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "669-1159",
+                  "interactorRef": "uniprotkb_Q03135",
+                  "participantRef": "1"
+                }
+              ],
+              "linkedFeatures": [
+                "2"
+              ]
+            },
+            {
               "id": "6",
               "name": "region",
               "category": "experimentalFeatures",
@@ -175,25 +194,6 @@
                   "interactorRef": "uniprotkb_Q12809",
                   "participantRef": "5"
                 }
-              ]
-            },
-            {
-              "id": "3",
-              "name": "c-terminal",
-              "category": "bindingSites",
-              "type": {
-                "id": "MI:0442",
-                "name": "sufficient binding region"
-              },
-              "sequenceData": [
-                {
-                  "pos": "669-1159",
-                  "interactorRef": "uniprotkb_Q12809",
-                  "participantRef": "5"
-                }
-              ],
-              "linkedFeatures": [
-                "2"
               ]
             }
           ]

@@ -24,17 +24,7 @@ public class GraphInteractionServiceTest {
     public void getInteractionEvidenceByAc() {
         GraphInteractionEvidence graphInteractionEvidence = null;
         String ac = "EBI-10000974";
-        int depth = 2;
-        graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac, depth);
-
-        Assert.assertEquals("Interaction not present", ac, graphInteractionEvidence.getAc());
-    }
-
-    @Test
-    public void getInteractionEvidenceByAcForDetails() {
-        GraphInteractionEvidence graphInteractionEvidence = null;
-        String ac = "EBI-10000974";
-        graphInteractionEvidence = graphInteractionService.findByInteractionAcForDetails(ac);
+        graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac);
 
         Assert.assertEquals("Interaction not present", ac, graphInteractionEvidence.getAc());
     }

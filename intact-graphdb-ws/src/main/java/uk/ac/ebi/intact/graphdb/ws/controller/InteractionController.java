@@ -15,13 +15,12 @@ import psidev.psi.mi.jami.json.MIJsonOptionFactory;
 import psidev.psi.mi.jami.json.MIJsonType;
 import psidev.psi.mi.jami.model.InteractionCategory;
 import psidev.psi.mi.jami.model.InteractionEvidence;
-import uk.ac.ebi.intact.graphdb.ws.controller.model.InteractionExportFormat;
-import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 import uk.ac.ebi.intact.graphdb.service.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
+import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
@@ -54,10 +53,9 @@ public class InteractionController {
     public InteractionDetails getInteractionDetails(
             @PathVariable String ac) {
 
-        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAcForDetails(ac);
-        GraphExperiment graphExperiment = graphExperimentService.findByInteractionAc(ac);
+        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAc(ac);
 
-        return createInteractionDetails(graphInteractionEvidence, graphExperiment);
+        return createInteractionDetails(graphInteractionEvidence);
     }
 
     @CrossOrigin(origins = "*")
@@ -67,15 +65,7 @@ public class InteractionController {
     public GraphInteractionEvidence getDetailsOld(
             @RequestParam(value = "ac") String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
-        return graphInteractionService.findByInteractionAc(ac, depth);
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping(value = "/experiment/{ac}",
-            produces = {APPLICATION_JSON_VALUE})
-    public GraphExperiment getExperimentAndPublicationDetails(
-            @PathVariable String ac) {
-        return graphExperimentService.findByInteractionAc(ac);
+        return graphInteractionService.findByInteractionAc(ac);
     }
 
     @CrossOrigin(origins = "*")
@@ -104,8 +94,7 @@ public class InteractionController {
     /**
      * CONVERTS from GraphInteractionEvidence and GraphExperiment to InteractionDetails model
      **/
-    private InteractionDetails createInteractionDetails(GraphInteractionEvidence graphInteractionEvidence,
-                                                        GraphExperiment graphExperiment) {
+    private InteractionDetails createInteractionDetails(GraphInteractionEvidence graphInteractionEvidence) {
         String ac = graphInteractionEvidence.getAc();
 
         String interactionType = graphInteractionEvidence.getInteractionType().getShortName();
@@ -137,6 +126,8 @@ public class InteractionController {
             CvTerm cvTerm = new CvTerm(confidence.getType().getShortName(), confidence.getType().getMIIdentifier());
             confidences.add(new Confidence(cvTerm, confidence.getValue()));
         });
+
+        GraphExperiment graphExperiment = (GraphExperiment) graphInteractionEvidence.getExperiment();
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
         PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
