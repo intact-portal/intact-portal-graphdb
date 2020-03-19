@@ -1,7 +1,5 @@
 package uk.ac.ebi.intact.graphdb.ws.controller.model;
 
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeature;
-
 import java.util.Collection;
 
 /**
@@ -14,7 +12,7 @@ public class FeatureDetails {
     private CvTerm type;
     private CvTerm role;
     private Collection<String> ranges; //ranges.rangeString
-    private Collection<GraphFeature> linkedFeatures; //linkedFeatures.shortName, linkedFeatures.ac
+    private Collection<LinkedFeature> linkedFeatures; //linkedFeatures.shortName, linkedFeatures.ac
     private String participantName; // participant.participant.shortName
     private Xref participant; // participant.participant.preferredIdentifierStr
     private String participantAc; //participant.ac
@@ -25,7 +23,7 @@ public class FeatureDetails {
     private Collection<Annotation> annotations;
 
     public FeatureDetails(String featureAc, String name, CvTerm type, CvTerm role, Collection<String> ranges,
-                          Collection<GraphFeature> linkedFeatures, String participantName, Xref participant,
+                          Collection<LinkedFeature> linkedFeatures, String participantName, Xref participant,
                           String participantAc, Collection<CvTerm> detectionMethods, Collection<Parameter> parameters,
                           Collection<Xref> identifiers, Collection<Xref> xrefs, Collection<Annotation> annotations) {
         this.featureAc = featureAc;
@@ -84,11 +82,11 @@ public class FeatureDetails {
         this.ranges = ranges;
     }
 
-    public Collection<GraphFeature> getLinkedFeatures() {
+    public Collection<LinkedFeature> getLinkedFeatures() {
         return linkedFeatures;
     }
 
-    public void setLinkedFeatures(Collection<GraphFeature> linkedFeatures) {
+    public void setLinkedFeatures(Collection<LinkedFeature> linkedFeatures) {
         this.linkedFeatures = linkedFeatures;
     }
 

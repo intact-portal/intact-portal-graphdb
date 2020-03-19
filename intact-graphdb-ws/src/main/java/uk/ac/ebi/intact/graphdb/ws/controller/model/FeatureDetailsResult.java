@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeature;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphFeatureEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphParticipantEvidence;
 
@@ -134,10 +133,10 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
             Collection<String> ranges = new ArrayList<>();
             feature.getRanges().forEach(graphRange -> ranges.add(graphRange.getRangeString()));
 
-            Collection<GraphFeature> linkedFeatures = new ArrayList<>();
+            Collection<LinkedFeature> linkedFeatures = new ArrayList<>();
             feature.getLinkedFeatures().forEach(linkfeature -> {
                 if (linkfeature != null) {
-                    linkedFeatures.add(linkfeature);
+                    linkedFeatures.add(new LinkedFeature(linkfeature.getShortName(), linkfeature.getAc()));
                 }
             });
 

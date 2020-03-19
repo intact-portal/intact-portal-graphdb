@@ -97,7 +97,7 @@ public class GraphFeatureRepositoryTest {
                 graphFeatureEvidence2 = graphFeatureEvidence1;
             }
         }
-        Assert.assertNotNull("Feature :" + featureAc + " not present", graphFeatureEvidence2);
+        Assert.assertNotNull("Feature :" + featureAc2 + " not present", graphFeatureEvidence2);
         Assert.assertNotNull("Xrefs should not empty", graphFeatureEvidence2.getXrefs() == null || graphFeatureEvidence2.getXrefs().isEmpty());
         Assert.assertEquals("Xrefs count is wrong", 1, graphFeatureEvidence2.getXrefs().size());
         GraphXref graphXref = graphFeatureEvidence2.getXrefs().iterator().next();
@@ -121,6 +121,41 @@ public class GraphFeatureRepositoryTest {
         Assert.assertNull("Role is expected to be null", graphFeatureEvidence2.getRole());
         Assert.assertTrue("Parameters are expected to be null", graphFeatureEvidence2.getParameters() == null || graphFeatureEvidence2.getParameters().isEmpty());
 
+        String interactionAc3 = "EBI-10042058";
 
+        Page<GraphFeatureEvidence> page3 = graphFeatureRepository.findByInteractionAc(interactionAc3, PageRequest.of(pageNumber, pageSize));
+        Assert.assertNotNull("Page is Null", page3);
+
+        List<GraphFeatureEvidence> graphFeatureEvidenceList3 = page3.getContent();
+        Assert.assertNotNull("Features is null ", graphFeatureEvidenceList3);
+        Assert.assertEquals("Features Count is wrong ", 4, graphFeatureEvidenceList3.size());
+
+        GraphFeatureEvidence graphFeatureEvidence3 = null;
+        String featureAc3 = "EBI-10042078";
+        for (GraphFeatureEvidence graphFeatureEvidence1 : graphFeatureEvidenceList3) {
+            if (graphFeatureEvidence1.getAc().equals(featureAc3)) {
+                graphFeatureEvidence3 = graphFeatureEvidence1;
+            }
+        }
+        Assert.assertNotNull("Feature :" + featureAc3 + " not present", graphFeatureEvidence3);
+        Assert.assertEquals("Feature was expected to have 1 linked feature", 1, graphFeatureEvidence3.getLinkedFeatures().size());
+
+        String interactionAc4 = "EBI-1001015";
+        Page<GraphFeatureEvidence> page4 = graphFeatureRepository.findByInteractionAc(interactionAc4, PageRequest.of(pageNumber, pageSize));
+        Assert.assertNotNull("Page is Null", page4);
+
+        List<GraphFeatureEvidence> graphFeatureEvidenceList4 = page4.getContent();
+        Assert.assertNotNull("Features is null ", graphFeatureEvidenceList4);
+        Assert.assertEquals("Features Count is wrong ", 4, graphFeatureEvidenceList4.size());
+
+        GraphFeatureEvidence graphFeatureEvidence4 = null;
+        String featureAc4 = "EBI-1001019";
+        for (GraphFeatureEvidence graphFeatureEvidence1 : graphFeatureEvidenceList4) {
+            if (graphFeatureEvidence1.getAc().equals(featureAc4)) {
+                graphFeatureEvidence4 = graphFeatureEvidence1;
+            }
+        }
+        Assert.assertNotNull("Feature :" + featureAc4 + " not present", graphFeatureEvidence4);
+        Assert.assertEquals("Feature was expected to have 1 annotation", 1, graphFeatureEvidence4.getAnnotations().size());
     }
 }
