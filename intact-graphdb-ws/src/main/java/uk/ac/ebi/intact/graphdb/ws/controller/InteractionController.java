@@ -139,6 +139,10 @@ public class InteractionController {
         String experimentAc = graphExperiment.getAc();
         String hostOrganism = graphExperiment.getHostOrganism().getScientificName();
         String interactionDetMethod = graphExperiment.getInteractionDetectionMethod().getShortName();
+        String participantDetMethod = null;
+        if (graphExperiment.getParticipantDetectionMethod() != null) {
+            participantDetMethod = graphExperiment.getParticipantDetectionMethod().getShortName();
+        }
 
         List<Xref> experimentXrefs = new ArrayList<>();
         graphExperiment.getXrefs().forEach(xref -> {
@@ -153,7 +157,7 @@ public class InteractionController {
             experimentAnnotations.add(new Annotation(term, annotation.getValue()));
         });
 
-        return new ExperimentDetails(experimentAc, interactionDetMethod, hostOrganism, experimentXrefs, experimentAnnotations);
+        return new ExperimentDetails(experimentAc, interactionDetMethod, participantDetMethod, hostOrganism, experimentXrefs, experimentAnnotations);
     }
 
     private PublicationDetails createPublicationDetails(GraphExperiment graphExperiment) {

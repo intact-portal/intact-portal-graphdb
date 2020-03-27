@@ -9,15 +9,17 @@ public class ExperimentDetails {
 
     private String experimentAc;
     private String interactionDetectionMethod;
+    private String participantDetectionMethod;
     private String interactionHostOrganism;
     private Collection<Xref> experimentXrefs;
     private Collection<Annotation> experimentAnnotations;
 
-    public ExperimentDetails(String experimentAc, String interactionDetMethod, String interactionHostOrganism,
+    public ExperimentDetails(String experimentAc, String interactionDetMethod, String participantDetMethod, String interactionHostOrganism,
                              Collection<Xref> experimentXrefs,
                              Collection<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
         this.interactionDetectionMethod = interactionDetMethod;
+        this.participantDetectionMethod = participantDetMethod;
         this.interactionHostOrganism = interactionHostOrganism;
         this.experimentXrefs = experimentXrefs;
         this.experimentAnnotations = experimentAnnotations;
@@ -61,5 +63,13 @@ public class ExperimentDetails {
 
     public void setExperimentAnnotations(Collection<Annotation> experimentAnnotations) {
         this.experimentAnnotations = experimentAnnotations;
+    }
+
+    public String getParticipantDetectionMethod() {
+        return participantDetectionMethod;
+    }
+
+    public void setParticipantDetectionMethod(String participantDetectionMethod) {
+        this.participantDetectionMethod = participantDetectionMethod;
     }
 }
