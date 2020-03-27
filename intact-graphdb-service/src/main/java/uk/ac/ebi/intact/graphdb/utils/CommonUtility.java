@@ -53,12 +53,12 @@ public class CommonUtility {
         try {
             if (object != null) {
                 Class clazz = object.getClass();
-                   try {
-                        Method method = clazz.getMethod("getParticipantIdentificationMethod");
-                        participantDetectionMethod = (CvTerm) method.invoke(clazz.cast(object));
-                    } catch (NoSuchMethodException e) {
-                       // log.debug("No Such method in class:" + clazz);
-                    }
+                try {
+                    Method method = clazz.getMethod("getParticipantIdentificationMethod");
+                    participantDetectionMethod = (CvTerm) method.invoke(clazz.cast(object));
+                } catch (NoSuchMethodException e) {
+                    // log.debug("No Such method in class:" + clazz);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
