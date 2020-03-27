@@ -58,6 +58,7 @@ public class RelationshipTypes {
 
     //Experiment
     public static final String INTERACTION_DETECTION_METHOD = "interactionDetectionMethod";
+    public static final String PARTICIPANT_DETECTION_METHOD = "participantDetectionMethod";
     public static final String HOST_ORGANISM = "hostOrganism";
 
     //FeatureEvidence

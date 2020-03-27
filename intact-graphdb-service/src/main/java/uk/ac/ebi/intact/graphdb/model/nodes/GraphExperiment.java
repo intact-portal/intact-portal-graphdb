@@ -20,6 +20,7 @@ import uk.ac.ebi.intact.graphdb.utils.cache.GraphEntityCache;
 import java.util.*;
 
 import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.INTERACTION_DETECTION_METHOD;
+import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.PARTICIPANT_DETECTION_METHOD;
 
 @NodeEntity
 public class GraphExperiment extends GraphDatabaseObject implements Experiment {
@@ -41,6 +42,9 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
 
     @Relationship(type = INTERACTION_DETECTION_METHOD)
     private GraphCvTerm interactionDetectionMethod;
+
+    @Relationship(type = PARTICIPANT_DETECTION_METHOD)
+    private GraphCvTerm participantDetectionMethod;
 
     @Relationship(type = RelationshipTypes.HOST_ORGANISM)
     private GraphOrganism hostOrganism;
@@ -69,6 +73,7 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
             setPublication(experiment.getPublication());
         }
         setInteractionDetectionMethod(experiment.getInteractionDetectionMethod());
+        setParticipantDetectionMethod(CommonUtility.extractParticipantDetectionMethod(experiment));
         setHostOrganism(experiment.getHostOrganism());
         setPubmedId(experiment.getPublication().getPubmedId());
         setAc(CommonUtility.extractAc(experiment));
@@ -123,6 +128,7 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
 
     public void createRelationShipNatively() {
         CommonUtility.createRelationShip(interactionDetectionMethod, this.getGraphId(), RelationshipTypes.INTERACTION_DETECTION_METHOD);
+        CommonUtility.createRelationShip(participantDetectionMethod, this.getGraphId(), RelationshipTypes.PARTICIPANT_DETECTION_METHOD);
         CommonUtility.createRelationShip(hostOrganism, this.getGraphId(), RelationshipTypes.HOST_ORGANISM);
         CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUB_EXP);
         CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
@@ -272,6 +278,22 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
             }
         } else {
             this.interactionDetectionMethod = null;
+        }
+    }
+
+    public CvTerm getParticipantDetectionMethod() {
+        return this.participantDetectionMethod;
+    }
+
+    public void setParticipantDetectionMethod(CvTerm participantDetectionMethod) {
+        if (participantDetectionMethod != null) {
+            if (participantDetectionMethod instanceof GraphCvTerm) {
+                this.participantDetectionMethod = (GraphCvTerm) participantDetectionMethod;
+            } else {
+                this.participantDetectionMethod = new GraphCvTerm(participantDetectionMethod, false);
+            }
+        } else {
+            this.participantDetectionMethod = null;
         }
     }
 

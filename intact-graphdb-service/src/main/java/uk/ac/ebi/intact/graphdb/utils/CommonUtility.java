@@ -2,6 +2,8 @@ package uk.ac.ebi.intact.graphdb.utils;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import psidev.psi.mi.jami.model.*;
@@ -19,6 +21,7 @@ import static uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes.*;
 public class CommonUtility {
 
     private static final Map<Class, Label[]> labelMap = new HashMap<>();
+    private static final Log log = LogFactory.getLog(CommonUtility.class);
 
     public static String extractAc(Object object) {
         String ac = null;
@@ -43,6 +46,25 @@ public class CommonUtility {
         }
 
         return ac;
+    }
+
+    public static CvTerm extractParticipantDetectionMethod(Object object) {
+        CvTerm participantDetectionMethod = null;
+        try {
+            if (object != null) {
+                Class clazz = object.getClass();
+                   try {
+                        Method method = clazz.getMethod("getParticipantIdentificationMethod");
+                        participantDetectionMethod = (CvTerm) method.invoke(clazz.cast(object));
+                    } catch (NoSuchMethodException e) {
+                       // log.debug("No Such method in class:" + clazz);
+                    }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return participantDetectionMethod;
     }
 
 

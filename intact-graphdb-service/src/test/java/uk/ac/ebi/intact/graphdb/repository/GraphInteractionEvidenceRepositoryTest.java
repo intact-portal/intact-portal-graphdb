@@ -455,8 +455,11 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Host Organism is null", graphExperiment.getHostOrganism());
         Assert.assertEquals("Host Organism is incorrect", "in vitro", graphExperiment.getHostOrganism().getCommonName());
         Assert.assertNotNull("Interaction Detection method is null", graphExperiment.getInteractionDetectionMethod());
-        Assert.assertEquals("Interaction Detection Method is incorect", "pull down",
+        Assert.assertEquals("Interaction Detection Method is incorrect", "pull down",
                 graphExperiment.getInteractionDetectionMethod().getShortName());
+        Assert.assertNotNull("Participant Detection method is null", graphExperiment.getParticipantDetectionMethod());
+        Assert.assertEquals("Participant Detection Method is incorrect", "weight by comassie",
+                graphExperiment.getParticipantDetectionMethod().getShortName());
         Assert.assertNotNull("Experiment Xrefs is null", graphExperiment.getXrefs());
         Assert.assertEquals("Experiment Xrefs count is wrong", 2, graphExperiment.getXrefs().size());
 
