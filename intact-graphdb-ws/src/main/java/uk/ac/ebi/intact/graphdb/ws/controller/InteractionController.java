@@ -50,6 +50,16 @@ public class InteractionController {
     }
 
     @CrossOrigin(origins = "*")
+    @GetMapping(value = "/json", produces = {APPLICATION_JSON_VALUE})
+    public Iterable<Map<String,Object>> getInteractionDetails()  {
+
+    return graphInteractionService.findJsonLines();
+
+
+
+    }
+
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "/details/{ac}", produces = {APPLICATION_JSON_VALUE})
     public InteractionDetails getInteractionDetails(
             @PathVariable String ac) {

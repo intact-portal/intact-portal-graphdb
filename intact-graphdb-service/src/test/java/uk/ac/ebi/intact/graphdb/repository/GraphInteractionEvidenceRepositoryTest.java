@@ -1,22 +1,8 @@
 package uk.ac.ebi.intact.graphdb.repository;
 
-import apoc.convert.Json;
-import apoc.help.Help;
-import apoc.load.LoadJson;
-import apoc.load.Xml;
-import apoc.meta.Meta;
-import apoc.path.PathExplorer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Result;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.kernel.api.exceptions.KernelException;
-import org.neo4j.kernel.impl.proc.Procedures;
-import org.neo4j.kernel.internal.GraphDatabaseAPI;
-import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
-import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -32,11 +18,10 @@ import psidev.psi.mi.jami.utils.XrefUtils;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by anjali on 07/02/19.
@@ -57,7 +42,7 @@ public class GraphInteractionEvidenceRepositoryTest {
         int depth = 0;
         Page<GraphInteractionEvidence> page;
 
-        do{
+        do {
             page = graphInteractionEvidenceRepository.findAll(PageRequest.of(pageNumber, pageSize), depth);
             Assert.assertNotNull("Page is Null", page);
             totalElements = totalElements + page.getNumberOfElements();
@@ -447,28 +432,9 @@ public class GraphInteractionEvidenceRepositoryTest {
 
     @Test
     public void getJsonLines() {
-        GraphDatabaseService databaseService = new GraphDatabaseFactory()
-                .newEmbeddedDatabaseBuilder(new File("/home/anjali/Tools/neo4j-community-3.5.7/data/databases/graph.db")).newGraphDatabase();
 
-        //GraphDatabaseService databaseService = Components.driver().getGraphDatabaseService();
-        Procedures procedures = ((GraphDatabaseAPI) databaseService).getDependencyResolver().resolveDependency(Procedures.class);
-
-        List<Class<?>> list=new ArrayList<>();
-        list.add(Help.class);
-        list.add(Json.class);
-        list.add(LoadJson.class);
-        list.add(Xml.class);
-        list.add(PathExplorer.class);
-        list.add(Meta.class);
-
-        list.forEach((proc) -> {
-            try {
-                procedures.registerProcedure(proc);
-            } catch (KernelException e) {
-                throw new RuntimeException("Error registering " + proc, e);
-            }
-        });
-        graphInteractionEvidenceRepository.findJsonLines();
+        Object object=  graphInteractionEvidenceRepository.findJsonLines();
+        System.out.println(object);
 
     }
 }

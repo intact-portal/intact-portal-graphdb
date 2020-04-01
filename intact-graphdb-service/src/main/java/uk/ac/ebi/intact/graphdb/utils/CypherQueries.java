@@ -959,9 +959,8 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
     public static final String GET_INTERACTION_DETMETHOD_BY_EXPERIMENT_AC =
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
-    public static final String GET_JSON_LINES="CALL apoc.export.json.query(\n" +
-            "\"MATCH (interactorA:GraphInteractor)<-[:interactors]-(interaction:GraphBinaryInteractionEvidence)-[:interactors]->(interactorB:GraphInteractor)\n" +
-            "WHERE  interactorA.uniprotName IN ['A0A024A2C9', 'A0A024R0L9','A0A024R0Y4','A0A024R493','A0A024R4Q5'] AND ID(interactorA)<ID(interactorB) AND EXISTS(interactorA.uniprotName) AND EXISTS(interactorB.uniprotName)\n" +
+    public static final String GET_JSON_LINES="MATCH (interactorA:GraphInteractor)<-[:interactors]-(interaction:GraphBinaryInteractionEvidence)-[:interactors]->(interactorB:GraphInteractor)\n" +
+            "WHERE ID(interactorA)<ID(interactorB) AND EXISTS(interactorA.uniprotName) AND EXISTS(interactorB.uniprotName)\n" +
             "OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
             "OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
             "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
@@ -989,8 +988,7 @@ MATCH (publicationN)-[publicationR:PUB_EXP]-(experimentN:GraphExperiment)-[exper
             "       CASE WHEN complexExpansionN.shortName IS NULL THEN 'Not Needed' ELSE complexExpansionN.shortName END as expansion_method_short_name,\n" +
             "       CASE WHEN complexExpansionN.mIIdentifier IS NULL THEN 'Not Needed' ELSE complexExpansionN.mIIdentifier END as expansion_method_mi_identifier,\n" +
             "       COLLECT (sourceN.shortName) as source_databases\n" +
-            "       ORDER BY interactorA_uniprot_name\",\"cytoscape/embedded.json\",null)" ;
-/*            "       YIELD file, nodes, relationships, properties, data\n" +
-            "       RETURN file, nodes, relationships, properties, data";*/
+            "       ORDER BY interactorA_uniprot_name";
+
 
 }

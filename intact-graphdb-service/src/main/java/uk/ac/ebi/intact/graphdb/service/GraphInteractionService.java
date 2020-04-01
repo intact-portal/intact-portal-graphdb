@@ -9,10 +9,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.repository.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repository.GraphInteractionEvidenceRepository;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by anjali on 12/07/18.
@@ -36,6 +33,10 @@ public class GraphInteractionService {
 
     public GraphClusteredInteraction findClusteredInteraction(String idA, String idB) {
         return this.graphBinaryInteractionEvidenceRepository.getClusteredInteraction(idA, idB);
+    }
+
+    public Iterable<Map<String,Object>> findJsonLines(){
+        return this.graphInteractionEvidenceRepository.findJsonLines();
     }
 
     public GraphInteractionEvidence findByInteractionAc(String ac, int depth) {

@@ -40,7 +40,7 @@ public interface GraphInteractionEvidenceRepository extends Neo4jRepository<Grap
     Optional<GraphInteractionEvidence> findByInteractionAcForDetails(String ac);
 
     @Query(value = CypherQueries.GET_JSON_LINES)
-    void findJsonLines();
+    Iterable<Map<String,Object>> findJsonLines();
 //
 //    Page<BinaryInteractionEvidence> findByInteractorA_ShortName(Pageable pageable, @Param("shortName") String shortName);
 //

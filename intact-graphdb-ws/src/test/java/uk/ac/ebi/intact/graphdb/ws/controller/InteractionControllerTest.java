@@ -112,4 +112,16 @@ public class InteractionControllerTest {
             }
         }
     }
+
+    @Test
+    public void json() {
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
+                "/interaction/json/" , String.class);
+
+        assertNotNull("Response is null", response);
+        assertNotNull("Response status line is null", response.getStatusCode());
+        assertEquals("Response Code is wrong", 200, response.getStatusCodeValue());
+        String string=response.getBody();
+        System.out.println(string);
+    }
 }
