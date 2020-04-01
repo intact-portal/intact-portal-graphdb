@@ -46,8 +46,11 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
     @Query(CypherQueries.GET_CLUSTERED_INTERACTION)
     GraphClusteredInteraction getClusteredInteraction(String idA, String idB);
 
-    @Query(value = CypherQueries.CYTOSCAPE_APP_QUERY)
-    Iterable<Map<String, Object>> findBinaryInteractionsForCyApp();
+    @Query(value = CypherQueries.CYTOSCAPE_APP_QUERY_FOR_NODES)
+    Iterable<Map<String, Object>> findBinaryInteractionsForCyAppNodes();
+
+    @Query(value = CypherQueries.CYTOSCAPE_APP_QUERY_FOR_EDGES)
+    Iterable<Map<String, Object>> findBinaryInteractionsForCyAppEdges();
 
     Optional<GraphBinaryInteractionEvidence> findByAc(String ac, @Depth int depth);
 

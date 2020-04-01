@@ -81,7 +81,25 @@ public class CypherQueries {
     public static final String GET_INTERACTION_DETMETHOD_BY_EXPERIMENT_AC =
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
-    public static final String CYTOSCAPE_APP_QUERY = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
+    public static final String CYTOSCAPE_APP_QUERY_FOR_NODES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
+            " MATCH (interaction)-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interactorsFN:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersFN:GraphXref) WHERE identifiersFN.identifier IN ['Q9BZD4','O14777']" +
+            " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierN:GraphXref) " +
+            /*" OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
+            " OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)\n" +
+            "OPTIONAL MATCH (experimentN)-[participantIdentificationMethodR:participantIdentificationMethod]-(participantIdentificationMethodN:GraphCvTerm)\n" +
+            "OPTIONAL MATCH (experimentN)-[publicationR:PUB_EXP]-(publicationN:GraphPublication)-[pubmedIdXrefR:pubmedId]-(pubmedIdXrefN:GraphXref)\n" +
+            "OPTIONAL MATCH (interaction)-[clusteredInteractionR:interactions]-(clusteredInteractionN:GraphClusteredInteraction)\n" +
+            "OPTIONAL MATCH (interaction)-[complexExpansionR:complexExpansion]-(complexExpansionN:GraphCvTerm) \n" +*/
+
+            " RETURN " +
+            "       DISTINCT" +
+            "       interactorsN.ac as id," +
+            "       identifierN.identifier as preferred_id" +
+            "       ";
+
+    public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
             " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifiersR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersN:GraphXref) WHERE identifiersN.identifier IN ['Q9BZD4','O14777']" +
             " OPTIONAL MATCH (interaction)-[interactorBR:" + RelationshipTypes.INTERACTOR_B + "]-(interactorBN:GraphInteractor)-[identifierBR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierBN:GraphXref) " +
             " OPTIONAL MATCH (interaction)-[interactorAR:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor)-[identifierAR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierAN:GraphXref) " +
@@ -95,11 +113,9 @@ public class CypherQueries {
             "OPTIONAL MATCH (interaction)-[complexExpansionR:complexExpansion]-(complexExpansionN:GraphCvTerm) \n" +*/
 
             " RETURN " +
-            "       ID(interaction) as interaction_id, " +
-            "       identifierAN.ac as interactorA_id," +
-            "       identifierBN.ac as interactorB_id," +
-            "       identifierAN.identifier as interactorA_preferred_id," +
-            "       identifierBN.identifier as interactorB_preferred_id" +
+            "       ID(interaction) as id, " +
+            "       interactorAN.ac as source," +
+            "       interactorBN.ac as target" +
             "       ";
 
 

@@ -44,7 +44,10 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
 
     @Test
     public void testCytoscapeAppQuery() {
-        Iterable<Map<String, Object>> iterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyApp();
-        System.out.println(iterable);
+        Iterable<Map<String, Object>> nodesIterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes();
+        System.out.println(nodesIterable);
+
+        Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppEdges();
+        System.out.println(edgesIterable);
     }
 }
