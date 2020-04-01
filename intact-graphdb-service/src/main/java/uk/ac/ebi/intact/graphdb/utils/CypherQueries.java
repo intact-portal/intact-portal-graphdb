@@ -82,8 +82,9 @@ public class CypherQueries {
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
     public static final String CYTOSCAPE_APP_QUERY_FOR_NODES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-            " MATCH (interaction)-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interactorsFN:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersFN:GraphXref) WHERE identifiersFN.identifier IN ['Q9BZD4','O14777']" +
+            " MATCH (interaction)-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interactorsFN:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
             " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierN:GraphXref) " +
+            " OPTIONAL MATCH (interactorsN)-[organismR:" + RelationshipTypes.ORGANISM + "]-(organismN:GraphOrganism)" +
             /*" OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
             " OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
             "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
@@ -96,7 +97,9 @@ public class CypherQueries {
             " RETURN " +
             "       DISTINCT" +
             "       interactorsN.ac as id," +
-            "       identifierN.identifier as preferred_id" +
+            "       identifierN.identifier as preferred_id," +
+            "       organismN.scientificName as species," +
+            "       organismN.taxId as taxId" +
             "       ";
 
     public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
