@@ -57,8 +57,8 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         Iterable<Map<String, Object>> nodesIterable1 = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes(identifiers);
         Assert.assertEquals(152, Iterables.count(nodesIterable1));
 
-        Iterable<Map<String, Object>> nodesIterable2 = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes(null);
-        Assert.assertEquals(112316, Iterables.count(nodesIterable2));
+        /*Iterable<Map<String, Object>> nodesIterable2 = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes(null);
+        Assert.assertEquals(112316, Iterables.count(nodesIterable2));*/
 
         Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppEdges();
         Assert.assertEquals(432, Iterables.count(edgesIterable));

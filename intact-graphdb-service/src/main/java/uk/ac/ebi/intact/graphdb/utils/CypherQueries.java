@@ -82,25 +82,57 @@ public class CypherQueries {
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
     public static final String CYTOSCAPE_APP_QUERY_FOR_NODES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-            " MATCH (interaction)-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interactorsFN:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
-            " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierN:GraphXref) " +
-            " OPTIONAL MATCH (interactorsN)-[organismR:" + RelationshipTypes.ORGANISM + "]-(organismN:GraphOrganism)" +
-            /*" OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
-            " OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)\n" +
-            "OPTIONAL MATCH (experimentN)-[participantIdentificationMethodR:participantIdentificationMethod]-(participantIdentificationMethodN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (experimentN)-[publicationR:PUB_EXP]-(publicationN:GraphPublication)-[pubmedIdXrefR:pubmedId]-(pubmedIdXrefN:GraphXref)\n" +
-            "OPTIONAL MATCH (interaction)-[clusteredInteractionR:interactions]-(clusteredInteractionN:GraphClusteredInteraction)\n" +
-            "OPTIONAL MATCH (interaction)-[complexExpansionR:complexExpansion]-(complexExpansionN:GraphCvTerm) \n" +*/
+            " MATCH (interaction)-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]->(interactorsFN:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
+            " WITH interaction,COLLECT(interactorsFN) as na" +
+            " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]->(interactorsN:GraphInteractor)" +
+            " WITH COLLECT(distinct interactorsN) as interactorsCollection" +
+            " UNWIND interactorsCollection as interactorN " +
+            " MATCH (interactorN)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]->(identifierN:GraphXref) " +
+            " WITH interactorN,identifierN" +
+            " OPTIONAL MATCH (interactorN)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism)" +
+            " OPTIONAL MATCH (interactorN)-[interactorTypeR:" + RelationshipTypes.INTERACTOR_TYPE + "]->(interactorTypeN:GraphCvTerm)" +
+            " WITH interactorN,identifierN,organismN,interactorTypeN" +
+            " OPTIONAL MATCH (interactorN)-[interactorXrefsR:" + RelationshipTypes.IDENTIFIERS + "]->(interactorXrefsN:GraphXref)" +
+            " WITH" +
+            "       interactorN.ac as id," +
+            "       identifierN.identifier as preferred_id," +
+            "       organismN.scientificName as species," +
+            "       organismN.taxId as taxId," +
+            "       (interactorN.preferredName +'('+identifierN.identifier+')') as label," +
+            "       interactorTypeN.shortName as type," +
+            "       interactorTypeN.mIIdentifier as type_mi_dentifier," +
+            "       interactorTypeN.mODIdentifier as type_mod_identifier," +
+            "       interactorTypeN.pARIdentifier as type_par_identifier," +
+            "       interactorN.preferredName as interactor_name," +
+            "       COLLECT(interactorXrefsN) as interactorXrefsNCollection" +
+            " UNWIND interactorXrefsNCollection as interactorXref" +
+            " MATCH (interactorXref)-[interactorXrefDatabaseR:database]->(interactorXrefDatabaseN:GraphCvTerm)" +
+            " WITH" +
+            "       id," +
+            "       preferred_id," +
+            "       species," +
+            "       taxId," +
+            "       label," +
+            "       type," +
+            "       type_mi_dentifier," +
+            "       type_mod_identifier," +
+            "       type_par_identifier," +
+            "       interactor_name," +
+            " COLLECT('xref_database_name:'+interactorXrefDatabaseN.shortName+',xref_database_mi:'+interactorXrefDatabaseN.mIIdentifier+',xref_id:'+interactorXref.identifier) as xrefs" +
 
             " RETURN " +
             "       DISTINCT" +
-            "       interactorsN.ac as id," +
-            "       identifierN.identifier as preferred_id," +
-            "       organismN.scientificName as species," +
-            "       organismN.taxId as taxId" +
-            "       ";
+            "       id," +
+            "       preferred_id," +
+            "       species," +
+            "       taxId," +
+            "       label," +
+            "       type," +
+            "       type_mi_dentifier," +
+            "       type_mod_identifier," +
+            "       type_par_identifier," +
+            "       interactor_name," +
+            "       xrefs";
 
     public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
             " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifiersR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersN:GraphXref) WHERE identifiersN.identifier IN ['Q9BZD4','O14777']" +
