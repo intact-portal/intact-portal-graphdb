@@ -94,8 +94,9 @@ public class InteractionController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/cytoscape", produces = {APPLICATION_JSON_VALUE})
     public Iterable<Map<String, Object>> cytoscape(
-            @RequestParam(value = "identifiers", required = false) List<String> identifiers) {
-        return graphInteractionService.findCyAppNodes(identifiers);
+            @RequestParam(value = "identifiers", required = false) List<String> identifiers,
+            @RequestParam(value = "species", required = false) List<Integer> species) {
+        return graphInteractionService.findCyAppNodes(identifiers, species);
     }
 
     /**

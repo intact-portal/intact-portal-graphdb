@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.repository;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.driver.internal.util.Iterables;
@@ -46,6 +47,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void testCytoscapeAppQuery() {
         // null parameters check
         // with parameters check
@@ -54,13 +56,23 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         List<String> identifiers = new ArrayList<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
-        Iterable<Map<String, Object>> nodesIterable1 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers);
-        Assert.assertEquals(8, Iterables.count(nodesIterable1));
+
+        List<Integer> species = new ArrayList<>();
+        species.add(9606);
+
+        Iterable<Map<String, Object>> nodesIterable1 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, null);
+        Assert.assertEquals(152, Iterables.count(nodesIterable1));//152
+
+        Iterable<Map<String, Object>> nodesIterable2 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, species);
+        Assert.assertEquals(141, Iterables.count(nodesIterable2));//141
+
+        Iterable<Map<String, Object>> nodesIterable3 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(null, species);
+        Assert.assertEquals(30179, Iterables.count(nodesIterable3));// 30179
 
         /*Iterable<Map<String, Object>> nodesIterable2 = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes(null);
         Assert.assertEquals(112316, Iterables.count(nodesIterable2));*/
 
         Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppEdges();
-        Assert.assertEquals(33, Iterables.count(edgesIterable));
+        Assert.assertEquals(432, Iterables.count(edgesIterable));// 432
     }
 }
