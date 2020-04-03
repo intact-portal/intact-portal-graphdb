@@ -9,10 +9,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.repository.GraphBinaryInteractionEvidenceRepository;
 import uk.ac.ebi.intact.graphdb.repository.GraphInteractionEvidenceRepository;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by anjali on 12/07/18.
@@ -86,6 +83,10 @@ public class GraphInteractionService {
             return graphInteractionEvidence;
         }
         return null;
+    }
+
+    public Iterable<Map<String, Object>> findCyAppNodes(List<String> identifiers) {
+        return this.graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers);
     }
 
 }

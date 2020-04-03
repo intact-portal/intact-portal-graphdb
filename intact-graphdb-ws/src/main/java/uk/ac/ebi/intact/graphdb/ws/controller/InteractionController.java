@@ -91,6 +91,13 @@ public class InteractionController {
         throw new Exception("Export failed " + ac + ". No Interaction result");
     }
 
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "/cytoscape", produces = {APPLICATION_JSON_VALUE})
+    public Iterable<Map<String, Object>> cytoscape(
+            @RequestParam(value = "identifiers", required = false) List<String> identifiers) {
+        return graphInteractionService.findCyAppNodes(identifiers);
+    }
+
     /**
      * CONVERTS from GraphInteractionEvidence and GraphExperiment to InteractionDetails model
      **/

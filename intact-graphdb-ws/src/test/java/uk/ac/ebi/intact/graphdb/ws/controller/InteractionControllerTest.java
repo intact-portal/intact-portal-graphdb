@@ -112,4 +112,16 @@ public class InteractionControllerTest {
             }
         }
     }
+
+    @Test
+    public void getCytoscapeAppData() {
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
+                "/interaction/cytoscape?identifiers=Q9BZD4,O14777", String.class);
+
+        assertNotNull("Response is null", response);
+        assertNotNull("Response status line is null", response.getStatusCode());
+        assertEquals("Response Code is wrong", 200, response.getStatusCodeValue());
+        String string = response.getBody();
+        System.out.println(string);
+    }
 }

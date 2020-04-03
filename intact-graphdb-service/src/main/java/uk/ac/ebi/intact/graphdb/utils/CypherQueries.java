@@ -118,7 +118,7 @@ public class CypherQueries {
             "       type_mod_identifier," +
             "       type_par_identifier," +
             "       interactor_name," +
-            " COLLECT('xref_database_name:'+interactorXrefDatabaseN.shortName+',xref_database_mi:'+interactorXrefDatabaseN.mIIdentifier+',xref_id:'+interactorXref.identifier) as xrefs" +
+            " COLLECT({xref_database_name:interactorXrefDatabaseN.shortName,xref_database_mi:interactorXrefDatabaseN.mIIdentifier,xref_id:interactorXref.identifier}) as xrefs" +
 
             " RETURN " +
             "       DISTINCT" +
