@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.repository;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.driver.internal.util.Iterables;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.utils.CyAppJsonNodeParamNames;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +48,6 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void testCytoscapeAppQuery() {
         // null parameters check
         // with parameters check
@@ -69,8 +68,8 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         try {
             while (iterator1.hasNext()) {
                 Map<String, Object> map = iterator1.next();
-                for (Map identifierMap : (Map[]) map.get("xrefs")) {
-                    if (identifierMap.get("xref_id").equals("Q9BZD4") || identifierMap.get("xref_id").equals("O14777")) {
+                for (Map identifierMap : (Map[]) map.get(CyAppJsonNodeParamNames.XREFS)) {
+                    if (identifierMap.get(CyAppJsonNodeParamNames.XREF_ID).equals("Q9BZD4") || identifierMap.get(CyAppJsonNodeParamNames.XREF_ID).equals("O14777")) {
                         interactorsPresent1 = true;
                     }
                 }
@@ -90,16 +89,16 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         try {
             while (iterator2.hasNext()) {
                 Map<String, Object> map = iterator2.next();
-                if (map.get("id").equals("EBI-949451")) {
+                if (map.get(CyAppJsonNodeParamNames.ID).equals("EBI-949451")) {
                     mapToBeTested = map;
                 }
 
-                if (!map.get("species").equals("Homo sapiens")) {
+                if (!map.get(CyAppJsonNodeParamNames.SPECIES).equals("Homo sapiens")) {
                     Assert.assertTrue("Only Human species records were expected", false);
                 }
 
-                for (Map identifierMap : (Map[]) map.get("xrefs")) {
-                    if (identifierMap.get("xref_id").equals("Q9BZD4") || identifierMap.get("xref_id").equals("O14777")) {
+                for (Map identifierMap : (Map[]) map.get(CyAppJsonNodeParamNames.XREFS)) {
+                    if (identifierMap.get(CyAppJsonNodeParamNames.XREF_ID).equals("Q9BZD4") || identifierMap.get(CyAppJsonNodeParamNames.XREF_ID).equals("O14777")) {
                         interactorsPresent = true;
                     }
                 }
@@ -112,16 +111,16 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
             Assert.assertTrue("An interactor with id 'EBI-949451' was expected", false);
         }
         Assert.assertTrue("Queried Interactors should have been present", interactorsPresent);
-        Assert.assertTrue(mapToBeTested.get("preferred_id").equals("P07199"));
-        Assert.assertTrue(mapToBeTested.get("species").equals("Homo sapiens"));
-        Assert.assertTrue(mapToBeTested.get("taxId").equals(9606));
-        Assert.assertTrue(mapToBeTested.get("label").equals("CENPB(P07199)"));
-        Assert.assertTrue(mapToBeTested.get("type").equals("protein"));
-        Assert.assertTrue(mapToBeTested.get("type_mi_dentifier").equals("MI:0326"));
-        Assert.assertTrue(mapToBeTested.get("type_mod_identifier") == null);
-        Assert.assertTrue(mapToBeTested.get("type_par_identifier") == null);
-        Assert.assertTrue(mapToBeTested.get("interactor_name").equals("CENPB"));
-        Assert.assertEquals(3, ((Map[]) mapToBeTested.get("xrefs")).length);
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.PREFERRED_ID).equals("P07199"));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.SPECIES).equals("Homo sapiens"));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.TAXID).equals(9606));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.LABEL).equals("CENPB(P07199)"));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.TYPE).equals("protein"));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.TYPE_MI_IDENTIFIER).equals("MI:0326"));
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.TYPE_MOD_IDENTIFIER) == null);
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.TYPE_PAR_IDENTIFIER) == null);
+        Assert.assertTrue(mapToBeTested.get(CyAppJsonNodeParamNames.INTERACTOR_NAME).equals("CENPB"));
+        Assert.assertEquals(3, ((Map[]) mapToBeTested.get(CyAppJsonNodeParamNames.XREFS)).length);
 
         Iterable<Map<String, Object>> nodesIterable3 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(null, species);
         Assert.assertEquals(473, Iterables.count(nodesIterable3));// 30179
@@ -131,7 +130,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
             while (iterator3.hasNext()) {
                 Map<String, Object> map = iterator3.next();
 
-                if (!map.get("species").equals("Homo sapiens")) {
+                if (!map.get(CyAppJsonNodeParamNames.SPECIES).equals("Homo sapiens")) {
                     Assert.assertTrue("Only Human species records were expected", false);
                 }
             }
