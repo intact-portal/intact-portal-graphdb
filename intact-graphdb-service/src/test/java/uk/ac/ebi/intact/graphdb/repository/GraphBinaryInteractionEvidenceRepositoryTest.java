@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.repository;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.driver.internal.util.Iterables;
@@ -48,6 +49,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void testCytoscapeAppQuery() {
         // null parameters check
         // with parameters check
