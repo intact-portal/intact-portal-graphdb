@@ -98,45 +98,45 @@ public class CypherQueries {
                     " WITH interactorN,identifierN,organismN,interactorTypeN" +
                     " OPTIONAL MATCH (interactorN)-[interactorXrefsR:" + RelationshipTypes.IDENTIFIERS + "]->(interactorXrefsN:GraphXref)" +
                     " WITH" +
-                    "       interactorN.ac as id," +
-                    "       identifierN.identifier as preferred_id," +
-                    "       organismN.scientificName as species," +
-                    "       organismN.taxId as taxId," +
-                    "       (interactorN.preferredName +'('+identifierN.identifier+')') as label," +
-                    "       interactorTypeN.shortName as type," +
-                    "       interactorTypeN.mIIdentifier as type_mi_dentifier," +
-                    "       interactorTypeN.mODIdentifier as type_mod_identifier," +
-                    "       interactorTypeN.pARIdentifier as type_par_identifier," +
-                    "       interactorN.preferredName as interactor_name," +
+                    "       interactorN.ac as " + CyAppJsonParamNames.ID + "," +
+                    "       identifierN.identifier as " + CyAppJsonParamNames.PREFERRED_ID + "," +
+                    "       organismN.scientificName as " + CyAppJsonParamNames.SPECIES + "," +
+                    "       organismN.taxId as " + CyAppJsonParamNames.TAXID + "," +
+                    "       (interactorN.preferredName +'('+identifierN.identifier+')') as " + CyAppJsonParamNames.LABEL + "," +
+                    "       interactorTypeN.shortName as " + CyAppJsonParamNames.TYPE + "," +
+                    "       interactorTypeN.mIIdentifier as " + CyAppJsonParamNames.TYPE_MI_IDENTIFIER + "," +
+                    "       interactorTypeN.mODIdentifier as " + CyAppJsonParamNames.TYPE_MOD_IDENTIFIER + "," +
+                    "       interactorTypeN.pARIdentifier as " + CyAppJsonParamNames.TYPE_PAR_IDENTIFIER + "," +
+                    "       interactorN.preferredName as " + CyAppJsonParamNames.INTERACTOR_NAME + "," +
                     "       COLLECT(interactorXrefsN) as interactorXrefsNCollection" +
                     " UNWIND interactorXrefsNCollection as interactorXref" +
                     " MATCH (interactorXref)-[interactorXrefDatabaseR:database]->(interactorXrefDatabaseN:GraphCvTerm)" +
                     " WITH" +
-                    "       id," +
-                    "       preferred_id," +
-                    "       species," +
-                    "       taxId," +
-                    "       label," +
-                    "       type," +
-                    "       type_mi_dentifier," +
-                    "       type_mod_identifier," +
-                    "       type_par_identifier," +
-                    "       interactor_name," +
-                    " COLLECT({xref_database_name:interactorXrefDatabaseN.shortName,xref_database_mi:interactorXrefDatabaseN.mIIdentifier,xref_id:interactorXref.identifier}) as xrefs" +
+                    "       " + CyAppJsonParamNames.ID + "," +
+                    "       " + CyAppJsonParamNames.PREFERRED_ID + "," +
+                    "       " + CyAppJsonParamNames.SPECIES + "," +
+                    "       " + CyAppJsonParamNames.TAXID + "," +
+                    "       " + CyAppJsonParamNames.LABEL + "," +
+                    "       " + CyAppJsonParamNames.TYPE + "," +
+                    "       " + CyAppJsonParamNames.TYPE_MI_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.TYPE_MOD_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.TYPE_PAR_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.INTERACTOR_NAME + "," +
+                    " COLLECT({xref_database_name:interactorXrefDatabaseN.shortName,xref_database_mi:interactorXrefDatabaseN.mIIdentifier,xref_id:interactorXref.identifier}) as " + CyAppJsonParamNames.XREFS + "" +
 
                     " RETURN " +
                     "       DISTINCT" +
-                    "       id," +
-                    "       preferred_id," +
-                    "       species," +
-                    "       taxId," +
-                    "       label," +
-                    "       type," +
-                    "       type_mi_dentifier," +
-                    "       type_mod_identifier," +
-                    "       type_par_identifier," +
-                    "       interactor_name," +
-                    "       xrefs";
+                    "       " + CyAppJsonParamNames.ID + "," +
+                    "       " + CyAppJsonParamNames.PREFERRED_ID + "," +
+                    "       " + CyAppJsonParamNames.SPECIES + "," +
+                    "       " + CyAppJsonParamNames.TAXID + "," +
+                    "       " + CyAppJsonParamNames.LABEL + "," +
+                    "       " + CyAppJsonParamNames.TYPE + "," +
+                    "       " + CyAppJsonParamNames.TYPE_MI_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.TYPE_MOD_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.TYPE_PAR_IDENTIFIER + "," +
+                    "       " + CyAppJsonParamNames.INTERACTOR_NAME + "," +
+                    "       " + CyAppJsonParamNames.XREFS;
 
     public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
             " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifiersR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersN:GraphXref) WHERE identifiersN.identifier IN ['Q9BZD4','O14777']" +
