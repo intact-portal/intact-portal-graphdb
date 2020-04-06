@@ -138,24 +138,55 @@ public class CypherQueries {
                     "       " + CyAppJsonNodeParamNames.INTERACTOR_NAME + "," +
                     "       " + CyAppJsonNodeParamNames.XREFS;
 
-    public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES = "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-            " MATCH (interaction)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]-(interactorsN:GraphInteractor)-[identifiersR:" + RelationshipTypes.IDENTIFIERS + "]-(identifiersN:GraphXref) WHERE identifiersN.identifier IN ['Q9BZD4','O14777']" +
-            " OPTIONAL MATCH (interaction)-[interactorBR:" + RelationshipTypes.INTERACTOR_B + "]-(interactorBN:GraphInteractor)-[identifierBR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierBN:GraphXref) " +
-            " OPTIONAL MATCH (interaction)-[interactorAR:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor)-[identifierAR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]-(identifierAN:GraphXref) " +
-            /*" OPTIONAL MATCH (interaction)-[identifiersR:identifiers]-(identifiersN:GraphXref)-[sourceR:database]-(sourceN:GraphCvTerm) WHERE sourceN.shortName IN ['reactome','signor','intact']\n" +
-            " OPTIONAL MATCH (interaction)-[interactiontypeR:interactionType]-(interactiontypeN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (interaction)-[experimentR:experiment]-(experimentN:GraphExperiment)-[interactionDetectionMethodR:interactionDetectionMethod]-(interactionDetectionMethodN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (experimentN)-[hostOrganismR:hostOrganism]-(hostOrganismN:GraphOrganism)\n" +
-            "OPTIONAL MATCH (experimentN)-[participantIdentificationMethodR:participantIdentificationMethod]-(participantIdentificationMethodN:GraphCvTerm)\n" +
-            "OPTIONAL MATCH (experimentN)-[publicationR:PUB_EXP]-(publicationN:GraphPublication)-[pubmedIdXrefR:pubmedId]-(pubmedIdXrefN:GraphXref)\n" +
-            "OPTIONAL MATCH (interaction)-[clusteredInteractionR:interactions]-(clusteredInteractionN:GraphClusteredInteraction)\n" +
-            "OPTIONAL MATCH (interaction)-[complexExpansionR:complexExpansion]-(complexExpansionN:GraphCvTerm) \n" +*/
+    public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES =
+            " MATCH (interactor:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
+                    " MATCH (interactor)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
+                    " MATCH (interactor)<-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interaction:GraphBinaryInteractionEvidence)" +
+                    " WITH COLLECT(distinct interaction) as interactionCollection" +
+                    " UNWIND interactionCollection as interactionN" +
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTION_TYPE + "]-(interactionTypeN:GraphCvTerm)" +
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTIONS + "]-(clusteredInteractionN:GraphClusteredInteraction)" +
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTION_EVIDENCE + "]-(graphInteractionEvidenceN:GraphInteractionEvidence)" +
+                    " MATCH (graphInteractionEvidenceN)-[:" + RelationshipTypes.EXPERIMENT + "]-(experimentN:GraphExperiment)" +
 
-            " RETURN " +
-            "       ID(interaction) as id, " +
-            "       interactorAN.ac as source," +
-            "       interactorBN.ac as target" +
-            "       ";
+                    " MATCH (experimentN)-[:" + RelationshipTypes.INTERACTION_DETECTION_METHOD + "]-(interactionDetectionMethodN:GraphCvTerm)" +
+                    " MATCH (experimentN)-[:" + RelationshipTypes.PUB_EXP + "]-(publicationN:GraphPublication)" +
+                    " MATCH (publicationN)-[:" + RelationshipTypes.PMID + "]-(pmIdN:GraphXref)" +
+                    " OPTIONAL MATCH (experimentN)-[:" + RelationshipTypes.HOST_ORGANISM + "]-(hostOrganismN:GraphOrganism)" +
+
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.COMPLEX_EXPANSION + "]-(complexExpansionN:GraphCvTerm) " +
+
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor) " +
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_B + "]-(interactorBN:GraphInteractor) " +
+
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_A + "]-(entityAN:GraphEntity) " +
+                    " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresAN:GraphFeature) " +
+                    " OPTIONAL MATCH (featuresAN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeAN:GraphCvTerm) " +
+
+                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
+                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN,graphInteractionEvidenceN," +
+                    " COLLECT({feature_name:featuresAN.shortName,feature_type:featureTypeAN.shortName}) as source_features" +
+
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_B + "]-(entityBN:GraphEntity) " +
+                    " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresBN:GraphFeature) " +
+                    " OPTIONAL MATCH (featuresBN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeBN:GraphCvTerm) " +
+                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
+                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN,graphInteractionEvidenceN,source_features," +
+                    " COLLECT({feature_name:featuresBN.shortName,feature_type:featureTypeBN.shortName}) as target_features" +
+
+                    " RETURN " +
+                    "       ID(interactionN) as id, " +
+                    "       graphInteractionEvidenceN.ac as interaction_ac, " +
+                    "       interactorAN.ac as source," +
+                    "       interactorBN.ac as target," +
+                    "       interactionTypeN.shortName as interaction_type," +
+                    "       interactionDetectionMethodN.shortName as interaction_detection_method," +
+                    "       clusteredInteractionN.miscore as mi_score," +
+                    "       hostOrganismN.scientificName as host_organism," +
+                    "       pmIdN.identifier as pubmed_id," +
+                    "       complexExpansionN.shortName as expansion_type," +
+                    "       source_features," +
+                    "       target_features";
 
 
 }

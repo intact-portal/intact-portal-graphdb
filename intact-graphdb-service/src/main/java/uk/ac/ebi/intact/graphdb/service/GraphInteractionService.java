@@ -89,4 +89,8 @@ public class GraphInteractionService {
         return this.graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, species);
     }
 
+    public Iterable<Map<String, Object>> findCyAppEdges(List<String> identifiers, List<Integer> species) {
+        return this.graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, species);
+    }
+
 }

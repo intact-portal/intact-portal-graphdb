@@ -50,7 +50,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
 
     @Test
     @Ignore
-    public void testCytoscapeAppQuery() {
+    public void testCytoscapeAppNodesQuery() {
         // null parameters check
         // with parameters check
         // interactor count check
@@ -139,11 +139,21 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         } catch (Exception e) {
             Assert.assertTrue("A map with the key value was expected", false);
         }
+    }
 
-        /*Iterable<Map<String, Object>> nodesIterable2 = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppNodes(null);
-        Assert.assertEquals(112316, Iterables.count(nodesIterable2));*/
+    @Test
+    @Ignore
+    public void testCytoscapeAppEdgesQuery() {
 
-        Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findBinaryInteractionsForCyAppEdges();
+        List<String> identifiers = new ArrayList<>();
+        identifiers.add("Q9BZD4");
+        identifiers.add("O14777");
+
+        List<Integer> species = new ArrayList<>();
+        species.add(9606);
+
+        Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, null);
         Assert.assertEquals(432, Iterables.count(edgesIterable));// 432
     }
+
 }
