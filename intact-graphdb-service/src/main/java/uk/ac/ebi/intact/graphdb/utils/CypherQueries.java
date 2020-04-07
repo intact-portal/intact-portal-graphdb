@@ -156,8 +156,10 @@ public class CypherQueries {
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.COMPLEX_EXPANSION + "]-(complexExpansionN:GraphCvTerm) " +
 
-                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor) " +
+                    " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor)" +
+                    "                -[:" + RelationshipTypes.ORGANISM + "]->(organismAN:GraphOrganism) WHERE ((organismAN.taxId IN {species}) OR {species} is null)" +
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_B + "]-(interactorBN:GraphInteractor) " +
+                    "                -[:" + RelationshipTypes.ORGANISM + "]->(organismBN:GraphOrganism) WHERE ((organismBN.taxId IN {species}) OR {species} is null)" +
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_A + "]-(entityAN:GraphEntity) " +
                     " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleAN:GraphCvTerm) " +
