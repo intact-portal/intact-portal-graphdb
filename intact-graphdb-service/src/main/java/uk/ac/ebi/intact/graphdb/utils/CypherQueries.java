@@ -167,9 +167,20 @@ public class CypherQueries {
                     " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresAN:GraphFeature) " +
                     " OPTIONAL MATCH (featuresAN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeAN:GraphCvTerm) " +
 
-                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
-                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN," +
-                    "      graphInteractionEvidenceN,biologicalRoleAN," +
+                    " WITH interactionN," +
+                    "      interactorAN.ac as interactor_A_ac," +
+                    "      interactorBN.ac as interactor_B_ac," +
+                    "      interactionTypeN.shortName as type_short_name," +
+                    "      interactionTypeN.mIIdentifier as type_mi," +
+                    "      interactionDetectionMethodN.shortName as detection_method_short_name," +
+                    "      interactionDetectionMethodN.mIIdentifier as detection_method_mi," +
+                    "      clusteredInteractionN.miscore as mi_score," +
+                    "      hostOrganismN.taxId as host_organism_tax_id," +
+                    "      hostOrganismN.scientificName as host_organism_scientific_name," +
+                    "      pmIdN.identifier as pmid,complexExpansionN.shortName as expansion_type," +
+                    "      graphInteractionEvidenceN," +
+                    "      biologicalRoleAN.shortName as biological_role_A_short_name," +
+                    "      biologicalRoleAN.mIIdentifier as biological_role_A_mi," +
                     " COLLECT({feature_name:featuresAN.shortName,feature_type:featureTypeAN.shortName," +
                     "         feature_type_mi_identifier:featureTypeAN.mIIdentifier}) as source_features" +
 
@@ -177,26 +188,77 @@ public class CypherQueries {
                     " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleBN:GraphCvTerm) " +
                     " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresBN:GraphFeature) " +
                     " OPTIONAL MATCH (featuresBN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeBN:GraphCvTerm) " +
-                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
-                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN," +
-                    "      graphInteractionEvidenceN,source_features,biologicalRoleAN,biologicalRoleBN," +
+                    " WITH ID(interactionN) as id," +
+                    "      interactionN.ac as interaction_ac," +
+                    "      interactor_A_ac," +
+                    "      interactor_B_ac," +
+                    "      type_short_name," +
+                    "      type_mi," +
+                    "      detection_method_short_name," +
+                    "      detection_method_mi," +
+                    "      mi_score," +
+                    "      host_organism_tax_id," +
+                    "      host_organism_scientific_name," +
+                    "      pmid," +
+                    "      expansion_type," +
+                    "      graphInteractionEvidenceN," +
+                    "      biological_role_A_short_name," +
+                    "      biological_role_A_mi," +
+                    "      biologicalRoleBN.shortName as biological_role_B_short_name," +
+                    "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
+                    "      source_features," +
                     " COLLECT({feature_name:featuresBN.shortName,feature_type:featureTypeBN.shortName," +
                     "        feature_type_mi_identifier:featureTypeBN.mIIdentifier}) as target_features" +
 
-                    " OPTIONAL MATCH (graphInteractionEvidenceN)-[" + RelationshipTypes.ANNOTATIONS + "]-(annotationsN:GraphAnnotation)" +
-                    " OPTIONAL MATCH (annotationsN)-[" + RelationshipTypes.TOPIC + "]-(topicN:GraphCvTerm)" +
-                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
-                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN," +
-                    "      graphInteractionEvidenceN,source_features,target_features,biologicalRoleAN,biologicalRoleBN," +
+                    " OPTIONAL MATCH (graphInteractionEvidenceN)-[" + RelationshipTypes.ANNOTATIONS + "]->(annotationsN:GraphAnnotation)" +
+                    " OPTIONAL MATCH (annotationsN)-[" + RelationshipTypes.TOPIC + "]->(topicN:GraphCvTerm)" +
+                    " WITH id," +
+                    "      interaction_ac," +
+                    "      interactor_A_ac," +
+                    "      interactor_B_ac," +
+                    "      type_short_name," +
+                    "      type_mi," +
+                    "      detection_method_short_name," +
+                    "      detection_method_mi," +
+                    "      mi_score," +
+                    "      host_organism_tax_id," +
+                    "      host_organism_scientific_name," +
+                    "      pmid," +
+                    "      expansion_type," +
+                    "      graphInteractionEvidenceN," +
+                    "      biological_role_A_short_name," +
+                    "      biological_role_A_mi," +
+                    "      biological_role_B_short_name," +
+                    "      biological_role_B_mi," +
+                    "      source_features," +
+                    "      target_features," +
                     " COLLECT({annotation_value:annotationsN.value,annotation_topic:topicN.shortName,annotation_topic_mi_identifier:topicN.mIIdentifier}) as annotations" +
 
                     " OPTIONAL MATCH (graphInteractionEvidenceN)-[" + RelationshipTypes.PARAMETERS + "]-(parametersN:GraphParameter)" +
                     " OPTIONAL MATCH (parametersN)-[" + RelationshipTypes.TYPE + "]-(parameterTypeN:GraphCvTerm)" +
                     " OPTIONAL MATCH (parametersN)-[" + RelationshipTypes.UNIT + "]-(parameterUnitN:GraphCvTerm)" +
                     " OPTIONAL MATCH (parametersN)-[" + RelationshipTypes.VALUE + "]-(parameterValueN:GraphCvTerm)" +
-                    " WITH interactionN,experimentN,publicationN,interactorAN,interactorBN,interactionTypeN," +
-                    "      interactionDetectionMethodN,clusteredInteractionN,hostOrganismN,pmIdN,complexExpansionN," +
-                    "      graphInteractionEvidenceN,source_features,target_features,biologicalRoleAN,biologicalRoleBN,annotations," +
+                    " WITH id," +
+                    "      interaction_ac," +
+                    "      interactor_A_ac," +
+                    "      interactor_B_ac," +
+                    "      type_short_name," +
+                    "      type_mi," +
+                    "      detection_method_short_name," +
+                    "      detection_method_mi," +
+                    "      mi_score," +
+                    "      host_organism_tax_id," +
+                    "      host_organism_scientific_name," +
+                    "      pmid," +
+                    "      expansion_type," +
+                    "      graphInteractionEvidenceN," +
+                    "      biological_role_A_short_name," +
+                    "      biological_role_A_mi," +
+                    "      biological_role_B_short_name," +
+                    "      biological_role_B_mi," +
+                    "      source_features," +
+                    "      target_features," +
+                    "      annotations," +
                     "COLLECT({parameter_type:parameterTypeN.shortName,paramter_type_mi_identifier:parameterTypeN.mIIdentifier," +
                     "        parameter_unit:parameterUnitN.shortName,parameter_unit_mi_identifier:parameterUnitN.mIIdentifier," +
                     "        parameter_value_base:parameterValueN.base,parameter_value_factor:parameterValueN.factor,parameter_value_exponent:parameterValueN.exponent})" +
@@ -206,23 +268,23 @@ public class CypherQueries {
                     "" +
 
                     " RETURN " +
-                    "       ID(interactionN) as " + CyAppJsonEdgeParamNames.ID + ", " +
-                    "       graphInteractionEvidenceN.ac as " + CyAppJsonEdgeParamNames.AC + ", " +
-                    "       interactorAN.ac as " + CyAppJsonEdgeParamNames.SOURCE + "," +
-                    "       interactorBN.ac as " + CyAppJsonEdgeParamNames.TARGET + "," +
-                    "       interactionTypeN.shortName as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE + "," +
-                    "       interactionTypeN.mIIdentifier as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
-                    "       interactionDetectionMethodN.shortName as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
-                    "       interactionDetectionMethodN.mIIdentifier as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
-                    "       clusteredInteractionN.miscore as " + CyAppJsonEdgeParamNames.MI_SCORE + "," +
-                    "       hostOrganismN.scientificName as " + CyAppJsonEdgeParamNames.HOST_ORGANISM + "," +
-                    "       hostOrganismN.taxId as " + CyAppJsonEdgeParamNames.HOST_ORGANISM_TAX_ID + "," +
-                    "       pmIdN.identifier as " + CyAppJsonEdgeParamNames.PUBMED_ID + "," +
-                    "       complexExpansionN.shortName as " + CyAppJsonEdgeParamNames.EXPANSION_TYPE + "," +
-                    "       biologicalRoleAN.shortName as " + CyAppJsonEdgeParamNames.SOURCE_BIOLOGICAL_ROLE + "," +
-                    "       biologicalRoleAN.mIIdentifier as " + CyAppJsonEdgeParamNames.SOURCE_BIOLOGICAL_ROLE_MI_IDENTIFIER + "," +
-                    "       biologicalRoleBN.shortName as " + CyAppJsonEdgeParamNames.TARGET_BIOLOGICAL_ROLE + "," +
-                    "       biologicalRoleBN.mIIdentifier as " + CyAppJsonEdgeParamNames.TARGET_BIOLOGICAL_ROLE_MI_IDENTIFIER + "," +
+                    "       id as " + CyAppJsonEdgeParamNames.ID + ", " +
+                    "       interaction_ac as " + CyAppJsonEdgeParamNames.AC + ", " +
+                    "       interactor_A_ac as " + CyAppJsonEdgeParamNames.SOURCE + "," +
+                    "       interactor_B_ac as " + CyAppJsonEdgeParamNames.TARGET + "," +
+                    "       type_short_name as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE + "," +
+                    "       type_mi as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
+                    "       detection_method_short_name as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
+                    "       detection_method_mi as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
+                    "       mi_score as " + CyAppJsonEdgeParamNames.MI_SCORE + "," +
+                    "       host_organism_scientific_name as " + CyAppJsonEdgeParamNames.HOST_ORGANISM + "," +
+                    "       host_organism_tax_id as " + CyAppJsonEdgeParamNames.HOST_ORGANISM_TAX_ID + "," +
+                    "       pmid as " + CyAppJsonEdgeParamNames.PUBMED_ID + "," +
+                    "       expansion_type as " + CyAppJsonEdgeParamNames.EXPANSION_TYPE + "," +
+                    "       biological_role_A_short_name as " + CyAppJsonEdgeParamNames.SOURCE_BIOLOGICAL_ROLE + "," +
+                    "       biological_role_A_mi as " + CyAppJsonEdgeParamNames.SOURCE_BIOLOGICAL_ROLE_MI_IDENTIFIER + "," +
+                    "       biological_role_B_short_name as " + CyAppJsonEdgeParamNames.TARGET_BIOLOGICAL_ROLE + "," +
+                    "       biological_role_B_mi as " + CyAppJsonEdgeParamNames.TARGET_BIOLOGICAL_ROLE_MI_IDENTIFIER + "," +
                     "       source_features as " + CyAppJsonEdgeParamNames.SOUCRCE_FEATURES + "," +
                     "       target_features as " + CyAppJsonEdgeParamNames.TARGET_FEATURES + "," +
                     "       annotations as " + CyAppJsonEdgeParamNames.ANNOTATIONS + "," +

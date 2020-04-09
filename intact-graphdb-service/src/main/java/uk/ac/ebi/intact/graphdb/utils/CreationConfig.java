@@ -55,4 +55,9 @@ public class CreationConfig {
         CommonUtility.createSchemaConstraint(GraphModelledParameter.class, "uniqueKey");
         CommonUtility.createSchemaConstraint(GraphModelledParticipant.class, "uniqueKey");
     }
+
+    public static void createSchemaIndex() {
+        CommonUtility.createDeferredSchemaIndex(GraphInteractor.class, "ac");
+        CommonUtility.createDeferredSchemaIndex(GraphOrganism.class, "taxId");
+    }
 }
