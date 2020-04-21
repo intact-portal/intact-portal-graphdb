@@ -9,6 +9,8 @@ public class CyAppJsonEdgeParamNames {
     public static final String AC = "ac";
     public static final String SOURCE = "source";
     public static final String TARGET = "target";
+    public static final String SOURCE_NODE = "source";
+    public static final String TARGET_NODE = "target";
     public static final String INTERACTION_TYPE = "interaction_type";
     public static final String INTERACTION_TYPE_MI_IDENTIFIER = "interaction_type_mi_identifier";
     public static final String INTERACTION_DETECTION_METHOD = "interaction_detection_method";

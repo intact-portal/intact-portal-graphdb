@@ -12,12 +12,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.utils.CyAppJsonEdgeParamNames;
 import uk.ac.ebi.intact.graphdb.utils.CyAppJsonNodeParamNames;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -151,9 +154,106 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
 
         List<Integer> species = new ArrayList<>();
         species.add(9606);
+        Instant starts = Instant.now();
+        Iterable<Map<String, Object>> edgesIterable1 = graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, null);
+        Instant ends = Instant.now();
+        Duration executionDuration = Duration.between(starts, ends);
+        System.out.println("Total process took" + executionDuration);
+        Assert.assertTrue(executionDuration.getSeconds() < 5);
+        Assert.assertNotNull(edgesIterable1);
+        Assert.assertEquals(30, Iterables.count(edgesIterable1));// 432
 
-        Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, null);
-        Assert.assertEquals(432, Iterables.count(edgesIterable));// 432
+        Iterable<Map<String, Object>> nodesIterable1 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, null);
+        Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
+
+        Map<String, Object> mapToBeTested1 = null;
+        Set<String> interactorAcsFromEdgesQuery1 = new HashSet<>();
+        Iterator<Map<String, Object>> edgeIterator2 = edgesIterable1.iterator();
+        try {
+            while (edgeIterator2.hasNext()) {
+                Map<String, Object> map = edgeIterator2.next();
+                if (map.get(CyAppJsonEdgeParamNames.AC).equals("EBI-949451")) {
+                    mapToBeTested1 = map;
+                }
+
+
+                interactorAcsFromEdgesQuery1.add((String) ((Map<String, Object>) map.get(CyAppJsonEdgeParamNames.SOURCE)).get(CyAppJsonEdgeParamNames.SOURCE));
+                interactorAcsFromEdgesQuery1.add((String) ((Map<String, Object>) map.get(CyAppJsonEdgeParamNames.TARGET)).get(CyAppJsonEdgeParamNames.TARGET));
+
+            }
+        } catch (Exception e) {
+            Assert.assertTrue("A map with the key value was expected", false);
+        }
+
+        Iterator<Map<String, Object>> nodeIterator1 = nodesIterable1.iterator();
+        List<String> interactorAcsFromNodesQuery1 = new ArrayList<>();
+
+        try {
+            while (nodeIterator1.hasNext()) {
+                Map<String, Object> map = nodeIterator1.next();
+                interactorAcsFromNodesQuery1.add((String) map.get(CyAppJsonEdgeParamNames.ID));
+            }
+        } catch (Exception e) {
+            Assert.assertTrue("A map with the key value was expected", false);
+        }
+
+        Assert.assertEquals(interactorAcsFromEdgesQuery1.size(), interactorAcsFromNodesQuery1.size());
+
+        for (String interactorAcFromEdgeQuery : interactorAcsFromEdgesQuery1) {
+            if (!interactorAcsFromNodesQuery1.contains(interactorAcFromEdgeQuery)) {
+                Assert.assertTrue("Node from edges query was expected to be in nodes from nodes query", false);
+            }
+        }
+
+
+    }
+
+    /*
+    * For performance testing with only in neo4j server with whole database
+    * */
+    @Test
+    @Ignore
+    public void testCytoscapeAppNodesAndEdgesQyery() {
+        List<String> identifiers = new ArrayList<>();
+        identifiers.add("Q9BZD4");
+        identifiers.add("O14777");
+        identifiers.add("Q5S007");
+        identifiers.add("P04637");
+
+        List<Integer> species = new ArrayList<>();
+        species.add(9606);
+
+        Instant processStarted = Instant.now();
+        try {
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+
+            executor.execute(() -> {
+                Instant starts = Instant.now();
+                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, species);
+                Instant ends = Instant.now();
+                System.out.println("Cy App Edges retrieval took" + Duration.between(starts, ends));
+            });
+
+            //Thread.currentThread().sleep(3);
+
+            executor.execute(() -> {
+                Instant starts = Instant.now();
+                Iterable<Map<String, Object>> nodesIterable = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, species);
+                Instant ends = Instant.now();
+                System.out.println("Cy App Nodes retrieval took" + Duration.between(starts, ends));
+            });
+
+            executor.shutdown();
+
+            boolean finished = executor.awaitTermination(7, TimeUnit.MINUTES);
+            Instant processEnds = Instant.now();
+            Duration executionDuration = Duration.between(processStarted, processEnds);
+            System.out.println("Total process took" + executionDuration);
+            Assert.assertTrue(executionDuration.getSeconds() < 10);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

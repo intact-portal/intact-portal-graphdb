@@ -226,13 +226,13 @@ public class CypherQueries {
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_A_short_name," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_A_mi," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": source_features" +
-                    "       } as source_node," +
+                    "       } as  " + CyAppJsonEdgeParamNames.SOURCE_NODE + "," +
                     "       {" +
                     "       " + CyAppJsonEdgeParamNames.TARGET + ": interactor_B_ac," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_B_short_name," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_B_mi," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": target_features" +
-                    "       } as target_node" +
+                    "       } as  " + CyAppJsonEdgeParamNames.TARGET_NODE + "" +
 
                     "";
 
