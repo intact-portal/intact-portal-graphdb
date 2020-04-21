@@ -18,12 +18,9 @@ public class CyAppJsonEdgeParamNames {
     public static final String HOST_ORGANISM_TAX_ID = "host_organism_tax_id";
     public static final String PUBMED_ID = "pubmed_id";
     public static final String EXPANSION_TYPE = "expansion_type";
-    public static final String SOURCE_BIOLOGICAL_ROLE = "source_biological_role_name";
-    public static final String SOURCE_BIOLOGICAL_ROLE_MI_IDENTIFIER = "source_biological_role_mi_identifier";
-    public static final String TARGET_BIOLOGICAL_ROLE = "target_biological_role_name";
-    public static final String TARGET_BIOLOGICAL_ROLE_MI_IDENTIFIER = "target_biological_role_mi_identifier";
-    public static final String SOUCRCE_FEATURES = "source_features";
-    public static final String TARGET_FEATURES = "target_features";
+    public static final String PARTICIPANT_BIOLOGICAL_ROLE = "participant_biological_role_name";
+    public static final String PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER = "participant_biological_role_mi_identifier";
+    public static final String PARTICIPANT_FEATURES = "participant_features";
     public static final String ANNOTATIONS = "annotations";
     public static final String PARAMS = "parameters";
 
