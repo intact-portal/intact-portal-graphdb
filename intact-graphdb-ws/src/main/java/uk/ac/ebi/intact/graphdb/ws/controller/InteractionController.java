@@ -22,12 +22,17 @@ import uk.ac.ebi.intact.graphdb.service.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -92,11 +97,44 @@ public class InteractionController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "/cytoscape", produces = {APPLICATION_JSON_VALUE})
-    public Iterable<Map<String, Object>> cytoscape(
-            @RequestParam(value = "identifiers", required = false) List<String> identifiers,
-            @RequestParam(value = "species", required = false) List<Integer> species) {
-        return graphInteractionService.findCyAppNodes(identifiers, species);
+    @PostMapping(value = "/cytoscape",
+            produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) List<String> identifiers,
+                                                 @RequestParam(value = "species", required = false) List<Integer> species,
+                                                 HttpServletRequest request) throws IOException {
+        NetworkJson networkJson = new NetworkJson();
+        try {
+
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+
+            executor.execute(() -> {
+                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findCyAppEdges(identifiers, species);
+                networkJson.setEdges(edgesIterable);
+            });
+
+            executor.execute(() -> {
+                Iterable<Map<String, Object>> nodesIterable = graphInteractionService.findCyAppNodes(identifiers, species);
+                networkJson.setNodes(nodesIterable);
+            });
+
+            executor.shutdown();
+
+            executor.awaitTermination(10, TimeUnit.MINUTES);
+            executor.shutdownNow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HttpStatus httpStatus = HttpStatus.OK;
+        if (networkJson.getNodes() == null || networkJson.getEdges() == null) {
+            httpStatus = HttpStatus.GATEWAY_TIMEOUT;
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", APPLICATION_JSON_VALUE);
+        headers.add("X-Clacks-Overhead", "headers");
+
+        return new ResponseEntity<NetworkJson>(networkJson, headers, httpStatus);
     }
 
     /**

@@ -386,7 +386,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     * */
     @Test
     @Ignore
-    public void testCytoscapeAppNodesAndEdgesQyery() {
+    public void testPerformanceOfCytoscapeAppNodesAndEdgesQuery() {
         List<String> identifiers = new ArrayList<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
@@ -426,6 +426,7 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
 
         } catch (Exception e) {
             e.printStackTrace();
+            Assert.assertTrue("Exception", false);
         }
     }
 
