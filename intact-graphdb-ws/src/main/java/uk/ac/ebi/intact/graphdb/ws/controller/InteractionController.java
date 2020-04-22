@@ -128,6 +128,8 @@ public class InteractionController {
         HttpStatus httpStatus = HttpStatus.OK;
         if (networkJson.getNodes() == null || networkJson.getEdges() == null) {
             httpStatus = HttpStatus.GATEWAY_TIMEOUT;
+            networkJson.setEdges(null);
+            networkJson.setNodes(null);
         }
 
         HttpHeaders headers = new HttpHeaders();
