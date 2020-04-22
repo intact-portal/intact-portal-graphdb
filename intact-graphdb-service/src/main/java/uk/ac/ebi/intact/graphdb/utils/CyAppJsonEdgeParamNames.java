@@ -7,8 +7,6 @@ public class CyAppJsonEdgeParamNames {
 
     public static final String ID = "id";
     public static final String AC = "ac";
-    public static final String SOURCE = "source";
-    public static final String TARGET = "target";
     public static final String SOURCE_NODE = "source";
     public static final String TARGET_NODE = "target";
     public static final String INTERACTION_TYPE = "interaction_type";
@@ -25,6 +23,9 @@ public class CyAppJsonEdgeParamNames {
     public static final String PARTICIPANT_FEATURES = "participant_features";
     public static final String ANNOTATIONS = "annotations";
     public static final String PARAMS = "parameters";
+    public static final String FEATURE_NAME="feature_name";
+    public static final String FEATURE_TYPE="feature_type";
+    public static final String FEATURE_TYPE_MI_IDENTIFIER="feature_type_mi_identifier";
 
 
 }

@@ -204,8 +204,8 @@ public class CypherQueries {
                     "      biologicalRoleBN.shortName as biological_role_B_short_name," +
                     "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
                     "      source_features," +
-                    " COLLECT({feature_name:featuresBN.shortName,feature_type:featureTypeBN.shortName," +
-                    "        feature_type_mi_identifier:featureTypeBN.mIIdentifier}) as target_features" +
+                    " COLLECT({" + CyAppJsonEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," + CyAppJsonEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
+                    "        " + CyAppJsonEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeBN.mIIdentifier}) as target_features" +
 
                     "" +
 
@@ -222,13 +222,13 @@ public class CypherQueries {
                     "       pmid as " + CyAppJsonEdgeParamNames.PUBMED_ID + "," +
                     "       expansion_type as " + CyAppJsonEdgeParamNames.EXPANSION_TYPE + "," +
                     "       {" +
-                    "       " + CyAppJsonEdgeParamNames.SOURCE + ": interactor_A_ac," +
+                    "       " + CyAppJsonEdgeParamNames.ID + ": interactor_A_ac," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_A_short_name," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_A_mi," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": source_features" +
                     "       } as  " + CyAppJsonEdgeParamNames.SOURCE_NODE + "," +
                     "       {" +
-                    "       " + CyAppJsonEdgeParamNames.TARGET + ": interactor_B_ac," +
+                    "       " + CyAppJsonEdgeParamNames.ID + ": interactor_B_ac," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_B_short_name," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_B_mi," +
                     "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": target_features" +
