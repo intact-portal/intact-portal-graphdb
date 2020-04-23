@@ -26,10 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -99,9 +98,13 @@ public class InteractionController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/cytoscape",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) List<String> identifiers,
-                                                 @RequestParam(value = "species", required = false) List<Integer> species,
+    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) Set<String> identifiers,
+                                                 @RequestParam(value = "species", required = false) Set<Integer> species,
                                                  HttpServletRequest request) throws IOException {
+
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Instant processStarted = Instant.now();
         NetworkJson networkJson = new NetworkJson();
         try {
 
@@ -121,13 +124,18 @@ public class InteractionController {
 
             executor.awaitTermination(10, TimeUnit.MINUTES);
             executor.shutdownNow();
+
+            Instant processEnded = Instant.now();
+            Duration executionDuration = Duration.between(processStarted, processEnded);
+            if (executionDuration.getSeconds() > 600) {
+                httpStatus = HttpStatus.GATEWAY_TIMEOUT;
+            }
         } catch (Exception e) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         }
 
-        HttpStatus httpStatus = HttpStatus.OK;
         if (networkJson.getNodes() == null || networkJson.getEdges() == null) {
-            httpStatus = HttpStatus.GATEWAY_TIMEOUT;
             networkJson.setEdges(null);
             networkJson.setNodes(null);
         }

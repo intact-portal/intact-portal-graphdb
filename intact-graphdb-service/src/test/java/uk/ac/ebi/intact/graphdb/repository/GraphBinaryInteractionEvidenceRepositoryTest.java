@@ -57,11 +57,11 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
         // with parameters check
         // interactor count check
         // interaction count check
-        List<String> identifiers = new ArrayList<>();
+        Set<String> identifiers = new HashSet<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
 
-        List<Integer> species = new ArrayList<>();
+        Set<Integer> species = new HashSet<>();
         species.add(9606);
 
         Iterable<Map<String, Object>> nodesIterable1 = graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, null);
@@ -146,11 +146,11 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     @Test
     public void testCytoscapeAppEdgesQuery() {
 
-        List<String> identifiers = new ArrayList<>();
+        Set<String> identifiers = new HashSet<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
 
-        List<Integer> species = new ArrayList<>();
+        Set<Integer> species = new HashSet<>();
         species.add(9606);
 
         // With identifiers only
@@ -387,13 +387,13 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     @Test
     @Ignore
     public void testPerformanceOfCytoscapeAppNodesAndEdgesQuery() {
-        List<String> identifiers = new ArrayList<>();
+        Set<String> identifiers = new HashSet<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
         identifiers.add("Q5S007");
         identifiers.add("P04637");
 
-        List<Integer> species = new ArrayList<>();
+        Set<Integer> species = new HashSet<>();
         species.add(9606);
 
         Instant processStarted = Instant.now();
