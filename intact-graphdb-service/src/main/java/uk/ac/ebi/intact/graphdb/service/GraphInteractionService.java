@@ -27,6 +27,15 @@ public class GraphInteractionService {
         this.graphInteractionEvidenceRepository = graphInteractionEvidenceRepository;
     }
 
+    /*
+    * TODO... After having binaryids in database change this method to find by binary id instead
+    * */
+    public GraphBinaryInteractionEvidence findWithBinaryId(int id, int depth) {
+        Optional<GraphBinaryInteractionEvidence> optionalGraphInteractionEvidence =
+                graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, depth);
+        return optionalGraphInteractionEvidence.orElse(null);
+    }
+
     public Page<GraphBinaryInteractionEvidence> findAll(Pageable page, int depth) {
         return this.graphBinaryInteractionEvidenceRepository.findAll(page, depth);
     }
@@ -85,12 +94,8 @@ public class GraphInteractionService {
         return null;
     }
 
-    public Iterable<Map<String, Object>> findCyAppNodes(Set<String> identifiers, Set<Integer> species) {
-        return this.graphBinaryInteractionEvidenceRepository.findCyAppNodes(identifiers, species);
-    }
-
-    public Iterable<Map<String, Object>> findCyAppEdges(Set<String> identifiers, Set<Integer> species) {
-        return this.graphBinaryInteractionEvidenceRepository.findCyAppEdges(identifiers, species);
+    public Iterable<Map<String, Object>> findNetworkEdges(Set<String> identifiers, Set<Integer> species) {
+        return this.graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species);
     }
 
 }

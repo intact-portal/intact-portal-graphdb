@@ -7,9 +7,12 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
+import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,6 +29,9 @@ public interface GraphInteractorRepository extends Neo4jRepository<GraphInteract
 
     @Query("MATCH (a:Interactor)<-[i:INTERACTS_IN]-(b:Interactor) RETURN i,a,b LIMIT {limit}")
     Collection<GraphInteractor> graph(@Param("limit") int limit);
+
+    @Query(value = CypherQueries.GET_NETWORK_NODES)
+    Iterable<Map<String, Object>> findNetworkNodes(@Param("identifiers") Set<String> identifiers, @Param("species") Set<Integer> species);
 
 }
 

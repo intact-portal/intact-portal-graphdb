@@ -3,7 +3,7 @@ package uk.ac.ebi.intact.graphdb.utils;
 /**
  * Created by anjali on 06/04/20.
  */
-public class CyAppJsonEdgeParamNames {
+public class NetworkEdgeParamNames {
 
     public static final String ID = "id";
     public static final String AC = "ac";
@@ -23,9 +23,9 @@ public class CyAppJsonEdgeParamNames {
     public static final String PARTICIPANT_FEATURES = "participant_features";
     public static final String ANNOTATIONS = "annotations";
     public static final String PARAMS = "parameters";
-    public static final String FEATURE_NAME="feature_name";
-    public static final String FEATURE_TYPE="feature_type";
-    public static final String FEATURE_TYPE_MI_IDENTIFIER="feature_type_mi_identifier";
+    public static final String FEATURE_NAME = "feature_name";
+    public static final String FEATURE_TYPE = "feature_type";
+    public static final String FEATURE_TYPE_MI_IDENTIFIER = "feature_type_mi_identifier";
 
 
 }

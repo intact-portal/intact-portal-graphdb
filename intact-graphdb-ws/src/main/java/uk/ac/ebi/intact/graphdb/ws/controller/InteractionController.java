@@ -22,16 +22,12 @@ import uk.ac.ebi.intact.graphdb.service.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -93,58 +89,6 @@ public class InteractionController {
             return responseEntity;
         }
         throw new Exception("Export failed " + ac + ". No Interaction result");
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping(value = "/cytoscape",
-            produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) Set<String> identifiers,
-                                                 @RequestParam(value = "species", required = false) Set<Integer> species,
-                                                 HttpServletRequest request) throws IOException {
-
-        HttpStatus httpStatus = HttpStatus.OK;
-
-        Instant processStarted = Instant.now();
-        NetworkJson networkJson = new NetworkJson();
-        try {
-
-            ExecutorService executor = Executors.newFixedThreadPool(2);
-
-            executor.execute(() -> {
-                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findCyAppEdges(identifiers, species);
-                networkJson.setEdges(edgesIterable);
-            });
-
-            executor.execute(() -> {
-                Iterable<Map<String, Object>> nodesIterable = graphInteractionService.findCyAppNodes(identifiers, species);
-                networkJson.setNodes(nodesIterable);
-            });
-
-            executor.shutdown();
-
-            executor.awaitTermination(10, TimeUnit.MINUTES);
-            executor.shutdownNow();
-
-            Instant processEnded = Instant.now();
-            Duration executionDuration = Duration.between(processStarted, processEnded);
-            if (executionDuration.getSeconds() > 600) {
-                httpStatus = HttpStatus.GATEWAY_TIMEOUT;
-            }
-        } catch (Exception e) {
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            e.printStackTrace();
-        }
-
-        if (networkJson.getNodes() == null || networkJson.getEdges() == null) {
-            networkJson.setEdges(null);
-            networkJson.setNodes(null);
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", APPLICATION_JSON_VALUE);
-        headers.add("X-Clacks-Overhead", "headers");
-
-        return new ResponseEntity<NetworkJson>(networkJson, headers, httpStatus);
     }
 
     /**

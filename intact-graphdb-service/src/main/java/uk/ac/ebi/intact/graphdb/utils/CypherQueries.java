@@ -81,7 +81,7 @@ public class CypherQueries {
     public static final String GET_INTERACTION_DETMETHOD_BY_EXPERIMENT_AC =
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
-    public static final String CYTOSCAPE_APP_QUERY_FOR_NODES =
+    public static final String GET_NETWORK_NODES =
             " MATCH (interactor:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
                     " MATCH (interactor)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
                     " MATCH (interactor)<-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interaction:GraphBinaryInteractionEvidence)" +
@@ -122,23 +122,23 @@ public class CypherQueries {
                     "       mODIdentifier," +
                     "       pARIdentifier," +
                     "       preferredName," +
-                    " COLLECT({" + CyAppJsonNodeParamNames.XREF_DB_NAME + ":interactorXrefDatabaseN.shortName," + CyAppJsonNodeParamNames.XREF_MI + ":interactorXrefDatabaseN.mIIdentifier," + CyAppJsonNodeParamNames.XREF_ID + ":interactorXref.identifier}) as xrefs" +
+                    " COLLECT({" + NetworkNodeParamNames.XREF_DB_NAME + ":interactorXrefDatabaseN.shortName," + NetworkNodeParamNames.XREF_MI + ":interactorXrefDatabaseN.mIIdentifier," + NetworkNodeParamNames.XREF_ID + ":interactorXref.identifier}) as xrefs" +
 
                     " RETURN " +
                     "       DISTINCT" +
-                    "       ac as " + CyAppJsonNodeParamNames.ID + "," +
-                    "       identifier as " + CyAppJsonNodeParamNames.PREFERRED_ID + "," +
-                    "       scientificName as " + CyAppJsonNodeParamNames.SPECIES + "," +
-                    "       taxId as " + CyAppJsonNodeParamNames.TAXID + "," +
-                    "       label as " + CyAppJsonNodeParamNames.LABEL + "," +
-                    "       shortName as " + CyAppJsonNodeParamNames.TYPE + "," +
-                    "       mIIdentifier as " + CyAppJsonNodeParamNames.TYPE_MI_IDENTIFIER + "," +
-                    "       mODIdentifier as " + CyAppJsonNodeParamNames.TYPE_MOD_IDENTIFIER + "," +
-                    "       pARIdentifier as " + CyAppJsonNodeParamNames.TYPE_PAR_IDENTIFIER + "," +
-                    "       preferredName as " + CyAppJsonNodeParamNames.INTERACTOR_NAME + "," +
-                    "       xrefs as " + CyAppJsonNodeParamNames.XREFS;
+                    "       ac as " + NetworkNodeParamNames.ID + "," +
+                    "       identifier as " + NetworkNodeParamNames.PREFERRED_ID + "," +
+                    "       scientificName as " + NetworkNodeParamNames.SPECIES + "," +
+                    "       taxId as " + NetworkNodeParamNames.TAXID + "," +
+                    "       label as " + NetworkNodeParamNames.LABEL + "," +
+                    "       shortName as " + NetworkNodeParamNames.TYPE + "," +
+                    "       mIIdentifier as " + NetworkNodeParamNames.TYPE_MI_IDENTIFIER + "," +
+                    "       mODIdentifier as " + NetworkNodeParamNames.TYPE_MOD_IDENTIFIER + "," +
+                    "       pARIdentifier as " + NetworkNodeParamNames.TYPE_PAR_IDENTIFIER + "," +
+                    "       preferredName as " + NetworkNodeParamNames.INTERACTOR_NAME + "," +
+                    "       xrefs as " + NetworkNodeParamNames.IDENTIFIERS;
 
-    public static final String CYTOSCAPE_APP_QUERY_FOR_EDGES =
+    public static final String GET_NETWORK_EDGES =
             " MATCH (interactor:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
                     " WITH interactor, COLLECT(identifiersFN) as identifiersFNCollection " +
                     " MATCH (interactor)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
@@ -204,36 +204,41 @@ public class CypherQueries {
                     "      biologicalRoleBN.shortName as biological_role_B_short_name," +
                     "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
                     "      source_features," +
-                    " COLLECT({" + CyAppJsonEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," + CyAppJsonEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
-                    "        " + CyAppJsonEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeBN.mIIdentifier}) as target_features" +
+                    " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
+                    "        " + NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeBN.mIIdentifier}) as target_features" +
 
                     "" +
 
                     " RETURN " +
-                    "       id as " + CyAppJsonEdgeParamNames.ID + ", " +
-                    "       interaction_ac as " + CyAppJsonEdgeParamNames.AC + ", " +
-                    "       type_short_name as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE + "," +
-                    "       type_mi as " + CyAppJsonEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
-                    "       detection_method_short_name as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
-                    "       detection_method_mi as " + CyAppJsonEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
-                    "       mi_score as " + CyAppJsonEdgeParamNames.MI_SCORE + "," +
-                    "       host_organism_scientific_name as " + CyAppJsonEdgeParamNames.HOST_ORGANISM + "," +
-                    "       host_organism_tax_id as " + CyAppJsonEdgeParamNames.HOST_ORGANISM_TAX_ID + "," +
-                    "       pmid as " + CyAppJsonEdgeParamNames.PUBMED_ID + "," +
-                    "       expansion_type as " + CyAppJsonEdgeParamNames.EXPANSION_TYPE + "," +
+                    "       id as " + NetworkEdgeParamNames.ID + ", " +
+                    "       interaction_ac as " + NetworkEdgeParamNames.AC + ", " +
+                    "       type_short_name as " + NetworkEdgeParamNames.INTERACTION_TYPE + "," +
+                    "       type_mi as " + NetworkEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
+                    "       detection_method_short_name as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
+                    "       detection_method_mi as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
+                    "       mi_score as " + NetworkEdgeParamNames.MI_SCORE + "," +
+                    "       host_organism_scientific_name as " + NetworkEdgeParamNames.HOST_ORGANISM + "," +
+                    "       host_organism_tax_id as " + NetworkEdgeParamNames.HOST_ORGANISM_TAX_ID + "," +
+                    "       pmid as " + NetworkEdgeParamNames.PUBMED_ID + "," +
+                    "       expansion_type as " + NetworkEdgeParamNames.EXPANSION_TYPE + "," +
                     "       {" +
-                    "       " + CyAppJsonEdgeParamNames.ID + ": interactor_A_ac," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_A_short_name," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_A_mi," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": source_features" +
-                    "       } as  " + CyAppJsonEdgeParamNames.SOURCE_NODE + "," +
+                    "       " + NetworkEdgeParamNames.ID + ": interactor_A_ac," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_A_short_name," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_A_mi," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_FEATURES + ": source_features" +
+                    "       } as  " + NetworkEdgeParamNames.SOURCE_NODE + "," +
                     "       {" +
-                    "       " + CyAppJsonEdgeParamNames.ID + ": interactor_B_ac," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_B_short_name," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_B_mi," +
-                    "       " + CyAppJsonEdgeParamNames.PARTICIPANT_FEATURES + ": target_features" +
-                    "       } as  " + CyAppJsonEdgeParamNames.TARGET_NODE + "" +
+                    "       " + NetworkEdgeParamNames.ID + ": interactor_B_ac," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_B_short_name," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_B_mi," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_FEATURES + ": target_features" +
+                    "       } as  " + NetworkEdgeParamNames.TARGET_NODE + "" +
 
                     "";
+
+    public static final String INTERACTION_BY_BINARY_ID =
+            "MATCH (interaction:GraphBinaryInteractionEvidence)" +
+                    "WHERE ID(interaction)={binary_id}" +
+                    "RETURN interaction";
 
 }
