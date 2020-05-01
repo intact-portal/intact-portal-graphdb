@@ -93,13 +93,16 @@ public class CypherQueries {
                     " UNWIND interactorsCollection as interactorN " +
                     " MATCH (interactorN)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
                     " MATCH (interactorN)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]->(identifierN:GraphXref) " +
-                    " WITH interactorN,identifierN,organismN" +
+                    " MATCH (identifierN)-[identifierDBR:" + RelationshipTypes.DATABASE + "]->(identifierDBN:GraphCvTerm)" +
+                    " WITH interactorN,identifierN,identifierDBN,organismN" +
                     " OPTIONAL MATCH (interactorN)-[interactorTypeR:" + RelationshipTypes.INTERACTOR_TYPE + "]->(interactorTypeN:GraphCvTerm)" +
-                    " WITH interactorN,identifierN,organismN,interactorTypeN" +
+                    " WITH interactorN,identifierN,identifierDBN,organismN,interactorTypeN" +
                     " OPTIONAL MATCH (interactorN)-[interactorXrefsR:" + RelationshipTypes.IDENTIFIERS + "]->(interactorXrefsN:GraphXref)" +
                     " WITH" +
                     "       interactorN.ac as ac ," +
                     "       identifierN.identifier as identifier," +
+                    "       identifierDBN.shortName as identifier_db_name," +
+                    "       identifierDBN.mIIdentifier as identifier_db_mi," +
                     "       organismN.scientificName as scientificName," +
                     "       organismN.taxId as taxId ," +
                     "       (interactorN.preferredName +'('+identifierN.identifier+')') as label," +
@@ -114,6 +117,8 @@ public class CypherQueries {
                     " WITH" +
                     "       ac," +
                     "       identifier," +
+                    "       identifier_db_name," +
+                    "       identifier_db_mi," +
                     "       scientificName," +
                     "       taxId," +
                     "       label," +
@@ -128,6 +133,8 @@ public class CypherQueries {
                     "       DISTINCT" +
                     "       ac as " + NetworkNodeParamNames.ID + "," +
                     "       identifier as " + NetworkNodeParamNames.PREFERRED_ID + "," +
+                    "       identifier_db_name as " + NetworkNodeParamNames.PREFERRED_ID_DB_NAME + "," +
+                    "       identifier_db_mi as " + NetworkNodeParamNames.PREFERRED_ID_DB_MI + "," +
                     "       scientificName as " + NetworkNodeParamNames.SPECIES + "," +
                     "       taxId as " + NetworkNodeParamNames.TAXID + "," +
                     "       label as " + NetworkNodeParamNames.LABEL + "," +

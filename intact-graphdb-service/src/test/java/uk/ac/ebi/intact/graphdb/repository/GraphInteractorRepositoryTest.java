@@ -113,6 +113,8 @@ public class GraphInteractorRepositoryTest {
         }
         Assert.assertTrue("Queried Interactors should have been present", interactorsPresent);
         Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID).equals("P07199"));
+        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_NAME).equals("uniprotkb"));
+        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_MI).equals("MI:0486"));
         Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.SPECIES).equals("Homo sapiens"));
         Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TAXID).equals(9606));
         Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.LABEL).equals("CENPB(P07199)"));
