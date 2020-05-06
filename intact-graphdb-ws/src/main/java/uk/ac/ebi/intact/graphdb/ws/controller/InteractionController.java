@@ -18,7 +18,6 @@ import psidev.psi.mi.jami.model.InteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
-import uk.ac.ebi.intact.graphdb.service.GraphExperimentService;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
@@ -39,13 +38,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class InteractionController {
 
     private GraphInteractionService graphInteractionService;
-    private GraphExperimentService graphExperimentService;
 
     @Autowired
-    public InteractionController(GraphInteractionService graphInteractionService,
-                                 GraphExperimentService graphExperimentService) {
+    public InteractionController(GraphInteractionService graphInteractionService) {
         this.graphInteractionService = graphInteractionService;
-        this.graphExperimentService = graphExperimentService;
     }
 
     @CrossOrigin(origins = "*")
