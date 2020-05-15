@@ -127,7 +127,11 @@ public class CypherQueries {
                     "       mODIdentifier," +
                     "       pARIdentifier," +
                     "       preferredName," +
-                    " COLLECT({" + NetworkNodeParamNames.XREF_DB_NAME + ":interactorXrefDatabaseN.shortName," + NetworkNodeParamNames.XREF_MI + ":interactorXrefDatabaseN.mIIdentifier," + NetworkNodeParamNames.XREF_ID + ":interactorXref.identifier}) as xrefs" +
+                    " COLLECT({" + NetworkNodeParamNames.XREF_DB_NAME + ":interactorXrefDatabaseN.shortName," +
+                    "          " + NetworkNodeParamNames.XREF_MI + ":interactorXrefDatabaseN.mIIdentifier," +
+                    "          " + NetworkNodeParamNames.XREF_ID + ":interactorXref.identifier," +
+                    "          " + NetworkNodeParamNames.XREF_AC + ":interactorXref.ac" +
+                    "        }) as xrefs" +
 
                     " RETURN " +
                     "       DISTINCT" +
@@ -187,6 +191,7 @@ public class CypherQueries {
                     "     biologicalRoleAN.shortName as biological_role_A_short_name," +
                     "      biologicalRoleAN.mIIdentifier as biological_role_A_mi," +
                     " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresAN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_AC + ":featuresAN.ac," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeAN.shortName," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER + ":featureTypeAN.mODIdentifier," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER + ":featureTypeAN.pARIdentifier," +
@@ -216,6 +221,7 @@ public class CypherQueries {
                     "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
                     "      source_features," +
                     " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_AC + ":featuresBN.ac," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER + ":featureTypeBN.mODIdentifier," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER + ":featureTypeBN.pARIdentifier," +

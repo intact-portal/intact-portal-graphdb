@@ -21,5 +21,6 @@ public class NetworkNodeParamNames {
     public static final String XREF_DB_NAME = "xref_database_name";
     public static final String XREF_MI = "xref_database_mi";
     public static final String XREF_ID = "xref_id";
+    public static final String XREF_AC = "xref_ac";
 
 }

@@ -130,6 +130,7 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
             Assert.assertNull(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER));
             Assert.assertNull(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER));
+            Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_AC), "EBI-1000300");
 
             // target node
 
@@ -140,13 +141,14 @@ public class GraphNetworkCompositeRepositoryTest {
 
             Iterable<Map<String, Object>> targetFeatures = (Iterable<Map<String, Object>>) targetMap.get(NetworkEdgeParamNames.PARTICIPANT_FEATURES);
             Assert.assertEquals(2, Iterables.count(targetFeatures));
-            Iterator<Map<String, Object>> targetFeaturesIterator = sourceFeatures.iterator();
+            Iterator<Map<String, Object>> targetFeaturesIterator = targetFeatures.iterator();
             boolean requiredFeaturePresent = false;
 
             while (targetFeaturesIterator.hasNext()) {
                 Map<String, Object> targetFeature = targetFeaturesIterator.next();
                 if (targetFeature.get(NetworkEdgeParamNames.FEATURE_NAME).equals("region")) {
                     Assert.assertEquals(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE), "35s radiolabel");
+                    Assert.assertEquals(targetFeature.get(NetworkEdgeParamNames.FEATURE_AC), "EBI-1000314");
                     Assert.assertEquals(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
                     Assert.assertNull(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER));
                     Assert.assertNull(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER));

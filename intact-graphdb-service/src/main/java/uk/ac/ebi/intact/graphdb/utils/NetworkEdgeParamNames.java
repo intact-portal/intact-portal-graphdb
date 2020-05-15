@@ -24,6 +24,7 @@ public class NetworkEdgeParamNames {
     public static final String ANNOTATIONS = "annotations";
     public static final String PARAMS = "parameters";
     public static final String FEATURE_NAME = "feature_name";
+    public static final String FEATURE_AC = "feature_ac";
     public static final String FEATURE_TYPE = "feature_type";
     public static final String FEATURE_TYPE_MI_IDENTIFIER = "feature_type_mi_identifier";
     public static final String FEATURE_TYPE_MOD_IDENTIFIER = "feature_type_mod_identifier";
