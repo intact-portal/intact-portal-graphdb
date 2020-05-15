@@ -42,10 +42,12 @@ public class GraphNetworkCompositeRepositoryTest {
         Set<Integer> species = new HashSet<>();
         species.add(9606);
 
+        boolean neighboursRequired = true;
+
         // With identifiers only
 
         Instant starts = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable1 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, null);
+        Iterable<Map<String, Object>> edgesIterable1 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, null, neighboursRequired);
         Instant ends = Instant.now();
         Duration executionDuration = Duration.between(starts, ends);
         System.out.println("Total process with identifiers only took :" + executionDuration);
@@ -53,7 +55,7 @@ public class GraphNetworkCompositeRepositoryTest {
         Assert.assertNotNull(edgesIterable1);
         Assert.assertEquals(30, Iterables.count(edgesIterable1));// 432
 
-        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null);
+        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
 
         Map<String, Object> mapToBeTested1 = null;
@@ -120,7 +122,7 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER), "MI:0499");
 
             Iterable<Map<String, Object>> sourceFeatures = (Iterable<Map<String, Object>>) sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_FEATURES);
-            Assert.assertEquals(Iterables.count(sourceFeatures), 1);
+            Assert.assertEquals(1, Iterables.count(sourceFeatures));
             Map<String, Object> sourceFeature = sourceFeatures.iterator().next();
 
             Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_NAME), "region");
@@ -135,7 +137,7 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER), "MI:0499");
 
             Iterable<Map<String, Object>> targetFeatures = (Iterable<Map<String, Object>>) targetMap.get(NetworkEdgeParamNames.PARTICIPANT_FEATURES);
-            Assert.assertEquals(Iterables.count(targetFeatures), 2);
+            Assert.assertEquals(2, Iterables.count(targetFeatures));
             Iterator<Map<String, Object>> targetFeaturesIterator = sourceFeatures.iterator();
             boolean requiredFeaturePresent = false;
 
@@ -161,7 +163,7 @@ public class GraphNetworkCompositeRepositoryTest {
         // With identifiers and species
 
         Instant starts1 = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable2 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species);
+        Iterable<Map<String, Object>> edgesIterable2 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species, neighboursRequired);
         Instant ends1 = Instant.now();
         Duration executionDuration1 = Duration.between(starts1, ends1);
         System.out.println("Total process with identifiers and species took" + executionDuration);
@@ -169,7 +171,7 @@ public class GraphNetworkCompositeRepositoryTest {
         Assert.assertNotNull(edgesIterable2);
         Assert.assertEquals(30, Iterables.count(edgesIterable2));// 432
 
-        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species);
+        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable2));//152
 
         Set<String> interactorAcsFromEdgesQuery2 = new HashSet<>();
@@ -216,7 +218,7 @@ public class GraphNetworkCompositeRepositoryTest {
         //With species only
 
         Instant starts2 = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable3 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(null, species);
+        Iterable<Map<String, Object>> edgesIterable3 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(null, species, neighboursRequired);
         Instant ends2 = Instant.now();
         Duration executionDuration2 = Duration.between(starts2, ends2);
         System.out.println("Total process with species only took" + executionDuration);
@@ -224,7 +226,7 @@ public class GraphNetworkCompositeRepositoryTest {
         Assert.assertNotNull(edgesIterable3);
         Assert.assertEquals(1220, Iterables.count(edgesIterable3));// 432
 
-        Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species);
+        Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired);
         Assert.assertEquals(473, Iterables.count(nodesIterable3));//152
 
         Set<String> interactorAcsFromEdgesQuery3 = new HashSet<>();
@@ -267,6 +269,62 @@ public class GraphNetworkCompositeRepositoryTest {
             }
         }
 
+        //Without Neighbours
+
+/*        boolean neighboursRequired1=false;
+
+        Instant starts3 = Instant.now();
+        Iterable<Map<String, Object>> edgesIterable4 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, null,neighboursRequired1);
+        Instant ends3 = Instant.now();
+        Duration executionDuration3 = Duration.between(starts3, ends3);
+        System.out.println("Total process with species only took" + executionDuration3);
+        Assert.assertTrue("Performance is low for querying with species only", executionDuration3.getSeconds() < 6);
+        Assert.assertNotNull(edgesIterable4);
+        Assert.assertEquals(30, Iterables.count(edgesIterable4));// 432
+
+        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(identifiers, null,neighboursRequired1);
+        Assert.assertEquals(2, Iterables.count(nodesIterable4));//152
+
+        Set<String> interactorAcsFromEdgesQuery4 = new HashSet<>();
+        Iterator<Map<String, Object>> edgeIterator4 = edgesIterable4.iterator();
+        try {
+            while (edgeIterator4.hasNext()) {
+                Map<String, Object> map = edgeIterator4.next();
+
+                String source = (String) ((Map<String, Object>) map.get(NetworkEdgeParamNames.SOURCE_NODE)).get(NetworkEdgeParamNames.ID);
+                String target = (String) ((Map<String, Object>) map.get(NetworkEdgeParamNames.TARGET_NODE)).get(NetworkEdgeParamNames.ID);
+
+                if (source != null) {
+                    interactorAcsFromEdgesQuery4.add(source);
+                }
+                if (target != null) {
+                    interactorAcsFromEdgesQuery4.add(target);
+                }
+            }
+        } catch (Exception e) {
+            Assert.assertTrue("A map with the key value was expected", false);
+        }
+
+        Iterator<Map<String, Object>> nodeIterator4 = nodesIterable4.iterator();
+        List<String> interactorAcsFromNodesQuery4 = new ArrayList<>();
+
+        try {
+            while (nodeIterator4.hasNext()) {
+                Map<String, Object> map = nodeIterator4.next();
+                interactorAcsFromNodesQuery4.add((String) map.get(NetworkEdgeParamNames.ID));
+            }
+        } catch (Exception e) {
+            Assert.assertTrue("A map with the key value was expected", false);
+        }
+
+        Assert.assertEquals(interactorAcsFromEdgesQuery4.size(), interactorAcsFromNodesQuery4.size());
+
+        for (String interactorAcFromEdgeQuery : interactorAcsFromEdgesQuery4) {
+            if (!interactorAcsFromNodesQuery4.contains(interactorAcFromEdgeQuery)) {
+                Assert.assertTrue("Node from edges query was expected to be in nodes from nodes query", false);
+            }
+        }*/
+
 
     }
 
@@ -285,13 +343,15 @@ public class GraphNetworkCompositeRepositoryTest {
         Set<Integer> species = new HashSet<>();
         species.add(9606);
 
+        boolean neighboursRequired = true;
+
         Instant processStarted = Instant.now();
         try {
             ExecutorService executor = Executors.newFixedThreadPool(2);
 
             executor.execute(() -> {
                 Instant starts = Instant.now();
-                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species);
+                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species, neighboursRequired);
                 Instant ends = Instant.now();
                 System.out.println("Cy App Edges retrieval took" + Duration.between(starts, ends));
             });
@@ -300,7 +360,7 @@ public class GraphNetworkCompositeRepositoryTest {
 
             executor.execute(() -> {
                 Instant starts = Instant.now();
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorRepository.findNetworkNodes(identifiers, species);
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
                 Instant ends = Instant.now();
                 System.out.println("Cy App Nodes retrieval took" + Duration.between(starts, ends));
             });

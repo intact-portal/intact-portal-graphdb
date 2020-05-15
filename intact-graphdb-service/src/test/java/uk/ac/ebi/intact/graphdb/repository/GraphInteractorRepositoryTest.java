@@ -50,10 +50,7 @@ public class GraphInteractorRepositoryTest {
 
     @Test
     public void testCytoscapeAppNodesQuery() {
-        // null parameters check
-        // with parameters check
-        // interactor count check
-        // interaction count check
+
         Set<String> identifiers = new HashSet<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
@@ -61,7 +58,9 @@ public class GraphInteractorRepositoryTest {
         Set<Integer> species = new HashSet<>();
         species.add(9606);
 
-        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null);
+        boolean neighboursRequired = true;
+
+        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
 
         boolean interactorsPresent1 = false;
@@ -81,7 +80,7 @@ public class GraphInteractorRepositoryTest {
 
         Assert.assertTrue("Queried Interactors should have been present", interactorsPresent1);
 
-        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species);
+        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable2));//141
 
         Map<String, Object> mapToBeTested = null;
@@ -125,7 +124,7 @@ public class GraphInteractorRepositoryTest {
         Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.INTERACTOR_NAME).equals("CENPB"));
         Assert.assertEquals(3, ((Map[]) mapToBeTested.get(NetworkNodeParamNames.IDENTIFIERS)).length);
 
-        Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species);
+        Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired);
         Assert.assertEquals(473, Iterables.count(nodesIterable3));// 30179
 
         Iterator<Map<String, Object>> iterator3 = nodesIterable3.iterator();
@@ -140,5 +139,19 @@ public class GraphInteractorRepositoryTest {
         } catch (Exception e) {
             Assert.assertTrue("A map with the key value was expected", false);
         }
+
+        // Without Neighbours
+
+        /*Set<String> identifiers1 = new HashSet<>();
+        identifiers1.add("Q9BZD4");
+        identifiers1.add("O14777");
+
+        Set<Integer> species1 = new HashSet<>();
+        species.add(9606);
+
+        boolean neighboursRequired1=false;
+
+        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(identifiers1, null,neighboursRequired1);
+        Assert.assertEquals(2, Iterables.count(nodesIterable4));*/
     }
 }
