@@ -8,10 +8,18 @@ public class Xref {
     private CvTerm database;
     private String identifier;
     private CvTerm qualifier;
+    private String ac;
 
     public Xref(CvTerm database, String identifier) {
         this.database = database;
         this.identifier = identifier;
+    }
+
+    public Xref(CvTerm database, String identifier, CvTerm qualifier, String ac) {
+        this.database = database;
+        this.identifier = identifier;
+        this.qualifier = qualifier;
+        this.ac = ac;
     }
 
     public Xref(CvTerm database, String identifier, CvTerm qualifier) {
@@ -42,5 +50,13 @@ public class Xref {
 
     public void setQualifier(CvTerm qualifier) {
         this.qualifier = qualifier;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 }

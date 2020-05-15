@@ -9,10 +9,7 @@ import org.springframework.stereotype.Repository;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,6 +23,10 @@ public interface GraphInteractorRepository extends Neo4jRepository<GraphInteract
     GraphInteractor findByShortName(@Param("shortName") String shortName);
 
     Optional<GraphInteractor> findByAc(@Param("ac") String ac, @Depth int depth);
+
+    //TODO... try making it work by findAllByAc or some sdn method
+    @Query(value = CypherQueries.INTERACTORS_BY_ACS)
+    List<GraphInteractor> findWithInteractorAcs(@Param("acs") Set<String> acs, @Depth int depth);
 
     @Query("MATCH (a:Interactor)<-[i:INTERACTS_IN]-(b:Interactor) RETURN i,a,b LIMIT {limit}")
     Collection<GraphInteractor> graph(@Param("limit") int limit);

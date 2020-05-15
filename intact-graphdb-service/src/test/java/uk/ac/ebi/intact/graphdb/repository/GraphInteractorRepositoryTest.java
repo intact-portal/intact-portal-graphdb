@@ -13,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.utils.NetworkNodeParamNames;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -46,6 +43,17 @@ public class GraphInteractorRepositoryTest {
         Assert.assertEquals(655, totalElements);
         Assert.assertTrue(pageNumber > 1);
 
+    }
+
+    @Test
+    public void findAllByAcs() {
+        Set<String> acs = new HashSet<>();
+        acs.add("EBI-715849");
+        acs.add("EBI-724102");
+
+        List<GraphInteractor> interactors = graphInteractorRepository.findWithInteractorAcs(acs, 0);
+        Assert.assertNotNull(interactors);
+        Assert.assertEquals(2, interactors.size());
     }
 
     @Test
@@ -111,18 +119,33 @@ public class GraphInteractorRepositoryTest {
             Assert.assertTrue("An interactor with id 'EBI-949451' was expected", false);
         }
         Assert.assertTrue("Queried Interactors should have been present", interactorsPresent);
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID).equals("P07199"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_NAME).equals("uniprotkb"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_MI).equals("MI:0486"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.SPECIES).equals("Homo sapiens"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TAXID).equals(9606));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.LABEL).equals("CENPB(P07199)"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TYPE).equals("protein"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TYPE_MI_IDENTIFIER).equals("MI:0326"));
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TYPE_MOD_IDENTIFIER) == null);
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.TYPE_PAR_IDENTIFIER) == null);
-        Assert.assertTrue(mapToBeTested.get(NetworkNodeParamNames.INTERACTOR_NAME).equals("CENPB"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID), ("P07199"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.FULL_NAME), ("Major centromere autoantigen B"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_NAME), ("uniprotkb"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.PREFERRED_ID_DB_MI), ("MI:0486"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.SPECIES), ("Homo sapiens"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.TAXID), (9606));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.LABEL), ("CENPB(P07199)"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.TYPE), ("protein"));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.TYPE_MI_IDENTIFIER), ("MI:0326"));
+        Assert.assertNull(mapToBeTested.get(NetworkNodeParamNames.TYPE_MOD_IDENTIFIER));
+        Assert.assertNull(mapToBeTested.get(NetworkNodeParamNames.TYPE_PAR_IDENTIFIER));
+        Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.INTERACTOR_NAME), ("CENPB"));
         Assert.assertEquals(3, ((Map[]) mapToBeTested.get(NetworkNodeParamNames.IDENTIFIERS)).length);
+
+        boolean identifierCheck = false;
+        for (Map identifierMap : (Map[]) mapToBeTested.get(NetworkNodeParamNames.IDENTIFIERS)) {
+            if (identifierMap.get(NetworkNodeParamNames.XREF_ID).equals("Q96EI4")) {
+                identifierCheck = true;
+                Assert.assertEquals("MI:0360", identifierMap.get(NetworkNodeParamNames.XREF_QUALIFIER_MI));
+                Assert.assertEquals("secondary-ac", identifierMap.get(NetworkNodeParamNames.XREF_QUALIFIER_NAME));
+                Assert.assertEquals("uniprotkb", identifierMap.get(NetworkNodeParamNames.XREF_DB_NAME));
+                Assert.assertEquals("MI:0486", identifierMap.get(NetworkNodeParamNames.XREF_DB_MI));
+                Assert.assertEquals("EBI-9222998", identifierMap.get(NetworkNodeParamNames.XREF_AC));
+            }
+        }
+
+        Assert.assertTrue(identifierCheck);
 
         Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired);
         Assert.assertEquals(473, Iterables.count(nodesIterable3));// 30179

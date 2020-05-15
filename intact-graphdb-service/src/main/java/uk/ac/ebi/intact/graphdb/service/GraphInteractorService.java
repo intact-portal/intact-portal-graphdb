@@ -79,6 +79,10 @@ public class GraphInteractorService {
         return graphInteractorRepository.findByAc(ac, depth).orElse(null);
     }
 
+    public List<GraphInteractor> findWithInteractorAcs(Set<String> acs, int depth) {
+        return graphInteractorRepository.findWithInteractorAcs(acs, depth);
+    }
+
     public Iterable<Map<String, Object>> findNetworkNodes(Set<String> identifiers, Set<Integer> species, boolean neighboursRequired) {
         return this.graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
     }

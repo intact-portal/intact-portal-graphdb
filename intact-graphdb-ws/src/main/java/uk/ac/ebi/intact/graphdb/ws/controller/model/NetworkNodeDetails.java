@@ -7,10 +7,14 @@ import java.util.Collection;
  */
 public class NetworkNodeDetails {
 
+    private String id;
     private Collection<Xref> xrefs;
+    private Collection<Alias> aliases;
 
-    public NetworkNodeDetails(Collection<Xref> xrefs) {
+    public NetworkNodeDetails(String id, Collection<Xref> xrefs, Collection<Alias> aliases) {
         this.xrefs = xrefs;
+        this.aliases = aliases;
+        this.id = id;
     }
 
     public Collection<Xref> getXrefs() {
@@ -19,5 +23,21 @@ public class NetworkNodeDetails {
 
     public void setXrefs(Collection<Xref> xrefs) {
         this.xrefs = xrefs;
+    }
+
+    public Collection<Alias> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(Collection<Alias> aliases) {
+        this.aliases = aliases;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

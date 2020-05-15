@@ -100,6 +100,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (interactorN)-[interactorXrefsR:" + RelationshipTypes.IDENTIFIERS + "]->(interactorXrefsN:GraphXref)" +
                     " WITH" +
                     "       interactorN.ac as ac ," +
+                    "       interactorN.fullName as fullName ," +
                     "       identifierN.identifier as identifier," +
                     "       identifierDBN.shortName as identifier_db_name," +
                     "       identifierDBN.mIIdentifier as identifier_db_mi," +
@@ -113,9 +114,11 @@ public class CypherQueries {
                     "       interactorN.preferredName as preferredName," +
                     "       COLLECT(interactorXrefsN) as interactorXrefsNCollection" +
                     " UNWIND interactorXrefsNCollection as interactorXref" +
-                    " MATCH (interactorXref)-[interactorXrefDatabaseR:database]->(interactorXrefDatabaseN:GraphCvTerm)" +
+                    " MATCH (interactorXref)-[interactorXrefDatabaseR:" + RelationshipTypes.DATABASE + "]->(interactorXrefDatabaseN:GraphCvTerm)" +
+                    " MATCH (interactorXref)-[interactorXrefQualifierR:" + RelationshipTypes.QUALIFIER + "]->(interactorXrefQualifierN:GraphCvTerm)" +
                     " WITH" +
                     "       ac," +
+                    "       fullName," +
                     "       identifier," +
                     "       identifier_db_name," +
                     "       identifier_db_mi," +
@@ -128,14 +131,17 @@ public class CypherQueries {
                     "       pARIdentifier," +
                     "       preferredName," +
                     " COLLECT({" + NetworkNodeParamNames.XREF_DB_NAME + ":interactorXrefDatabaseN.shortName," +
-                    "          " + NetworkNodeParamNames.XREF_MI + ":interactorXrefDatabaseN.mIIdentifier," +
+                    "          " + NetworkNodeParamNames.XREF_DB_MI + ":interactorXrefDatabaseN.mIIdentifier," +
                     "          " + NetworkNodeParamNames.XREF_ID + ":interactorXref.identifier," +
-                    "          " + NetworkNodeParamNames.XREF_AC + ":interactorXref.ac" +
+                    "          " + NetworkNodeParamNames.XREF_AC + ":interactorXref.ac," +
+                    "          " + NetworkNodeParamNames.XREF_QUALIFIER_NAME + ":interactorXrefQualifierN.shortName," +
+                    "          " + NetworkNodeParamNames.XREF_QUALIFIER_MI + ":interactorXrefQualifierN.mIIdentifier" +
                     "        }) as xrefs" +
 
                     " RETURN " +
                     "       DISTINCT" +
                     "       ac as " + NetworkNodeParamNames.ID + "," +
+                    "       fullName as " + NetworkNodeParamNames.FULL_NAME + "," +
                     "       identifier as " + NetworkNodeParamNames.PREFERRED_ID + "," +
                     "       identifier_db_name as " + NetworkNodeParamNames.PREFERRED_ID_DB_NAME + "," +
                     "       identifier_db_mi as " + NetworkNodeParamNames.PREFERRED_ID_DB_MI + "," +
@@ -257,9 +263,14 @@ public class CypherQueries {
 
                     "";
 
-    public static final String INTERACTION_BY_BINARY_ID =
+    public static final String INTERACTIONS_BY_BINARY_IDS =
             "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-                    "WHERE ID(interaction)={binary_id}" +
+                    "WHERE ID(interaction) IN {binary_ids}" +
                     "RETURN interaction";
+
+    public static final String INTERACTORS_BY_ACS =
+            "MATCH (interactor:GraphInteractor)" +
+                    "WHERE interactor.ac IN {acs}" +
+                    "RETURN interactor";
 
 }

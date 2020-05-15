@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -47,11 +44,11 @@ public class NetworkController {
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) Set<String> identifiers,
                                                  @RequestParam(value = "species", required = false) Set<Integer> species,
-                                                 @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,
+                                                /* @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,*/
                                                  HttpServletRequest request) throws IOException {
 
         HttpStatus httpStatus = HttpStatus.OK;
-
+        boolean neighboursRequired = true;// to be removed when accessed from request
         Instant processStarted = Instant.now();
         NetworkJson networkJson = new NetworkJson();
         try {
@@ -93,58 +90,83 @@ public class NetworkController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "/edge/details/{id}", produces = {APPLICATION_JSON_VALUE})
-    public NetworkEdgeDetails getEdgeDetails(
-            @PathVariable int id) {
+    @PostMapping(value = "/edge/details",
+            produces = {APPLICATION_JSON_VALUE})
+    public List<NetworkEdgeDetails> getEdgeDetails(@RequestParam(value = "ids", required = true) Set<Long> ids,
+                                                   HttpServletRequest request) throws IOException {
 
-        GraphBinaryInteractionEvidence graphInteractionEvidence = graphInteractionService.findWithBinaryId(id, 0);
+        List<GraphBinaryInteractionEvidence> graphInteractionEvidences = graphInteractionService.findWithBinaryIds(ids, 0);
 
-        return createNetworkEdgeDetails(graphInteractionEvidence);
+        return createNetworkEdgeDetails(graphInteractionEvidences);
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "/node/details/{id}", produces = {APPLICATION_JSON_VALUE})
-    public NetworkNodeDetails getNodeDetails(
-            @PathVariable String id) {
+    @PostMapping(value = "/node/details",
+            produces = {APPLICATION_JSON_VALUE})
+    public List<NetworkNodeDetails> getNodeDetails(@RequestParam(value = "ids", required = true) Set<String> ids,
+                                                   HttpServletRequest request) throws IOException {
 
-        GraphInteractor graphInteractor = graphInteractorService.findByAc(id, 0);
+        List<GraphInteractor> graphInteractors = graphInteractorService.findWithInteractorAcs(ids, 0);
 
-        return createNetworkNodeDetails(graphInteractor);
+        return createNetworkNodeDetails(graphInteractors);
     }
 
     /**
      * CONVERTS from GraphBinaryInteractionEvidence to CyAppInteractionDetails model
      **/
-    private NetworkEdgeDetails createNetworkEdgeDetails(GraphBinaryInteractionEvidence graphBinaryInteractionEvidence) {
+    private List<NetworkEdgeDetails> createNetworkEdgeDetails(List<GraphBinaryInteractionEvidence> graphBinaryInteractionEvidences) {
 
-        List<Annotation> annotations = new ArrayList<>();
-        graphBinaryInteractionEvidence.getAnnotations().forEach(annotation -> {
-            CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
-            annotations.add(new Annotation(term, annotation.getValue()));
-        });
+        List<NetworkEdgeDetails> networkEdgeDetails = new ArrayList<>();
 
-        List<Parameter> parameters = new ArrayList<>();
-        graphBinaryInteractionEvidence.getParameters().forEach(parameter -> {
-            CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-            CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
-            parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
+        for (GraphBinaryInteractionEvidence graphBinaryInteractionEvidence : graphBinaryInteractionEvidences) {
 
-        });
+            List<Annotation> annotations = new ArrayList<>();
+            graphBinaryInteractionEvidence.getAnnotations().forEach(annotation -> {
+                CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
+                annotations.add(new Annotation(term, annotation.getValue()));
+            });
 
-        return new NetworkEdgeDetails(annotations, parameters);
+            List<Parameter> parameters = new ArrayList<>();
+            graphBinaryInteractionEvidence.getParameters().forEach(parameter -> {
+                CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+                CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
+
+            });
+            networkEdgeDetails.add(new NetworkEdgeDetails(graphBinaryInteractionEvidence.getGraphId(), annotations, parameters));
+        }
+
+        return networkEdgeDetails;
     }
 
     /**
      * CONVERTS from GraphInteractionEvidence and GraphExperiment to InteractionDetails model
      **/
-    private NetworkNodeDetails createNetworkNodeDetails(GraphInteractor graphInteractor) {
+    private List<NetworkNodeDetails> createNetworkNodeDetails(List<GraphInteractor> graphInteractors) {
 
-        List<Xref> xrefs = new ArrayList<>();
-        graphInteractor.getXrefs().forEach(xref -> {
-            CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
-            xrefs.add(new Xref(term, xref.getId()));
-        });
+        List<NetworkNodeDetails> networkNodeDetailsList = new ArrayList<>();
 
-        return new NetworkNodeDetails(xrefs);
+        for (GraphInteractor graphInteractor : graphInteractors) {
+
+            List<Xref> xrefs = new ArrayList<>();
+            graphInteractor.getXrefs().forEach(xref -> {
+                CvTerm database = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+                CvTerm qualifier = null;
+                if (xref.getQualifier() != null) {
+                    qualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
+                }
+                xrefs.add(new Xref(database, xref.getId(), qualifier, xref.getAc()));
+            });
+
+            Collection<Alias> aliases = new ArrayList<>();
+            graphInteractor.getAliases().forEach(alias -> {
+                if (alias.getType() != null) {
+                    aliases.add(new Alias(alias.getName(), new CvTerm(alias.getType().getShortName(), alias.getType().getMIIdentifier())));
+                }
+            });
+            networkNodeDetailsList.add(new NetworkNodeDetails(graphInteractor.getAc(), xrefs, aliases));
+        }
+
+        return networkNodeDetailsList;
     }
 }

@@ -335,7 +335,7 @@ public class GraphNetworkCompositeRepositoryTest {
     * */
     @Test
     @Ignore
-    public void testPerformanceOfCytoscapeAppNodesAndEdgesQuery() {
+    public void testSmallScalePerformanceOfCytoscapeAppNodesAndEdgesQuery() {
         Set<String> identifiers = new HashSet<>();
         identifiers.add("Q9BZD4");
         identifiers.add("O14777");
@@ -374,6 +374,62 @@ public class GraphNetworkCompositeRepositoryTest {
             Duration executionDuration = Duration.between(processStarted, processEnds);
             System.out.println("Total process took" + executionDuration);
             Assert.assertTrue(executionDuration.getSeconds() < 10);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue("Exception", false);
+        }
+    }
+
+    /*
+    * For performance testing with only in neo4j server with whole database
+    * */
+    @Test
+    public void testLargeScalePerformanceOfCytoscapeAppNodesAndEdgesQuery() {
+
+        Set<Integer> species = new HashSet<>();
+        species.add(9606);
+
+        boolean neighboursRequired = true;
+
+        Instant processStarted = Instant.now();
+        try {
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+
+            HashMap<String, Integer> dataRetrievalStatus = new HashMap<>();
+
+            executor.execute(() -> {
+                Instant starts = Instant.now();
+                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findNetworkEdges(null, species, neighboursRequired);
+                Instant ends = Instant.now();
+                System.out.println("Cy App Edges retrieval took" + Duration.between(starts, ends));
+                if (edgesIterable != null) {
+                    dataRetrievalStatus.put("edges", Iterables.count(edgesIterable));
+                }
+            });
+
+            //Thread.currentThread().sleep(3);
+
+            executor.execute(() -> {
+                Instant starts = Instant.now();
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired);
+                Instant ends = Instant.now();
+                System.out.println("Cy App Nodes retrieval took" + Duration.between(starts, ends));
+                if (nodesIterable != null) {
+                    dataRetrievalStatus.put("nodes", Iterables.count(nodesIterable));
+                }
+            });
+
+            executor.shutdown();
+
+            boolean finished = executor.awaitTermination(15, TimeUnit.MINUTES);
+            executor.shutdownNow();
+            Instant processEnds = Instant.now();
+            Duration executionDuration = Duration.between(processStarted, processEnds);
+            System.out.println("Total process took" + executionDuration);
+            Assert.assertTrue(executionDuration.getSeconds() < 420);
+            Assert.assertNotNull(dataRetrievalStatus.get("edges"));
+            Assert.assertNotNull(dataRetrievalStatus.get("nodes"));
 
         } catch (Exception e) {
             e.printStackTrace();

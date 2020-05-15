@@ -7,10 +7,12 @@ import java.util.Collection;
  */
 public class NetworkEdgeDetails {
 
+    private Long id;
     private Collection<Annotation> annotations;
     private Collection<Parameter> parameters;
 
-    public NetworkEdgeDetails(Collection<Annotation> annotations, Collection<Parameter> parameters) {
+    public NetworkEdgeDetails(Long id, Collection<Annotation> annotations, Collection<Parameter> parameters) {
+        this.id = id;
         this.annotations = annotations;
         this.parameters = parameters;
     }
@@ -29,5 +31,13 @@ public class NetworkEdgeDetails {
 
     public void setParameters(Collection<Parameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
