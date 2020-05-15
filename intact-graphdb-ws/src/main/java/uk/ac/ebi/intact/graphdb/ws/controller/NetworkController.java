@@ -47,6 +47,7 @@ public class NetworkController {
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) Set<String> identifiers,
                                                  @RequestParam(value = "species", required = false) Set<Integer> species,
+                                                 @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,
                                                  HttpServletRequest request) throws IOException {
 
         HttpStatus httpStatus = HttpStatus.OK;
@@ -57,11 +58,11 @@ public class NetworkController {
 
             ExecutorService executor = Executors.newFixedThreadPool(2);
             executor.execute(() -> {
-                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(identifiers, species);
+                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(identifiers, species, neighboursRequired);
                 networkJson.setEdges(edgesIterable);
             });
             executor.execute(() -> {
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(identifiers, species);
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(identifiers, species, neighboursRequired);
                 networkJson.setNodes(nodesIterable);
             });
             executor.shutdown();

@@ -128,6 +128,8 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_NAME), "region");
             Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE), "35s radiolabel");
             Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
+            Assert.assertNull(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER));
+            Assert.assertNull(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER));
 
             // target node
 
@@ -144,17 +146,15 @@ public class GraphNetworkCompositeRepositoryTest {
             while (targetFeaturesIterator.hasNext()) {
                 Map<String, Object> targetFeature = targetFeaturesIterator.next();
                 if (targetFeature.get(NetworkEdgeParamNames.FEATURE_NAME).equals("region")) {
-                    Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE), "35s radiolabel");
-                    Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
+                    Assert.assertEquals(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE), "35s radiolabel");
+                    Assert.assertEquals(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
+                    Assert.assertNull(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER));
+                    Assert.assertNull(targetFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER));
                     requiredFeaturePresent = true;
                 }
             }
 
             Assert.assertTrue(requiredFeaturePresent);
-
-            Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_NAME), "region");
-            Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE), "35s radiolabel");
-            Assert.assertEquals(sourceFeature.get(NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER), "MI:0371");
 
         } catch (Exception e) {
             Assert.assertTrue("Map with the key value was expected", false);

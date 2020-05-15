@@ -186,8 +186,12 @@ public class CypherQueries {
                     "      pmIdN.identifier as pmid,complexExpansionN.shortName as expansion_type," +
                     "     biologicalRoleAN.shortName as biological_role_A_short_name," +
                     "      biologicalRoleAN.mIIdentifier as biological_role_A_mi," +
-                    " COLLECT({feature_name:featuresAN.shortName,feature_type:featureTypeAN.shortName," +
-                    "         feature_type_mi_identifier:featureTypeAN.mIIdentifier}) as source_features" +
+                    " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresAN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeAN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER + ":featureTypeAN.mODIdentifier," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER + ":featureTypeAN.pARIdentifier," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeAN.mIIdentifier}" +
+                    "        ) as source_features" +
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_B + "]-(entityBN:GraphEntity) " +
                     " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleBN:GraphCvTerm) " +
@@ -211,8 +215,12 @@ public class CypherQueries {
                     "      biologicalRoleBN.shortName as biological_role_B_short_name," +
                     "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
                     "      source_features," +
-                    " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
-                    "        " + NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeBN.mIIdentifier}) as target_features" +
+                    " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeBN.shortName," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_MOD_IDENTIFIER + ":featureTypeBN.mODIdentifier," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_PAR_IDENTIFIER + ":featureTypeBN.pARIdentifier," +
+                    "          " + NetworkEdgeParamNames.FEATURE_TYPE_MI_IDENTIFIER + ":featureTypeBN.mIIdentifier}" +
+                    "         ) as target_features" +
 
                     "" +
 
