@@ -15,8 +15,6 @@ public class NetworkNodeParamNames {
     public static final String LABEL = "label";
     public static final String TYPE = "type";
     public static final String TYPE_MI_IDENTIFIER = "type_mi_identifier";
-    public static final String TYPE_MOD_IDENTIFIER = "type_mod_identifier";
-    public static final String TYPE_PAR_IDENTIFIER = "type_par_identifier";
     public static final String INTERACTOR_NAME = "interactor_name";
     public static final String IDENTIFIERS = "identifiers";
     public static final String XREF_DB_NAME = "xref_database_name";

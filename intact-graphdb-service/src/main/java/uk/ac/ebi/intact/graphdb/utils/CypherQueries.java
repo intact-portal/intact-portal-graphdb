@@ -150,8 +150,6 @@ public class CypherQueries {
                     "       label as " + NetworkNodeParamNames.LABEL + "," +
                     "       shortName as " + NetworkNodeParamNames.TYPE + "," +
                     "       mIIdentifier as " + NetworkNodeParamNames.TYPE_MI_IDENTIFIER + "," +
-                    "       mODIdentifier as " + NetworkNodeParamNames.TYPE_MOD_IDENTIFIER + "," +
-                    "       pARIdentifier as " + NetworkNodeParamNames.TYPE_PAR_IDENTIFIER + "," +
                     "       preferredName as " + NetworkNodeParamNames.INTERACTOR_NAME + "," +
                     "       xrefs as " + NetworkNodeParamNames.IDENTIFIERS;
 

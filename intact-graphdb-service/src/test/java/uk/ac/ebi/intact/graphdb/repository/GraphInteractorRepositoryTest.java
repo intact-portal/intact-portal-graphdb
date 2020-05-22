@@ -128,8 +128,6 @@ public class GraphInteractorRepositoryTest {
         Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.LABEL), ("CENPB(P07199)"));
         Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.TYPE), ("protein"));
         Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.TYPE_MI_IDENTIFIER), ("MI:0326"));
-        Assert.assertNull(mapToBeTested.get(NetworkNodeParamNames.TYPE_MOD_IDENTIFIER));
-        Assert.assertNull(mapToBeTested.get(NetworkNodeParamNames.TYPE_PAR_IDENTIFIER));
         Assert.assertEquals(mapToBeTested.get(NetworkNodeParamNames.INTERACTOR_NAME), ("CENPB"));
         Assert.assertEquals(3, ((Map[]) mapToBeTested.get(NetworkNodeParamNames.IDENTIFIERS)).length);
 
