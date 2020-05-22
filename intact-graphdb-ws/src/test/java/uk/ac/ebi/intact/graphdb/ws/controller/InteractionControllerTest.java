@@ -1,10 +1,19 @@
 package uk.ac.ebi.intact.graphdb.ws.controller;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -19,6 +28,9 @@ import uk.ac.ebi.intact.graphdb.ws.Neo4jTestConfiguration;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,4 +124,36 @@ public class InteractionControllerTest {
             }
         }
     }
+
+    /*Only for manual testing*/
+    @Test
+    @Ignore
+    public void test() {
+
+        try {
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpPost httppost = new HttpPost("http://intact-neo4j-001.ebi.ac.uk:8083/intact/ws/graph/network/data");
+
+            // Request parameters and other properties.
+            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            params.add(new BasicNameValuePair("species", "9606"));
+            httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+
+            //Execute and get the response.
+            Instant starts = Instant.now();
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            Instant ends = Instant.now();
+            Duration executionDuration = Duration.between(starts, ends);
+            System.out.println("Total process took" + executionDuration);
+            if (entity != null) {
+                try (InputStream instream = entity.getContent()) {
+                    // do something useful
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
