@@ -30,8 +30,10 @@ public class GraphInteractionService {
     /*
     * TODO... After having binaryids in database change this method to find by binary id instead
     * */
-    public List<GraphBinaryInteractionEvidence> findWithBinaryIds(Set<Long> binaryIds, int depth) {
-        return graphBinaryInteractionEvidenceRepository.findWithBinaryIds(binaryIds, depth);
+    public GraphBinaryInteractionEvidence findWithBinaryId(int id, int depth) {
+        Optional<GraphBinaryInteractionEvidence> optionalGraphInteractionEvidence =
+                graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, depth);
+        return optionalGraphInteractionEvidence.orElse(null);
     }
 
     public Page<GraphBinaryInteractionEvidence> findAll(Pageable page, int depth) {

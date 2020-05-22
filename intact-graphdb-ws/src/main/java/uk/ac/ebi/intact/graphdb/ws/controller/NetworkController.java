@@ -90,83 +90,68 @@ public class NetworkController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping(value = "/edge/details",
-            produces = {APPLICATION_JSON_VALUE})
-    public List<NetworkEdgeDetails> getEdgeDetails(@RequestParam(value = "ids", required = true) Set<Long> ids,
-                                                   HttpServletRequest request) throws IOException {
+    @GetMapping(value = "/edge/details/{id}", produces = {APPLICATION_JSON_VALUE})
+    public NetworkEdgeDetails getEdgeDetails(
+            @PathVariable int id) {
 
-        List<GraphBinaryInteractionEvidence> graphInteractionEvidences = graphInteractionService.findWithBinaryIds(ids, 0);
+        GraphBinaryInteractionEvidence graphInteractionEvidence = graphInteractionService.findWithBinaryId(id, 0);
 
-        return createNetworkEdgeDetails(graphInteractionEvidences);
+        return createNetworkEdgeDetails(graphInteractionEvidence);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping(value = "/node/details",
-            produces = {APPLICATION_JSON_VALUE})
-    public List<NetworkNodeDetails> getNodeDetails(@RequestParam(value = "ids", required = true) Set<String> ids,
-                                                   HttpServletRequest request) throws IOException {
+    @GetMapping(value = "/node/details/{id}", produces = {APPLICATION_JSON_VALUE})
+    public NetworkNodeDetails getNodeDetails(
+            @PathVariable String id) {
 
-        List<GraphInteractor> graphInteractors = graphInteractorService.findWithInteractorAcs(ids, 0);
+        GraphInteractor graphInteractor = graphInteractorService.findByAc(id, 0);
 
-        return createNetworkNodeDetails(graphInteractors);
+        return createNetworkNodeDetails(graphInteractor);
     }
 
     /**
      * CONVERTS from GraphBinaryInteractionEvidence to CyAppInteractionDetails model
      **/
-    private List<NetworkEdgeDetails> createNetworkEdgeDetails(List<GraphBinaryInteractionEvidence> graphBinaryInteractionEvidences) {
+    private NetworkEdgeDetails createNetworkEdgeDetails(GraphBinaryInteractionEvidence graphBinaryInteractionEvidence) {
 
-        List<NetworkEdgeDetails> networkEdgeDetails = new ArrayList<>();
+        List<Annotation> annotations = new ArrayList<>();
+        graphBinaryInteractionEvidence.getAnnotations().forEach(annotation -> {
+            CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
+            annotations.add(new Annotation(term, annotation.getValue()));
+        });
 
-        for (GraphBinaryInteractionEvidence graphBinaryInteractionEvidence : graphBinaryInteractionEvidences) {
+        List<Parameter> parameters = new ArrayList<>();
+        graphBinaryInteractionEvidence.getParameters().forEach(parameter -> {
+            CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
+            CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+            parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
 
-            List<Annotation> annotations = new ArrayList<>();
-            graphBinaryInteractionEvidence.getAnnotations().forEach(annotation -> {
-                CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
-                annotations.add(new Annotation(term, annotation.getValue()));
-            });
+        });
 
-            List<Parameter> parameters = new ArrayList<>();
-            graphBinaryInteractionEvidence.getParameters().forEach(parameter -> {
-                CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-                CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
-                parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
-
-            });
-            networkEdgeDetails.add(new NetworkEdgeDetails(graphBinaryInteractionEvidence.getGraphId(), annotations, parameters));
-        }
-
-        return networkEdgeDetails;
+        return new NetworkEdgeDetails(graphBinaryInteractionEvidence.getGraphId(), annotations, parameters);
     }
 
     /**
      * CONVERTS from GraphInteractionEvidence and GraphExperiment to InteractionDetails model
      **/
-    private List<NetworkNodeDetails> createNetworkNodeDetails(List<GraphInteractor> graphInteractors) {
+    private NetworkNodeDetails createNetworkNodeDetails(GraphInteractor graphInteractor) {
 
-        List<NetworkNodeDetails> networkNodeDetailsList = new ArrayList<>();
+        List<Xref> xrefs = new ArrayList<>();
+        graphInteractor.getXrefs().forEach(xref -> {
+            CvTerm database = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
+            CvTerm qualifier = null;
+            if (xref.getQualifier() != null) {
+                qualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
+            }
+            xrefs.add(new Xref(database, xref.getId(), qualifier, xref.getAc()));
+        });
 
-        for (GraphInteractor graphInteractor : graphInteractors) {
-
-            List<Xref> xrefs = new ArrayList<>();
-            graphInteractor.getXrefs().forEach(xref -> {
-                CvTerm database = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
-                CvTerm qualifier = null;
-                if (xref.getQualifier() != null) {
-                    qualifier = new CvTerm(xref.getQualifier().getShortName(), xref.getQualifier().getMIIdentifier());
-                }
-                xrefs.add(new Xref(database, xref.getId(), qualifier, xref.getAc()));
-            });
-
-            Collection<Alias> aliases = new ArrayList<>();
-            graphInteractor.getAliases().forEach(alias -> {
-                if (alias.getType() != null) {
-                    aliases.add(new Alias(alias.getName(), new CvTerm(alias.getType().getShortName(), alias.getType().getMIIdentifier())));
-                }
-            });
-            networkNodeDetailsList.add(new NetworkNodeDetails(graphInteractor.getAc(), xrefs, aliases));
-        }
-
-        return networkNodeDetailsList;
+        Collection<Alias> aliases = new ArrayList<>();
+        graphInteractor.getAliases().forEach(alias -> {
+            if (alias.getType() != null) {
+                aliases.add(new Alias(alias.getName(), new CvTerm(alias.getType().getShortName(), alias.getType().getMIIdentifier())));
+            }
+        });
+        return new NetworkNodeDetails(graphInteractor.getAc(), xrefs, aliases);
     }
 }

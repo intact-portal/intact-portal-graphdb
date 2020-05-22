@@ -13,7 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.utils.NetworkNodeParamNames;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -43,17 +46,6 @@ public class GraphInteractorRepositoryTest {
         Assert.assertEquals(655, totalElements);
         Assert.assertTrue(pageNumber > 1);
 
-    }
-
-    @Test
-    public void findAllByAcs() {
-        Set<String> acs = new HashSet<>();
-        acs.add("EBI-715849");
-        acs.add("EBI-724102");
-
-        List<GraphInteractor> interactors = graphInteractorRepository.findWithInteractorAcs(acs, 0);
-        Assert.assertNotNull(interactors);
-        Assert.assertEquals(2, interactors.size());
     }
 
     @Test

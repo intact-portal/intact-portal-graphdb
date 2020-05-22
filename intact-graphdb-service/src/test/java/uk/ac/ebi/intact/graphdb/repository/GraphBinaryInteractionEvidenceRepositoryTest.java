@@ -12,9 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -50,13 +48,10 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     /*
     * TODO... This test won't be needed when we have binary ids in database
     * */
-    public void findByIds() {
-        Set<Long> binaryIds = new HashSet<>();
-        binaryIds.add(20200l);
-        binaryIds.add(20257l);
-        List<GraphBinaryInteractionEvidence> graphBinaryInteractionEvidences = graphBinaryInteractionEvidenceRepository.findWithBinaryIds(binaryIds, 0);
-        Assert.assertNotNull(graphBinaryInteractionEvidences);
-        Assert.assertEquals(2, graphBinaryInteractionEvidences.size());
+    public void findById() {
+        int id = 20188;
+        Optional<GraphBinaryInteractionEvidence> optionalGraphBinaryInteractionEvidence = graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, 0);
+        Assert.assertNotNull(optionalGraphBinaryInteractionEvidence.orElse(null));
     }
 
 }

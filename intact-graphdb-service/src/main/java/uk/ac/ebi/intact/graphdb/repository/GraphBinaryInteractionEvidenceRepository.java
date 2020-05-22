@@ -49,8 +49,8 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
     @Query(value = CypherQueries.GET_NETWORK_EDGES)
     Iterable<Map<String, Object>> findNetworkEdges(@Param("identifiers") Set<String> identifiers, @Param("species") Set<Integer> species, @Param("neighboursRequired") boolean neighboursRequired);
 
-    @Query(value = CypherQueries.INTERACTIONS_BY_BINARY_IDS)
-    List<GraphBinaryInteractionEvidence> findWithBinaryIds(@Param("binary_ids") Set<Long> binaryIds, @Depth int depth);
+    @Query(value = CypherQueries.INTERACTION_BY_BINARY_ID)
+    Optional<GraphBinaryInteractionEvidence> findWithBinaryId(@Param("binary_id") int id, @Depth int depth);
 
     Optional<GraphBinaryInteractionEvidence> findByAc(String ac, @Depth int depth);
 

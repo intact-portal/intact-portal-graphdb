@@ -261,14 +261,9 @@ public class CypherQueries {
 
                     "";
 
-    public static final String INTERACTIONS_BY_BINARY_IDS =
+    public static final String INTERACTION_BY_BINARY_ID =
             "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-                    "WHERE ID(interaction) IN {binary_ids}" +
+                    "WHERE ID(interaction)={binary_id}" +
                     "RETURN interaction";
-
-    public static final String INTERACTORS_BY_ACS =
-            "MATCH (interactor:GraphInteractor)" +
-                    "WHERE interactor.ac IN {acs}" +
-                    "RETURN interactor";
 
 }
