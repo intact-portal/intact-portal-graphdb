@@ -33,9 +33,9 @@
     </modules>
 
     <scm>
-        <connection>scm:git:https://github.com/EBI-IntAct/intact-graphdb.git</connection>
-        <developerConnection>scm:git:https://github.com/EBI-IntAct/intact-graphdb.git</developerConnection>
-        <url>https://github.com/EBI-IntAct/intact-graphdb</url>
+        <connection>scm:git:https://github.com/intact-portal/intact-portal-graphdb.git</connection>
+        <developerConnection>scm:git:https://github.com/intact-portal/intact-portal-graphdb.git</developerConnection>
+        <url>https://github.com/intact-portal/intact-portal-graphdb</url>
         <tag>HEAD</tag>
     </scm>
 
