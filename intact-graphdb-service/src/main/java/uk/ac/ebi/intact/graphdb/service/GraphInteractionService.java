@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.repository.GraphBinaryInteractionEvidenceRepository;
@@ -38,6 +39,10 @@ public class GraphInteractionService {
 
     public Page<GraphBinaryInteractionEvidence> findAll(Pageable page, int depth) {
         return this.graphBinaryInteractionEvidenceRepository.findAll(page, depth);
+    }
+
+    public Slice<GraphBinaryInteractionEvidence> getAllGraphBinaryInteractionEvidences(Pageable page) {
+        return this.graphBinaryInteractionEvidenceRepository.getAllGraphBinaryInteractionEvidences(page);
     }
 
     public GraphClusteredInteraction findClusteredInteraction(String idA, String idB) {
