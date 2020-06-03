@@ -56,5 +56,8 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
 
     Optional<GraphBinaryInteractionEvidence> findByUniqueKey(String uniqueKey, @Depth int depth);
 
+    @Query(value = CypherQueries.ALL_BINARY_INTERACTIONS)
+    Slice<GraphBinaryInteractionEvidence> getAllGraphBinaryInteractionEvidences(Pageable page);
+
 }
 

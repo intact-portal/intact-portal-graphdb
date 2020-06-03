@@ -7,6 +7,10 @@ import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
  */
 public class CypherQueries {
 
+    public static final String ALL_BINARY_INTERACTIONS =
+            "MATCH (interaction:GraphBinaryInteractionEvidence)" +
+                    "RETURN distinct interaction";
+
     /*Common BinaryInteractionEvidences of any two interactors*/
 
     public static final String COMM_NEIGH_OF_INTOR =
