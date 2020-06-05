@@ -51,16 +51,16 @@ public class GraphInteractorRepositoryTest {
     @Test
     public void testCytoscapeAppNodesQuery() {
 
-        Set<String> identifiers = new HashSet<>();
-        identifiers.add("Q9BZD4");
-        identifiers.add("O14777");
+        Set<String> acs = new HashSet<>();
+        acs.add("EBI-724102");
+        acs.add("EBI-715849");
 
         Set<Integer> species = new HashSet<>();
         species.add(9606);
 
         boolean neighboursRequired = true;
 
-        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null, neighboursRequired);
+        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
 
         boolean interactorsPresent1 = false;
@@ -80,7 +80,7 @@ public class GraphInteractorRepositoryTest {
 
         Assert.assertTrue("Queried Interactors should have been present", interactorsPresent1);
 
-        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
+        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable2));//141
 
         Map<String, Object> mapToBeTested = null;

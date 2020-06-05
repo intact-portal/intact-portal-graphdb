@@ -35,9 +35,9 @@ public class GraphNetworkCompositeRepositoryTest {
     @Test
     public void testNetworkQuery() {
 
-        Set<String> identifiers = new HashSet<>();
-        identifiers.add("Q9BZD4");
-        identifiers.add("O14777");
+        Set<String> acs = new HashSet<>();
+        acs.add("EBI-724102");
+        acs.add("EBI-715849");
 
         Set<Integer> species = new HashSet<>();
         species.add(9606);
@@ -47,7 +47,7 @@ public class GraphNetworkCompositeRepositoryTest {
         // With identifiers only
 
         Instant starts = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable1 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, null, neighboursRequired);
+        Iterable<Map<String, Object>> edgesIterable1 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(acs, null, neighboursRequired);
         Instant ends = Instant.now();
         Duration executionDuration = Duration.between(starts, ends);
         System.out.println("Total process with identifiers only took :" + executionDuration);
@@ -55,7 +55,7 @@ public class GraphNetworkCompositeRepositoryTest {
         Assert.assertNotNull(edgesIterable1);
         Assert.assertEquals(30, Iterables.count(edgesIterable1));// 432
 
-        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(identifiers, null, neighboursRequired);
+        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
 
         Map<String, Object> mapToBeTested1 = null;
@@ -165,7 +165,7 @@ public class GraphNetworkCompositeRepositoryTest {
         // With identifiers and species
 
         Instant starts1 = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable2 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species, neighboursRequired);
+        Iterable<Map<String, Object>> edgesIterable2 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(acs, species, neighboursRequired);
         Instant ends1 = Instant.now();
         Duration executionDuration1 = Duration.between(starts1, ends1);
         System.out.println("Total process with identifiers and species took" + executionDuration);
@@ -173,7 +173,7 @@ public class GraphNetworkCompositeRepositoryTest {
         Assert.assertNotNull(edgesIterable2);
         Assert.assertEquals(30, Iterables.count(edgesIterable2));// 432
 
-        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
+        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable2));//152
 
         Set<String> interactorAcsFromEdgesQuery2 = new HashSet<>();
@@ -336,11 +336,11 @@ public class GraphNetworkCompositeRepositoryTest {
     @Test
     @Ignore
     public void testSmallScalePerformanceOfCytoscapeAppNodesAndEdgesQuery() {
-        Set<String> identifiers = new HashSet<>();
-        identifiers.add("Q9BZD4");
-        identifiers.add("O14777");
-        identifiers.add("Q5S007");
-        identifiers.add("P04637");
+        Set<String> acs = new HashSet<>();
+        acs.add("EBI-724102");
+        acs.add("EBI-715849");
+        acs.add("EBI-5323863");
+        acs.add("EBI-366083");
 
         Set<Integer> species = new HashSet<>();
         species.add(9606);
@@ -353,7 +353,7 @@ public class GraphNetworkCompositeRepositoryTest {
 
             executor.execute(() -> {
                 Instant starts = Instant.now();
-                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species, neighboursRequired);
+                Iterable<Map<String, Object>> edgesIterable = graphBinaryInteractionEvidenceRepository.findNetworkEdges(acs, species, neighboursRequired);
                 Instant ends = Instant.now();
                 System.out.println("Cy App Edges retrieval took" + Duration.between(starts, ends));
             });
@@ -362,7 +362,7 @@ public class GraphNetworkCompositeRepositoryTest {
 
             executor.execute(() -> {
                 Instant starts = Instant.now();
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorRepository.findNetworkNodes(identifiers, species, neighboursRequired);
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired);
                 Instant ends = Instant.now();
                 System.out.println("Cy App Nodes retrieval took" + Duration.between(starts, ends));
             });

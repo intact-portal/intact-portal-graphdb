@@ -42,7 +42,7 @@ public class NetworkController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/data",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "identifiers", required = false) Set<String> identifiers,
+    public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "interactorAcs", required = false) Set<String> interactorAcs,
                                                  @RequestParam(value = "species", required = false) Set<Integer> species,
                                                 /* @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,*/
                                                  HttpServletRequest request) throws IOException {
@@ -55,11 +55,11 @@ public class NetworkController {
 
             ExecutorService executor = Executors.newFixedThreadPool(2);
             executor.execute(() -> {
-                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(identifiers, species, neighboursRequired);
+                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(interactorAcs, species, neighboursRequired);
                 networkJson.setEdges(edgesIterable);
             });
             executor.execute(() -> {
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(identifiers, species, neighboursRequired);
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(interactorAcs, species, neighboursRequired);
                 networkJson.setNodes(nodesIterable);
             });
             executor.shutdown();

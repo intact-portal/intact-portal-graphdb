@@ -86,7 +86,7 @@ public class CypherQueries {
             "MATCH (e:GraphExperiment{ac:{0} })-[r:interactionDetectionMethod]->(n:GraphCvTerm) RETURN n;";
 
     public static final String GET_NETWORK_NODES =
-            " MATCH (interactor:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
+            " MATCH (interactor:GraphInteractor) WHERE (interactor.ac IN {acs}) OR {acs} is null" +
                     " MATCH (interactor)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
                     " MATCH (interactor)<-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interaction:GraphBinaryInteractionEvidence)" +
                     " WITH COLLECT(distinct interaction) as interactionCollection" +
@@ -158,8 +158,7 @@ public class CypherQueries {
                     "       xrefs as " + NetworkNodeParamNames.IDENTIFIERS;
 
     public static final String GET_NETWORK_EDGES =
-            " MATCH (interactor:GraphInteractor)-[identifiersFR:" + RelationshipTypes.IDENTIFIERS + "]->(identifiersFN:GraphXref) WHERE ((identifiersFN.identifier IN {identifiers}) OR {identifiers} is null)" +
-                    " WITH interactor, COLLECT(identifiersFN) as identifiersFNCollection " +
+            " MATCH (interactor:GraphInteractor) WHERE (interactor.ac IN {acs}) OR {acs} is null" +
                     " MATCH (interactor)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
                     " MATCH (interactor)<-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interaction:GraphBinaryInteractionEvidence)" +
                     " WITH COLLECT(distinct interaction) as interactionCollection" +

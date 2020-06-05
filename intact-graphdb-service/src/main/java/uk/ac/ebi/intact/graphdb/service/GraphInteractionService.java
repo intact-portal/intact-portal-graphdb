@@ -99,8 +99,8 @@ public class GraphInteractionService {
         return null;
     }
 
-    public Iterable<Map<String, Object>> findNetworkEdges(Set<String> identifiers, Set<Integer> species, boolean neighboursRequired) {
-        return this.graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, species, neighboursRequired);
+    public Iterable<Map<String, Object>> findNetworkEdges(Set<String> interactorAcs, Set<Integer> species, boolean neighboursRequired) {
+        return this.graphBinaryInteractionEvidenceRepository.findNetworkEdges(interactorAcs, species, neighboursRequired);
     }
 
 }
