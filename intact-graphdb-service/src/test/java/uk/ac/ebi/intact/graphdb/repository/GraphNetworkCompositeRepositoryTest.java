@@ -107,7 +107,7 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_TYPE), "physical association");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER), "MI:0915");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.PUBMED_ID), "14699129");
-            Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD), "anti tag coip");
+            Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD), "anti tag coimmunoprecipitation");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER), "MI:0007");
             Assert.assertNull(mapToBeTested1.get(NetworkEdgeParamNames.EXPANSION_TYPE));
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.HOST_ORGANISM), "In vitro");

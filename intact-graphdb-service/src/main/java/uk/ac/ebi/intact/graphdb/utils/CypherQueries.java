@@ -189,7 +189,7 @@ public class CypherQueries {
                     "      interactorBN.ac as interactor_B_ac," +
                     "      interactionTypeN.shortName as type_short_name," +
                     "      interactionTypeN.mIIdentifier as type_mi," +
-                    "      interactionDetectionMethodN.shortName as detection_method_short_name," +
+                    "      interactionDetectionMethodN.fullName as detection_method_long_name," +
                     "      interactionDetectionMethodN.mIIdentifier as detection_method_mi," +
                     "      clusteredInteractionN.miscore as mi_score," +
                     "      hostOrganismN.taxId as host_organism_tax_id," +
@@ -215,7 +215,7 @@ public class CypherQueries {
                     "      interactor_B_ac," +
                     "      type_short_name," +
                     "      type_mi," +
-                    "      detection_method_short_name," +
+                    "      detection_method_long_name," +
                     "      detection_method_mi," +
                     "      mi_score," +
                     "      host_organism_tax_id," +
@@ -242,7 +242,7 @@ public class CypherQueries {
                     "       interaction_ac as " + NetworkEdgeParamNames.AC + ", " +
                     "       type_short_name as " + NetworkEdgeParamNames.INTERACTION_TYPE + "," +
                     "       type_mi as " + NetworkEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
-                    "       detection_method_short_name as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
+                    "       detection_method_long_name as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
                     "       detection_method_mi as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
                     "       mi_score as " + NetworkEdgeParamNames.MI_SCORE + "," +
                     "       host_organism_scientific_name as " + NetworkEdgeParamNames.HOST_ORGANISM + "," +
