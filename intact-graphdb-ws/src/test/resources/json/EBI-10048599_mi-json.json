@@ -201,7 +201,7 @@
             "common": "spofr-sf_9",
             "scientific": "Spodoptera frugiperda insect cells",
             "cellType": {
-              "id": "MINT-86941",
+              "id": "ACC 125",
               "name": "insect cells"
             }
           },
