@@ -43,23 +43,21 @@ public class NetworkController {
     @PostMapping(value = "/data",
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<NetworkJson> cytoscape(@RequestParam(value = "interactorAcs", required = false) Set<String> interactorAcs,
-                                                 @RequestParam(value = "species", required = false) Set<Integer> species,
-                                                /* @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,*/
+                                                 @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,
                                                  HttpServletRequest request) throws IOException {
 
         HttpStatus httpStatus = HttpStatus.OK;
-        boolean neighboursRequired = true;// to be removed when accessed from request
         Instant processStarted = Instant.now();
         NetworkJson networkJson = new NetworkJson();
         try {
 
             ExecutorService executor = Executors.newFixedThreadPool(2);
             executor.execute(() -> {
-                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(interactorAcs, species, neighboursRequired);
+                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(interactorAcs, neighboursRequired);
                 networkJson.setEdges(edgesIterable);
             });
             executor.execute(() -> {
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(interactorAcs, species, neighboursRequired);
+                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(interactorAcs, neighboursRequired);
                 networkJson.setNodes(nodesIterable);
             });
             executor.shutdown();

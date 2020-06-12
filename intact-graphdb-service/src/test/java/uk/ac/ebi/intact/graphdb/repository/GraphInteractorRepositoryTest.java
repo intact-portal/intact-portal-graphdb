@@ -55,32 +55,9 @@ public class GraphInteractorRepositoryTest {
         acs.add("EBI-724102");
         acs.add("EBI-715849");
 
-        Set<Integer> species = new HashSet<>();
-        species.add(9606);
-
         boolean neighboursRequired = true;
 
-        Iterable<Map<String, Object>> nodesIterable1 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired);
-        Assert.assertEquals(8, Iterables.count(nodesIterable1));//152
-
-        boolean interactorsPresent1 = false;
-        Iterator<Map<String, Object>> iterator1 = nodesIterable1.iterator();
-        try {
-            while (iterator1.hasNext()) {
-                Map<String, Object> map = iterator1.next();
-                for (Map identifierMap : (Map[]) map.get(NetworkNodeParamNames.IDENTIFIERS)) {
-                    if (identifierMap.get(NetworkNodeParamNames.XREF_ID).equals("Q9BZD4") || identifierMap.get(NetworkNodeParamNames.XREF_ID).equals("O14777")) {
-                        interactorsPresent1 = true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Assert.assertTrue("A map with the key value was expected", false);
-        }
-
-        Assert.assertTrue("Queried Interactors should have been present", interactorsPresent1);
-
-        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired);
+        Iterable<Map<String, Object>> nodesIterable2 = graphInteractorRepository.findNetworkNodes(acs, neighboursRequired);
         Assert.assertEquals(8, Iterables.count(nodesIterable2));//141
 
         Map<String, Object> mapToBeTested = null;
@@ -137,33 +114,11 @@ public class GraphInteractorRepositoryTest {
 
         Assert.assertTrue(identifierCheck);
 
-        Iterable<Map<String, Object>> nodesIterable3 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired);
-        Assert.assertEquals(473, Iterables.count(nodesIterable3));// 30179
-
-        Iterator<Map<String, Object>> iterator3 = nodesIterable3.iterator();
-        try {
-            while (iterator3.hasNext()) {
-                Map<String, Object> map = iterator3.next();
-
-                if (!map.get(NetworkNodeParamNames.SPECIES).equals("Homo sapiens")) {
-                    Assert.assertTrue("Only Human species records were expected", false);
-                }
-            }
-        } catch (Exception e) {
-            Assert.assertTrue("A map with the key value was expected", false);
-        }
-
         // Without Neighbours
 
         boolean neighboursRequired1 = false;
 
-        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired1);
+        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(acs, neighboursRequired1);
         Assert.assertEquals(2, Iterables.count(nodesIterable4));
-
-        Iterable<Map<String, Object>> nodesIterable5 = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired1);
-        Assert.assertEquals(2, Iterables.count(nodesIterable5));//141
-
-        Iterable<Map<String, Object>> nodesIterable6 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired1);
-        Assert.assertEquals(473, Iterables.count(nodesIterable6));// 30179
     }
 }

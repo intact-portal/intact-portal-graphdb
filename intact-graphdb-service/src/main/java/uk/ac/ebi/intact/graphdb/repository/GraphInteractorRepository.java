@@ -31,7 +31,7 @@ public interface GraphInteractorRepository extends Neo4jRepository<GraphInteract
     Collection<GraphInteractor> graph(@Param("limit") int limit);
 
     @Query(value = CypherQueries.GET_NETWORK_NODES)
-    Iterable<Map<String, Object>> findNetworkNodes(@Param("acs") Set<String> acs, @Param("species") Set<Integer> species, @Param("neighboursRequired") boolean neighboursRequired);
+    Iterable<Map<String, Object>> findNetworkNodes(@Param("acs") Set<String> acs, @Param("neighboursRequired") boolean neighboursRequired);
 
 }
 
