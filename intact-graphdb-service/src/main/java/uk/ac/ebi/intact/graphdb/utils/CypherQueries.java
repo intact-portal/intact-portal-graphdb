@@ -92,7 +92,7 @@ public class CypherQueries {
                     " WITH COLLECT(distinct interaction) as interactionCollection" +
                     " UNWIND interactionCollection as interactionN " +
 
-                    " MATCH (interactionN)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]->(interactorsN:GraphInteractor)" +
+                    " MATCH (interactionN)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]->(interactorsN:GraphInteractor) WHERE {neighboursRequired} OR ((interactorsN.ac IN {acs}) OR {acs} is null)" +
                     " WITH COLLECT(distinct interactorsN) as interactorsCollection" +
                     " UNWIND interactorsCollection as interactorN " +
                     " MATCH (interactorN)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism) WHERE ((organismN.taxId IN {species}) OR {species} is null)" +
@@ -163,6 +163,15 @@ public class CypherQueries {
                     " MATCH (interactor)<-[interactorsFR:" + RelationshipTypes.INTERACTORS + "]-(interaction:GraphBinaryInteractionEvidence)" +
                     " WITH COLLECT(distinct interaction) as interactionCollection" +
                     " UNWIND interactionCollection as interactionN" +
+
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTORS + "]-(interactors:GraphInteractor)" +
+                    " WITH interactionN, COLLECT(distinct interactors) as interactorCollection" +
+                    " MATCH (interactionN)" +
+                    " WHERE ALL(interactorN in interactorCollection " +
+                    "                       WHERE ((interactionN)-[:interactors]->(interactorN)" +
+                    "                              AND ({neighboursRequired} OR ((interactorN.ac IN {acs}) OR {acs} is null))))" +
+                    " WITH distinct interactionN" +
+
                     " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTION_TYPE + "]-(interactionTypeN:GraphCvTerm)" +
                     " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTIONS + "]-(clusteredInteractionN:GraphClusteredInteraction)" +
                     " MATCH (interactionN)-[:" + RelationshipTypes.EXPERIMENT + "]-(experimentN:GraphExperiment)" +
@@ -175,9 +184,7 @@ public class CypherQueries {
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.COMPLEX_EXPANSION + "]-(complexExpansionN:GraphCvTerm) " +
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor)" +
-                    "                -[:" + RelationshipTypes.ORGANISM + "]->(organismAN:GraphOrganism) WHERE ((organismAN.taxId IN {species}) OR {species} is null)" +
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_B + "]-(interactorBN:GraphInteractor) " +
-                    "                -[:" + RelationshipTypes.ORGANISM + "]->(organismBN:GraphOrganism) WHERE ((organismBN.taxId IN {species}) OR {species} is null)" +
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_A + "]-(entityAN:GraphEntity) " +
                     " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleAN:GraphCvTerm) " +

@@ -155,15 +155,15 @@ public class GraphInteractorRepositoryTest {
 
         // Without Neighbours
 
-/*        boolean neighboursRequired1=false;
+        boolean neighboursRequired1 = false;
 
-        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(acs, null,neighboursRequired1);
+        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired1);
         Assert.assertEquals(2, Iterables.count(nodesIterable4));
 
         Iterable<Map<String, Object>> nodesIterable5 = graphInteractorRepository.findNetworkNodes(acs, species, neighboursRequired1);
         Assert.assertEquals(2, Iterables.count(nodesIterable5));//141
 
         Iterable<Map<String, Object>> nodesIterable6 = graphInteractorRepository.findNetworkNodes(null, species, neighboursRequired1);
-        Assert.assertEquals(473, Iterables.count(nodesIterable6));// 30179*/
+        Assert.assertEquals(473, Iterables.count(nodesIterable6));// 30179
     }
 }

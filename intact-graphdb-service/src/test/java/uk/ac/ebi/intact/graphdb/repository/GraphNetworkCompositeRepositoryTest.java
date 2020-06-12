@@ -219,7 +219,7 @@ public class GraphNetworkCompositeRepositoryTest {
 
         //With species only
 
-        Instant starts2 = Instant.now();
+        /*Instant starts2 = Instant.now();
         Iterable<Map<String, Object>> edgesIterable3 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(null, species, neighboursRequired);
         Instant ends2 = Instant.now();
         Duration executionDuration2 = Duration.between(starts2, ends2);
@@ -269,22 +269,22 @@ public class GraphNetworkCompositeRepositoryTest {
             if (!interactorAcsFromNodesQuery3.contains(interactorAcFromEdgeQuery)) {
                 Assert.assertTrue("Node from edges query was expected to be in nodes from nodes query", false);
             }
-        }
+        }*/
 
         //Without Neighbours
 
-/*        boolean neighboursRequired1=false;
+        boolean neighboursRequired1 = false;
 
         Instant starts3 = Instant.now();
-        Iterable<Map<String, Object>> edgesIterable4 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(identifiers, null,neighboursRequired1);
+        Iterable<Map<String, Object>> edgesIterable4 = graphBinaryInteractionEvidenceRepository.findNetworkEdges(acs, null, neighboursRequired1);
         Instant ends3 = Instant.now();
         Duration executionDuration3 = Duration.between(starts3, ends3);
         System.out.println("Total process with species only took" + executionDuration3);
         Assert.assertTrue("Performance is low for querying with species only", executionDuration3.getSeconds() < 6);
         Assert.assertNotNull(edgesIterable4);
-        Assert.assertEquals(30, Iterables.count(edgesIterable4));// 432
+        Assert.assertEquals(3, Iterables.count(edgesIterable4));// 432
 
-        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(identifiers, null,neighboursRequired1);
+        Iterable<Map<String, Object>> nodesIterable4 = graphInteractorRepository.findNetworkNodes(acs, null, neighboursRequired1);
         Assert.assertEquals(2, Iterables.count(nodesIterable4));//152
 
         Set<String> interactorAcsFromEdgesQuery4 = new HashSet<>();
@@ -325,7 +325,7 @@ public class GraphNetworkCompositeRepositoryTest {
             if (!interactorAcsFromNodesQuery4.contains(interactorAcFromEdgeQuery)) {
                 Assert.assertTrue("Node from edges query was expected to be in nodes from nodes query", false);
             }
-        }*/
+        }
 
 
     }
