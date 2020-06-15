@@ -91,9 +91,17 @@ public class CypherQueries {
                     " WITH COLLECT(distinct interaction) as interactionCollection" +
                     " UNWIND interactionCollection as interactionN " +
 
-                    " MATCH (interactionN)-[interactorsR:" + RelationshipTypes.INTERACTORS + "]->(interactorsN:GraphInteractor) WHERE {neighboursRequired} OR ((interactorsN.ac IN {acs}) OR {acs} is null)" +
-                    " WITH COLLECT(distinct interactorsN) as interactorsCollection" +
-                    " UNWIND interactorsCollection as interactorN " +
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTORS + "]-(interactors:GraphInteractor)" +
+                    " WITH interactionN, COLLECT(distinct interactors) as interactorCollection" +
+                    " MATCH (interactionN)" +
+                    " WHERE ALL(interactor in interactorCollection " +
+                    "                       WHERE ((interactionN)-[:" + RelationshipTypes.INTERACTORS + "]->(interactor)" +
+                    "                              AND ({neighboursRequired} OR ((interactor.ac IN {acs}) OR {acs} is null))))" +
+                    " WITH distinct interactionN" +
+                    " MATCH (interactionN)-[:" + RelationshipTypes.INTERACTORS + "]-(filteredInteractors:GraphInteractor)" +
+                    " WITH COLLECT(distinct filteredInteractors) as filteredInteractorsCollection" +
+
+                    " UNWIND filteredInteractorsCollection as interactorN " +
                     " MATCH (interactorN)-[identifierR:" + RelationshipTypes.PREFERRED_IDENTIFIER + "]->(identifierN:GraphXref) " +
                     " MATCH (identifierN)-[identifierDBR:" + RelationshipTypes.DATABASE + "]->(identifierDBN:GraphCvTerm)" +
                     " OPTIONAL MATCH (interactorN)-[organismR:" + RelationshipTypes.ORGANISM + "]->(organismN:GraphOrganism)" +
