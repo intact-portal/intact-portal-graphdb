@@ -6,6 +6,7 @@ import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
@@ -47,7 +48,7 @@ public interface GraphBinaryInteractionEvidenceRepository extends Neo4jRepositor
     GraphClusteredInteraction getClusteredInteraction(String idA, String idB);
 
     @Query(value = CypherQueries.GET_NETWORK_EDGES)
-    Iterable<Map<String, Object>> findNetworkEdges(@Param("acs") Set<String> interactorAcs, @Param("neighboursRequired") boolean neighboursRequired);
+    Iterable<Map<String, Object>> findNetworkEdges(@Nullable @Param("acs") Set<String> interactorAcs, @Param("neighboursRequired") boolean neighboursRequired);
 
     @Query(value = CypherQueries.INTERACTION_BY_BINARY_ID)
     Optional<GraphBinaryInteractionEvidence> findWithBinaryId(@Param("binary_id") int id, @Depth int depth);

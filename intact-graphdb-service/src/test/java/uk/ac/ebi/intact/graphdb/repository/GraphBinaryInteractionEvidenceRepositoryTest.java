@@ -45,8 +45,8 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
     @Test
     @Ignore
     /*
-    * TODO... This test won't be needed when we have binary ids in database
-    * */
+     * TODO... This test won't be needed when we have binary ids in database
+     * */
     public void findById() {
         int id = 20188;
         Optional<GraphBinaryInteractionEvidence> optionalGraphBinaryInteractionEvidence = graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, 0);

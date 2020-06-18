@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.annotation.Depth;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.utils.CypherQueries;
@@ -31,7 +32,7 @@ public interface GraphInteractorRepository extends Neo4jRepository<GraphInteract
     Collection<GraphInteractor> graph(@Param("limit") int limit);
 
     @Query(value = CypherQueries.GET_NETWORK_NODES)
-    Iterable<Map<String, Object>> findNetworkNodes(@Param("acs") Set<String> acs, @Param("neighboursRequired") boolean neighboursRequired);
+    Iterable<Map<String, Object>> findNetworkNodes(@Nullable @Param("acs") Set<String> acs, @Param("neighboursRequired") boolean neighboursRequired);
 
 }
 

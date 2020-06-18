@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -53,21 +56,19 @@ public class NetworkController {
 
             ExecutorService executor = Executors.newFixedThreadPool(2);
             executor.execute(() -> {
-                Iterable<Map<String, Object>> edgesIterable = graphInteractionService.findNetworkEdges(interactorAcs, neighboursRequired);
-                networkJson.setEdges(edgesIterable);
+                networkJson.setEdges(graphInteractionService.findNetworkEdges(interactorAcs, neighboursRequired));
             });
             executor.execute(() -> {
-                Iterable<Map<String, Object>> nodesIterable = graphInteractorService.findNetworkNodes(interactorAcs, neighboursRequired);
-                networkJson.setNodes(nodesIterable);
+                networkJson.setNodes(graphInteractorService.findNetworkNodes(interactorAcs, neighboursRequired));
             });
             executor.shutdown();
 
-            executor.awaitTermination(10, TimeUnit.MINUTES);
+            executor.awaitTermination(15, TimeUnit.MINUTES);
             executor.shutdownNow();
 
             Instant processEnded = Instant.now();
             Duration executionDuration = Duration.between(processStarted, processEnded);
-            if (executionDuration.getSeconds() > 600) {
+            if (executionDuration.getSeconds() > 900) {
                 httpStatus = HttpStatus.GATEWAY_TIMEOUT;
             }
         } catch (Exception e) {
