@@ -118,7 +118,7 @@ public class CypherQueries {
                     "       organismN.scientificName as scientificName," +
                     "       organismN.taxId as taxId ," +
                     "       (interactorN.preferredName +'('+identifierN.identifier+')') as label," +
-                    "       interactorTypeN.shortName as shortName," +
+                    "       interactorTypeN.fullName as typeFullName," +
                     "       interactorTypeN.mIIdentifier as mIIdentifier," +
                     "       interactorTypeN.mODIdentifier as mODIdentifier," +
                     "       interactorTypeN.pARIdentifier as pARIdentifier," +
@@ -136,7 +136,7 @@ public class CypherQueries {
                     "       scientificName," +
                     "       taxId," +
                     "       label," +
-                    "       shortName," +
+                    "       typeFullName," +
                     "       mIIdentifier," +
                     "       mODIdentifier," +
                     "       pARIdentifier," +
@@ -159,7 +159,7 @@ public class CypherQueries {
                     "       scientificName as " + NetworkNodeParamNames.SPECIES + "," +
                     "       taxId as " + NetworkNodeParamNames.TAXID + "," +
                     "       label as " + NetworkNodeParamNames.LABEL + "," +
-                    "       shortName as " + NetworkNodeParamNames.TYPE + "," +
+                    "       typeFullName as " + NetworkNodeParamNames.TYPE + "," +
                     "       mIIdentifier as " + NetworkNodeParamNames.TYPE_MI_IDENTIFIER + "," +
                     "       preferredName as " + NetworkNodeParamNames.INTERACTOR_NAME + "," +
                     "       xrefs as " + NetworkNodeParamNames.IDENTIFIERS;
@@ -187,6 +187,8 @@ public class CypherQueries {
                     " MATCH (publicationN)-[:" + RelationshipTypes.PMID + "]-(pmIdN:GraphXref)" +
                     " OPTIONAL MATCH (experimentN)-[:" + RelationshipTypes.HOST_ORGANISM + "]-(hostOrganismN:GraphOrganism)" +
 
+                    " OPTIONAL MATCH (experimentN)-[:" + RelationshipTypes.PARTICIPANT_DETECTION_METHOD + "]-(participantDetectionMethodN:GraphCvTerm)" +
+
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.COMPLEX_EXPANSION + "]-(complexExpansionN:GraphCvTerm) " +
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.INTERACTOR_A + "]-(interactorAN:GraphInteractor)" +
@@ -194,6 +196,7 @@ public class CypherQueries {
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_A + "]-(entityAN:GraphEntity) " +
                     " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleAN:GraphCvTerm) " +
+                    " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.EXPERIMENTAL_ROLE + "]-(experimentalRoleAN:GraphCvTerm) " +
                     " OPTIONAL MATCH (entityAN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresAN:GraphFeature) " +
                     " OPTIONAL MATCH (featuresAN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeAN:GraphCvTerm) " +
 
@@ -202,14 +205,18 @@ public class CypherQueries {
                     "      interactorBN.ac as interactor_B_ac," +
                     "      interactionTypeN.shortName as type_short_name," +
                     "      interactionTypeN.mIIdentifier as type_mi," +
-                    "      interactionDetectionMethodN.fullName as detection_method_long_name," +
-                    "      interactionDetectionMethodN.mIIdentifier as detection_method_mi," +
+                    "      interactionDetectionMethodN.fullName as interaction_detection_method_long_name," +
+                    "      interactionDetectionMethodN.mIIdentifier as interaction_detection_method_mi," +
+                    "      participantDetectionMethodN.fullName as participant_detection_method_long_name," +
+                    "      participantDetectionMethodN.mIIdentifier as participant_detection_method_mi," +
                     "      clusteredInteractionN.miscore as mi_score," +
                     "      hostOrganismN.taxId as host_organism_tax_id," +
                     "      hostOrganismN.scientificName as host_organism_scientific_name," +
                     "      pmIdN.identifier as pmid,complexExpansionN.shortName as expansion_type," +
-                    "     biologicalRoleAN.shortName as biological_role_A_short_name," +
+                    "      biologicalRoleAN.shortName as biological_role_A_short_name," +
                     "      biologicalRoleAN.mIIdentifier as biological_role_A_mi," +
+                    "      experimentalRoleAN.shortName as experimental_role_A_short_name," +
+                    "      experimentalRoleAN.mIIdentifier as experimental_role_A_mi," +
                     " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresAN.shortName," +
                     "          " + NetworkEdgeParamNames.FEATURE_AC + ":featuresAN.ac," +
                     "          " + NetworkEdgeParamNames.FEATURE_TYPE + ":featureTypeAN.shortName," +
@@ -220,6 +227,7 @@ public class CypherQueries {
 
                     " OPTIONAL MATCH (interactionN)-[:" + RelationshipTypes.BIE_PARTICIPANT_B + "]-(entityBN:GraphEntity) " +
                     " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.BIOLOGICAL_ROLE + "]-(biologicalRoleBN:GraphCvTerm) " +
+                    " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.EXPERIMENTAL_ROLE + "]-(experimentalRoleBN:GraphCvTerm) " +
                     " OPTIONAL MATCH (entityBN)-[:" + RelationshipTypes.PARTICIPANT_FEATURE + "]-(featuresBN:GraphFeature) " +
                     " OPTIONAL MATCH (featuresBN)-[:" + RelationshipTypes.TYPE + "]-(featureTypeBN:GraphCvTerm) " +
                     " WITH ID(interactionN) as id," +
@@ -228,8 +236,10 @@ public class CypherQueries {
                     "      interactor_B_ac," +
                     "      type_short_name," +
                     "      type_mi," +
-                    "      detection_method_long_name," +
-                    "      detection_method_mi," +
+                    "      interaction_detection_method_long_name," +
+                    "      interaction_detection_method_mi," +
+                    "      participant_detection_method_long_name," +
+                    "      participant_detection_method_mi," +
                     "      mi_score," +
                     "      host_organism_tax_id," +
                     "      host_organism_scientific_name," +
@@ -239,6 +249,10 @@ public class CypherQueries {
                     "      biological_role_A_mi," +
                     "      biologicalRoleBN.shortName as biological_role_B_short_name," +
                     "      biologicalRoleBN.mIIdentifier as biological_role_B_mi," +
+                    "      experimental_role_A_short_name," +
+                    "      experimental_role_A_mi," +
+                    "      experimentalRoleBN.shortName as experimental_role_B_short_name," +
+                    "      experimentalRoleBN.mIIdentifier as experimental_role_B_mi," +
                     "      source_features," +
                     " COLLECT({" + NetworkEdgeParamNames.FEATURE_NAME + ":featuresBN.shortName," +
                     "          " + NetworkEdgeParamNames.FEATURE_AC + ":featuresBN.ac," +
@@ -255,8 +269,10 @@ public class CypherQueries {
                     "       interaction_ac as " + NetworkEdgeParamNames.AC + ", " +
                     "       type_short_name as " + NetworkEdgeParamNames.INTERACTION_TYPE + "," +
                     "       type_mi as " + NetworkEdgeParamNames.INTERACTION_TYPE_MI_IDENTIFIER + "," +
-                    "       detection_method_long_name as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
-                    "       detection_method_mi as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
+                    "       interaction_detection_method_long_name as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD + "," +
+                    "       interaction_detection_method_mi as " + NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER + "," +
+                    "       participant_detection_method_long_name as " + NetworkEdgeParamNames.PARTICIPANT_DETECTION_METHOD + "," +
+                    "       participant_detection_method_mi as " + NetworkEdgeParamNames.PARTICIPANT_DETECTION_METHOD_MI_IDENTIFIER + "," +
                     "       mi_score as " + NetworkEdgeParamNames.MI_SCORE + "," +
                     "       host_organism_scientific_name as " + NetworkEdgeParamNames.HOST_ORGANISM + "," +
                     "       host_organism_tax_id as " + NetworkEdgeParamNames.HOST_ORGANISM_TAX_ID + "," +
@@ -266,12 +282,16 @@ public class CypherQueries {
                     "       " + NetworkEdgeParamNames.ID + ": interactor_A_ac," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_A_short_name," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_A_mi," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE + ": experimental_role_A_short_name," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE_MI_IDENTIFIER + ": experimental_role_A_mi," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_FEATURES + ": source_features" +
                     "       } as  " + NetworkEdgeParamNames.SOURCE_NODE + "," +
                     "       {" +
                     "       " + NetworkEdgeParamNames.ID + ": interactor_B_ac," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE + ": biological_role_B_short_name," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER + ": biological_role_B_mi," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE + ": experimental_role_B_short_name," +
+                    "       " + NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE_MI_IDENTIFIER + ": experimental_role_B_mi," +
                     "       " + NetworkEdgeParamNames.PARTICIPANT_FEATURES + ": target_features" +
                     "       } as  " + NetworkEdgeParamNames.TARGET_NODE + "" +
 

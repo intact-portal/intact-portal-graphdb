@@ -106,6 +106,8 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.PUBMED_ID), "14699129");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD), "anti tag coimmunoprecipitation");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.INTERACTION_DETECTION_METHOD_MI_IDENTIFIER), "MI:0007");
+            Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.PARTICIPANT_DETECTION_METHOD), "predetermined participant");
+            Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.PARTICIPANT_DETECTION_METHOD_MI_IDENTIFIER), "MI:0396");
             Assert.assertNull(mapToBeTested1.get(NetworkEdgeParamNames.EXPANSION_TYPE));
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.HOST_ORGANISM), "In vitro");
             Assert.assertEquals(mapToBeTested1.get(NetworkEdgeParamNames.HOST_ORGANISM_TAX_ID), -1);
@@ -117,6 +119,8 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.ID), "EBI-999909");
             Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE), "unspecified role");
             Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER), "MI:0499");
+            Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE), "prey");
+            Assert.assertEquals(sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE_MI_IDENTIFIER), "MI:0498");
 
             Iterable<Map<String, Object>> sourceFeatures = (Iterable<Map<String, Object>>) sourceMap.get(NetworkEdgeParamNames.PARTICIPANT_FEATURES);
             Assert.assertEquals(1, Iterables.count(sourceFeatures));
@@ -135,6 +139,8 @@ public class GraphNetworkCompositeRepositoryTest {
             Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.ID), "EBI-715849");
             Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE), "unspecified role");
             Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.PARTICIPANT_BIOLOGICAL_ROLE_MI_IDENTIFIER), "MI:0499");
+            Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE), "bait");
+            Assert.assertEquals(targetMap.get(NetworkEdgeParamNames.PARTICIPANT_EXPERIMENTAL_ROLE_MI_IDENTIFIER), "MI:0496");
 
             Iterable<Map<String, Object>> targetFeatures = (Iterable<Map<String, Object>>) targetMap.get(NetworkEdgeParamNames.PARTICIPANT_FEATURES);
             Assert.assertEquals(2, Iterables.count(targetFeatures));
@@ -219,8 +225,8 @@ public class GraphNetworkCompositeRepositoryTest {
     }
 
     /*
-    * For performance testing with only in neo4j server with whole database
-    * */
+     * For performance testing with only in neo4j server with whole database
+     * */
     @Test
     @Ignore
     public void testSmallScalePerformanceOfCytoscapeAppNodesAndEdgesQuery() {
@@ -267,8 +273,8 @@ public class GraphNetworkCompositeRepositoryTest {
     }
 
     /*
-    * For performance testing with only in neo4j server with whole database
-    * */
+     * For performance testing with only in neo4j server with whole database
+     * */
     @Test
     @Ignore
     public void testLargeScalePerformanceOfCytoscapeAppNodesAndEdgesQuery() {
