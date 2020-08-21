@@ -23,8 +23,9 @@ import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -163,7 +164,12 @@ public class InteractionController {
         String title = graphExperiment.getPublication().getTitle();
         String journal = graphExperiment.getPublication().getJournal();
         List<String> authors = graphExperiment.getPublication().getAuthors();
-        Date publicationDate = graphExperiment.getPublication().getPublicationDate();
+        //TODO...Check if we can fix this from graph db side, difficult to do as WFH
+        String publicationDate = null;
+        if (graphExperiment.getPublication().getPublicationDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            publicationDate = dateFormat.format(graphExperiment.getPublication().getPublicationDate());
+        }
 
         List<Xref> publicationXrefs = new ArrayList<>();
         graphExperiment.getPublication().getXrefs().forEach(xref -> {

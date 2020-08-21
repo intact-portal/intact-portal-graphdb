@@ -1,7 +1,6 @@
 package uk.ac.ebi.intact.graphdb.ws.controller.model;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,11 +12,11 @@ public class PublicationDetails {
     private String title;
     private String journal;
     private List<String> authors;
-    private Date publicationDate;
+    private String publicationDate;
     private Collection<Xref> publicationXrefs;
     private Collection<Annotation> publicationAnnotations;
 
-    public PublicationDetails(String pubmedId, String title, String journal, List<String> authors, Date publicationDate,
+    public PublicationDetails(String pubmedId, String title, String journal, List<String> authors, String publicationDate,
                               Collection<Xref> publicationXrefs, Collection<Annotation> publicationAnnotations) {
         this.pubmedId = pubmedId;
         this.title = title;
@@ -60,11 +59,11 @@ public class PublicationDetails {
         this.authors = authors;
     }
 
-    public Date getPublicationDate() {
+    public String getPublicationDate() {
         return publicationDate;
     }
 
-    public void setPublicationDate(Date publicationDate) {
+    public void setPublicationDate(String publicationDate) {
         this.publicationDate = publicationDate;
     }
 
