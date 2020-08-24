@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -98,13 +96,13 @@ public class InteractionController {
 
         String shortLabel = graphInteractionEvidence.getShortName();
 
-        List<Xref> xrefs = new ArrayList<>();
+        Set<Xref> xrefs = new HashSet<>();
         graphInteractionEvidence.getXrefs().forEach(xref -> {
             CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
             xrefs.add(new Xref(term, xref.getId()));
         });
 
-        List<Annotation> annotations = new ArrayList<>();
+        Set<Annotation> annotations = new HashSet<>();
         graphInteractionEvidence.getAnnotations().forEach(annotation -> {
             CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
             annotations.add(new Annotation(term, annotation.getValue()));
@@ -128,8 +126,10 @@ public class InteractionController {
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
         PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
+        InteractionDetails interactionDetails = new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, experimentDetails, publicationDetails);
 
-        return new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, experimentDetails, publicationDetails);
+        shuffleDataBetweenModels(experimentDetails, publicationDetails, interactionDetails);
+        return interactionDetails;
     }
 
     private ExperimentDetails createExperimentDetails(GraphExperiment graphExperiment) {
@@ -141,13 +141,13 @@ public class InteractionController {
             participantDetMethod = graphExperiment.getParticipantDetectionMethod().getShortName();
         }
 
-        List<Xref> experimentXrefs = new ArrayList<>();
+        Set<Xref> experimentXrefs = new HashSet<>();
         graphExperiment.getXrefs().forEach(xref -> {
             CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
             experimentXrefs.add(new Xref(term, xref.getId()));
         });
 
-        List<Annotation> experimentAnnotations = new ArrayList<>();
+        Set<Annotation> experimentAnnotations = new HashSet<>();
         graphExperiment.getAnnotations().forEach(annotation -> {
             CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
 
@@ -171,19 +171,85 @@ public class InteractionController {
             publicationDate = dateFormat.format(graphExperiment.getPublication().getPublicationDate());
         }
 
-        List<Xref> publicationXrefs = new ArrayList<>();
+        Set<Xref> publicationXrefs = new HashSet<>();
         graphExperiment.getPublication().getXrefs().forEach(xref -> {
             CvTerm term = new CvTerm(xref.getDatabase().getShortName(), xref.getDatabase().getMIIdentifier());
             publicationXrefs.add(new Xref(term, xref.getId()));
         });
 
-        List<Annotation> publicationAnnotation = new ArrayList<>();
+        Set<Annotation> publicationAnnotation = new HashSet<>();
         graphExperiment.getPublication().getAnnotations().forEach(annotation -> {
             CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
             publicationAnnotation.add(new Annotation(term, annotation.getValue()));
         });
 
         return new PublicationDetails(pubmedId, title, journal, authors, publicationDate, publicationXrefs, publicationAnnotation);
+    }
+
+    /*
+     * For better user experience it was required to shuffle experiment and publication data between
+     * publication and interaction data
+     * */
+    private void shuffleDataBetweenModels(ExperimentDetails experimentDetails, PublicationDetails publicationDetails, InteractionDetails interactionDetails) {
+
+        //remove exp annotation which is already in publication data
+        List<Annotation> annotationsToRemove = new ArrayList<>(); // as already in publication fields
+        experimentDetails.getExperimentAnnotations().stream().filter(annotation ->
+                annotation.getTopic().getIdentifier().equals("MI:0886") || //publication year
+                        annotation.getTopic().getIdentifier().equals("MI:0885") || //journal
+                        annotation.getTopic().getIdentifier().equals("MI:0636")   //authors
+
+        ).forEach(annotation -> {
+            annotationsToRemove.add(annotation);
+        });
+        experimentDetails.getExperimentAnnotations().removeAll(annotationsToRemove);
+
+        //remove exp xref which is already in publication data
+        List<Xref> xrefsToRemove = new ArrayList<>(); // as already in publication fields
+        experimentDetails.getExperimentXrefs().stream().filter(xref ->
+                xref.getDatabase().getIdentifier().equals("MI:0446")// pubmed id
+        ).forEach(xref -> {
+            xrefsToRemove.add(xref);
+        });
+        experimentDetails.getExperimentXrefs().removeAll(xrefsToRemove);
+
+
+        //add experiment data to interaction data
+        interactionDetails.getXrefs().addAll(experimentDetails.getExperimentXrefs());
+        interactionDetails.getAnnotations().addAll(experimentDetails.getExperimentAnnotations());
+
+        //add publication data to interaction data (some entries need to be at interaction level)
+        interactionDetails.getAnnotations().addAll(publicationDetails.getPublicationAnnotations());
+
+        //retain specific pub annotations
+        List<Annotation> annotationsToRetain = new ArrayList<>(); // as already in publication fields
+        publicationDetails.getPublicationAnnotations().stream().filter(annotation ->
+                annotation.getTopic().getIdentifier().equals("MI:0634") || //contact-email
+                        annotation.getTopic().getIdentifier().equals("MI:0878") || //author-submitted
+                        annotation.getTopic().getIdentifier().equals("MI:0612") || //comments
+                        annotation.getTopic().getIdentifier().equals("MI:0618") || //cautions
+                        annotation.getTopic().getIdentifier().equals("MI:0614")   //urls
+        ).forEach(annotation -> {
+            annotationsToRetain.add(annotation);
+        });
+        publicationDetails.getPublicationAnnotations().retainAll(annotationsToRetain);
+
+
+        //remove publication data from interaction data (will remove duplication on page)
+        interactionDetails.getXrefs().removeAll(publicationDetails.getPublicationXrefs());
+        interactionDetails.getAnnotations().removeAll(publicationDetails.getPublicationAnnotations());
+
+        //remove full-coverage from details page
+        List<Annotation> interactionAnnotationsToDelete = new ArrayList<>();
+        interactionDetails.getAnnotations().stream().filter(annotation ->
+                annotation.getTopic().getIdentifier().equals("MI:0957") || //full-coverage
+                        annotation.getTopic().getIdentifier().equals("MI:0959")
+        ).forEach(annotation -> {
+            interactionAnnotationsToDelete.add(annotation);
+        });
+        interactionDetails.getAnnotations().removeAll(interactionAnnotationsToDelete);
+
+
     }
 
 

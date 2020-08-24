@@ -1,6 +1,7 @@
 package uk.ac.ebi.intact.graphdb.ws.controller.model;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Elisabet Barrera
@@ -10,15 +11,15 @@ public class InteractionDetails {
     private String interactionAc;
     private String interactionType;
     private String shortLabel;
-    private Collection<Xref> xrefs;
-    private Collection<Annotation> annotations;
+    private Set<Xref> xrefs;
+    private Set<Annotation> annotations;
     private Collection<Parameter> parameters;
     private Collection<Confidence> confidences;
     private ExperimentDetails experiment;
     private PublicationDetails publication;
 
     public InteractionDetails(String interactionAc, String interactionType, String shortLabel,
-                              Collection<Xref> xrefs, Collection<Annotation> annotations,
+                              Set<Xref> xrefs, Set<Annotation> annotations,
                               Collection<Parameter> parameters, Collection<Confidence> confidences,
                               ExperimentDetails experiment, PublicationDetails publication) {
         this.interactionAc = interactionAc;
@@ -56,19 +57,19 @@ public class InteractionDetails {
         this.shortLabel = shortLabel;
     }
 
-    public Collection<Xref> getXrefs() {
+    public Set<Xref> getXrefs() {
         return xrefs;
     }
 
-    public void setXrefs(Collection<Xref> xrefs) {
+    public void setXrefs(Set<Xref> xrefs) {
         this.xrefs = xrefs;
     }
 
-    public Collection<Annotation> getAnnotations() {
+    public Set<Annotation> getAnnotations() {
         return annotations;
     }
 
-    public void setAnnotations(Collection<Annotation> annotations) {
+    public void setAnnotations(Set<Annotation> annotations) {
         this.annotations = annotations;
     }
 

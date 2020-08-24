@@ -1,6 +1,6 @@
 package uk.ac.ebi.intact.graphdb.ws.controller.model;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Elisabet Barrera
@@ -11,12 +11,12 @@ public class ExperimentDetails {
     private String interactionDetectionMethod;
     private String participantDetectionMethod;
     private String interactionHostOrganism;
-    private Collection<Xref> experimentXrefs;
-    private Collection<Annotation> experimentAnnotations;
+    private Set<Xref> experimentXrefs;
+    private Set<Annotation> experimentAnnotations;
 
     public ExperimentDetails(String experimentAc, String interactionDetMethod, String participantDetMethod, String interactionHostOrganism,
-                             Collection<Xref> experimentXrefs,
-                             Collection<Annotation> experimentAnnotations) {
+                             Set<Xref> experimentXrefs,
+                             Set<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
         this.interactionDetectionMethod = interactionDetMethod;
         this.participantDetectionMethod = participantDetMethod;
@@ -49,19 +49,19 @@ public class ExperimentDetails {
         this.interactionHostOrganism = interactionHostOrganism;
     }
 
-    public Collection<Xref> getExperimentXrefs() {
+    public Set<Xref> getExperimentXrefs() {
         return experimentXrefs;
     }
 
-    public void setExperimentXrefs(Collection<Xref> experimentXrefs) {
+    public void setExperimentXrefs(Set<Xref> experimentXrefs) {
         this.experimentXrefs = experimentXrefs;
     }
 
-    public Collection<Annotation> getExperimentAnnotations() {
+    public Set<Annotation> getExperimentAnnotations() {
         return experimentAnnotations;
     }
 
-    public void setExperimentAnnotations(Collection<Annotation> experimentAnnotations) {
+    public void setExperimentAnnotations(Set<Annotation> experimentAnnotations) {
         this.experimentAnnotations = experimentAnnotations;
     }
 

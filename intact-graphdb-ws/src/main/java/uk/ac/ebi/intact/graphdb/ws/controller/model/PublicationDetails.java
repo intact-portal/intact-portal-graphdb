@@ -1,7 +1,7 @@
 package uk.ac.ebi.intact.graphdb.ws.controller.model;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Elisabet Barrera
@@ -13,11 +13,11 @@ public class PublicationDetails {
     private String journal;
     private List<String> authors;
     private String publicationDate;
-    private Collection<Xref> publicationXrefs;
-    private Collection<Annotation> publicationAnnotations;
+    private Set<Xref> publicationXrefs;
+    private Set<Annotation> publicationAnnotations;
 
     public PublicationDetails(String pubmedId, String title, String journal, List<String> authors, String publicationDate,
-                              Collection<Xref> publicationXrefs, Collection<Annotation> publicationAnnotations) {
+                              Set<Xref> publicationXrefs, Set<Annotation> publicationAnnotations) {
         this.pubmedId = pubmedId;
         this.title = title;
         this.journal = journal;
@@ -67,19 +67,19 @@ public class PublicationDetails {
         this.publicationDate = publicationDate;
     }
 
-    public Collection<Xref> getPublicationXrefs() {
+    public Set<Xref> getPublicationXrefs() {
         return publicationXrefs;
     }
 
-    public void setPublicationXrefs(Collection<Xref> publicationXrefs) {
+    public void setPublicationXrefs(Set<Xref> publicationXrefs) {
         this.publicationXrefs = publicationXrefs;
     }
 
-    public Collection<Annotation> getPublicationAnnotations() {
+    public Set<Annotation> getPublicationAnnotations() {
         return publicationAnnotations;
     }
 
-    public void setPublicationAnnotations(Collection<Annotation> publicationAnnotations) {
+    public void setPublicationAnnotations(Set<Annotation> publicationAnnotations) {
         this.publicationAnnotations = publicationAnnotations;
     }
 }
