@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -190,29 +191,7 @@ public class InteractionController {
      * For better user experience it was required to shuffle experiment and publication data between
      * publication and interaction data
      * */
-    private void shuffleDataBetweenModels(ExperimentDetails experimentDetails, PublicationDetails publicationDetails, InteractionDetails interactionDetails) {
-
-        //remove exp annotation which is already in publication data
-        List<Annotation> annotationsToRemove = new ArrayList<>(); // as already in publication fields
-        experimentDetails.getExperimentAnnotations().stream().filter(annotation ->
-                annotation.getTopic().getIdentifier().equals("MI:0886") || //publication year
-                        annotation.getTopic().getIdentifier().equals("MI:0885") || //journal
-                        annotation.getTopic().getIdentifier().equals("MI:0636")   //authors
-
-        ).forEach(annotation -> {
-            annotationsToRemove.add(annotation);
-        });
-        experimentDetails.getExperimentAnnotations().removeAll(annotationsToRemove);
-
-        //remove exp xref which is already in publication data
-        List<Xref> xrefsToRemove = new ArrayList<>(); // as already in publication fields
-        experimentDetails.getExperimentXrefs().stream().filter(xref ->
-                xref.getDatabase().getIdentifier().equals("MI:0446")// pubmed id
-        ).forEach(xref -> {
-            xrefsToRemove.add(xref);
-        });
-        experimentDetails.getExperimentXrefs().removeAll(xrefsToRemove);
-
+    public void shuffleDataBetweenModels(ExperimentDetails experimentDetails, PublicationDetails publicationDetails, InteractionDetails interactionDetails) {
 
         //add experiment data to interaction data
         interactionDetails.getXrefs().addAll(experimentDetails.getExperimentXrefs());
@@ -223,15 +202,13 @@ public class InteractionController {
 
         //retain specific pub annotations
         List<Annotation> annotationsToRetain = new ArrayList<>(); // as already in publication fields
-        publicationDetails.getPublicationAnnotations().stream().filter(annotation ->
+        annotationsToRetain.addAll(publicationDetails.getPublicationAnnotations().stream().filter(annotation ->
                 annotation.getTopic().getIdentifier().equals("MI:0634") || //contact-email
                         annotation.getTopic().getIdentifier().equals("MI:0878") || //author-submitted
                         annotation.getTopic().getIdentifier().equals("MI:0612") || //comments
                         annotation.getTopic().getIdentifier().equals("MI:0618") || //cautions
                         annotation.getTopic().getIdentifier().equals("MI:0614")   //urls
-        ).forEach(annotation -> {
-            annotationsToRetain.add(annotation);
-        });
+        ).collect(Collectors.toList()));
         publicationDetails.getPublicationAnnotations().retainAll(annotationsToRetain);
 
 
@@ -239,17 +216,22 @@ public class InteractionController {
         interactionDetails.getXrefs().removeAll(publicationDetails.getPublicationXrefs());
         interactionDetails.getAnnotations().removeAll(publicationDetails.getPublicationAnnotations());
 
-        //remove full-coverage from details page
+        //remove some unwanted xref and annotations from details page
         List<Annotation> interactionAnnotationsToDelete = new ArrayList<>();
-        interactionDetails.getAnnotations().stream().filter(annotation ->
-                annotation.getTopic().getIdentifier().equals("MI:0957") || //full-coverage
-                        annotation.getTopic().getIdentifier().equals("MI:0959")
-        ).forEach(annotation -> {
-            interactionAnnotationsToDelete.add(annotation);
-        });
+        interactionAnnotationsToDelete.addAll(interactionDetails.getAnnotations().stream().filter(annotation ->
+                annotation.getTopic().getIdentifier().equals("MI:0957") ||         //full-coverage
+                        annotation.getTopic().getIdentifier().equals("MI:0959") || // imex curation
+                        annotation.getTopic().getIdentifier().equals("MI:0886") ||         //publication year
+                        annotation.getTopic().getIdentifier().equals("MI:0885") || //journal
+                        annotation.getTopic().getIdentifier().equals("MI:0636")    //authors
+        ).collect(Collectors.toList()));
         interactionDetails.getAnnotations().removeAll(interactionAnnotationsToDelete);
 
-
+        List<Xref> xrefsToRemove = new ArrayList<>(); // as already in publication fields
+        xrefsToRemove.addAll(interactionDetails.getXrefs().stream().filter(xref ->
+                xref.getDatabase().getIdentifier().equals("MI:0446")// pubmed id
+        ).collect(Collectors.toList()));
+        interactionDetails.getXrefs().removeAll(xrefsToRemove);
     }
 
 
