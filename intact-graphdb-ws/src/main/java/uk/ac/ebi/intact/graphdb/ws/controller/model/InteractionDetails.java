@@ -9,28 +9,30 @@ import java.util.Set;
 public class InteractionDetails {
 
     private String interactionAc;
-    private String interactionType;
+    private CvTerm type;
     private String shortLabel;
     private Set<Xref> xrefs;
     private Set<Annotation> annotations;
     private Collection<Parameter> parameters;
     private Collection<Confidence> confidences;
-    private ExperimentDetails experiment;
     private PublicationDetails publication;
+    private CvTerm detectionMethod;
+    private String hostOrganism;
 
-    public InteractionDetails(String interactionAc, String interactionType, String shortLabel,
+    public InteractionDetails(String interactionAc, CvTerm interactionType, String shortLabel,
                               Set<Xref> xrefs, Set<Annotation> annotations,
                               Collection<Parameter> parameters, Collection<Confidence> confidences,
-                              ExperimentDetails experiment, PublicationDetails publication) {
+                              PublicationDetails publication, CvTerm detectionMethod, String hostOrganism) {
         this.interactionAc = interactionAc;
-        this.interactionType = interactionType;
+        this.type = interactionType;
         this.shortLabel = shortLabel;
         this.xrefs = xrefs;
         this.annotations = annotations;
         this.parameters = parameters;
         this.confidences = confidences;
-        this.experiment = experiment;
         this.publication = publication;
+        this.detectionMethod = detectionMethod;
+        this.hostOrganism = hostOrganism;
     }
 
     public String getInteractionAc() {
@@ -41,12 +43,12 @@ public class InteractionDetails {
         this.interactionAc = interactionAc;
     }
 
-    public String getInteractionType() {
-        return interactionType;
+    public CvTerm getType() {
+        return type;
     }
 
-    public void setInteractionType(String interactionType) {
-        this.interactionType = interactionType;
+    public void setType(CvTerm type) {
+        this.type = type;
     }
 
     public String getShortLabel() {
@@ -89,19 +91,27 @@ public class InteractionDetails {
         this.confidences = confidences;
     }
 
-    public ExperimentDetails getExperiment() {
-        return experiment;
-    }
-
-    public void setExperiment(ExperimentDetails experiment) {
-        this.experiment = experiment;
-    }
-
     public PublicationDetails getPublication() {
         return publication;
     }
 
     public void setPublication(PublicationDetails publication) {
         this.publication = publication;
+    }
+
+    public CvTerm getDetectionMethod() {
+        return detectionMethod;
+    }
+
+    public void setDetectionMethod(CvTerm detectionMethod) {
+        this.detectionMethod = detectionMethod;
+    }
+
+    public String getHostOrganism() {
+        return hostOrganism;
+    }
+
+    public void setHostOrganism(String hostOrganism) {
+        this.hostOrganism = hostOrganism;
     }
 }

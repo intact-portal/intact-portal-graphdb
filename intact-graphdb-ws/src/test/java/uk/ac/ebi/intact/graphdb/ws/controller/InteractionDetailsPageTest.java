@@ -111,13 +111,18 @@ public class InteractionDetailsPageTest {
         experimentAnnotations.add(new Annotation(new CvTerm("db_shortname17", "db_identifier17"),
                 "description17"));
 
+        //intializing experiment details to be transferred to interaction details
+
+        CvTerm interactionDetMethod = new CvTerm("interaction detection method", "MI:Identifier");
+        String hostOrganism = "Host Organism";
+
         PublicationDetails publicationDetails = new PublicationDetails(null, null, null,
                 null, null, publicationXrefs, publicationAnnotations);
-        ExperimentDetails experimentDetails = new ExperimentDetails(null, null,
-                null, null, experimentXrefs, experimentAnnotations);
+        ExperimentDetails experimentDetails = new ExperimentDetails(null, interactionDetMethod,
+                null, hostOrganism, experimentXrefs, experimentAnnotations);
         InteractionDetails interactionDetails = new InteractionDetails(null, null,
-                null, interactionXrefs, interactionAnnotations, null, null, null,
-                null);
+                null, interactionXrefs, interactionAnnotations, null, null,
+                null, null, null);
 
         controller.shuffleDataBetweenModels(experimentDetails,
                 publicationDetails, interactionDetails);
@@ -158,6 +163,10 @@ public class InteractionDetailsPageTest {
 
         Assert.assertEquals(4, modifiedInteractionAnnotations.size());
         Assert.assertEquals(4, interactionAnnotations.size());
+
+        Assert.assertEquals("interaction detection method", interactionDetails.getDetectionMethod().getShortName());
+        Assert.assertEquals("MI:Identifier", interactionDetails.getDetectionMethod().getIdentifier());
+        Assert.assertEquals("Host Organism", interactionDetails.getHostOrganism());
 
 
     }

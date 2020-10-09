@@ -93,7 +93,7 @@ public class InteractionController {
     private InteractionDetails createInteractionDetails(GraphInteractionEvidence graphInteractionEvidence) {
         String ac = graphInteractionEvidence.getAc();
 
-        String interactionType = graphInteractionEvidence.getInteractionType().getShortName();
+        CvTerm interactionType = new CvTerm(graphInteractionEvidence.getInteractionType().getShortName(), graphInteractionEvidence.getInteractionType().getMIIdentifier());
 
         String shortLabel = graphInteractionEvidence.getShortName();
 
@@ -127,7 +127,7 @@ public class InteractionController {
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
         PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
-        InteractionDetails interactionDetails = new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, experimentDetails, publicationDetails);
+        InteractionDetails interactionDetails = new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, publicationDetails, null, null);
 
         shuffleDataBetweenModels(experimentDetails, publicationDetails, interactionDetails);
         return interactionDetails;
@@ -136,7 +136,8 @@ public class InteractionController {
     private ExperimentDetails createExperimentDetails(GraphExperiment graphExperiment) {
         String experimentAc = graphExperiment.getAc();
         String hostOrganism = graphExperiment.getHostOrganism().getScientificName();
-        String interactionDetMethod = graphExperiment.getInteractionDetectionMethod().getShortName();
+        CvTerm interactionDetMethod = new CvTerm(graphExperiment.getInteractionDetectionMethod().getShortName(), graphExperiment.getInteractionDetectionMethod().getMIIdentifier());
+
         String participantDetMethod = null;
         if (graphExperiment.getParticipantDetectionMethod() != null) {
             participantDetMethod = graphExperiment.getParticipantDetectionMethod().getShortName();
@@ -232,6 +233,9 @@ public class InteractionController {
                 xref.getDatabase().getIdentifier().equals("MI:0446")// pubmed id
         ).collect(Collectors.toList()));
         interactionDetails.getXrefs().removeAll(xrefsToRemove);
+
+        interactionDetails.setHostOrganism(experimentDetails.getInteractionHostOrganism());
+        interactionDetails.setDetectionMethod(experimentDetails.getInteractionDetectionMethod());
     }
 
 

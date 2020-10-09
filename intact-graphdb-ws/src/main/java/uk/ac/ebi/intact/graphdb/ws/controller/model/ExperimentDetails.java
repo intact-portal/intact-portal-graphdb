@@ -8,13 +8,13 @@ import java.util.Set;
 public class ExperimentDetails {
 
     private String experimentAc;
-    private String interactionDetectionMethod;
+    private CvTerm interactionDetectionMethod;
     private String participantDetectionMethod;
     private String interactionHostOrganism;
     private Set<Xref> experimentXrefs;
     private Set<Annotation> experimentAnnotations;
 
-    public ExperimentDetails(String experimentAc, String interactionDetMethod, String participantDetMethod, String interactionHostOrganism,
+    public ExperimentDetails(String experimentAc, CvTerm interactionDetMethod, String participantDetMethod, String interactionHostOrganism,
                              Set<Xref> experimentXrefs,
                              Set<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
@@ -33,11 +33,11 @@ public class ExperimentDetails {
         this.experimentAc = experimentAc;
     }
 
-    public String getInteractionDetectionMethod() {
+    public CvTerm getInteractionDetectionMethod() {
         return interactionDetectionMethod;
     }
 
-    public void setInteractionDetectionMethod(String interactionDetectionMethod) {
+    public void setInteractionDetectionMethod(CvTerm interactionDetectionMethod) {
         this.interactionDetectionMethod = interactionDetectionMethod;
     }
 
