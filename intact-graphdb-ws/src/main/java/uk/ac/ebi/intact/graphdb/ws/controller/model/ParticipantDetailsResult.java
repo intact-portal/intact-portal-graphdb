@@ -135,11 +135,11 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             });
 
             String description = null;
-            if (participant.getInteractor() != null ) {
+            if (participant.getInteractor() != null) {
                 description = participant.getInteractor().getFullName();
             }
             Organism species = null;
-            if (participant.getInteractor() != null && participant.getInteractor().getOrganism() != null ) {
+            if (participant.getInteractor() != null && participant.getInteractor().getOrganism() != null) {
                 species = new Organism(participant.getInteractor().getOrganism().getScientificName(), participant.getInteractor().getOrganism().getTaxId());
 
             }
@@ -157,12 +157,12 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             });
 
             CvTerm experimentalRole = null;
-            if (participant.getExperimentalRole() != null ) {
+            if (participant.getExperimentalRole() != null) {
                 experimentalRole = new CvTerm(participant.getExperimentalRole().getShortName(), participant.getExperimentalRole().getMIIdentifier());
             }
 
             CvTerm biologicalRole = null;
-            if (participant.getBiologicalRole() != null ) {
+            if (participant.getBiologicalRole() != null) {
                 biologicalRole = new CvTerm(participant.getBiologicalRole().getShortName(), participant.getBiologicalRole().getMIIdentifier());
             }
 
@@ -200,12 +200,14 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             });
 
             Collection<Annotation> annotations = new ArrayList<>();
-            participant.getAnnotations().forEach(graphAnnotation -> {
-                if (graphAnnotation != null) {
-                    CvTerm cvTerm = new CvTerm(graphAnnotation.getTopic().getShortName(), graphAnnotation.getTopic().getMIIdentifier());
-                    annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
-                }
-            });
+            if (participant.getInteractor().getAnnotations() != null) {
+                participant.getInteractor().getAnnotations().forEach(graphAnnotation -> {
+                    if (graphAnnotation != null) {
+                        CvTerm cvTerm = new CvTerm(graphAnnotation.getTopic().getShortName(), graphAnnotation.getTopic().getMIIdentifier());
+                        annotations.add(new Annotation(cvTerm, graphAnnotation.getValue()));
+                    }
+                });
+            }
 
             ParticipantDetails participantDetails = new ParticipantDetails(participantAc, type, participantIdentifier, aliases,
                     description, species, expressionSystem, detectionMethods, experimentalRole, biologicalRole, experimentalPreparations,
