@@ -3,8 +3,10 @@ package uk.ac.ebi.intact.graphdb.ws.controller;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.ac.ebi.intact.graphdb.ws.Neo4jTestConfiguration;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
 import java.util.HashSet;
@@ -13,8 +15,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Neo4jTestConfiguration.class)
 public class InteractionDetailsPageTest {
+
+    @Autowired
+    private InteractionController controller;
 
     @Test
     public void shuffleDataBetweenModels() {
@@ -114,7 +119,7 @@ public class InteractionDetailsPageTest {
                 null, interactionXrefs, interactionAnnotations, null, null, null,
                 null);
 
-        new InteractionController(null).shuffleDataBetweenModels(experimentDetails,
+        controller.shuffleDataBetweenModels(experimentDetails,
                 publicationDetails, interactionDetails);
 
         //shuffled data test
