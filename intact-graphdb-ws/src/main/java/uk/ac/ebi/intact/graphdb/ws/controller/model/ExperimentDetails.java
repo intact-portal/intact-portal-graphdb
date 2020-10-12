@@ -10,11 +10,11 @@ public class ExperimentDetails {
     private String experimentAc;
     private CvTerm interactionDetectionMethod;
     private String participantDetectionMethod;
-    private String interactionHostOrganism;
+    private Organism interactionHostOrganism;
     private Set<Xref> experimentXrefs;
     private Set<Annotation> experimentAnnotations;
 
-    public ExperimentDetails(String experimentAc, CvTerm interactionDetMethod, String participantDetMethod, String interactionHostOrganism,
+    public ExperimentDetails(String experimentAc, CvTerm interactionDetMethod, String participantDetMethod, Organism interactionHostOrganism,
                              Set<Xref> experimentXrefs,
                              Set<Annotation> experimentAnnotations) {
         this.experimentAc = experimentAc;
@@ -41,11 +41,11 @@ public class ExperimentDetails {
         this.interactionDetectionMethod = interactionDetectionMethod;
     }
 
-    public String getInteractionHostOrganism() {
+    public Organism getInteractionHostOrganism() {
         return interactionHostOrganism;
     }
 
-    public void setInteractionHostOrganism(String interactionHostOrganism) {
+    public void setInteractionHostOrganism(Organism interactionHostOrganism) {
         this.interactionHostOrganism = interactionHostOrganism;
     }
 

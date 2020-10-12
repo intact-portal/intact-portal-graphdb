@@ -135,7 +135,7 @@ public class InteractionController {
 
     private ExperimentDetails createExperimentDetails(GraphExperiment graphExperiment) {
         String experimentAc = graphExperiment.getAc();
-        String hostOrganism = graphExperiment.getHostOrganism().getScientificName();
+        Organism hostOrganism = new Organism(graphExperiment.getHostOrganism().getScientificName(), graphExperiment.getHostOrganism().getTaxId());
         CvTerm interactionDetMethod = new CvTerm(graphExperiment.getInteractionDetectionMethod().getShortName(), graphExperiment.getInteractionDetectionMethod().getMIIdentifier());
 
         String participantDetMethod = null;

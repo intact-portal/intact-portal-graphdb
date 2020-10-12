@@ -17,12 +17,12 @@ public class InteractionDetails {
     private Collection<Confidence> confidences;
     private PublicationDetails publication;
     private CvTerm detectionMethod;
-    private String hostOrganism;
+    private Organism hostOrganism;
 
     public InteractionDetails(String interactionAc, CvTerm interactionType, String shortLabel,
                               Set<Xref> xrefs, Set<Annotation> annotations,
                               Collection<Parameter> parameters, Collection<Confidence> confidences,
-                              PublicationDetails publication, CvTerm detectionMethod, String hostOrganism) {
+                              PublicationDetails publication, CvTerm detectionMethod, Organism hostOrganism) {
         this.interactionAc = interactionAc;
         this.type = interactionType;
         this.shortLabel = shortLabel;
@@ -107,11 +107,11 @@ public class InteractionDetails {
         this.detectionMethod = detectionMethod;
     }
 
-    public String getHostOrganism() {
+    public Organism getHostOrganism() {
         return hostOrganism;
     }
 
-    public void setHostOrganism(String hostOrganism) {
+    public void setHostOrganism(Organism hostOrganism) {
         this.hostOrganism = hostOrganism;
     }
 }
