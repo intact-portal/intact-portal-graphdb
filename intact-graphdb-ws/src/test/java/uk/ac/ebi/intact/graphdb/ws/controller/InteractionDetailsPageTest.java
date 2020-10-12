@@ -114,7 +114,7 @@ public class InteractionDetailsPageTest {
         //intializing experiment details to be transferred to interaction details
 
         CvTerm interactionDetMethod = new CvTerm("interaction detection method", "MI:Identifier");
-        String hostOrganism = "Host Organism";
+        Organism hostOrganism = new Organism("Homo Sapiens", 9606);
 
         PublicationDetails publicationDetails = new PublicationDetails(null, null, null,
                 null, null, publicationXrefs, publicationAnnotations);
@@ -166,7 +166,8 @@ public class InteractionDetailsPageTest {
 
         Assert.assertEquals("interaction detection method", interactionDetails.getDetectionMethod().getShortName());
         Assert.assertEquals("MI:Identifier", interactionDetails.getDetectionMethod().getIdentifier());
-        Assert.assertEquals("Host Organism", interactionDetails.getHostOrganism());
+        Assert.assertEquals("Homo Sapiens", interactionDetails.getHostOrganism().getScientificName());
+        Assert.assertEquals(9606, interactionDetails.getHostOrganism().getTaxId());
 
 
     }
