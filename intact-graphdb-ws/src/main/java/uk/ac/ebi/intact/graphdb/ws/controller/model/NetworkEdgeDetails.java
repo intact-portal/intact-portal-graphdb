@@ -7,12 +7,12 @@ import java.util.Collection;
  */
 public class NetworkEdgeDetails {
 
-    private Long id;
+    private String ac;
     private Collection<Annotation> annotations;
     private Collection<Parameter> parameters;
 
-    public NetworkEdgeDetails(Long id, Collection<Annotation> annotations, Collection<Parameter> parameters) {
-        this.id = id;
+    public NetworkEdgeDetails(String ac, Collection<Annotation> annotations, Collection<Parameter> parameters) {
+        this.ac = ac;
         this.annotations = annotations;
         this.parameters = parameters;
     }
@@ -33,11 +33,11 @@ public class NetworkEdgeDetails {
         this.parameters = parameters;
     }
 
-    public Long getId() {
-        return id;
+    public String getAc() {
+        return ac;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 }

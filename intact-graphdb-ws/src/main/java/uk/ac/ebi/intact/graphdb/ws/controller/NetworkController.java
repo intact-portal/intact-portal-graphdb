@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
+import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractor;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractorService;
@@ -49,6 +49,8 @@ public class NetworkController {
                                                  @RequestParam(value = "neighboursRequired", required = false, defaultValue = "true") boolean neighboursRequired,
                                                  HttpServletRequest request) throws IOException {
 
+        System.out.println("Request Received");
+
         HttpStatus httpStatus = HttpStatus.OK;
         Instant processStarted = Instant.now();
         NetworkJson networkJson = new NetworkJson();
@@ -91,9 +93,9 @@ public class NetworkController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/edge/details/{id}", produces = {APPLICATION_JSON_VALUE})
     public NetworkEdgeDetails getEdgeDetails(
-            @PathVariable int id) {
+            @PathVariable String id) {
 
-        GraphBinaryInteractionEvidence graphInteractionEvidence = graphInteractionService.findWithBinaryId(id, 0);
+        GraphInteractionEvidence graphInteractionEvidence = graphInteractionService.findByInteractionAc(id);
 
         return createNetworkEdgeDetails(graphInteractionEvidence);
     }
@@ -111,23 +113,23 @@ public class NetworkController {
     /**
      * CONVERTS from GraphBinaryInteractionEvidence to CyAppInteractionDetails model
      **/
-    private NetworkEdgeDetails createNetworkEdgeDetails(GraphBinaryInteractionEvidence graphBinaryInteractionEvidence) {
+    private NetworkEdgeDetails createNetworkEdgeDetails(GraphInteractionEvidence graphInteractionEvidence) {
 
         List<Annotation> annotations = new ArrayList<>();
-        graphBinaryInteractionEvidence.getAnnotations().forEach(annotation -> {
+        graphInteractionEvidence.getAnnotations().forEach(annotation -> {
             CvTerm term = new CvTerm(annotation.getTopic().getShortName(), annotation.getTopic().getMIIdentifier());
             annotations.add(new Annotation(term, annotation.getValue()));
         });
 
         List<Parameter> parameters = new ArrayList<>();
-        graphBinaryInteractionEvidence.getParameters().forEach(parameter -> {
+        graphInteractionEvidence.getParameters().forEach(parameter -> {
             CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
             CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
             parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
 
         });
 
-        return new NetworkEdgeDetails(graphBinaryInteractionEvidence.getGraphId(), annotations, parameters);
+        return new NetworkEdgeDetails(graphInteractionEvidence.getAc(), annotations, parameters);
     }
 
     /**
