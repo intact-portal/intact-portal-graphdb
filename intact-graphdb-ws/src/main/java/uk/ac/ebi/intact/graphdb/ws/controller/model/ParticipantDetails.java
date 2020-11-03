@@ -6,6 +6,7 @@ import java.util.Collection;
  * @author Elisabet Barrera
  */
 public class ParticipantDetails {
+    private String shortLabel;
     private String participantAc;
     private CvTerm type;
     private Xref participantId;
@@ -16,14 +17,14 @@ public class ParticipantDetails {
     private Collection<CvTerm> detectionMethod;
     private CvTerm experimentalRole;
     private CvTerm biologicalRole;
-//    private Integer featureCount; //TODO: add features count
+    //    private Integer featureCount; //TODO: add features count
     private Collection<CvTerm> experimentalPreparations;
     private Collection<Parameter> parameters;
     private Collection<Confidence> confidences;
     private Collection<Xref> xrefs;
     private Collection<Annotation> annotations;
 
-    public ParticipantDetails(String participantAc, CvTerm type, Xref participantId, Collection<Alias> aliases,
+    public ParticipantDetails(String shortLabel, String participantAc, CvTerm type, Xref participantId, Collection<Alias> aliases,
                               String description, Organism species, Organism expressionSystem,
                               Collection<CvTerm> detectionMethod, CvTerm experimentalRole, CvTerm biologicalRole,
                               Collection<CvTerm> experimentalPreparations, Collection<Parameter> parameters,
@@ -43,6 +44,15 @@ public class ParticipantDetails {
         this.confidences = confidences;
         this.xrefs = xrefs;
         this.annotations = annotations;
+        this.shortLabel = shortLabel;
+    }
+
+    public String getShortLabel() {
+        return shortLabel;
+    }
+
+    public void setShortLabel(String shortLabel) {
+        this.shortLabel = shortLabel;
     }
 
     public String getParticipantAc() {

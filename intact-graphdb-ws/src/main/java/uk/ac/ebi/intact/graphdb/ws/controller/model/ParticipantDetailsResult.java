@@ -121,7 +121,8 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             String participantAc = participant.getAc();
             CvTerm type = new CvTerm(participant.getInteractor().getInteractorType().getShortName(), participant.getInteractor().getInteractorType().getMIIdentifier());
 
-            CvTerm database = new CvTerm(participant.getInteractor().getPreferredName(), participant.getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
+            String shortLabel = participant.getInteractor().getShortName();
+            CvTerm database = new CvTerm(participant.getInteractor().getPreferredIdentifier().getDatabase().getShortName(), participant.getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
             Xref participantIdentifier = new Xref(database, participant.getInteractor().getPreferredIdentifier().getId());
 
             /* TODO: CVTERMS shouldn't have type null, but until this is fixed I need to create a patch and add a CVterm with not available
@@ -209,7 +210,7 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
                 });
             }
 
-            ParticipantDetails participantDetails = new ParticipantDetails(participantAc, type, participantIdentifier, aliases,
+            ParticipantDetails participantDetails = new ParticipantDetails(shortLabel, participantAc, type, participantIdentifier, aliases,
                     description, species, expressionSystem, detectionMethods, experimentalRole, biologicalRole, experimentalPreparations,
                     parameters, confidences, xrefs, annotations);
 
