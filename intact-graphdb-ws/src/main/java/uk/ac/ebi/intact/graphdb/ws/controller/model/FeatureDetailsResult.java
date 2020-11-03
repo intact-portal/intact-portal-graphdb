@@ -145,7 +145,7 @@ public class FeatureDetailsResult implements Page<FeatureDetails> {
                 participantName = feature.getParticipant().getInteractor().getShortName();
             }
 
-            CvTerm participantDatabase = new CvTerm(feature.getParticipant().getInteractor().getPreferredName(),
+            CvTerm participantDatabase = new CvTerm(feature.getParticipant().getInteractor().getPreferredIdentifier().getDatabase().getShortName(),
                     feature.getParticipant().getInteractor().getPreferredIdentifier().getDatabase().getMIIdentifier());
             Xref participantIdentifier = new Xref(participantDatabase, feature.getParticipant().getInteractor().getPreferredIdentifier().getId());
 
