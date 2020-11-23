@@ -226,9 +226,11 @@ public class GraphInteractor extends GraphDatabaseObject implements Interactor {
     }
 
     public void createRelationShipNatively(Long graphId) {
-        CommonUtility.createRelationShip(organism, graphId, RelationshipTypes.ORGANISM);
-        CommonUtility.createRelationShip(interactorType, graphId, RelationshipTypes.INTERACTOR_TYPE);
-        CommonUtility.createRelationShip(preferredIdentifier, graphId, RelationshipTypes.PREFERRED_IDENTIFIER);
+        if(!this.isAlreadyCreated()) {// we need to do this to avoid ambiguity because when reactome import occurs with intact import
+            CommonUtility.createRelationShip(organism, graphId, RelationshipTypes.ORGANISM);
+            CommonUtility.createRelationShip(interactorType, graphId, RelationshipTypes.INTERACTOR_TYPE);
+            CommonUtility.createRelationShip(preferredIdentifier, graphId, RelationshipTypes.PREFERRED_IDENTIFIER);
+        }
         CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createChecksumRelationShips(checksums, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);

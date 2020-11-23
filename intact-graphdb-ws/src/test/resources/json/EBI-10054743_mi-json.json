@@ -113,7 +113,7 @@
           "features": [
             {
               "id": "2",
-              "name": "p.Ser558_Ser559delinsAlaAla",
+              "name": "Q9BXL7:p.Ser558_Ser559delinsAlaAla",
               "category": "pointMutations",
               "type": {
                 "id": "MI:1130",
@@ -136,7 +136,7 @@
             },
             {
               "id": "3",
-              "name": "p.Ser652Ala",
+              "name": "Q9BXL7:p.Ser652Ala",
               "category": "pointMutations",
               "type": {
                 "id": "MI:1130",
@@ -178,7 +178,7 @@
             },
             {
               "id": "6",
-              "name": "p.[Ser644Ala;Ser652Ala]",
+              "name": "Q9BXL7:p.[Ser644Ala;Ser652Ala]",
               "category": "pointMutations",
               "type": {
                 "id": "MI:1129",
@@ -223,7 +223,7 @@
             },
             {
               "id": "8",
-              "name": "p.Ser644Ala",
+              "name": "Q9BXL7:p.Ser644Ala",
               "category": "pointMutations",
               "type": {
                 "id": "MI:1129",
@@ -268,7 +268,7 @@
             "common": "spofr-sf_21",
             "scientific": "Spodoptera frugiperda insect cells",
             "cellType": {
-              "id": "ACC 119",
+              "id": "MINT-7501077",
               "name": "Insect cells"
             }
           },
