@@ -483,7 +483,7 @@ public class GraphFeature<P extends Entity, F extends Feature> extends GraphData
             initialiseLinkedFeatures();
         }
         if (this.linkedFeatures.add(graphFeature)) {
-            graphFeature.setParticipant(this.getParticipant());
+            //graphFeature.setParticipant(this.getParticipant());
             return true;
         }
 
