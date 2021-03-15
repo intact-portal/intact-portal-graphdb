@@ -1,5 +1,6 @@
 package uk.ac.ebi.intact.graphdb.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.Index;
@@ -49,7 +50,9 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
     @Relationship(type = RelationshipTypes.HOST_ORGANISM)
     private GraphOrganism hostOrganism;
 
-    //private Collection<InteractionEvidence> interactions;
+    @Relationship(type = RelationshipTypes.EXPERIMENT, direction = Relationship.INCOMING)
+    @JsonBackReference
+    private Collection<InteractionEvidence> interactions;
 
     @Relationship(type = RelationshipTypes.CONFIDENCE)
     private Collection<GraphConfidence> confidences;
@@ -86,6 +89,7 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
         setXrefs(experiment.getXrefs());
         setAnnotations(experiment.getAnnotations());
         setConfidences(experiment.getConfidences());
+        addAllInteractionEvidences(experiment.getInteractionEvidences());
 
         boolean wasInitializedBefore = false;
         if (GraphEntityCache.experimentCacheMap.get(this.getUniqueKey()) == null) {
@@ -322,11 +326,10 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
     }
 
     public Collection<InteractionEvidence> getInteractionEvidences() {
-        /*if (interactions == null) {
-            initialiseInteractions();
-        }*/
-        //  return this.interactions;
-        return null;
+        if (interactions == null) {
+            this.interactions = new ArrayList<InteractionEvidence>();
+        }
+          return this.interactions;
     }
 
     public boolean addInteractionEvidence(InteractionEvidence evidence) {

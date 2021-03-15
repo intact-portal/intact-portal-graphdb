@@ -35,7 +35,7 @@
         "db": "uniprotkb",
         "id": "P01123"
       },
-      "label": "ypt1_yeast"
+      "label": "YPT1"
     },
     {
       "object": "interaction",

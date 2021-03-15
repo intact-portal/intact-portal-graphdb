@@ -190,6 +190,18 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
     }
 
     @Override
+    //TODO Needs to be implemented
+    public CvTerm getBiologicalEffect() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    //TODO Needs to be implemented
+    public void setBiologicalEffect(CvTerm biologicalEffect) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public EntityInteractorChangeListener getChangeListener() {
         return changeListener;
     }

@@ -1,31 +1,19 @@
 package uk.ac.ebi.intact.graphdb.ws.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
-import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
-import psidev.psi.mi.jami.datasource.InteractionWriter;
-import psidev.psi.mi.jami.factory.InteractionWriterFactory;
-import psidev.psi.mi.jami.json.InteractionViewerJson;
-import psidev.psi.mi.jami.json.MIJsonOptionFactory;
-import psidev.psi.mi.jami.json.MIJsonType;
-import psidev.psi.mi.jami.model.InteractionCategory;
-import psidev.psi.mi.jami.model.InteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphExperiment;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphPublication;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/interaction")
 public class InteractionController {
 
-    private GraphInteractionService graphInteractionService;
+    private final GraphInteractionService graphInteractionService;
 
     @Autowired
     public InteractionController(GraphInteractionService graphInteractionService) {
@@ -62,29 +50,6 @@ public class InteractionController {
             @RequestParam(value = "ac") String ac,
             @RequestParam(value = "depth", defaultValue = "2", required = false) int depth) {
         return graphInteractionService.findByInteractionAc(ac);
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping(value = "/export/{ac}")
-    public ResponseEntity<String> exportInteraction(@PathVariable String ac,
-                                                    @RequestParam(value = "format", defaultValue = "json", required = false) String format,
-                                                    HttpServletResponse response) throws Exception {
-        Boolean exportAsFile = false;
-
-        InteractionEvidence interactionEvidence = graphInteractionService.findByInteractionAcForMiJson(ac);
-
-        ResponseEntity<String> responseEntity = null;
-        if (interactionEvidence != null) {
-            InteractionWriterFactory writerFactory = InteractionWriterFactory.getInstance();
-            switch (InteractionExportFormat.formatOf(format)) {
-                case JSON:
-                default:
-                    responseEntity = createJsonResponse(interactionEvidence, writerFactory);
-                    break;
-            }
-            return responseEntity;
-        }
-        throw new Exception("Export failed " + ac + ". No Interaction result");
     }
 
     /**
@@ -202,13 +167,15 @@ public class InteractionController {
         interactionDetails.getAnnotations().addAll(publicationDetails.getPublicationAnnotations());
 
         //retain specific pub annotations
+        // Noe: Maybe we should have used AnnotationUtils.collectAllAnnotationsHavingTopic("MI:XXX") here to compact the code
+        // and reuse our existing function to do it
         List<Annotation> annotationsToRetain = new ArrayList<>(); // as already in publication fields
         annotationsToRetain.addAll(publicationDetails.getPublicationAnnotations().stream().filter(annotation ->
-                (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0634")) || //contact-email
+                (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0634")) ||         //contact-email
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0878")) || //author-submitted
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0612")) || //comments
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0618")) || //cautions
-                        (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0614"))   //urls
+                        (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0614"))    //urls
         ).collect(Collectors.toList()));
         publicationDetails.getPublicationAnnotations().retainAll(annotationsToRetain);
 
@@ -222,7 +189,7 @@ public class InteractionController {
         interactionAnnotationsToDelete.addAll(interactionDetails.getAnnotations().stream().filter(annotation ->
                 (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0957")) ||         //full-coverage
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0959")) || // imex curation
-                        (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0886")) ||         //publication year
+                        (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0886")) || //publication year
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0885")) || //journal
                         (annotation.getTopic().getIdentifier() != null && annotation.getTopic().getIdentifier().equals("MI:0636"))    //authors
         ).collect(Collectors.toList()));
@@ -236,39 +203,6 @@ public class InteractionController {
 
         interactionDetails.setHostOrganism(experimentDetails.getInteractionHostOrganism());
         interactionDetails.setDetectionMethod(experimentDetails.getInteractionDetectionMethod());
-    }
-
-
-    private ResponseEntity<String> createJsonResponse(InteractionEvidence interactionEvidence,
-                                                      InteractionWriterFactory writerFactory) {
-
-        InteractionViewerJson.initialiseAllMIJsonWriters();
-        MIJsonOptionFactory optionFactory = MIJsonOptionFactory.getInstance();
-        StringWriter answer = new StringWriter();
-        InteractionWriter writer = null;
-        Map<String, Object> options = null;
-        try {
-            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
-                    MIJsonType.n_ary_only, new CachedOlsOntologyTermFetcher(), null);
-            writer = writerFactory.getInteractionWriterWith(options);
-        } catch (BridgeFailedException e) {
-            options = optionFactory.getJsonOptions(answer, InteractionCategory.evidence, null,
-                    MIJsonType.n_ary_only, null, null);
-
-        }
-        writer = writerFactory.getInteractionWriterWith(options);
-
-        try {
-            writer.start();
-            writer.write(interactionEvidence);
-            writer.end();
-        } finally {
-            writer.close();
-        }
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.add("X-Clacks-Overhead", "GNU Terry Pratchett"); //In memory of Sir Terry Pratchett
-        return new ResponseEntity<String>(answer.toString(), httpHeaders, HttpStatus.OK);
     }
 
 }

@@ -254,6 +254,18 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
         this.clusteredInteraction = clusteredInteraction;
     }
 
+    @Override
+    //TODO Needs to be implemented
+    public CvTerm getCausalRegulatoryMechanism() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    //TODO Needs to be implemented
+    public void setCausalRegulatoryMechanism(CvTerm causalRegulatoryMechanism) {
+        throw new UnsupportedOperationException();
+    }
+
     public boolean isAlreadyCreated() {
         return isAlreadyCreated;
     }

@@ -28,6 +28,12 @@
         </dependency>
 
         <dependency>
+            <groupId>uk.ac.ebi.intact.search.interactions</groupId>
+            <artifactId>intact-search-interactions-service</artifactId>
+            <version>${search.interaction.service.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>psidev.psi.mi.jami</groupId>
             <artifactId>jami-interactionviewer-json</artifactId>
             <version>${psi.jami.version}</version>
@@ -58,16 +64,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!--For Unit Tests-->
-        <!-- TODO-->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.6</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
