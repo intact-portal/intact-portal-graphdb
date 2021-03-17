@@ -17,7 +17,7 @@
         "db": "uniprotkb",
         "id": "O14048"
       },
-      "label": "ubx2_schpo"
+      "label": "ubx2"
     },
     {
       "object": "interactor",
@@ -36,7 +36,7 @@
         "db": "uniprotkb",
         "id": "Q9P3A7"
       },
-      "label": "cdc48_schpo"
+      "label": "cdc48"
     },
     {
       "object": "interaction",

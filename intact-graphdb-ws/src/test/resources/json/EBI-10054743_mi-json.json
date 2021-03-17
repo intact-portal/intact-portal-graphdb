@@ -17,7 +17,7 @@
         "db": "uniprotkb",
         "id": "Q9BXL7"
       },
-      "label": "car11_human"
+      "label": "CARD11"
     },
     {
       "object": "interactor",
@@ -36,7 +36,7 @@
         "db": "uniprotkb",
         "id": "P31749"
       },
-      "label": "akt1_human"
+      "label": "AKT1"
     },
     {
       "object": "interaction",

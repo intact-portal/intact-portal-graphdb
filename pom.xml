@@ -22,8 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <!--<neo4j-ogm.version>2.1.3</neo4j-ogm.version>-->
-        <psi.jami.version>3.0.19-SNAPSHOT</psi.jami.version>
+        <psi.jami.version>3.2.10-SNAPSHOT</psi.jami.version>
+        <search.interaction.service.version>1.0.6-SNAPSHOT</search.interaction.service.version>
         <neo4j.version>3.2.13</neo4j.version>
     </properties>
 

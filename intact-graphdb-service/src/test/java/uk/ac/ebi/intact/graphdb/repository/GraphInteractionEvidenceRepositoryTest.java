@@ -19,8 +19,10 @@ import uk.ac.ebi.intact.graphdb.model.nodes.*;
 import uk.ac.ebi.intact.graphdb.utils.Constants;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by anjali on 07/02/19.
@@ -74,6 +76,59 @@ public class GraphInteractionEvidenceRepositoryTest {
         Assert.assertNotNull("Publication not present", graphInteractionEvidence.getExperiment().getPublication());
         Assert.assertEquals("Publication shortlabel not present", "25314077",
                 ((GraphPublication) graphInteractionEvidence.getExperiment().getPublication()).getPubmedIdStr());
+    }
+
+    @Test
+    public void getInteractionEvidenceByAcs() {
+        int pageNumber = 0;
+        int totalElements = 0;
+        int pageSize = 2;
+        int depth = 0;
+        Page<GraphInteractionEvidence> page;
+
+        List<String> interactionAcsToTest = new ArrayList<>();
+        interactionAcsToTest.add("EBI-10052707");// generic checking
+        interactionAcsToTest.add("EBI-10048599");// for checking interaction parameters
+        interactionAcsToTest.add("EBI-10049314");// for checking expressedIn
+        interactionAcsToTest.add("EBI-10054743");// for checking linkedFeatures
+        interactionAcsToTest.add("EBI-10042058");// for checking linkedFeatures
+        interactionAcsToTest.add("EBI-1005174"); // for checking interpro
+        interactionAcsToTest.add("EBI-1004945"); // for checking experiment modifications
+        interactionAcsToTest.add("EBI-10052707");// duplicated interaction on purpose
+        interactionAcsToTest.add("EBI-10052707b");// non existing interaction on purpose
+
+        do {
+            page = graphInteractionEvidenceRepository.findByAcIn(interactionAcsToTest, PageRequest.of(pageNumber, pageSize), depth);
+            Assert.assertNotNull("Page is Null", page);
+            totalElements = totalElements + page.getNumberOfElements();
+            pageNumber++;
+        } while (page.hasNext());
+
+        Assert.assertEquals(pageNumber, page.getTotalPages());
+        Assert.assertEquals(totalElements, page.getTotalElements());
+        Assert.assertEquals(7, totalElements);
+        Assert.assertTrue(pageNumber > 1);
+
+    }
+
+    @Test
+    public void getInteractionEvidenceBy1000Acs() {
+        int pageNumber = 0;
+        int totalElements = 1000;
+        int pageSize = 1000;
+        int depth = 0;
+        Page<GraphInteractionEvidence> page;
+
+        List<String> interactionAcsToTest = graphInteractionEvidenceRepository.findAllInteractionAcs();
+        Assert.assertNotNull("Interaction ac list is Null", interactionAcsToTest);
+
+        page = graphInteractionEvidenceRepository.findByAcIn(interactionAcsToTest, PageRequest.of(pageNumber, pageSize), depth);
+        Assert.assertNotNull("Page is Null", page);
+
+
+        Assert.assertEquals(pageNumber, page.getTotalPages()-1);
+        Assert.assertEquals(totalElements, page.getTotalElements());
+        Assert.assertEquals(1000, totalElements);
     }
 
     @Test
@@ -137,10 +192,10 @@ public class GraphInteractionEvidenceRepositoryTest {
     public void findByInteractionAcForMiJson() {
         String ac = "EBI-10052707";
         GraphInteractionEvidence graphInteractionEvidence = null;
-        Page<GraphInteractionEvidence> page = graphInteractionEvidenceRepository.findTopByAc(ac, PageRequest.of(0, 1), 0);
-        if (page != null && !page.getContent().isEmpty()) {
-            graphInteractionEvidence = page.getContent().get(0);
-        }
+        graphInteractionEvidence = graphInteractionEvidenceRepository.findByAc(ac);
+//        if (page != null && !page.getContent().isEmpty()) {
+//            graphInteractionEvidence = page.getContent().get(0);
+//        }
 
         // interaction
         Assert.assertNotNull("Interaction:" + ac + " was expected here" + graphInteractionEvidence);
@@ -244,8 +299,8 @@ public class GraphInteractionEvidenceRepositoryTest {
         //Experiment...
         Experiment experiment = graphInteractionEvidence.getExperiment();
         Assert.assertNotNull("Experiment is null", experiment);
-        Assert.assertNotNull("Experiment Detection Method is null", experiment.getInteractionDetectionMethod());
-        Assert.assertEquals("Experiment Detection method has wrong name", "pull down", experiment.getInteractionDetectionMethod().
+        Assert.assertNotNull("Interaction Detection Method is null", experiment.getInteractionDetectionMethod());
+        Assert.assertEquals("Interaction Detection method has wrong name", "pull down", experiment.getInteractionDetectionMethod().
                 getShortName());
         Assert.assertEquals("Experiment Detection method has wrong Mi Identifier", "MI:0096", experiment.getInteractionDetectionMethod().
                 getMIIdentifier());

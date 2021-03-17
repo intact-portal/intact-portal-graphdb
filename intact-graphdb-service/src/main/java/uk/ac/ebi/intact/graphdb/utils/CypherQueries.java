@@ -301,5 +301,11 @@ public class CypherQueries {
             "MATCH (interaction:GraphBinaryInteractionEvidence)" +
                     "WHERE ID(interaction)={binary_id}" +
                     "RETURN interaction";
+    public static final String INTERACTION_ACS =
+            "MATCH (interaction:GraphInteractionEvidence) RETURN interaction.ac";
+
+    public static final String INTERACTION_ACS_COUNT =
+            "MATCH (interaction:GraphInteractionEvidence) RETURN COUNT(interaction.ac)";
+
 
 }

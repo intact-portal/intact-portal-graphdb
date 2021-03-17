@@ -84,7 +84,7 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
         setGraphCurationDepth(new GraphCurationDepth(curationDepth));
         setReleasedDate(publication.getReleasedDate());
         setSource(publication.getSource());
-        setPubmedId(publication.getPubmedId());
+//        setPubmedId(publication.getPubmedId());
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
         setAc(CommonUtility.extractAc(publication));

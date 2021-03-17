@@ -17,7 +17,7 @@
         "db": "uniprotkb",
         "id": "P36102"
       },
-      "label": "pan3_yeast"
+      "label": "PAN3"
     },
     {
       "object": "interactor",
@@ -36,7 +36,7 @@
         "db": "uniprotkb",
         "id": "P53010"
       },
-      "label": "pan2_yeast"
+      "label": "PAN2"
     },
     {
       "object": "interaction",
