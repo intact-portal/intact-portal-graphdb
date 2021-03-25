@@ -66,14 +66,15 @@ public class ExportControllerTest {
         String[] acs = {"EBI-10043643","EBI-10043649","EBI-10043655","EBI-10043691","EBI-10043699"};
         boolean batchSearch = false;
         Set<String> interactorSpeciesFilter = null;
-        Set<String> interactorTypeFilter = null;
-        Set<String> interactionDetectionMethodFilter = null;
-        Set<String> interactionTypeFilter = null;
-        Set<String> interactionHostOrganismFilter = null;
+        Set<String> interactorTypesFilter = null;
+        Set<String> interactionDetectionMethodsFilter = null;
+        Set<String> interactionTypesFilter = null;
+        Set<String> interactionHostOrganismsFilter = null;
         boolean isNegativeFilter = false;
+        boolean mutationFilter = false;
         double minMiScore = 0.0;
         double maxMiScore = 1.0;
-        boolean interSpecies = false;
+        boolean intraSpeciesFilter = false;
         Set<Integer> binaryInteractionIdFilter = null;
         Set<String> interactorAcFilter = null;
         Pageable page = PageRequest.of(0,100);
@@ -89,24 +90,24 @@ public class ExportControllerTest {
         Page<SearchInteraction> result = new PageImpl<>(interactionIdentifiers);
 
         doReturn(5L).when(interactionSearchService).countInteractionResult(query, batchSearch, interactorSpeciesFilter,
-                interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, interSpecies,
+                interactorTypesFilter, interactionDetectionMethodsFilter, interactionTypesFilter,
+                interactionHostOrganismsFilter, isNegativeFilter, mutationFilter, minMiScore, maxMiScore, intraSpeciesFilter,
                 binaryInteractionIdFilter, interactorAcFilter);
 
 
 //        given(interactionSearchService.countInteractionResult(query, batchSearch, interactorSpeciesFilter,
 //                interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-//                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, interSpecies,
+//                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, intraSpeciesFilter,
 //                binaryInteractionIdFilter, interactorAcFilter)).willReturn(5L);
 
         doReturn(result).when(interactionSearchService).findInteractionIdentifiers(query, batchSearch, interactorSpeciesFilter,
-                interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, interSpecies,
+                interactorTypesFilter, interactionDetectionMethodsFilter, interactionTypesFilter,
+                interactionHostOrganismsFilter, isNegativeFilter, mutationFilter, minMiScore, maxMiScore, intraSpeciesFilter,
                 binaryInteractionIdFilter, interactorAcFilter, page);
 
 //        given(interactionSearchService.findInteractionIdentifiers(query, batchSearch, interactorSpeciesFilter,
 //                interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-//                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, interSpecies,
+//                interactionHostOrganismFilter, isNegativeFilter, minMiScore, maxMiScore, intraSpeciesFilter,
 //                binaryInteractionIdFilter, interactorAcFilter, page)).willReturn(result);
     }
 

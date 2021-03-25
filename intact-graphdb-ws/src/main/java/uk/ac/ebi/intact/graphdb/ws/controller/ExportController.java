@@ -74,17 +74,18 @@ public class ExportController {
     public ResponseEntity<StreamingResponseBody> exportInteraction(
             @RequestParam(value = "query") String query,
             @RequestParam(value = "batchSearch", required = false) boolean batchSearch,
-            @RequestParam(value = "interactorSpeciesFilter", required = false) Set<String> interactorSpeciesFilter,
-            @RequestParam(value = "interactorTypeFilter", required = false) Set<String> interactorTypeFilter,
-            @RequestParam(value = "interactionDetectionMethodFilter", required = false) Set<String> interactionDetectionMethodFilter,
-            @RequestParam(value = "interactionTypeFilter", required = false) Set<String> interactionTypeFilter,
-            @RequestParam(value = "interactionHostOrganismFilter", required = false) Set<String> interactionHostOrganismFilter,
-            @RequestParam(value = "isNegativeFilter", required = false) boolean isNegativeFilter,
-            @RequestParam(value = "minMiscore", defaultValue = "0", required = false) double minMiscore,
-            @RequestParam(value = "maxMiscore", defaultValue = "1", required = false) double maxMiscore,
-            @RequestParam(value = "interSpecies", required = false) boolean interSpecies,
-            @RequestParam(value = "binaryInteractionId[]", required = false) Set<Integer> binaryInteractionIdFilter,
-            @RequestParam(value = "interactorAc[]", required = false) Set<String> interactorAcFilter,
+            @RequestParam(value = "interactorSpecies", required = false) Set<String> interactorSpecies,
+            @RequestParam(value = "interactorTypesFilter", required = false) Set<String> interactorTypesFilter,
+            @RequestParam(value = "interactionDetectionMethodsFilter", required = false) Set<String> interactionDetectionMethodsFilter,
+            @RequestParam(value = "interactionTypesFilter", required = false) Set<String> interactionTypesFilter,
+            @RequestParam(value = "interactionHostOrganismsFilter", required = false) Set<String> interactionHostOrganismsFilter,
+            @RequestParam(value = "negativeFilter", required = false) boolean negativeFilter,
+            @RequestParam(value = "mutationFilter", required = false) boolean mutationFilter,
+            @RequestParam(value = "minMIScore", defaultValue = "0", required = false) double minMIScore,
+            @RequestParam(value = "maxMIScore", defaultValue = "1", required = false) double maxMIScore,
+            @RequestParam(value = "intraSpeciesFilter", required = false) boolean intraSpeciesFilter,
+            @RequestParam(value = "binaryInteractionIds", required = false) Set<Integer> binaryInteractionIds,
+            @RequestParam(value = "interactorAcs", required = false) Set<String> interactorAcs,
             @RequestParam(value = "format", defaultValue = "json", required = false) String format) {
 
         //TODO Sort the code repetition
@@ -95,17 +96,18 @@ public class ExportController {
             long results = interactionSearchService.countInteractionResult(
                     extractSearchTerms(query),
                     batchSearch,
-                    interactorSpeciesFilter,
-                    interactorTypeFilter,
-                    interactionDetectionMethodFilter,
-                    interactionTypeFilter,
-                    interactionHostOrganismFilter,
-                    isNegativeFilter,
-                    minMiscore,
-                    maxMiscore,
-                    interSpecies,
-                    binaryInteractionIdFilter,
-                    interactorAcFilter);
+                    interactorSpecies,
+                    interactorTypesFilter,
+                    interactionDetectionMethodsFilter,
+                    interactionTypesFilter,
+                    interactionHostOrganismsFilter,
+                    negativeFilter,
+                    mutationFilter,
+                    minMIScore,
+                    maxMIScore,
+                    intraSpeciesFilter,
+                    binaryInteractionIds,
+                    interactorAcs);
             if (results == 0) {
                 return ResponseEntity.notFound().build();
             }
@@ -128,17 +130,17 @@ public class ExportController {
                         interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
                                 extractSearchTerms(query),
                                 batchSearch,
-                                interactorSpeciesFilter,
-                                interactorTypeFilter,
-                                interactionDetectionMethodFilter,
-                                interactionTypeFilter,
-                                interactionHostOrganismFilter,
-                                isNegativeFilter,
-                                minMiscore,
-                                maxMiscore,
-                                interSpecies,
-                                binaryInteractionIdFilter,
-                                interactorAcFilter,
+                                interactorSpecies,
+                                interactorTypesFilter,
+                                interactionDetectionMethodsFilter,
+                                interactionTypesFilter,
+                                interactionHostOrganismsFilter,
+                                negativeFilter,
+                                mutationFilter, minMIScore,
+                                maxMIScore,
+                                intraSpeciesFilter,
+                                binaryInteractionIds,
+                                interactorAcs,
                                 interactionsPage);
 
                         // do processing
