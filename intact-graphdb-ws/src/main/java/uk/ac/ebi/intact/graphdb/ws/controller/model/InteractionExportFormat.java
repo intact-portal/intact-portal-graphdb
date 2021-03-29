@@ -7,12 +7,12 @@ import org.springframework.http.MediaType;
  */
 public enum InteractionExportFormat {
 
-    MIJSON("json", MediaType.APPLICATION_JSON, "json"),
-    MIXML25("xml25", MediaType.APPLICATION_XML, "xml"),
-    MIXML30("xml30", MediaType.APPLICATION_XML, "xml"),
-    MITAB25("tab25", MediaType.TEXT_PLAIN, "txt"),
-    MITAB26("tab26", MediaType.TEXT_PLAIN, "txt"),
-    MITAB27("tab27", MediaType.TEXT_PLAIN, "txt"),
+    miJSON("json", MediaType.APPLICATION_JSON, "json"),
+    miXML25("xml25", MediaType.APPLICATION_XML, "xml"),
+    miXML30("xml30", MediaType.APPLICATION_XML, "xml"),
+    miTab25("tab25", MediaType.TEXT_PLAIN, "tsv"),
+    miTab26("tab26", MediaType.TEXT_PLAIN, "tsv"),
+    miTab27("tab27", MediaType.TEXT_PLAIN, "tsv"),
     UNKNOWN("", MediaType.TEXT_PLAIN, "txt");
 
     String format;
@@ -36,16 +36,5 @@ public enum InteractionExportFormat {
 
     public String getExtension() {
         return extension;
-    }
-
-    public static InteractionExportFormat findByFormat(String format) {
-
-        for (InteractionExportFormat value : values()) {
-            if(value.format.equals(format)){
-                return value;
-            }
-        }
-
-        return UNKNOWN;
     }
 }

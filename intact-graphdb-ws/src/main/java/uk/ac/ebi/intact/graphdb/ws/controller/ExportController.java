@@ -70,11 +70,11 @@ public class ExportController {
 
     //TODO Why binaryInteractionId AND interactorAc are arrays?
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "/interaction/list")
+    @PostMapping(value = "/interaction/list")
     public ResponseEntity<StreamingResponseBody> exportInteraction(
             @RequestParam(value = "query") String query,
             @RequestParam(value = "batchSearch", required = false) boolean batchSearch,
-            @RequestParam(value = "interactorSpecies", required = false) Set<String> interactorSpecies,
+            @RequestParam(value = "interactorSpeciesFilter", required = false) Set<String> interactorSpeciesFilter,
             @RequestParam(value = "interactorTypesFilter", required = false) Set<String> interactorTypesFilter,
             @RequestParam(value = "interactionDetectionMethodsFilter", required = false) Set<String> interactionDetectionMethodsFilter,
             @RequestParam(value = "interactionTypesFilter", required = false) Set<String> interactionTypesFilter,
@@ -86,17 +86,16 @@ public class ExportController {
             @RequestParam(value = "intraSpeciesFilter", required = false) boolean intraSpeciesFilter,
             @RequestParam(value = "binaryInteractionIds", required = false) Set<Integer> binaryInteractionIds,
             @RequestParam(value = "interactorAcs", required = false) Set<String> interactorAcs,
-            @RequestParam(value = "format", defaultValue = "json", required = false) String format) {
+            @RequestParam(value = "format", defaultValue = "json", required = false) InteractionExportFormat format) {
 
         //TODO Sort the code repetition
 
-        InteractionExportFormat formatEnum = InteractionExportFormat.findByFormat(format);
-        String fileName = new SimpleDateFormat("yyyyMMddHHmm'." + formatEnum.getExtension() + "'").format(new Date());
+        String fileName = new SimpleDateFormat("yyyyMMddHHmm'." + format.getExtension() + "'").format(new Date());
         try {
             long results = interactionSearchService.countInteractionResult(
                     extractSearchTerms(query),
                     batchSearch,
-                    interactorSpecies,
+                    interactorSpeciesFilter,
                     interactorTypesFilter,
                     interactionDetectionMethodsFilter,
                     interactionTypesFilter,
@@ -117,7 +116,7 @@ public class ExportController {
 
         StreamingResponseBody responseBody = response -> {
 
-                InteractionWriter writer = createInteractionEvidenceWriterFor(formatEnum, response);
+                InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
 
                 Page<SearchInteraction> interactionIdentifiers;
                 Pageable interactionsPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
@@ -130,7 +129,7 @@ public class ExportController {
                         interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
                                 extractSearchTerms(query),
                                 batchSearch,
-                                interactorSpecies,
+                                interactorSpeciesFilter,
                                 interactorTypesFilter,
                                 interactionDetectionMethodsFilter,
                                 interactionTypesFilter,
@@ -181,7 +180,7 @@ public class ExportController {
             };
 
         return ResponseEntity.ok()
-                .contentType(formatEnum.getContentType())
+                .contentType(format.getContentType())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                 .header("X-Clacks-Overhead", "GNU Terry Pratchett") //In memory of Sir Terry Pratchett)
                 .body(responseBody);
@@ -198,7 +197,7 @@ public class ExportController {
     public ResponseEntity<StreamingResponseBody> exportInteraction(@PathVariable String ac,
                                                                    @RequestParam(value = "format",
                                                                            defaultValue = "json",
-                                                                           required = false) String format) {
+                                                                           required = false) InteractionExportFormat format) {
 
         //TODO Find a way to avoid the sorting of the interaction. It is needed for comparison in the tests
         try {
@@ -207,10 +206,8 @@ public class ExportController {
                 return ResponseEntity.notFound().build();
             }
 
-            InteractionExportFormat formatEnum = InteractionExportFormat.findByFormat(format);
-
             StreamingResponseBody responseBody = response -> {
-                InteractionWriter writer = createInteractionEvidenceWriterFor(formatEnum, response);
+                InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
                 try {
                     writer.start();
                     writer.write(interactionEvidence);
@@ -222,7 +219,7 @@ public class ExportController {
                 }
             };
             return ResponseEntity.ok()
-                    .contentType(formatEnum.getContentType())
+                    .contentType(format.getContentType())
                     .header("X-Clacks-Overhead", "GNU Terry Pratchett") //In memory of Sir Terry Pratchett)
                     .body(responseBody);
 
@@ -241,27 +238,27 @@ public class ExportController {
 
         switch (format) {
             /* For the XML formats we are going to write in expanded format (not compact) to ease the streaming */
-            case MIXML25:
+            case miXML25:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getDefaultExpandedXmlOptions(output, InteractionCategory.evidence,
                         ComplexType.n_ary, PsiXmlVersion.v2_5_4));
                 break;
-            case MIXML30:
+            case miXML30:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getDefaultExpandedXmlOptions(output, InteractionCategory.evidence,
                         ComplexType.n_ary, PsiXmlVersion.v3_0_0));
                 break;
-            case MITAB25:
+            case miTab25:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
                         ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_5, false));
                 break;
-            case MITAB26:
+            case miTab26:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
                         ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_6, false));
                 break;
-            case MITAB27:
+            case miTab27:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
                         new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_7, false));
                 break;
-            case MIJSON:
+            case miJSON:
                 try {
                     writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, null,
                             MIJsonType.n_ary_only, new CachedOlsOntologyTermFetcher(), null));

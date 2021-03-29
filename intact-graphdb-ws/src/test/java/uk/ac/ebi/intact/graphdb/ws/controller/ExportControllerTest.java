@@ -134,7 +134,7 @@ public class ExportControllerTest {
             System.out.println("Test interaction with ac: " + interactionAc);
 
             ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                    "/export/interaction/" + interactionAc + "?format={format}", String.class, MITAB25.getFormat());
+                    "/export/interaction/" + interactionAc + "?format={format}", String.class, miTab25.getFormat());
 
             assertNotNull("Response is null", response);
             assertNotNull("Response status line is null", response.getStatusCode());
@@ -179,7 +179,7 @@ public class ExportControllerTest {
             System.out.println("Test interaction with ac: " + interactionAc);
 
             ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                    "/export/interaction/" + interactionAc + "?format={format}", String.class, MITAB26.getFormat());
+                    "/export/interaction/" + interactionAc + "?format={format}", String.class, miTab26.getFormat());
 
             assertNotNull("Response is null", response);
             assertNotNull("Response status line is null", response.getStatusCode());
@@ -225,7 +225,7 @@ public class ExportControllerTest {
             System.out.println("Test interaction with ac: " + interactionAc);
 
             ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                    "/export/interaction/" + interactionAc + "?format={format}", String.class, MITAB27.getFormat());
+                    "/export/interaction/" + interactionAc + "?format={format}", String.class, miTab27.getFormat());
 
             assertNotNull("Response is null", response);
             assertNotNull("Response status line is null", response.getStatusCode());
@@ -339,7 +339,7 @@ public class ExportControllerTest {
                 System.out.println("Test interaction with ac: " + interactionAc);
 
                 ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                        "/export/interaction/" + interactionAc + "?format={format}", String.class, MIXML25.getFormat());
+                        "/export/interaction/" + interactionAc + "?format={format}", String.class, miXML25.getFormat());
 
                 assertNotNull("Response is null", response);
                 assertNotNull("Response status line is null", response.getStatusCode());
@@ -383,7 +383,7 @@ public class ExportControllerTest {
             System.out.println("Test interaction with ac: " + interactionAc);
 
             ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                    "/export/interaction/" + interactionAc + "?format={format}", String.class, MIXML30.getFormat());
+                    "/export/interaction/" + interactionAc + "?format={format}", String.class, miXML30.getFormat());
 
             assertNotNull("Response is null", response);
             assertNotNull("Response status line is null", response.getStatusCode());
@@ -417,7 +417,7 @@ public class ExportControllerTest {
         System.out.println("Test interaction with query: " + query);
 
         ResponseEntity<String>  response = restTemplate.getForEntity("http://localhost:" + port +
-                "/export/interaction/list?query=" + query + "&format={format}", String.class, MITAB25.getFormat());
+                "/export/interaction/list?query=" + query + "&format={format}", String.class, miTab25.getFormat());
 
         assertNotNull("Response is null", response);
         assertNotNull("Response status line is null", response.getStatusCode());
