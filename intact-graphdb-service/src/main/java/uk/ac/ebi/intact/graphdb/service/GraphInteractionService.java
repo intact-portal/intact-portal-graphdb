@@ -32,7 +32,7 @@ public class GraphInteractionService {
     * */
     public GraphBinaryInteractionEvidence findWithBinaryId(int id, int depth) {
         Optional<GraphBinaryInteractionEvidence> optionalGraphInteractionEvidence =
-                graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, depth);
+                graphBinaryInteractionEvidenceRepository.findByBinaryId(id, depth);
         return optionalGraphInteractionEvidence.orElse(null);
     }
 
@@ -65,6 +65,10 @@ public class GraphInteractionService {
 
     public Page<GraphInteractionEvidence> findByInteractionAcs(Iterable<String> acs, Pageable page) {
         return graphInteractionEvidenceRepository.findByAcIn(acs, page, 0);
+    }
+
+    public Slice<GraphBinaryInteractionEvidence> findByBinaryInteractionIds(Iterable<Long> ids, Pageable page) {
+        return graphBinaryInteractionEvidenceRepository.findByBinaryIdIn(ids, page, 0);
     }
 
     public GraphBinaryInteractionEvidence findBinaryInteractionByUniqueKey(String uniqueKey, int depth) {

@@ -43,6 +43,12 @@
             <groupId>psidev.psi.mi.jami.bridges</groupId>
             <artifactId>jami-ols</artifactId>
             <version>${psi.jami.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>uk.ac.ebi.pride.architectural</groupId>
+                    <artifactId>pride-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Swagger documentation dependencies -->

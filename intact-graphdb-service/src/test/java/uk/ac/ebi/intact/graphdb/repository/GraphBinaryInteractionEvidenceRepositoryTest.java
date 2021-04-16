@@ -48,8 +48,8 @@ public class GraphBinaryInteractionEvidenceRepositoryTest {
      * TODO... This test won't be needed when we have binary ids in database
      * */
     public void findById() {
-        int id = 20188;
-        Optional<GraphBinaryInteractionEvidence> optionalGraphBinaryInteractionEvidence = graphBinaryInteractionEvidenceRepository.findWithBinaryId(id, 0);
+        long id = 20188;
+        Optional<GraphBinaryInteractionEvidence> optionalGraphBinaryInteractionEvidence = graphBinaryInteractionEvidenceRepository.findByBinaryId(id, 0);
         Assert.assertNotNull(optionalGraphBinaryInteractionEvidence.orElse(null));
     }
 

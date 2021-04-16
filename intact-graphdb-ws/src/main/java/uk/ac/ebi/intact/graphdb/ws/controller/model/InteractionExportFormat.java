@@ -7,13 +7,14 @@ import org.springframework.http.MediaType;
  */
 public enum InteractionExportFormat {
 
-    MIJSON("json", MediaType.APPLICATION_JSON, "json"),
-    MIXML25("xml25", MediaType.APPLICATION_XML, "xml"),
-    MIXML30("xml30", MediaType.APPLICATION_XML, "xml"),
-    MITAB25("tab25", MediaType.TEXT_PLAIN, "txt"),
-    MITAB26("tab26", MediaType.TEXT_PLAIN, "txt"),
-    MITAB27("tab27", MediaType.TEXT_PLAIN, "txt"),
-    UNKNOWN("", MediaType.TEXT_PLAIN, "txt");
+    // Note: We don't use the capitalization for aesthetic purposes.
+    // The enums are shown to the users in the swagger documentation.
+    miJSON("json", MediaType.APPLICATION_JSON, "json"),
+    miXML25("xml25", MediaType.APPLICATION_XML, "xml"),
+    miXML30("xml30", MediaType.APPLICATION_XML, "xml"),
+    miTab25("tab25", MediaType.TEXT_PLAIN, "txt"),
+    miTab26("tab26", MediaType.TEXT_PLAIN, "txt"),
+    miTab27("tab27", MediaType.TEXT_PLAIN, "txt");
 
     String format;
     MediaType contentType;
@@ -46,6 +47,6 @@ public enum InteractionExportFormat {
             }
         }
 
-        return UNKNOWN;
+        return miJSON;
     }
 }

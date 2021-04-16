@@ -361,6 +361,10 @@ public class GraphInteractionEvidence extends GraphDatabaseObject implements Int
         }
     }
 
+    public Collection<GraphBinaryInteractionEvidence> getBinaryInteractionEvidences() {
+        return binaryInteractionEvidences;
+    }
+
     public Date getUpdatedDate() {
         return this.updatedDate;
     }
@@ -573,6 +577,8 @@ public class GraphInteractionEvidence extends GraphDatabaseObject implements Int
             clearPropertiesLinkedToXrefs();
         }
     }*/
+
+
     public Map<String, Object> getNodeProperties() {
         return nodeProperties;
     }

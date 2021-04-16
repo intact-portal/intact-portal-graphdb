@@ -178,7 +178,10 @@ public class ParticipantDetailsResult implements Page<ParticipantDetails> {
             participant.getParameters().forEach(parameter -> {
                 if (parameter.getType() != null) {
                     CvTerm paramType = new CvTerm(parameter.getType().getShortName(), parameter.getType().getMIIdentifier());
-                    CvTerm paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                    CvTerm paramUnit = null;
+                    if(parameter.getUnit() != null) {
+                        paramUnit = new CvTerm(parameter.getUnit().getShortName(), parameter.getUnit().getMIIdentifier());
+                    }
                     parameters.add(new Parameter(paramType, paramUnit, parameter.getValue().toString()));
                 }
             });

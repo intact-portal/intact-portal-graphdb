@@ -298,9 +298,19 @@ public class CypherQueries {
                     "";
 
     public static final String INTERACTION_BY_BINARY_ID =
-            "MATCH (interaction:GraphBinaryInteractionEvidence)" +
-                    "WHERE ID(interaction)={binary_id}" +
+            "MATCH (interaction:GraphBinaryInteractionEvidence) " +
+                    "WHERE ID(interaction)={binaryId} " +
                     "RETURN interaction";
+
+    public static final String INTERACTION_BY_BINARY_ID_LIST =
+            "MATCH (interaction:GraphBinaryInteractionEvidence) " +
+                    "WHERE ID(interaction) IN {binaryIds} " +
+                    "RETURN interaction";
+
+    public static final String INTERACTION_BY_BINARY_ID_LIST_COUNT =
+            "MATCH (interaction:GraphBinaryInteractionEvidence) " +
+                    "WHERE ID(interaction) IN {binaryIds} " +
+                    "RETURN COUNT(interaction)";
 
     public static final String INTERACTION_ACS =
             "MATCH (interaction:GraphInteractionEvidence) RETURN interaction.ac";
