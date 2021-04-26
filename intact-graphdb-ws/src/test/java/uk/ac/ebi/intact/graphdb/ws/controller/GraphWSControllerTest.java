@@ -92,6 +92,7 @@ public class GraphWSControllerTest {
         Set<String> interactionHostOrganismFilter = null;
         boolean negativeFilter = false;
         boolean mutationFilter = false;
+        boolean expansionFilter = false;
         double minMiScore = 0.0;
         double maxMiScore = 1.0;
         boolean interSpecies = false;
@@ -113,12 +114,12 @@ public class GraphWSControllerTest {
 
         doReturn(5L).when(interactionSearchService).countInteractionResult(query, batchSearch, interactorSpeciesFilter,
                 interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-                interactionHostOrganismFilter, negativeFilter, mutationFilter, minMiScore, maxMiScore, interSpecies,
+                interactionHostOrganismFilter, negativeFilter, mutationFilter, expansionFilter, minMiScore, maxMiScore, interSpecies,
                 binaryInteractionIds, interactorAcs);
 
         doReturn(result).when(interactionSearchService).findInteractionIdentifiers(query, batchSearch, interactorSpeciesFilter,
                 interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
-                interactionHostOrganismFilter, negativeFilter, mutationFilter, minMiScore, maxMiScore, interSpecies,
+                interactionHostOrganismFilter, negativeFilter, mutationFilter, expansionFilter, minMiScore, maxMiScore, interSpecies,
                 binaryInteractionIds, interactorAcs, page);
 
     }
