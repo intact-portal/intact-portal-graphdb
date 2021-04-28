@@ -218,6 +218,7 @@ public class ExportController {
             };
             return ResponseEntity.ok()
                     .contentType(format.getContentType())
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ac + "." + format.getExtension())
                     .header("X-Clacks-Overhead", "GNU Terry Pratchett") //In memory of Sir Terry Pratchett)
                     .body(responseBody);
 
