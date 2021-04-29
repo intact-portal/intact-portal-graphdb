@@ -74,7 +74,7 @@ public class ExportController {
             @RequestParam(value = "expansionFilter", required = false) boolean expansionFilter,
             @RequestParam(value = "minMIScore", defaultValue = "0", required = false) double minMIScore,
             @RequestParam(value = "maxMIScore", defaultValue = "1", required = false) double maxMIScore,
-            @RequestParam(value = "interSpecies", required = false) boolean interSpecies,
+            @RequestParam(value = "intraSpecies", required = false) boolean intraSpecies,
             @RequestParam(value = "binaryInteractionIds", required = false) Set<Long> binaryInteractionIds,
             @RequestParam(value = "interactorAcs", required = false) Set<String> interactorAcs,
             @RequestParam(value = "format", defaultValue = "miJSON", required = false) InteractionExportFormat format) {
@@ -96,7 +96,7 @@ public class ExportController {
                     expansionFilter,
                     minMIScore,
                     maxMIScore,
-                    interSpecies,
+                    intraSpecies,
                     binaryInteractionIds,
                     interactorAcs);
             if (results == 0) {
@@ -131,7 +131,7 @@ public class ExportController {
                                 expansionFilter,
                                 minMIScore,
                                 maxMIScore,
-                                interSpecies,
+                                intraSpecies,
                                 binaryInteractionIds,
                                 interactorAcs,
                                 interactionsPage);
