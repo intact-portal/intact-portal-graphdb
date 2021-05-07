@@ -44,7 +44,7 @@ import java.util.Set;
 public class ExportController {
 
     private static final int FIRST_PAGE = 0;
-    private static final int DEFAULT_PAGE_SIZE = 100;
+    private static final int DEFAULT_PAGE_SIZE = 30;
 
     private final GraphInteractionService graphInteractionService;
     private final InteractionSearchService interactionSearchService;
