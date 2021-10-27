@@ -32,6 +32,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import psidev.psi.mi.jami.tab.utils.MitabUtils;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
@@ -177,6 +178,7 @@ public class GraphWSControllerTest {
         interactionAcsToTest.add("EBI-10042058");// for checking linkedFeatures
         interactionAcsToTest.add("EBI-1005174"); // for checking interpro
         interactionAcsToTest.add("EBI-1004945"); // for checking experiment modifications
+        interactionAcsToTest.add("EBI-10052477");// for annotations
 
         for (String interactionAc : interactionAcsToTest) {
 
@@ -193,7 +195,7 @@ public class GraphWSControllerTest {
             assertEquals("text", response.getHeaders().getContentType().getType());
             assertEquals("plain", response.getHeaders().getContentType().getSubtype());
 
-            // System.out.println(response.getBody());
+            System.out.println(response.getBody());
             String file = GraphWSControllerTest.class.getResource("/mitab/"+ interactionAc + "-miTab26.txt").getFile();
             assertEquals( new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
 
@@ -211,6 +213,7 @@ public class GraphWSControllerTest {
         interactionAcsToTest.add("EBI-10042058");// for checking linkedFeatures
         interactionAcsToTest.add("EBI-1005174"); // for checking interpro
         interactionAcsToTest.add("EBI-1004945"); // for checking experiment modifications
+        interactionAcsToTest.add("EBI-10052477");// for annotations
 
         for (String interactionAc : interactionAcsToTest) {
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
 import psidev.psi.mi.jami.binary.expansion.InteractionEvidenceSpokeExpansion;
 import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
 import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
@@ -20,8 +21,7 @@ import psidev.psi.mi.jami.factory.InteractionWriterFactory;
 import psidev.psi.mi.jami.json.InteractionViewerJson;
 import psidev.psi.mi.jami.json.MIJsonOptionFactory;
 import psidev.psi.mi.jami.json.MIJsonType;
-import psidev.psi.mi.jami.model.ComplexType;
-import psidev.psi.mi.jami.model.InteractionCategory;
+import psidev.psi.mi.jami.model.*;
 import psidev.psi.mi.jami.tab.MitabVersion;
 import psidev.psi.mi.jami.xml.PsiXmlVersion;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
@@ -32,9 +32,7 @@ import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ntoro on 02/08/2017.
@@ -108,69 +106,70 @@ public class ExportController {
 
         StreamingResponseBody responseBody = response -> {
 
-                InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
+            InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
 
-                Page<SearchInteraction> interactionIdentifiers;
-                Pageable interactionsPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
+            Page<SearchInteraction> interactionIdentifiers;
+            Pageable interactionsPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
 
-                try {
-                    writer.start();
+            try {
+                writer.start();
 
-                    // TODO check when we have the binary identifiers if we need to check from duplicated interactions. Probably not
+                // TODO check when we have the binary identifiers if we need to check from duplicated interactions. Probably not
+                do {
+                    interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
+                            query,
+                            batchSearch,
+                            interactorSpeciesFilter,
+                            interactorTypesFilter,
+                            interactionDetectionMethodsFilter,
+                            interactionTypesFilter,
+                            interactionHostOrganismsFilter,
+                            negativeFilter,
+                            mutationFilter,
+                            expansionFilter,
+                            minMIScore,
+                            maxMIScore,
+                            intraSpecies,
+                            binaryInteractionIds,
+                            interactorAcs,
+                            interactionsPage);
+
+                    // do processing
+                    Set<Long> acs = new HashSet<>();
+                    for (SearchInteraction interactionIdentifier : interactionIdentifiers) {
+                        acs.add(interactionIdentifier.getBinaryInteractionId());
+                    }
+
+                    Slice<GraphBinaryInteractionEvidence> graphInteractionEvidences;
+                    Pageable identifierPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
+
+
                     do {
-                        interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
-                                query,
-                                batchSearch,
-                                interactorSpeciesFilter,
-                                interactorTypesFilter,
-                                interactionDetectionMethodsFilter,
-                                interactionTypesFilter,
-                                interactionHostOrganismsFilter,
-                                negativeFilter,
-                                mutationFilter,
-                                expansionFilter,
-                                minMIScore,
-                                maxMIScore,
-                                intraSpecies,
-                                binaryInteractionIds,
-                                interactorAcs,
-                                interactionsPage);
+                        graphInteractionEvidences = graphInteractionService.findByBinaryInteractionIds(acs, identifierPage);
 
-                        // do processing
-                        Set<Long> acs = new HashSet<>();
-                        for (SearchInteraction interactionIdentifier : interactionIdentifiers) {
-                            acs.add(interactionIdentifier.getBinaryInteractionId());
+                        for (GraphInteractionEvidence graphInteractionEvidence : graphInteractionEvidences) {
+                            cleanBinariesForExport(graphInteractionEvidence);
+                            writer.write(graphInteractionEvidence);
                         }
 
-                        Slice<GraphBinaryInteractionEvidence> graphInteractionEvidences;
-                        Pageable identifierPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
-
-
-                        do {
-                            graphInteractionEvidences = graphInteractionService.findByBinaryInteractionIds(acs, identifierPage);
-
-                            for (GraphInteractionEvidence graphInteractionEvidence : graphInteractionEvidences) {
-                                writer.write(graphInteractionEvidence);
-                            }
-
-                            //advance to next page
-                            identifierPage = identifierPage.next();
-
-                        } while (graphInteractionEvidences.hasNext());
-
                         //advance to next page
-                        interactionsPage = interactionsPage.next();
+                        identifierPage = identifierPage.next();
 
-                    } while (interactionIdentifiers.hasNext());
+                    } while (graphInteractionEvidences.hasNext());
 
-                    writer.end();
+                    //advance to next page
+                    interactionsPage = interactionsPage.next();
 
-                } finally {
-                    if (writer != null) {
-                        writer.close();
-                    }
+                } while (interactionIdentifiers.hasNext());
+
+                writer.end();
+
+            } finally {
+                if (writer != null) {
+                    writer.close();
                 }
-            };
+            }
+        };
 
         return ResponseEntity.ok()
                 .contentType(format.getContentType())
@@ -208,6 +207,7 @@ public class ExportController {
                 InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
                 try {
                     writer.start();
+                    cleanBinariesForExport(interactionEvidence);
                     writer.write(interactionEvidence);
                     writer.end();
                 } finally {
@@ -269,5 +269,58 @@ public class ExportController {
                 break;
         }
         return writer;
+    }
+
+    private void cleanBinariesForExport(InteractionEvidence interactionEvidence) {
+        try {
+            Iterator<Annotation> iterator= interactionEvidence.getAnnotations().iterator();
+            while (iterator.hasNext()) {
+                Annotation annotation=iterator.next();
+                if (annotation.getValue().contains("\r\n")) { //windows text
+                    String annotValue = annotation.getValue().replaceAll("\r\n", " ");
+                    annotation.setValue(annotValue);
+                }
+                if(annotation.getValue().contains("\n")){
+                    String annotValue = annotation.getValue().replaceAll("\n", " ");
+                    annotation.setValue(annotValue);
+                }
+                if(annotation.getValue().contains("\r")){ //mac text
+                    String annotValue = annotation.getValue().replaceAll("\r", " ");
+                    annotation.setValue(annotValue);
+                }
+            }
+        } catch (Exception e) {}
+
+        try{
+            Publication publication=interactionEvidence.getExperiment().getPublication();
+            List<String> cleanedAuthors=new ArrayList<>();
+            boolean areAuthorsClean = true;
+            for(String author:publication.getAuthors()){
+                String cleanedAuthor=author;
+                if (author.contains("\r\n")) { //windows text
+                    cleanedAuthor = author.replaceAll("\r\n", "");
+                    areAuthorsClean=false;
+                }else if(author.contains("\n")){
+                    cleanedAuthor = author.replaceAll("\n", "");
+                    areAuthorsClean=false;
+                }else if(author.contains("\r")){ //mac text
+                    cleanedAuthor = author.replaceAll("\r", "");
+                    areAuthorsClean=false;
+                }
+                if (cleanedAuthor.contains(",")) {
+                    areAuthorsClean=false;
+                    cleanedAuthors.addAll(Arrays.asList(cleanedAuthor.split(",")));
+                } else if(cleanedAuthor.contains(";")){
+                    areAuthorsClean=false;
+                    cleanedAuthors.addAll(Arrays.asList(cleanedAuthor.split(";")));
+                }else{
+                    cleanedAuthors.add(cleanedAuthor);
+                }
+            }
+            if(!areAuthorsClean) {
+                publication.getAuthors().clear();
+                publication.getAuthors().addAll(cleanedAuthors);
+            }
+        } catch (Exception e) {}
     }
 }
