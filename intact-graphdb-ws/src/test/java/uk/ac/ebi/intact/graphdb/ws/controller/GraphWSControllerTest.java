@@ -538,7 +538,7 @@ public class GraphWSControllerTest {
                 null, hostOrganism, experimentXrefs, experimentAnnotations);
         InteractionDetails interactionDetails = new InteractionDetails(null, null,
                 null, interactionXrefs, interactionAnnotations, null, null,
-                null, null, null);
+                null, null, null,false);
 
         interactionController.shuffleDataBetweenModels(experimentDetails,
                 publicationDetails, interactionDetails);

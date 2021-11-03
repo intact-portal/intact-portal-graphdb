@@ -92,7 +92,7 @@ public class InteractionController {
 
         ExperimentDetails experimentDetails = createExperimentDetails(graphExperiment);
         PublicationDetails publicationDetails = createPublicationDetails(graphExperiment);
-        InteractionDetails interactionDetails = new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, publicationDetails, null, null);
+        InteractionDetails interactionDetails = new InteractionDetails(ac, interactionType, shortLabel, xrefs, annotations, parameters, confidences, publicationDetails, null, null,graphInteractionEvidence.isNegative());
 
         shuffleDataBetweenModels(experimentDetails, publicationDetails, interactionDetails);
         return interactionDetails;

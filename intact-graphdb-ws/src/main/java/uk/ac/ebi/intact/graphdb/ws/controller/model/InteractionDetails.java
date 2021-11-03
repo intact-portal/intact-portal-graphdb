@@ -18,11 +18,12 @@ public class InteractionDetails {
     private PublicationDetails publication;
     private CvTerm detectionMethod;
     private Organism hostOrganism;
+    private boolean negative;
 
     public InteractionDetails(String interactionAc, CvTerm interactionType, String shortLabel,
                               Set<Xref> xrefs, Set<Annotation> annotations,
                               Collection<Parameter> parameters, Collection<Confidence> confidences,
-                              PublicationDetails publication, CvTerm detectionMethod, Organism hostOrganism) {
+                              PublicationDetails publication, CvTerm detectionMethod, Organism hostOrganism, boolean negative) {
         this.interactionAc = interactionAc;
         this.type = interactionType;
         this.shortLabel = shortLabel;
@@ -33,6 +34,7 @@ public class InteractionDetails {
         this.publication = publication;
         this.detectionMethod = detectionMethod;
         this.hostOrganism = hostOrganism;
+        this.negative = negative;
     }
 
     public String getInteractionAc() {
@@ -113,5 +115,13 @@ public class InteractionDetails {
 
     public void setHostOrganism(Organism hostOrganism) {
         this.hostOrganism = hostOrganism;
+    }
+
+    public boolean isNegative() {
+        return negative;
+    }
+
+    public void setNegative(boolean negative) {
+        this.negative = negative;
     }
 }
