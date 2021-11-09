@@ -30,6 +30,7 @@ import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.InteractionExportFormat;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
+import uk.ac.ebi.intact.search.interactions.utils.NegativeFilterStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -67,7 +68,7 @@ public class ExportController {
             @RequestParam(value = "interactionDetectionMethodsFilter", required = false) Set<String> interactionDetectionMethodsFilter,
             @RequestParam(value = "interactionTypesFilter", required = false) Set<String> interactionTypesFilter,
             @RequestParam(value = "interactionHostOrganismsFilter", required = false) Set<String> interactionHostOrganismsFilter,
-            @RequestParam(value = "negativeFilter", required = false) boolean negativeFilter,
+            @RequestParam(value = "negativeFilter", required = false, defaultValue = "POSITIVE_ONLY") NegativeFilterStatus negativeFilter,
             @RequestParam(value = "mutationFilter", required = false) boolean mutationFilter,
             @RequestParam(value = "expansionFilter", required = false) boolean expansionFilter,
             @RequestParam(value = "minMIScore", defaultValue = "0", required = false) double minMIScore,
@@ -89,7 +90,7 @@ public class ExportController {
                     interactionDetectionMethodsFilter,
                     interactionTypesFilter,
                     interactionHostOrganismsFilter,
-                    negativeFilter,
+                    negativeFilter.booleanValue,
                     mutationFilter,
                     expansionFilter,
                     minMIScore,
@@ -124,7 +125,7 @@ public class ExportController {
                             interactionDetectionMethodsFilter,
                             interactionTypesFilter,
                             interactionHostOrganismsFilter,
-                            negativeFilter,
+                            negativeFilter.booleanValue,
                             mutationFilter,
                             expansionFilter,
                             minMIScore,
