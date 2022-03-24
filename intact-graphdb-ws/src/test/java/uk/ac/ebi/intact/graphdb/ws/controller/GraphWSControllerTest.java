@@ -32,7 +32,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import psidev.psi.mi.jami.tab.utils.MitabUtils;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.*;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
@@ -86,6 +85,7 @@ public class GraphWSControllerTest {
         long[] binaryIds = {39572, 39606, 39617, 39669, 39686};
 
         boolean batchSearch = false;
+        boolean advancedSearch = false;
         Set<String> interactorSpeciesFilter = null;
         Set<String> interactorTypeFilter = null;
         Set<String> interactionDetectionMethodFilter = null;
@@ -99,7 +99,7 @@ public class GraphWSControllerTest {
         boolean interSpecies = false;
         Set<Long> binaryInteractionIds = null;
         Set<String> interactorAcs = null;
-        Pageable page = PageRequest.of(0,100);
+        Pageable page = PageRequest.of(0, 100);
 
         //Mock the searchInteractionService
         ArrayList<SearchInteraction> interactionIdentifiers = new ArrayList<>();
@@ -113,12 +113,12 @@ public class GraphWSControllerTest {
 
         Page<SearchInteraction> result = new PageImpl<>(interactionIdentifiers);
 
-        doReturn(5L).when(interactionSearchService).countInteractionResult(query, batchSearch, interactorSpeciesFilter,
+        doReturn(5L).when(interactionSearchService).countInteractionResult(query, batchSearch, advancedSearch, interactorSpeciesFilter,
                 interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
                 interactionHostOrganismFilter, negativeFilter, mutationFilter, expansionFilter, minMiScore, maxMiScore, interSpecies,
                 binaryInteractionIds, interactorAcs);
 
-        doReturn(result).when(interactionSearchService).findInteractionIdentifiers(query, batchSearch, interactorSpeciesFilter,
+        doReturn(result).when(interactionSearchService).findInteractionIdentifiers(query, batchSearch, advancedSearch, interactorSpeciesFilter,
                 interactorTypeFilter, interactionDetectionMethodFilter, interactionTypeFilter,
                 interactionHostOrganismFilter, negativeFilter, mutationFilter, expansionFilter, minMiScore, maxMiScore, interSpecies,
                 binaryInteractionIds, interactorAcs, page);
@@ -161,8 +161,8 @@ public class GraphWSControllerTest {
             assertNotNull(disposition);
 
             // System.out.println(response.getBody());
-            String file = GraphWSControllerTest.class.getResource("/mitab/"+ interactionAc + "-miTab25.txt").getFile();
-            assertEquals( new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
+            String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab25.txt").getFile();
+            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
 
         }
     }
@@ -196,8 +196,8 @@ public class GraphWSControllerTest {
             assertEquals("plain", response.getHeaders().getContentType().getSubtype());
 
             System.out.println(response.getBody());
-            String file = GraphWSControllerTest.class.getResource("/mitab/"+ interactionAc + "-miTab26.txt").getFile();
-            assertEquals( new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
+            String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab26.txt").getFile();
+            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
 
         }
     }
@@ -231,8 +231,8 @@ public class GraphWSControllerTest {
             assertEquals("plain", response.getHeaders().getContentType().getSubtype());
 
             // System.out.println(response.getBody());
-            String file = GraphWSControllerTest.class.getResource("/mitab/"+ interactionAc + "-miTab27.txt").getFile();
-            assertEquals( new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
+            String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab27.txt").getFile();
+            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
 
         }
     }
@@ -319,20 +319,20 @@ public class GraphWSControllerTest {
 
         for (String interactionAc : interactionAcsToTest) {
 
-                System.out.println("Test interaction with ac: " + interactionAc);
+            System.out.println("Test interaction with ac: " + interactionAc);
 
-                ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
-                        "/export/interaction/" + interactionAc + "?format={format}", String.class, miXML25);
+            ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port +
+                    "/export/interaction/" + interactionAc + "?format={format}", String.class, miXML25);
 
-                assertNotNull("Response is null", response);
-                assertNotNull("Response status line is null", response.getStatusCode());
-                assertEquals("Response Code is wrong", 200, response.getStatusCodeValue());
+            assertNotNull("Response is null", response);
+            assertNotNull("Response status line is null", response.getStatusCode());
+            assertEquals("Response Code is wrong", 200, response.getStatusCodeValue());
 
-                assertNotNull(response.getHeaders().getContentType());
-                assertEquals("application", response.getHeaders().getContentType().getType());
-                assertEquals("xml", response.getHeaders().getContentType().getSubtype());
+            assertNotNull(response.getHeaders().getContentType());
+            assertEquals("application", response.getHeaders().getContentType().getType());
+            assertEquals("xml", response.getHeaders().getContentType().getSubtype());
 
-                //TODO Add XML comparison
+            //TODO Add XML comparison
         }
     }
 
@@ -383,7 +383,7 @@ public class GraphWSControllerTest {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameters, headers);
 
-        ResponseEntity<String>  response = restTemplate.postForEntity("http://localhost:" + port +
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port +
                 "/export/interaction/list?query=" + query + "&format={format}", request, String.class, miTab25);
 
         assertNotNull("Response is null", response);
@@ -401,7 +401,7 @@ public class GraphWSControllerTest {
         assertNotNull(fileName);
 
         String file = GraphWSControllerTest.class.getResource("/mitab/query-EBI-10043615-miTab25.txt").getFile();
-        assertEquals( new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
+        assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
 
     }
 
@@ -538,7 +538,7 @@ public class GraphWSControllerTest {
                 null, hostOrganism, experimentXrefs, experimentAnnotations);
         InteractionDetails interactionDetails = new InteractionDetails(null, null,
                 null, interactionXrefs, interactionAnnotations, null, null,
-                null, null, null,false);
+                null, null, null, false);
 
         interactionController.shuffleDataBetweenModels(experimentDetails,
                 publicationDetails, interactionDetails);
@@ -619,7 +619,7 @@ public class GraphWSControllerTest {
         }
     }
 
-    public boolean areFilesEqual (File file1, File file2) throws IOException {
+    public boolean areFilesEqual(File file1, File file2) throws IOException {
 
         BufferedReader reader1 = new BufferedReader(new FileReader(file1));
         BufferedReader reader2 = new BufferedReader(new FileReader(file2));
@@ -629,7 +629,7 @@ public class GraphWSControllerTest {
 
         boolean isEqual = true;
 
-        while (line1 != null && line2 != null && isEqual){
+        while (line1 != null && line2 != null && isEqual) {
             isEqual = line1.equals(line2);
             line1 = reader1.readLine();
             line2 = reader2.readLine();

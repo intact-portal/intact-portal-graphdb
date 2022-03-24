@@ -62,6 +62,7 @@ public class ExportController {
     public ResponseEntity<StreamingResponseBody> exportInteraction(
             @RequestParam(value = "query") String query,
             @RequestParam(value = "batchSearch", required = false) boolean batchSearch,
+            @RequestParam(value = "advancedSearch", required = false) boolean advancedSearch,
             @RequestParam(value = "interactorSpeciesFilter", required = false) Set<String> interactorSpeciesFilter,
             @RequestParam(value = "interactorTypesFilter", required = false) Set<String> interactorTypesFilter,
             @RequestParam(value = "interactionDetectionMethodsFilter", required = false) Set<String> interactionDetectionMethodsFilter,
@@ -84,6 +85,7 @@ public class ExportController {
             long results = interactionSearchService.countInteractionResult(
                     query,
                     batchSearch,
+                    advancedSearch,
                     interactorSpeciesFilter,
                     interactorTypesFilter,
                     interactionDetectionMethodsFilter,
@@ -119,6 +121,7 @@ public class ExportController {
                     interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
                             query,
                             batchSearch,
+                            advancedSearch,
                             interactorSpeciesFilter,
                             interactorTypesFilter,
                             interactionDetectionMethodsFilter,
