@@ -229,10 +229,10 @@ public class CollectionAdaptor {
         if (!featureEvidences.isEmpty()) {
             ModelledFeature modelledFeature = featureEvidences.iterator().next();
             if (modelledFeature instanceof GraphModelledFeature) {
-                return featureEvidences.stream().map(p -> (GraphModelledFeature) p).collect(Collectors.toList());
+                return featureEvidences.stream().map(p -> (GraphModelledFeature) p).collect(Collectors.toSet());
             }
         }
-        return featureEvidences.stream().map(GraphModelledFeature::new).collect(Collectors.toList());
+        return featureEvidences.stream().map(GraphModelledFeature::new).collect(Collectors.toSet());
     }
 
     public static Collection<GraphFeature> convertFeatureIntoGraphModel(Collection<Feature> featureEvidences) {

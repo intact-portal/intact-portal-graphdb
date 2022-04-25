@@ -174,6 +174,13 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
     /**
      * {@inheritDoc}
      */
+    public void setInterpro(GraphXref interpro) {
+        this.interpro = interpro;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void setInterpro(String interpro) {
         Collection<GraphXref> featureIdentifiers = getIdentifiers();
 
@@ -334,7 +341,7 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
 
     public Collection<GraphModelledFeature> getLinkedFeatures() {
         if (this.linkedFeatures == null) {
-            this.linkedFeatures = new ArrayList<GraphModelledFeature>();
+            this.linkedFeatures = new HashSet<>();
         }
         return this.linkedFeatures;
     }
@@ -343,7 +350,7 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
         if (linkedFeatures != null) {
             this.linkedFeatures = CollectionAdaptor.convertModelledFeatureIntoGraphModel(linkedFeatures);
         } else {
-            this.linkedFeatures = new ArrayList<GraphModelledFeature>();
+            this.linkedFeatures = new HashSet<>();
         }
     }
 
