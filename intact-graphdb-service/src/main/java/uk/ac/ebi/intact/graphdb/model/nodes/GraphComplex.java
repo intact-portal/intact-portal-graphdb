@@ -67,7 +67,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
     private Collection<GraphInteractionEvidence> interactionEvidences;
 
     @Relationship(type = RelationshipTypes.IC_PARTICIPANT)
-    private Collection<GraphModelledParticipant> components;
+    private Collection<GraphModelledParticipant> participants;
 
     @Relationship(type = RelationshipTypes.COOPERATIVE_EFFECT)
     private Collection<GraphCooperativeEffect> cooperativeEffects;
@@ -154,7 +154,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
         CommonUtility.createModelledConfidenceRelationShips(confidences, graphId);
         CommonUtility.createModelledParameterRelationShips(parameters, graphId);
         CommonUtility.createInteractionEvidenceRelationShips(interactionEvidences, graphId);
-        CommonUtility.createModelledParticipantsRelationShips(components, graphId);
+        CommonUtility.createModelledParticipantsRelationShips(participants, graphId);
         CommonUtility.createCooperativeEffectRelationShips(cooperativeEffects, graphId);
 
     }
@@ -177,17 +177,17 @@ public class GraphComplex extends GraphInteractor implements Complex {
 
 
     public Collection<GraphModelledParticipant> getParticipants() {
-        if (this.components == null) {
-            this.components = new ArrayList<GraphModelledParticipant>();
+        if (this.participants == null) {
+            this.participants = new ArrayList<GraphModelledParticipant>();
         }
-        return components;
+        return participants;
     }
 
     public void setParticipants(Collection<ModelledParticipant> components) {
         if (components != null) {
-            this.components = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
+            this.participants = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
         } else {
-            this.components = new ArrayList<GraphModelledParticipant>();
+            this.participants = new ArrayList<GraphModelledParticipant>();
         }
     }
 
@@ -196,11 +196,11 @@ public class GraphComplex extends GraphInteractor implements Complex {
         if (part == null) {
             return false;
         }
-        if (components == null) {
+        if (participants == null) {
             initialiseComponents();
         }
         part.setInteraction(this);
-        return components.add(new GraphModelledParticipant(part));
+        return participants.add(new GraphModelledParticipant(part));
     }
 
 
@@ -208,11 +208,11 @@ public class GraphComplex extends GraphInteractor implements Complex {
         if (part == null) {
             return false;
         }
-        if (components == null) {
+        if (participants == null) {
             initialiseComponents();
         }
         part.setInteraction(null);
-        if (components.remove(part)) {
+        if (participants.remove(part)) {
             return true;
         }
         return false;
@@ -705,7 +705,7 @@ public class GraphComplex extends GraphInteractor implements Complex {
      * <p>initialiseComponents</p>
      */
     protected void initialiseComponents() {
-        this.components = new ArrayList<GraphModelledParticipant>();
+        this.participants = new ArrayList<GraphModelledParticipant>();
     }
 
     /**
@@ -715,9 +715,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
      */
     protected void initialiseComponentsWith(Collection<ModelledParticipant> components) {
         if (components != null) {
-            this.components = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
+            this.participants = CollectionAdaptor.convertModelledParticipantIntoGraphModel(components);
         } else {
-            this.components = new ArrayList<GraphModelledParticipant>();
+            this.participants = new ArrayList<GraphModelledParticipant>();
         }
     }
 
