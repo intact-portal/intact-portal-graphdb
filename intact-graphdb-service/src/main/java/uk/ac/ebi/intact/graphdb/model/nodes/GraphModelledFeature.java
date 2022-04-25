@@ -370,14 +370,18 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
         this.ac = ac;
     }
 
-    public int hashCode() {
-
-        if (this.getUniqueKey() != null && !this.getUniqueKey().isEmpty()) {
-            return this.getUniqueKey().hashCode();
-        }
-        return super.hashCode();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GraphModelledFeature that = (GraphModelledFeature) o;
+        return Objects.equals(getUniqueKey(), that.getUniqueKey());
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUniqueKey());
+    }
 
     public String createUniqueKey(ModelledFeature modelledFeature) {
         return UniqueKeyGenerator.createModelledFeatureKey(modelledFeature);
