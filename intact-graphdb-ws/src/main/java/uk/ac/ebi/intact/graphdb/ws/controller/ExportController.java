@@ -263,10 +263,10 @@ public class ExportController {
             case miJSON:
             default:
                 try {
-                    writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, null,
+                    writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
                             MIJsonType.n_ary_only, new CachedOlsOntologyTermFetcher(), null));
                 } catch (BridgeFailedException e) {
-                    writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, null,
+                    writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
                             MIJsonType.n_ary_only, null, null));
                 }
                 break;
