@@ -130,6 +130,10 @@ public class GraphModelledEntity extends GraphDatabaseObject implements Modelled
 
     @Override
     public Collection<GraphModelledFeature> getFeatures() {
+        return initOrGetFeatures();
+    }
+
+    private Collection<GraphModelledFeature> initOrGetFeatures() {
         if (features == null) {
             features = new ArrayList<GraphModelledFeature>();
         }
@@ -159,7 +163,7 @@ public class GraphModelledEntity extends GraphDatabaseObject implements Modelled
         } else {
             graphModelledFeature = new GraphModelledFeature(feature);
         }
-        if (getFeatures().add(graphModelledFeature)) {
+        if (initOrGetFeatures().add(graphModelledFeature)) {
             feature.setParticipant(this);
             return true;
         }
@@ -174,7 +178,7 @@ public class GraphModelledEntity extends GraphDatabaseObject implements Modelled
             return false;
         }
 
-        if (getFeatures().remove(feature)) {
+        if (initOrGetFeatures().remove(feature)) {
             feature.setParticipant(null);
             return true;
         }
