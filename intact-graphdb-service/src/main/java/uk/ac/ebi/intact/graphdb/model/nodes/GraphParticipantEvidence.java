@@ -397,13 +397,11 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
         this.ac = ac;
     }
 
-    @Override
     //TODO Needs to be implemented
     public CvTerm getBiologicalEffect() {
         throw new UnsupportedOperationException();
     }
 
-    @Override
     //TODO Needs to be implemented
     public void setBiologicalEffect(CvTerm biologicalEffect) {
         throw new UnsupportedOperationException();
