@@ -138,7 +138,7 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
         CommonUtility.createRelationShip(type, this.getGraphId(), RelationshipTypes.TYPE);
         CommonUtility.createRelationShip(interpro, this.getGraphId(), RelationshipTypes.INTERPRO);
         CommonUtility.createRelationShip(role, this.getGraphId(), RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, this.getGraphId(), RelationshipTypes.PARTICIPANT_FEATURE);
+        CommonUtility.createIncomingRelationShip(participant, this.getGraphId(), RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createIdentifierRelationShips(identifiers, this.getGraphId());
         CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
         CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
