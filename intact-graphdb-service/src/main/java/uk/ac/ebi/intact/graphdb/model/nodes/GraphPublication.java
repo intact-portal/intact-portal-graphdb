@@ -65,7 +65,7 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
     @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
 
-    @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PUB_EXP)
     @JsonBackReference
     private Collection<GraphExperiment> experiments;
 
@@ -241,6 +241,10 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
 
     public String getPubmedId() {
         return this.pubmedId != null ? this.pubmedId.getId() : null;
+    }
+
+    public void setPubmedId(GraphXref pubmedId) {
+        this.pubmedId = pubmedId;
     }
 
     public void setPubmedId(String pubmedId) {

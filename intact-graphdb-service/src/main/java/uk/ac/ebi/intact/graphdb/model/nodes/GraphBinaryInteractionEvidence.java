@@ -32,10 +32,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A)
     private GraphParticipantEvidence participantA;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B)
     private GraphParticipantEvidence participantB;
 
     @Relationship(type = RelationshipTypes.INTERACTOR_A)
@@ -66,10 +66,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         super(binaryInteractionEvidence, true);
-        //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
-        setInteractionEvidence((InteractionEvidence) binaryInteractionEvidence);
+        setInteractionEvidence(binaryInteractionEvidence);
 
         if (binaryInteractionEvidence.getParticipantA() != null)
             setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());

@@ -60,7 +60,7 @@ public class GraphInteractionEvidence extends GraphDatabaseObject implements Int
     @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
 
-    @Relationship(type = RelationshipTypes.IE_PARTICIPANT, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.IE_PARTICIPANT)
     @JsonManagedReference
     private Collection<GraphParticipantEvidence> participants;
 

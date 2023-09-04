@@ -31,7 +31,7 @@ public class GraphEntity<F extends Feature> extends GraphDatabaseObject implemen
     @JsonManagedReference
     private GraphInteractor interactor;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE)
     @JsonBackReference
     private Collection<GraphFeature> features;
 
