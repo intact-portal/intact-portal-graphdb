@@ -313,7 +313,7 @@ public class GraphModelledInteraction extends GraphDatabaseObject implements Mod
     }
 
     @Override
-    public GraphCvTerm getEvidenceType() {
+    public CvTerm getEvidenceType() {
         return evidenceType;
     }
 
