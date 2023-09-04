@@ -195,6 +195,10 @@ public class GraphModelledFeature extends GraphDatabaseObject implements Modelle
         }
     }
 
+    public void setInterpro(GraphXref interpro) {
+        this.interpro = interpro;
+    }
+
     public Collection<GraphXref> getIdentifiers() {
         if (identifiers == null) {
             this.identifiers = new ArrayList<GraphXref>();
