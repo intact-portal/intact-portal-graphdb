@@ -242,7 +242,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
                 this.interactionEvidence = new GraphInteractionEvidence(interactionEvidence, false);
             }
         } else {
-            this.complexExpansion = null;
+            this.interactionEvidence = null;
         }
     }
 

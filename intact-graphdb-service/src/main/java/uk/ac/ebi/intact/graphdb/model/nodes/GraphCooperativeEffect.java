@@ -2,6 +2,7 @@ package uk.ac.ebi.intact.graphdb.model.nodes;
 
 import org.neo4j.graphdb.Label;
 import org.neo4j.ogm.annotation.*;
+import psidev.psi.mi.jami.model.Annotation;
 import psidev.psi.mi.jami.model.CooperativeEffect;
 import psidev.psi.mi.jami.model.CooperativityEvidence;
 import psidev.psi.mi.jami.model.CvTerm;
@@ -134,8 +135,12 @@ public class GraphCooperativeEffect implements CooperativeEffect {
         return annotations;
     }
 
-    public void setAnnotations(Collection<GraphAnnotation> annotations) {
-        this.annotations = annotations;
+    public void setAnnotations(Collection<Annotation> annotations) {
+        if (annotations != null) {
+            this.annotations = CollectionAdaptor.convertAnnotationIntoGraphModel(annotations);
+        } else {
+            this.annotations = new ArrayList<>();
+        }
     }
 
 
