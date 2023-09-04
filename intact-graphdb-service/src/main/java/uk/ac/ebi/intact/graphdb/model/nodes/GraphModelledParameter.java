@@ -27,7 +27,7 @@ public class GraphModelledParameter extends GraphParameter implements ModelledPa
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    @Relationship(type = RelationshipTypes.PUBLICATION, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PUBLICATION)
     @JsonManagedReference
     private GraphPublication publication;
 

@@ -148,7 +148,7 @@ public class GraphCooperativeEffect implements CooperativeEffect {
         return outCome;
     }
 
-    public void setOutCome(CvTerm outcoutComeome) {
+    public void setOutCome(CvTerm outCome) {
         if (outCome != null) {
             if (outCome instanceof GraphCvTerm) {
                 this.outCome = (GraphCvTerm) outCome;

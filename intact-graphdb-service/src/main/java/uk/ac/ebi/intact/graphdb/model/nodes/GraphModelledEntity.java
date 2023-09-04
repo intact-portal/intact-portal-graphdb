@@ -36,7 +36,7 @@ public class GraphModelledEntity extends GraphDatabaseObject implements Modelled
     @JsonManagedReference
     private GraphInteractor interactor;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE)
     @JsonBackReference
     private Collection<GraphModelledFeature> features;
 
