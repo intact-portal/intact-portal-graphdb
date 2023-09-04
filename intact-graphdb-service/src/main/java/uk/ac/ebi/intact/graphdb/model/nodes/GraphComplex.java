@@ -399,6 +399,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    public void setPhysicalProperties(GraphAnnotation physicalProperties) {
+        this.physicalProperties = physicalProperties;
+    }
 
     public String getRecommendedName() {
         return this.recommendedName != null ? this.recommendedName.getName() : null;
@@ -425,6 +428,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    public void setRecommendedName(GraphAlias recommendedName) {
+        this.recommendedName = recommendedName;
+    }
 
     public String getSystematicName() {
         return this.systematicName != null ? this.systematicName.getName() : null;
@@ -452,6 +458,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    public void setSystematicName(GraphAlias systematicName) {
+        this.systematicName = systematicName;
+    }
 
     public CvTerm getEvidenceType() {
         return this.evidenceType;
@@ -504,6 +513,9 @@ public class GraphComplex extends GraphInteractor implements Complex {
         }
     }
 
+    public void setRigid(GraphChecksum rigid) {
+        this.rigid = rigid;
+    }
 
     public Date getUpdatedDate() {
         return this.updatedDate;

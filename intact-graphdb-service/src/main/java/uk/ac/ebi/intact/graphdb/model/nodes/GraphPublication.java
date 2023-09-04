@@ -296,6 +296,10 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
         }
     }
 
+    public void setDoi(GraphXref doi) {
+        this.doi = doi;
+    }
+
     public Collection<GraphXref> getIdentifiers() {
         if (identifiers == null) {
             this.identifiers = new ArrayList<GraphXref>();
