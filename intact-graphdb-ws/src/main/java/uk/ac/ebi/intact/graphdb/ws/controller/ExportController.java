@@ -119,7 +119,7 @@ public class ExportController {
 
                 // TODO check when we have the binary identifiers if we need to check from duplicated interactions. Probably not
                 do {
-                    interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
+                    interactionIdentifiers = interactionSearchService.findInteractionIdentifiersWithFormat(
                             query,
                             batchSearch,
                             advancedSearch,
@@ -136,10 +136,12 @@ public class ExportController {
                             intraSpecies,
                             binaryInteractionIds,
                             interactorAcs,
-                            interactionsPage);
+                            interactionsPage,
+                            format.getFormat());
 
                     // do processing
                     for (SearchInteraction interactionIdentifier : interactionIdentifiers) {
+                        response.write("\n".getBytes());
                         switch (format) {
                             case miJSON:
                                 response.write(interactionIdentifier.getJsonFormat().getBytes());
