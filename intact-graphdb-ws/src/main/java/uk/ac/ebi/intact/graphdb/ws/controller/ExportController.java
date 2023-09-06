@@ -1,5 +1,7 @@
 package uk.ac.ebi.intact.graphdb.ws.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,8 @@ import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
 import uk.ac.ebi.intact.search.interactions.utils.NegativeFilterStatus;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -39,6 +43,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/export")
 public class ExportController {
+
+    private static final Log log = LogFactory.getLog(ExportController.class);
 
     private static final int FIRST_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 250;
@@ -106,6 +112,7 @@ public class ExportController {
         }
 
         StreamingResponseBody responseBody = response -> {
+            Instant processStarted = Instant.now();
 
             InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
 
@@ -176,6 +183,10 @@ public class ExportController {
                     writer.close();
                 }
             }
+
+            Instant processEnded = Instant.now();
+            Duration executionDuration = Duration.between(processStarted, processEnded);
+            log.info("\n=====\nTotal Duration: " + executionDuration.toString() + "\n=====\n");
         };
 
         return ResponseEntity.ok()
