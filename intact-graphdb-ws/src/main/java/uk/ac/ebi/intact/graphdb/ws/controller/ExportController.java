@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import psidev.psi.mi.jami.binary.expansion.InteractionEvidenceSpokeExpansion;
 import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
 import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
 import psidev.psi.mi.jami.commons.MIWriterOptionFactory;
@@ -25,6 +24,7 @@ import psidev.psi.mi.jami.xml.PsiXmlVersion;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
+import uk.ac.ebi.intact.graphdb.ws.controller.expansion.GraphDbExpansionMethod;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.InteractionExportFormat;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
@@ -256,15 +256,15 @@ public class ExportController {
                 break;
             case miTab25:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
-                        ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_5, false));
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_5, false));
                 break;
             case miTab26:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
-                        ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_6, false));
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_6, false));
                 break;
             case miTab27:
-                writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
-                        new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_7, false));
+                writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_7, false));
                 break;
             case miJSON:
             default:
