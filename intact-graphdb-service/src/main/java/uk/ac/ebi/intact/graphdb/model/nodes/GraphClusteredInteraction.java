@@ -6,7 +6,10 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import psidev.psi.mi.jami.model.Confidence;
+import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.Interactor;
+import psidev.psi.mi.jami.model.impl.DefaultCvTerm;
 import uk.ac.ebi.intact.graphdb.beans.NodeDataFeed;
 import uk.ac.ebi.intact.graphdb.model.domain.ClusterDataFeed;
 import uk.ac.ebi.intact.graphdb.model.relationships.RelationshipTypes;
@@ -22,7 +25,7 @@ import java.util.Set;
  * Created by anjali on 06/03/18.
  */
 @NodeEntity
-public class GraphClusteredInteraction extends GraphDatabaseObject {
+public class GraphClusteredInteraction extends GraphDatabaseObject implements Confidence {
 
     @Index(unique = true, primary = true)
     private String uniqueKey;
@@ -160,5 +163,15 @@ public class GraphClusteredInteraction extends GraphDatabaseObject {
 
     public String createUniqueKey() {
         return UniqueKeyGenerator.createClusteredInteractionKey(this);
+    }
+
+    @Override
+    public CvTerm getType() {
+        return new DefaultCvTerm("intact-miscore");
+    }
+
+    @Override
+    public String getValue() {
+        return Double.toString(miscore);
     }
 }
