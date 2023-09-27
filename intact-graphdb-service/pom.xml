@@ -7,7 +7,7 @@
     <parent>
         <groupId>uk.ac.ebi.intact.graphdb</groupId>
         <artifactId>intact-graphdb-module</artifactId>
-        <version>3.0.33-SNAPSHOT</version>
+        <version>3.0.37</version>
     </parent>
 
     <artifactId>intact-graphdb-service</artifactId>
@@ -75,11 +75,11 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.7</version>
+                <version>1.14.0</version>
                 <configuration>
-                    <complianceLevel>1.8</complianceLevel>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <complianceLevel>11</complianceLevel>
+                    <source>11</source>
+                    <target>11</target>
                     <showWeaveInfo>true</showWeaveInfo>
                     <verbose>true</verbose>
                     <Xlint>ignore</Xlint>

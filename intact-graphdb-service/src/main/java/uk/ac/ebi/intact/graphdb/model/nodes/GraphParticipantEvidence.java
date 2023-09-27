@@ -135,7 +135,7 @@ public class GraphParticipantEvidence extends GraphExperimentalEntity implements
         CommonUtility.createRelationShip(experimentalRole, this.getGraphId(), RelationshipTypes.EXPERIMENTAL_ROLE);
         CommonUtility.createRelationShip(biologicalRole, this.getGraphId(), RelationshipTypes.BIOLOGICAL_ROLE);
         CommonUtility.createRelationShip(expressedInOrganism, this.getGraphId(), RelationshipTypes.EXPRESSED_IN);
-        CommonUtility.createRelationShip(interaction, this.getGraphId(), RelationshipTypes.IE_PARTICIPANT);
+        CommonUtility.createIncomingRelationShip(interaction, this.getGraphId(), RelationshipTypes.IE_PARTICIPANT);
         //CommonUtility.createRelationShip(binaryInteractionEvidence, this.graphId, RelationshipTypes.BIE_PARTICIPANT);
         CommonUtility.createConfidenceRelationShips(confidences, this.getGraphId());
         CommonUtility.createParameterRelationShips(parameters, this.getGraphId());

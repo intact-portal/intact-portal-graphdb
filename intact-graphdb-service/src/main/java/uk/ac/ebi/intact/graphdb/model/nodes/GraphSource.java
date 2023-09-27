@@ -91,7 +91,7 @@ public class GraphSource extends GraphCvTerm implements Source {
     @Override
     public void setPublication(Publication publication) {
         if (publication != null) {
-            if (publication instanceof GraphCvTerm) {
+            if (publication instanceof GraphPublication) {
                 this.publication = (GraphPublication) publication;
             } else {
                 this.publication = new GraphPublication(publication);

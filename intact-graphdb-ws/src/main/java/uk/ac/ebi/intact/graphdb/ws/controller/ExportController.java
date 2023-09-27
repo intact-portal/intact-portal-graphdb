@@ -26,6 +26,7 @@ import psidev.psi.mi.jami.xml.PsiXmlVersion;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
+import uk.ac.ebi.intact.graphdb.ws.controller.expansion.GraphDbExpansionMethod;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.InteractionExportFormat;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
@@ -250,15 +251,15 @@ public class ExportController {
                 break;
             case miTab25:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
-                        ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_5, false));
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_5, false));
                 break;
             case miTab26:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
-                        ComplexType.n_ary, new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_6, false));
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_6, false));
                 break;
             case miTab27:
                 writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
-                        new InteractionEvidenceSpokeExpansion(), true, MitabVersion.v2_7, false));
+                        new GraphDbExpansionMethod(), true, MitabVersion.v2_7, false));
                 break;
             case miJSON:
             default:

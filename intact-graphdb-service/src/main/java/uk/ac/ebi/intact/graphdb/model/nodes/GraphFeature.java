@@ -150,7 +150,7 @@ public class GraphFeature<P extends Entity, F extends Feature> extends GraphData
     public void createRelationShipNatively(Long graphId) {
         CommonUtility.createRelationShip(type, graphId, RelationshipTypes.TYPE);
         CommonUtility.createRelationShip(role, graphId, RelationshipTypes.ROLE);
-        CommonUtility.createRelationShip(participant, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
+        CommonUtility.createIncomingRelationShip(participant, graphId, RelationshipTypes.PARTICIPANT_FEATURE);
         CommonUtility.createIdentifierRelationShips(identifiers, graphId);
         CommonUtility.createXrefRelationShips(xrefs, graphId);
         CommonUtility.createAnnotationRelationShips(annotations, graphId);

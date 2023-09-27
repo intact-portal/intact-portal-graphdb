@@ -67,7 +67,7 @@ public class GraphModelledInteraction extends GraphDatabaseObject implements Mod
     @Relationship(type = RelationshipTypes.IDENTIFIERS)
     private Collection<GraphXref> identifiers;
 
-    @Relationship(type = RelationshipTypes.IC_PARTICIPANT, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.IC_PARTICIPANT)
     @JsonManagedReference
     private Collection<GraphModelledParticipant> participants;
 
@@ -313,7 +313,7 @@ public class GraphModelledInteraction extends GraphDatabaseObject implements Mod
     }
 
     @Override
-    public GraphCvTerm getEvidenceType() {
+    public CvTerm getEvidenceType() {
         return evidenceType;
     }
 

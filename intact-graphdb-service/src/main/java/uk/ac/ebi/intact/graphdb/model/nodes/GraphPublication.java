@@ -65,7 +65,7 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
     @Relationship(type = RelationshipTypes.ANNOTATIONS)
     private Collection<GraphAnnotation> annotations;
 
-    @Relationship(type = RelationshipTypes.PUB_EXP, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PUB_EXP)
     @JsonBackReference
     private Collection<GraphExperiment> experiments;
 
@@ -84,7 +84,7 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
         setGraphCurationDepth(new GraphCurationDepth(curationDepth));
         setReleasedDate(publication.getReleasedDate());
         setSource(publication.getSource());
-//        setPubmedId(publication.getPubmedId());
+        setPubmedId(publication.getPubmedId());
         setDoi(publication.getDoi());
         assignImexId(publication.getImexId());
         setAc(CommonUtility.extractAc(publication));
@@ -243,6 +243,10 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
         return this.pubmedId != null ? this.pubmedId.getId() : null;
     }
 
+    public void setPubmedId(GraphXref pubmedId) {
+        this.pubmedId = pubmedId;
+    }
+
     public void setPubmedId(String pubmedId) {
 
         setPubmedIdStr(pubmedId);
@@ -290,6 +294,10 @@ public class GraphPublication extends GraphDatabaseObject implements Publication
             XrefUtils.removeAllXrefsWithDatabase(identifiers, Xref.DOI_MI, Xref.DOI);
             this.doi = null;
         }
+    }
+
+    public void setDoi(GraphXref doi) {
+        this.doi = doi;
     }
 
     public Collection<GraphXref> getIdentifiers() {

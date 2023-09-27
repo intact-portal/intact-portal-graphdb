@@ -191,6 +191,10 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
         }
     }
 
+    public void setDdbjEmblGenbank(GraphXref ddbjEmblGenbank) {
+        this.ddbjEmblGenbank = ddbjEmblGenbank;
+    }
+
     public String getRefseq() {
         return this.refseq != null ? this.refseq.getId() : null;
     }
@@ -214,6 +218,10 @@ public class GraphNucleicAcid extends GraphPolymer implements NucleicAcid {
             XrefUtils.removeAllXrefsWithDatabase(nucleicAcidIdentifiers, Xref.REFSEQ_MI, Xref.REFSEQ);
             this.refseq = null;
         }
+    }
+
+    public void setRefseq(GraphXref refseq) {
+        this.refseq = refseq;
     }
 
     protected void processAddedIdentifiersEvent(Xref added) {

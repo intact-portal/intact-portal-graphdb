@@ -134,7 +134,7 @@ public class GraphExperiment extends GraphDatabaseObject implements Experiment {
         CommonUtility.createRelationShip(interactionDetectionMethod, this.getGraphId(), RelationshipTypes.INTERACTION_DETECTION_METHOD);
         CommonUtility.createRelationShip(participantDetectionMethod, this.getGraphId(), RelationshipTypes.PARTICIPANT_DETECTION_METHOD);
         CommonUtility.createRelationShip(hostOrganism, this.getGraphId(), RelationshipTypes.HOST_ORGANISM);
-        CommonUtility.createRelationShip(publication, this.getGraphId(), RelationshipTypes.PUB_EXP);
+        CommonUtility.createIncomingRelationShip(publication, this.getGraphId(), RelationshipTypes.PUB_EXP);
         CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
         CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
         CommonUtility.createConfidenceRelationShips(confidences, this.getGraphId());
