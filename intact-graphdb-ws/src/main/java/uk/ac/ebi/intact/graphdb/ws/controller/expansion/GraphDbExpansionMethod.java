@@ -8,6 +8,7 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphBinaryInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class GraphDbExpansionMethod implements ComplexExpansionMethod<GraphInteractionEvidence, GraphBinaryInteractionEvidence> {
 
@@ -26,6 +27,9 @@ public class GraphDbExpansionMethod implements ComplexExpansionMethod<GraphInter
 
     @Override
     public Collection<GraphBinaryInteractionEvidence> expand(GraphInteractionEvidence interaction) throws ComplexExpansionException {
+        if (interaction instanceof GraphBinaryInteractionEvidence) {
+            return Collections.singletonList((GraphBinaryInteractionEvidence) interaction);
+        }
         return interaction.getBinaryInteractionEvidences();
     }
 
