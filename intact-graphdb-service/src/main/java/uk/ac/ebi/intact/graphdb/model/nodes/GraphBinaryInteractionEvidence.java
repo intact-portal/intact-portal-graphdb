@@ -9,6 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
+import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.InteractionEvidence;
 import psidev.psi.mi.jami.model.Interactor;
@@ -263,6 +264,11 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     //TODO Needs to be implemented
     public void setCausalRegulatoryMechanism(CvTerm causalRegulatoryMechanism) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Confidence getMiScore() {
+        return getClusteredInteraction();
     }
 
     public boolean isAlreadyCreated() {
