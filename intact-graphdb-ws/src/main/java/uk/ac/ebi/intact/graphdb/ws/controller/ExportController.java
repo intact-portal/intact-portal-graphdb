@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import psidev.psi.mi.jami.binary.expansion.InteractionEvidenceSpokeExpansion;
 import psidev.psi.mi.jami.bridges.exception.BridgeFailedException;
 import psidev.psi.mi.jami.bridges.ols.CachedOlsOntologyTermFetcher;
 import psidev.psi.mi.jami.commons.MIWriterOptionFactory;
@@ -43,7 +41,7 @@ import java.util.*;
 public class ExportController {
 
     private static final int FIRST_PAGE = 0;
-    private static final int DEFAULT_PAGE_SIZE = 30;
+    private static final int DEFAULT_PAGE_SIZE = 300;
 
     private final GraphInteractionService graphInteractionService;
     private final InteractionSearchService interactionSearchService;
@@ -116,10 +114,12 @@ public class ExportController {
 
             try {
                 writer.start();
+                // Flush to make sure the header has been written to the response before writing any interactions
+                writer.flush();
 
                 // TODO check when we have the binary identifiers if we need to check from duplicated interactions. Probably not
                 do {
-                    interactionIdentifiers = interactionSearchService.findInteractionIdentifiers(
+                    interactionIdentifiers = interactionSearchService.findInteractionIdentifiersWithFormat(
                             query,
                             batchSearch,
                             advancedSearch,
@@ -136,30 +136,35 @@ public class ExportController {
                             intraSpecies,
                             binaryInteractionIds,
                             interactorAcs,
-                            interactionsPage);
+                            interactionsPage,
+                            format.getFormat());
 
                     // do processing
-                    Set<Long> acs = new HashSet<>();
                     for (SearchInteraction interactionIdentifier : interactionIdentifiers) {
-                        acs.add(interactionIdentifier.getBinaryInteractionId());
-                    }
-
-                    Slice<GraphBinaryInteractionEvidence> graphInteractionEvidences;
-                    Pageable identifierPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
-
-
-                    do {
-                        graphInteractionEvidences = graphInteractionService.findByBinaryInteractionIds(acs, identifierPage);
-
-                        for (GraphInteractionEvidence graphInteractionEvidence : graphInteractionEvidences) {
-                            cleanBinariesForExport(graphInteractionEvidence);
-                            writer.write(graphInteractionEvidence);
+                        // New line before each interaction to have each interaction on a different line.
+                        // This is particularly relevant for the MiTab formats.
+                        response.write("\n".getBytes());
+                        switch (format) {
+                            case miJSON:
+                                response.write(interactionIdentifier.getJsonFormat().getBytes());
+                                break;
+                            case miXML25:
+                                response.write(interactionIdentifier.getXml25Format().getBytes());
+                                break;
+                            case miXML30:
+                                response.write(interactionIdentifier.getXml30Format().getBytes());
+                                break;
+                            case miTab25:
+                                response.write(interactionIdentifier.getTab25Format().getBytes());
+                                break;
+                            case miTab26:
+                                response.write(interactionIdentifier.getTab26Format().getBytes());
+                                break;
+                            case miTab27:
+                                response.write(interactionIdentifier.getTab27Format().getBytes());
+                                break;
                         }
-
-                        //advance to next page
-                        identifierPage = identifierPage.next();
-
-                    } while (graphInteractionEvidences.hasNext());
+                    }
 
                     //advance to next page
                     interactionsPage = interactionsPage.next();
@@ -258,8 +263,8 @@ public class ExportController {
                         ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_6, false));
                 break;
             case miTab27:
-                writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence, ComplexType.n_ary,
-                        new GraphDbExpansionMethod(), true, MitabVersion.v2_7, false));
+                writer = writerFactory.getInteractionWriterWith(optionFactory.getMitabOptions(output, InteractionCategory.evidence,
+                        ComplexType.n_ary, new GraphDbExpansionMethod(), true, MitabVersion.v2_7, false));
                 break;
             case miJSON:
             default:
