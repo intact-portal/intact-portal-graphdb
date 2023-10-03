@@ -51,6 +51,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>psidev.psi.mi</groupId>
+            <artifactId>calimocho-xgmml</artifactId>
+            <version>${calimocho.version}</version>
+        </dependency>
+
         <!-- Swagger documentation dependencies -->
         <dependency>
             <groupId>io.springfox</groupId>
