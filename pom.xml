@@ -25,6 +25,7 @@
         <psi.jami.version>3.4.0</psi.jami.version>
         <search.interaction.service.version>1.1.0-SNAPSHOT</search.interaction.service.version>
         <neo4j.version>3.2.13</neo4j.version>
+        <calimocho.version>2.6.0</calimocho.version>
     </properties>
 
     <modules>

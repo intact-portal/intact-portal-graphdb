@@ -14,7 +14,8 @@ public enum InteractionExportFormat {
     miXML30("xml30", MediaType.APPLICATION_XML, "xml"),
     miTab25("tab25", MediaType.TEXT_PLAIN, "txt"),
     miTab26("tab26", MediaType.TEXT_PLAIN, "txt"),
-    miTab27("tab27", MediaType.TEXT_PLAIN, "txt");
+    miTab27("tab27", MediaType.TEXT_PLAIN, "txt"),
+    miXGMML("xgmml", MediaType.APPLICATION_XML, "xml");
 
     String format;
     MediaType contentType;
@@ -29,6 +30,13 @@ public enum InteractionExportFormat {
 
     public String getFormat() {
         return format;
+    }
+
+    public String getSearchableSolrFormat() {
+        // For format miXGMML, we want to search in SOLR for the serialised interaction in the miTab27 format
+        return format.equals(InteractionExportFormat.miXGMML.getFormat()) ?
+                InteractionExportFormat.miTab27.getFormat() :
+                getFormat();
     }
 
     public MediaType getContentType() {
