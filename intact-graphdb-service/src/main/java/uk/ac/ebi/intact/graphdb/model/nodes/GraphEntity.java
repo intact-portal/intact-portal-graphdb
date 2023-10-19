@@ -31,7 +31,7 @@ public class GraphEntity<F extends Feature> extends GraphDatabaseObject implemen
     @JsonManagedReference
     private GraphInteractor interactor;
 
-    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PARTICIPANT_FEATURE)
     @JsonBackReference
     private Collection<GraphFeature> features;
 
@@ -145,10 +145,10 @@ public class GraphEntity<F extends Feature> extends GraphDatabaseObject implemen
             return false;
         }
         GraphFeature graphFeature = null;
-        if (feature instanceof GraphFeature) {
-            graphFeature = (GraphFeature) feature;
-        } else if (feature instanceof GraphFeatureEvidence) {
+        if (feature instanceof GraphFeatureEvidence) {
             graphFeature = (GraphFeatureEvidence) feature;
+        } else if (feature instanceof GraphFeature) {
+            graphFeature = (GraphFeature) feature;
         } else {
             String featureKey = UniqueKeyGenerator.createFeatureKey(feature);
 

@@ -421,13 +421,34 @@ public class CommonUtility {
                 Class clazz = relObj.getClass();
                 Method method = clazz.getMethod("getGraphId");
                 long endId = (Long) method.invoke(clazz.cast(relObj));
-                String relationIdentity = "" + fromId + "-" + endId + "-" + relationName;
-                boolean relationshipAlreadyCreated = Constants.createdRelationShipList.contains(relationIdentity);
-                if (!relationshipAlreadyCreated && fromId != endId) {
-                    RelationshipType relationshipType = RelationshipType.withName(relationName);
-                    CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
-                    Constants.createdRelationShipList.add(relationIdentity);
-                }
+                createRelationShip(fromId, endId, relationName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createIncomingRelationShip(Object relObj, long endId, String relationName) {
+        try {
+            if (relObj != null) {
+                Class clazz = relObj.getClass();
+                Method method = clazz.getMethod("getGraphId");
+                long fromId = (Long) method.invoke(clazz.cast(relObj));
+                createRelationShip(fromId, endId, relationName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void createRelationShip(long fromId, long endId, String relationName) {
+        try {
+            String relationIdentity = "" + fromId + "-" + endId + "-" + relationName;
+            boolean relationshipAlreadyCreated = Constants.createdRelationShipList.contains(relationIdentity);
+            if (!relationshipAlreadyCreated && fromId != endId) {
+                RelationshipType relationshipType = RelationshipType.withName(relationName);
+                CreationConfig.batchInserter.createRelationship(fromId, endId, relationshipType, null);
+                Constants.createdRelationShipList.add(relationIdentity);
             }
         } catch (Exception e) {
             e.printStackTrace();

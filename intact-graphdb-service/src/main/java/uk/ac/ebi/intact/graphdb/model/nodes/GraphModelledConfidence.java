@@ -27,7 +27,7 @@ public class GraphModelledConfidence extends GraphConfidence implements Modelled
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    @Relationship(type = RelationshipTypes.PUBLICATION, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.PUBLICATION)
     @JsonManagedReference
     private GraphPublication publication;
 

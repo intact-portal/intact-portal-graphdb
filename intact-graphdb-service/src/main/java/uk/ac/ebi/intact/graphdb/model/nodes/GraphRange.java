@@ -182,7 +182,11 @@ public class GraphRange extends GraphDatabaseObject implements Range {
 
     public void setParticipant(Entity participant) {
         if (participant != null) {
-            if (participant instanceof GraphEntity) {
+            if (participant instanceof GraphParticipantEvidence) {
+                this.participant = (GraphParticipantEvidence) participant;
+            } else if (participant instanceof GraphExperimentalEntity) {
+                this.participant = (GraphExperimentalEntity) participant;
+            } else if (participant instanceof GraphEntity) {
                 this.participant = (GraphEntity) participant;
             } else if (participant instanceof ParticipantEvidence) {
                 this.participant = new GraphParticipantEvidence((ParticipantEvidence) participant);

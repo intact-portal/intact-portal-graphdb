@@ -103,7 +103,7 @@ public class GraphModelledParticipant extends GraphModelledEntity implements Mod
     public void createRelationShipNatively() {
         super.createRelationShipNatively(this.getGraphId());
         CommonUtility.createRelationShip(biologicalRole, this.getGraphId(), RelationshipTypes.BIOLOGICAL_ROLE);
-        CommonUtility.createRelationShip(interaction, this.getGraphId(), RelationshipTypes.IC_PARTICIPANT);
+        CommonUtility.createIncomingRelationShip(interaction, this.getGraphId(), RelationshipTypes.IC_PARTICIPANT);
         CommonUtility.createXrefRelationShips(xrefs, this.getGraphId());
         CommonUtility.createAnnotationRelationShips(annotations, this.getGraphId());
         CommonUtility.createAliasRelationShips(aliases, this.getGraphId());

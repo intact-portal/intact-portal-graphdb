@@ -12,6 +12,12 @@ import java.util.stream.Collectors;
 public class CollectionAdaptor {
 
     public static Collection<GraphCvTerm> convertCvTermIntoGraphModel(Collection<CvTerm> cvTerms) {
+        if (!cvTerms.isEmpty()) {
+            CvTerm cvTerm = cvTerms.iterator().next();
+            if (cvTerm instanceof GraphCvTerm) {
+                return cvTerms.stream().map(p -> (GraphCvTerm) p).collect(Collectors.toList());
+            }
+        }
         return cvTerms.stream().map(p -> new GraphCvTerm(p, false)).collect(Collectors.toList());
     }
 

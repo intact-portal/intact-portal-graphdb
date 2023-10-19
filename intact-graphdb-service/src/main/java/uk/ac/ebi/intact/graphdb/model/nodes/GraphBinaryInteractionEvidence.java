@@ -9,6 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import psidev.psi.mi.jami.binary.BinaryInteractionEvidence;
+import psidev.psi.mi.jami.model.Confidence;
 import psidev.psi.mi.jami.model.CvTerm;
 import psidev.psi.mi.jami.model.InteractionEvidence;
 import psidev.psi.mi.jami.model.Interactor;
@@ -32,10 +33,10 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     @Index(unique = true, primary = true)
     private String uniqueKey;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_A)
     private GraphParticipantEvidence participantA;
 
-    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B, direction = Relationship.OUTGOING)
+    @Relationship(type = RelationshipTypes.BIE_PARTICIPANT_B)
     private GraphParticipantEvidence participantB;
 
     @Relationship(type = RelationshipTypes.INTERACTOR_A)
@@ -66,10 +67,9 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
 
     public GraphBinaryInteractionEvidence(BinaryInteractionEvidence binaryInteractionEvidence) {
         super(binaryInteractionEvidence, true);
-        //graphInteractionEvidence=super;
         setParticipantA(binaryInteractionEvidence.getParticipantA());
         setParticipantB(binaryInteractionEvidence.getParticipantB());
-        setInteractionEvidence((InteractionEvidence) binaryInteractionEvidence);
+        setInteractionEvidence(binaryInteractionEvidence);
 
         if (binaryInteractionEvidence.getParticipantA() != null)
             setInteractorA(binaryInteractionEvidence.getParticipantA().getInteractor());
@@ -242,7 +242,7 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
                 this.interactionEvidence = new GraphInteractionEvidence(interactionEvidence, false);
             }
         } else {
-            this.complexExpansion = null;
+            this.interactionEvidence = null;
         }
     }
 
@@ -264,6 +264,11 @@ public class GraphBinaryInteractionEvidence extends GraphInteractionEvidence imp
     //TODO Needs to be implemented
     public void setCausalRegulatoryMechanism(CvTerm causalRegulatoryMechanism) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Confidence getMiScore() {
+        return getClusteredInteraction();
     }
 
     public boolean isAlreadyCreated() {

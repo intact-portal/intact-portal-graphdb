@@ -259,6 +259,10 @@ public class GraphGene extends GraphMolecule implements Gene {
         }
     }
 
+    public void setEnsembl(GraphXref ensembl) {
+        this.ensembl = ensembl;
+    }
+
     public String getEnsemblGenome() {
         return this.ensemblGenome != null ? this.ensemblGenome.getId() : null;
     }
@@ -282,6 +286,10 @@ public class GraphGene extends GraphMolecule implements Gene {
             XrefUtils.removeAllXrefsWithDatabase(geneIdentifiers, Xref.ENSEMBL_GENOMES_MI, Xref.ENSEMBL_GENOMES);
             this.ensemblGenome = null;
         }
+    }
+
+    public void setEnsemblGenome(GraphXref ensemblGenome) {
+        this.ensemblGenome = ensemblGenome;
     }
 
     public String getEntrezGeneId() {
@@ -309,6 +317,9 @@ public class GraphGene extends GraphMolecule implements Gene {
         }
     }
 
+    public void setEntrezGeneId(GraphXref entrezGeneId) {
+        this.entrezGeneId = entrezGeneId;
+    }
 
     public String getRefseq() {
         return this.refseq != null ? this.refseq.getId() : null;
@@ -333,6 +344,10 @@ public class GraphGene extends GraphMolecule implements Gene {
             XrefUtils.removeAllXrefsWithDatabase(geneIdentifiers, Xref.REFSEQ_MI, Xref.REFSEQ);
             this.refseq = null;
         }
+    }
+
+    public void setRefseq(GraphXref refseq) {
+        this.refseq = refseq;
     }
 
     protected void processAddedIdentifierEvent(Xref added) {

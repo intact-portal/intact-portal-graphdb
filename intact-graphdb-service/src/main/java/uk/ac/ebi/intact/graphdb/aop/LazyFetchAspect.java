@@ -86,10 +86,11 @@ public class LazyFetchAspect {
                         Collection<Object> lazyLoadedObjectAsCollection = isLoaded ? null : advancedDatabaseObjectService.findCollectionByRelationship(dbId, clazz, methodReturnClazz, relationship.direction(), relationship.type());
                         if (lazyLoadedObjectAsCollection == null) {
                             //If a set or list has been requested and is null, then we set empty collection to avoid requesting again
-                            if (List.class.isAssignableFrom(methodReturnClazz))
-                                lazyLoadedObjectAsCollection = new ArrayList<>();
-                            if (Set.class.isAssignableFrom(methodReturnClazz))
+                            if (Set.class.isAssignableFrom(methodReturnClazz)) {
                                 lazyLoadedObjectAsCollection = new HashSet<>();
+                            } else {
+                                lazyLoadedObjectAsCollection = new ArrayList<>();
+                            }
                         }
                         if (lazyLoadedObjectAsCollection != null) {
                             // invoke the setter in order to set the object in the target
@@ -101,7 +102,11 @@ public class LazyFetchAspect {
                         GraphDatabaseObject lazyLoadedGraphDataBaseObject = null;
                         // we need to do this since GraphParameterValue cannot extend GraphDataBaseObject
                         GraphParameterValue lazyLoadedGraphParameterValue = null;
-                        if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
+
+                        Class<?> fieldClazz = methodMetaData.getFieldType();
+                        if (GraphDatabaseObject.class.isAssignableFrom(fieldClazz)) {
+                            clazz = fieldClazz.getSimpleName();
+                        } else if (GraphDatabaseObject.class.isAssignableFrom(methodReturnClazz)) {
                             clazz = methodReturnClazz.getSimpleName();
                         } else if (ParameterValue.class.isAssignableFrom(methodReturnClazz)) {
                             clazz = GraphParameterValue.class.getSimpleName();
