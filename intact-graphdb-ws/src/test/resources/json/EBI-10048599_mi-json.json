@@ -1,0 +1,264 @@
+{
+  "data": [
+    {
+      "object": "interactor",
+      "id": "chebi_CHEBI:64310",
+      "type": {
+        "id": "MI:0328",
+        "name": "small molecule"
+      },
+      "organism": {
+        "taxid": "-2",
+        "common": "chemical synthesis",
+        "scientific": "Chemical synthesis (Chemical synthesis)"
+      },
+      "identifier": {
+        "db": "chebi",
+        "id": "CHEBI:64310"
+      },
+      "label": "crizotinib"
+    },
+    {
+      "object": "interactor",
+      "id": "uniprotkb_Q9UM73",
+      "sequence": "MGAIGLLWLLPLLLSTAAVGSGMGTGQRAGSPAAGPPLQPREPLSYSRLQRKSLAVDFVVPSLFRVYARDLLLPPSSSELKAGRPEARGSLALDCAPLLRLLGPAPGVSWTAGSPAPAEARTLSRVLKGGSVRKLRRAKQLVLELGEEAILEGCVGPPGEAAVGLLQFNLSELFSWWIRQGEGRLRIRLMPEKKASEVGREGRLSAAIRASQPRLLFQIFGTGHSSLESPTNMPSPSPDYFTWNLTWIMKDSFPFLSHRSRYGLECSFDFPCELEYSPPLHDLRNQSWSWRRIPSEEASQMDLLDGPGAERSKEMPRGSFLLLNTSADSKHTILSPWMRSSSEHCTLAVSVHRHLQPSGRYIAQLLPHNEAAREILLMPTPGKHGWTVLQGRIGRPDNPFRVALEYISSGNRSLSAVDFFALKNCSEGTSPGSKMALQSSFTCWNGTVLQLGQACDFHQDCAQGEDESQMCRKLPVGFYCNFEDGFCGWTQGTLSPHTPQWQVRTLKDARFQDHQDHALLLSTTDVPASESATVTSATFPAPIKSSPCELRMSWLIRGVLRGNVSLVLVENKTGKEQGRMVWHVAAYEGLSLWQWMVLPLLDVSDRFWLQMVAWWGQGSRAIVAFDNISISLDCYLTISGEDKILQNTAPKSRNLFERNPNKELKPGENSPRQTPIFDPTVHWLFTTCGASGPHGPTQAQCNNAYQNSNLSVEVGSEGPLKGIQIWKVPATDTYSISGYGAAGGKGGKNTMMRSHGVSVLGIFNLEKDDMLYILVGQQGEDACPSTNQLIQKVCIGENNVIEEEIRVNRSVHEWAGGGGGGGGATYVFKMKDGVPVPLIIAAGGGGRAYGAKTDTFHPERLENNSSVLGLNGNSGAAGGGGGWNDNTSLLWAGKSLQEGATGGHSCPQAMKKWGWETRGGFGGGGGGCSSGGGGGGYIGGNAASNNDPEMDGEDGVSFISPLGILYTPALKVMEGHGEVNIKHYLNCSHCEVDECHMDPESHKVICFCDHGTVLAEDGVSCIVSPTPEPHLPLSLILSVVTSALVAALVLAFSGIMIVYRRKHQELQAMQMELQSPEYKLSKLRTSTIMTDYNPNYCFAGKTSSISDLKEVPRKNITLIRGLGHGAFGEVYEGQVSGMPNDPSPLQVAVKTLPEVCSEQDELDFLMEALIISKFNHQNIVRCIGVSLQSLPRFILLELMAGGDLKSFLRETRPRPSQPSSLAMLDLLHVARDIACGCQYLEENHFIHRDIAARNCLLTCPGPGRVAKIGDFGMARDIYRASYYRKGGCAMLPVKWMPPEAFMEGIFTSKTDTWSFGVLLWEIFSLGYMPYPSKSNQEVLEFVTSGGRMDPPKNCPGPVYRIMTQCWQHQPEDRPNFAIILERIEYCTQDPDVINTALPIEYGPLVEEEEKVPVRPKDPEGVPPLLVSQQAKREEERSPAAPPPLPTTSSGKAAKKPTAAEISVRVPRGPAVEGGHVNMAFSQSNPPSELHKVHGSRNKPTSLWNPTYGSWFTEKPTKKNNPIAKKEPHDRGNLGLEGSCTVPPNVATGRLPGASLLLEPSSLTANMKEVPLFRLRHFPCGNVNYGYQQQGLPLEAATAPGAGHYEDTILKSKNSMNQPGP",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "uniprotkb",
+        "id": "Q9UM73"
+      },
+      "label": "ALK"
+    },
+    {
+      "object": "interaction",
+      "id": "intact_EBI-10048599",
+      "interactionType": {
+        "id": "MI:0217",
+        "name": "phosphorylation reaction"
+      },
+      "experiment": {
+        "detmethod": {
+          "id": "MI:0424",
+          "name": "protein kinase assay"
+        },
+        "host": {
+          "taxid": "-1",
+          "common": "in vitro",
+          "scientific": "In vitro"
+        },
+        "pubid": [
+          {
+            "db": "pubmed",
+            "id": "25517749"
+          },
+          {
+            "db": "intact",
+            "id": "EBI-10048020"
+          },
+          {
+            "db": "imex",
+            "id": "IM-23650"
+          }
+        ],
+        "sourceDatabase": {
+          "id": "MI:0469",
+          "name": "European Bioinformatics Institute"
+        },
+        "figures": [
+          "Table 3-3"
+        ]
+      },
+      "parameters": [
+        {
+          "type": "ic50",
+          "value": "521x10^(-9)",
+          "unit": "molar"
+        },
+        {
+          "type": "km",
+          "value": "0.387000000000000010658141036401502788066864013671875x10^(-3)",
+          "unit": "molar"
+        }
+      ],
+      "identifiers": [
+        {
+          "db": "intact",
+          "id": "EBI-10048599"
+        },
+        {
+          "db": "imex",
+          "id": "IM-23650-6"
+        }
+      ],
+      "participants": [
+        {
+          "id": "1",
+          "interactorRef": "chebi_CHEBI:64310",
+          "bioRole": {
+            "id": "MI:0586",
+            "name": "inhibitor"
+          },
+          "expRole": {
+            "id": "MI:0499",
+            "name": "unspecified role"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0866",
+              "name": "tag visualisation"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "-2",
+            "common": "chemical synthesis",
+            "scientific": "Chemical synthesis (Chemical synthesis)"
+          }
+        },
+        {
+          "id": "2",
+          "interactorRef": "uniprotkb_Q9UM73",
+          "bioRole": {
+            "id": "MI:0502",
+            "name": "enzyme target"
+          },
+          "expRole": {
+            "id": "MI:0497",
+            "name": "neutral component"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0866",
+              "name": "tag visualisation"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "-2",
+            "common": "chemical synthesis",
+            "scientific": "Chemical synthesis (Chemical synthesis)"
+          },
+          "features": [
+            {
+              "id": "4",
+              "name": "n_terminus",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0239",
+                "name": "biotin tag"
+              },
+              "sequenceData": [
+                {
+                  "pos": "n-n",
+                  "interactorRef": "uniprotkb_Q9UM73",
+                  "participantRef": "2"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "name": "activation_loop_peptide",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "1274-1294",
+                  "interactorRef": "uniprotkb_Q9UM73",
+                  "participantRef": "2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "interactorRef": "uniprotkb_Q9UM73",
+          "bioRole": {
+            "id": "MI:0501",
+            "name": "enzyme"
+          },
+          "expRole": {
+            "id": "MI:0497",
+            "name": "neutral component"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0866",
+              "name": "tag visualisation"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "7108",
+            "common": "spofr-sf_9",
+            "scientific": "Spodoptera frugiperda insect cells",
+            "cellType": {
+              "id": "ACC 125",
+              "name": "insect cells"
+            }
+          },
+          "features": [
+            {
+              "id": "8",
+              "name": "n_terminus",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0521",
+                "name": "his tag"
+              },
+              "sequenceData": [
+                {
+                  "pos": "n-n",
+                  "interactorRef": "uniprotkb_Q9UM73",
+                  "participantRef": "5"
+                }
+              ]
+            },
+            {
+              "id": "7",
+              "name": "Q9UM73:p.Leu1196Met",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:0118",
+                "name": "mutation"
+              },
+              "sequenceData": [
+                {
+                  "pos": "1196-1196",
+                  "resultingSequence": "M",
+                  "interactorRef": "uniprotkb_Q9UM73",
+                  "participantRef": "5"
+                }
+              ]
+            },
+            {
+              "id": "6",
+              "name": "tyrosine_kinase_domain",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "1090-1416",
+                  "interactorRef": "uniprotkb_Q9UM73",
+                  "participantRef": "5"
+                }
+              ],
+              "InterPro": "IPR020635"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

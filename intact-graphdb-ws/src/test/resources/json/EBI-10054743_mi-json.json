@@ -1,0 +1,323 @@
+{
+  "data": [
+    {
+      "object": "interactor",
+      "id": "uniprotkb_Q9BXL7",
+      "sequence": "MPGGGPEMDDYMETLKDEEDALWENVECNRHMLSRYINPAKLTPYLRQCKVIDEQDEDEVLNAPMLPSKINRAGRLLDILHTKGQRGYVVFLESLEFYYPELYKLVTGKEPTRRFSTIVVEEGHEGLTHFLMNEVIKLQQQMKAKDLQRCELLARLRQLEDEKKQMTLTRVELLTFQERYYKMKEERDSYNDELVKVKDDNYNLAMRYAQLSEEKNMAVMRSRDLQLEIDQLKHRLNKMEEECKLERNQSLKLKNDIENRPKKEQVLELERENEMLKTKNQELQSIIQAGKRSLPDSDKAILDILEHDRKEALEDRQELVNRIYNLQEEARQAEELRDKYLEEKEDLELKCSTLGKDCEMYKHRMNTVMLQLEEVERERDQAFHSRDEAQTQYSQCLIEKDKYRKQIRELEEKNDEMRIEMVRREACIVNLESKLRRLSKDSNNLDQSLPRNLPVTIISQDFGDASPRTNGQEADDSSTSEESPEDSKYFLPYHPPQRRMNLKGIQLQRAKSPISLKRTSDFQAKGHEEEGTDASPSSCGSLPITNSFTKMQPPRSRSSIMSITAEPPGNDSIVRRYKEDAPHRSTVEEDNDSGGFDALDLDDDSHERYSFGPSSIHSSSSSHQSEGLDAYDLEQVNLMFRKFSLERPFRPSVTSVGHVRGPGPSVQHTTLNGDSLTSQLTLLGGNARGSFVHSVKPGSLAEKAGLREGHQLLLLEGCIRGERQSVPLDTCTKEEAHWTIQRCSGPVTLHYKVNHEGYRKLVKDMEDGLITSGDSFYIRLNLNISSQLDACTMSLKCDDVVHVRDTMYQDRHEWLCARVDPFTDHDLDMGTIPSYSRAQQLLLVKLQRLMHRGSREEVDGTHHTLRALRNTLQPEEALSTSDPRVSPRLSRASFLFGQLLQFVSRSENKYKRMNSNERVRIISGSPLGSLARSSLDATKLLTEKQEELDPESELGKNLSLIPYSLVRAFYCERRRPVLFTPTVLAKTLVQRLLNSGGAMEFTICKSDIVTRDEFLRRQKTETIIYSREKNPNAFECIAPANIEAVAAKNKHCLLEAGIGCTRDLIKSNIYPIVLFIRVCEKNIKRFRKLLPRPETEEEFLRVCRLKEKELEALPCLYATVEPDMWGSVEELLRVVKDKIGEEQRKTIWVDEDQL",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "uniprotkb",
+        "id": "Q9BXL7"
+      },
+      "label": "CARD11"
+    },
+    {
+      "object": "interactor",
+      "id": "uniprotkb_P31749",
+      "sequence": "MSDVAIVKEGWLHKRGEYIKTWRPRYFLLKNDGTFIGYKERPQDVDQREAPLNNFSVAQCQLMKTERPRPNTFIIRCLQWTTVIERTFHVETPEEREEWTTAIQTVADGLKKQEEEEMDFRSGSPSDNSGAEEMEVSLAKPKHRVTMNEFEYLKLLGKGTFGKVILVKEKATGRYYAMKILKKEVIVAKDEVAHTLTENRVLQNSRHPFLTALKYSFQTHDRLCFVMEYANGGELFFHLSRERVFSEDRARFYGAEIVSALDYLHSEKNVVYRDLKLENLMLDKDGHIKITDFGLCKEGIKDGATMKTFCGTPEYLAPEVLEDNDYGRAVDWWGLGVVMYEMMCGRLPFYNQDHEKLFELILMEEIRFPRTLGPEAKSLLSGLLKKDPKQRLGGGSEDAKEIMQHRFFAGIVWQHVYEKKLSPPFKPQVTSETDTRYFDEEFTAQMITITPPDQDDSMECVDSERRPHFPQFSYSASGTA",
+      "type": {
+        "id": "MI:0326",
+        "name": "protein"
+      },
+      "organism": {
+        "taxid": "9606",
+        "common": "human",
+        "scientific": "Homo sapiens"
+      },
+      "identifier": {
+        "db": "uniprotkb",
+        "id": "P31749"
+      },
+      "label": "AKT1"
+    },
+    {
+      "object": "interaction",
+      "id": "intact_EBI-10054743",
+      "interactionType": {
+        "id": "MI:0217",
+        "name": "phosphorylation reaction"
+      },
+      "experiment": {
+        "detmethod": {
+          "id": "MI:0424",
+          "name": "protein kinase assay"
+        },
+        "host": {
+          "taxid": "-1",
+          "common": "in vitro",
+          "scientific": "In vitro"
+        },
+        "pubid": [
+          {
+            "db": "intact",
+            "id": "EBI-10054717"
+          },
+          {
+            "db": "pubmed",
+            "id": "24548923"
+          },
+          {
+            "db": "imex",
+            "id": "IM-23675"
+          }
+        ],
+        "sourceDatabase": {
+          "id": "MI:0469",
+          "name": "European Bioinformatics Institute"
+        },
+        "figures": [
+          "Fig. 3b, 3c"
+        ]
+      },
+      "identifiers": [
+        {
+          "db": "intact",
+          "id": "EBI-10054743"
+        },
+        {
+          "db": "imex",
+          "id": "IM-23675-1"
+        }
+      ],
+      "participants": [
+        {
+          "id": "1",
+          "interactorRef": "uniprotkb_Q9BXL7",
+          "bioRole": {
+            "id": "MI:0502",
+            "name": "enzyme target"
+          },
+          "expRole": {
+            "id": "MI:0497",
+            "name": "neutral component"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0833",
+              "name": "autoradiography"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "511693",
+            "common": "ecobb",
+            "scientific": "Escherichia coli (strain B \/ BL21)"
+          },
+          "features": [
+            {
+              "id": "2",
+              "name": "Q9BXL7:p.Ser558_Ser559delinsAlaAla",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:1130",
+                "name": "mutation decreasing interaction rate"
+              },
+              "detmethods": [
+                {
+                  "id": "MI:0074",
+                  "name": "mutation analysis"
+                }
+              ],
+              "sequenceData": [
+                {
+                  "pos": "558-559",
+                  "resultingSequence": "AA",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "name": "Q9BXL7:p.Ser652Ala",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:1130",
+                "name": "mutation decreasing interaction rate"
+              },
+              "detmethods": [
+                {
+                  "id": "MI:0074",
+                  "name": "mutation analysis"
+                }
+              ],
+              "sequenceData": [
+                {
+                  "pos": "652-652",
+                  "resultingSequence": "A",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "4",
+              "name": "region",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "sequenceData": [
+                {
+                  "pos": "432-671",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ],
+              "linkedFeatures": [
+                "5"
+              ]
+            },
+            {
+              "id": "6",
+              "name": "Q9BXL7:p.[Ser644Ala;Ser652Ala]",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:1129",
+                "name": "mutation disrupting interaction rate"
+              },
+              "detmethods": [
+                {
+                  "id": "MI:0074",
+                  "name": "mutation analysis"
+                }
+              ],
+              "sequenceData": [
+                {
+                  "pos": "644-644",
+                  "resultingSequence": "A",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                },
+                {
+                  "pos": "652-652",
+                  "resultingSequence": "A",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "7",
+              "name": "n-terminus",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0519",
+                "name": "glutathione s tranferase tag"
+              },
+              "sequenceData": [
+                {
+                  "pos": "n-n",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ]
+            },
+            {
+              "id": "8",
+              "name": "Q9BXL7:p.Ser644Ala",
+              "category": "pointMutations",
+              "type": {
+                "id": "MI:1129",
+                "name": "mutation disrupting interaction rate"
+              },
+              "detmethods": [
+                {
+                  "id": "MI:0074",
+                  "name": "mutation analysis"
+                }
+              ],
+              "sequenceData": [
+                {
+                  "pos": "644-644",
+                  "resultingSequence": "A",
+                  "interactorRef": "uniprotkb_Q9BXL7",
+                  "participantRef": "1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "9",
+          "interactorRef": "uniprotkb_P31749",
+          "bioRole": {
+            "id": "MI:0501",
+            "name": "enzyme"
+          },
+          "expRole": {
+            "id": "MI:0497",
+            "name": "neutral component"
+          },
+          "identificationMethods": [
+            {
+              "id": "MI:0833",
+              "name": "autoradiography"
+            }
+          ],
+          "expressedIn": {
+            "taxid": "7108",
+            "common": "spofr-sf_21",
+            "scientific": "Spodoptera frugiperda insect cells",
+            "cellType": {
+              "id": "ACC 119",
+              "name": "Insect cells"
+            }
+          },
+          "features": [
+            {
+              "id": "10",
+              "name": "n-terminus",
+              "category": "experimentalFeatures",
+              "type": {
+                "id": "MI:0521",
+                "name": "his tag"
+              },
+              "sequenceData": [
+                {
+                  "pos": "n-n",
+                  "interactorRef": "uniprotkb_P31749",
+                  "participantRef": "9"
+                }
+              ]
+            },
+            {
+              "id": "5",
+              "name": "ser\/thr_dual-sp_kinase",
+              "category": "bindingSites",
+              "type": {
+                "id": "MI:0442",
+                "name": "sufficient binding region"
+              },
+              "detmethods": [
+                {
+                  "id": "MI:0033",
+                  "name": "deletion analysis"
+                }
+              ],
+              "sequenceData": [
+                {
+                  "pos": "118-480",
+                  "interactorRef": "uniprotkb_P31749",
+                  "participantRef": "9"
+                }
+              ],
+              "linkedFeatures": [
+                "4"
+              ],
+              "InterPro": "IPR002290"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
