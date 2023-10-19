@@ -30,6 +30,6 @@ public class SerialisedXmlSearchInteractionWriter extends SerialisedSearchIntera
         // the entrySet tag as a single tag with no children, '<entrySet/>'.
         // So, we cannot call the XML writer end method, and we need to add the entrySet closing tag manually to the
         // output stream.
-        getOutputStream().write(("\n</" + PsiXmlUtils.ENTRYSET_TAG + ">").getBytes());
+        getOutputStream().write(("\n</" + PsiXmlUtils.ENTRYSET_TAG + ">\n").getBytes());
     }
 }
