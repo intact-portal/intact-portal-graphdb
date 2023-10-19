@@ -26,10 +26,15 @@ import uk.ac.ebi.intact.graphdb.model.nodes.GraphInteractionEvidence;
 import uk.ac.ebi.intact.graphdb.service.GraphInteractionService;
 import uk.ac.ebi.intact.graphdb.ws.controller.expansion.GraphDbExpansionMethod;
 import uk.ac.ebi.intact.graphdb.ws.controller.model.InteractionExportFormat;
+import uk.ac.ebi.intact.graphdb.ws.controller.writer.SearchInteractionWriter;
+import uk.ac.ebi.intact.graphdb.ws.controller.writer.SerialisedJsonSearchInteractionWriter;
+import uk.ac.ebi.intact.graphdb.ws.controller.writer.SerialisedSearchInteractionWriter;
+import uk.ac.ebi.intact.graphdb.ws.controller.writer.SerialisedXmlSearchInteractionWriter;
 import uk.ac.ebi.intact.search.interactions.model.SearchInteraction;
 import uk.ac.ebi.intact.search.interactions.service.InteractionSearchService;
 import uk.ac.ebi.intact.search.interactions.utils.NegativeFilterStatus;
 
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -107,15 +112,13 @@ public class ExportController {
 
         StreamingResponseBody responseBody = response -> {
 
-            InteractionWriter writer = createInteractionEvidenceWriterFor(format, response);
+            SearchInteractionWriter writer = createSearchInteractionWriterFor(format, response);
 
             Page<SearchInteraction> interactionIdentifiers;
             Pageable interactionsPage = PageRequest.of(FIRST_PAGE, DEFAULT_PAGE_SIZE);
 
             try {
                 writer.start();
-                // Flush to make sure the header has been written to the response before writing any interactions
-                writer.flush();
 
                 // TODO check when we have the binary identifiers if we need to check from duplicated interactions. Probably not
                 do {
@@ -141,29 +144,7 @@ public class ExportController {
 
                     // do processing
                     for (SearchInteraction interactionIdentifier : interactionIdentifiers) {
-                        // New line before each interaction to have each interaction on a different line.
-                        // This is particularly relevant for the MiTab formats.
-                        response.write("\n".getBytes());
-                        switch (format) {
-                            case miJSON:
-                                response.write(interactionIdentifier.getJsonFormat().getBytes());
-                                break;
-                            case miXML25:
-                                response.write(interactionIdentifier.getXml25Format().getBytes());
-                                break;
-                            case miXML30:
-                                response.write(interactionIdentifier.getXml30Format().getBytes());
-                                break;
-                            case miTab25:
-                                response.write(interactionIdentifier.getTab25Format().getBytes());
-                                break;
-                            case miTab26:
-                                response.write(interactionIdentifier.getTab26Format().getBytes());
-                                break;
-                            case miTab27:
-                                response.write(interactionIdentifier.getTab27Format().getBytes());
-                                break;
-                        }
+                        writer.write(interactionIdentifier);
                     }
 
                     //advance to next page
@@ -275,6 +256,27 @@ public class ExportController {
                     writer = writerFactory.getInteractionWriterWith(miJsonOptionFactory.getJsonOptions(output, InteractionCategory.evidence, null,
                             MIJsonType.n_ary_only, null, null));
                 }
+                break;
+        }
+        return writer;
+    }
+
+    private SearchInteractionWriter createSearchInteractionWriterFor(InteractionExportFormat format, OutputStream output) {
+        InteractionWriter interactionWriter = createInteractionEvidenceWriterFor(format, output);
+        SearchInteractionWriter writer;
+        switch (format) {
+            case miXML25:
+            case miXML30:
+                writer = new SerialisedXmlSearchInteractionWriter(format, interactionWriter, output);
+                break;
+            case miTab25:
+            case miTab26:
+            case miTab27:
+                writer = new SerialisedSearchInteractionWriter(format, interactionWriter, output);
+                break;
+            case miJSON:
+            default:
+                writer = new SerialisedJsonSearchInteractionWriter(interactionWriter, output);
                 break;
         }
         return writer;
