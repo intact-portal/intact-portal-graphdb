@@ -160,10 +160,9 @@ public class GraphWSControllerTest {
             ContentDisposition disposition = response.getHeaders().getContentDisposition();
             assertNotNull(disposition);
 
-            // System.out.println(response.getBody());
             String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab25.txt").getFile();
-            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
-
+            String fileContent = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
+            assertEquals(fileContent, response.getBody());
         }
     }
 
@@ -195,10 +194,9 @@ public class GraphWSControllerTest {
             assertEquals("text", response.getHeaders().getContentType().getType());
             assertEquals("plain", response.getHeaders().getContentType().getSubtype());
 
-            System.out.println(response.getBody());
             String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab26.txt").getFile();
-            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
-
+            String fileContent = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
+            assertEquals(fileContent, response.getBody());
         }
     }
 
@@ -232,8 +230,8 @@ public class GraphWSControllerTest {
 
             // System.out.println(response.getBody());
             String file = GraphWSControllerTest.class.getResource("/mitab/" + interactionAc + "-miTab27.txt").getFile();
-            assertEquals(new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8), response.getBody());
-
+            String fileContent = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
+            assertEquals(fileContent, response.getBody());
         }
     }
 

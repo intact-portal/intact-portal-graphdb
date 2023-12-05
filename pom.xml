@@ -5,7 +5,7 @@
 
     <groupId>uk.ac.ebi.intact.graphdb</groupId>
     <artifactId>intact-graphdb-module</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <packaging>pom</packaging>
 
     <name>IntAct Portal :: Graph DB Core</name>
@@ -22,8 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <psi.jami.version>3.4.1</psi.jami.version>
-        <search.interaction.service.version>1.1.0</search.interaction.service.version>
+        <psi.jami.version>3.5.0</psi.jami.version>
+        <search.interaction.service.version>1.1.1</search.interaction.service.version>
         <neo4j.version>3.2.13</neo4j.version>
     </properties>
 
